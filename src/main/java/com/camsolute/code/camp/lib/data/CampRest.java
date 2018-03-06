@@ -100,6 +100,9 @@ public class CampRest {
 		public static String callRequest(String prefix, DaoService.Request request) {
 			return prefix + DaoService.Call.get(request)[1];
 		}
+		public static String path(String prefix, DaoService.Request request) {
+			return prefix + DaoService.Call.get(request)[0];
+		}
 	}
 	
 	public static class InstanceDaoService {
@@ -133,6 +136,9 @@ public class CampRest {
 		public static String callRequest(String prefix, InstanceDaoService.Request request) {
 			return prefix + InstanceDaoService.Call.get(request)[1];
 		}
+		public static String path(String prefix, InstanceDaoService.Request request) {
+			return prefix + InstanceDaoService.Call.get(request)[0];
+		}
 	}
 	
 	public static class ProcessReferenceDaoService {
@@ -155,6 +161,9 @@ public class CampRest {
 		}
 		public static String callRequest(String prefix, ProcessReferenceDaoService.Request request) {
 			return prefix + ProcessReferenceDaoService.Call.get(request)[1];
+		}
+		public static String path(String prefix, ProcessReferenceDaoService.Request request) {
+			return prefix + ProcessReferenceDaoService.Call.get(request)[0];
 		}
 	}
 	
@@ -179,17 +188,26 @@ public class CampRest {
 		public static String callRequest(String prefix, ReferenceDaoService.Request request) {
 			return prefix + ReferenceDaoService.Call.get(request)[1];
 		}
+		public static String path(String prefix, ReferenceDaoService.Request request) {
+			return prefix + ReferenceDaoService.Call.get(request)[0];
+		}
 	}
 	
 	public static class ModelReferenceDaoService {
 		public static String callRequest(String prefix, ReferenceDaoService.Request request) {
 			return prefix + "/model" + ReferenceDaoService.Call.get(request)[1];
 		}
+		public static String path(String prefix, ReferenceDaoService.Request request) {
+			return prefix + "/model" + ReferenceDaoService.Call.get(request)[0];
+		}
 	}
 	
 	public static class OrderPositionReferenceDaoService {
 		public static String callRequest(String prefix, ReferenceDaoService.Request request) {
 			return prefix + "/position" + ReferenceDaoService.Call.get(request)[1];
+		}
+		public static String path(String prefix, ReferenceDaoService.Request request) {
+			return prefix + "/position" + ReferenceDaoService.Call.get(request)[0];
 		}
 	}
 	
@@ -233,6 +251,9 @@ public class CampRest {
 		}
 		public static String callRequest(String prefix, ProcessControlDaoService.Request request) {
 			return prefix + ProcessControlDaoService.Call.get(request)[1];
+		}
+		public static String path(String prefix, ProcessControlDaoService.Request request) {
+			return prefix + ProcessControlDaoService.Call.get(request)[0];
 		}
 		
 	}
@@ -282,6 +303,9 @@ public class CampRest {
 		public static String callRequest(String prefix, DaoService.Request request) {
 			return prefix + DaoService.Call.get(request)[1];
 		}
+		public static String path(String prefix, DaoService.Request request) {
+			return prefix + DaoService.Call.get(request)[0];
+		}
 	}
 	
 
@@ -308,6 +332,9 @@ public class CampRest {
 		
 		public static String callRequest(String prefix, AttributeDaoService.Request request) {
 			return prefix + "/attr" + AttributeDaoService.Call.get(request)[1];
+		}
+		public static String path(String prefix, AttributeDaoService.Request request) {
+			return prefix + "/attr" + AttributeDaoService.Call.get(request)[0];
 		}
 
 	}
@@ -353,6 +380,9 @@ public class CampRest {
 		}
 		public static String callRequest(String prefix, AttributeDefinitionDaoService.Request request) {
 			return prefix + "/attr" + AttributeDefinitionDaoService.Call.get(request)[1];
+		}
+		public static String path(String prefix, AttributeDefinitionDaoService.Request request) {
+			return prefix + "/attr" + AttributeDefinitionDaoService.Call.get(request)[0];
 		}
 
 	}
@@ -408,8 +438,8 @@ public class CampRest {
 			Call.put(Request.DELETE_UPDATE, new String[] {"/updates/del","/updates/del?attributeId=%s&objectId=%s&businessKey=%s&target=%s","GET"});		
 			Call.put(Request.DELETE_UPDATES, new String[] {"/s/updates/list/del","/s/updates/list/del?businessKey=%s&target=%s","POST"});		
 		}
-		public static String callRequest(String prefix, AttributeValueDaoService.Request request) {
-			return prefix + "/attr" + AttributeValueDaoService.Call.get(request)[1];
+		public static String path(String prefix, AttributeValueDaoService.Request request) {
+			return prefix + "/attr" + AttributeValueDaoService.Call.get(request)[0];
 		}
 
 	}
@@ -449,6 +479,9 @@ public class CampRest {
 		}
 		public static String callRequest(String prefix, ProcessEngineDaoService.Request request) {
 			return prefix + ProcessEngineDaoService.Call.get(request)[1];
+		}
+		public static String path(String prefix, ProcessEngineDaoService.Request request) {
+			return prefix + ProcessEngineDaoService.Call.get(request)[0];
 		}
 	}		
  	public static class Order {
