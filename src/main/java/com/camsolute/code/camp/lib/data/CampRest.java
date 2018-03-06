@@ -74,6 +74,24 @@ public class CampRest {
 			DELETE_UPDATES,
 			DELETE_UPDATE;
 		};
+		public static final String LOAD_BY_ID = "/load/by/id/{id}";
+		public static final String LOAD = "/load/by/businessId";
+		public static final String LOAD_BY_KEY = "/load/by/key";
+		public static final String CREATE = "/create";
+		public static final String SAVE = "/save";
+		public static final String SAVE_LIST = "/s/save";
+		public static final String UPDATE = "/update";
+		public static final String UPDATE_LIST = "/s/update";
+		public static final String UPDATE_ATTRIBUTE = "/update/{businessId}/attribute/{name}/{value}";
+		public static final String LOAD_UPDATE = "/updates/load";
+		public static final String LOAD_UPDATES = "/s/updates/load";
+		public static final String LOAD_UPDATES_KEY = "/s/updates/key/load";
+		public static final String LOAD_UPDATES_TARGET = "/s/updates/target/load";
+		public static final String ADD_UPDATE = "/updates/add";
+		public static final String ADD_UPDATES = "/s/updates/add";
+		public static final String DELETE_ALL_UPDATES = "/s/updates/del/all";
+		public static final String DELETE_UPDATES = "/s/updates/del";
+		public static final String DELETE_UPDATE = "/updates/del";
 		public static final HashMap<Request,String[]> Call;
 		
 		static {
@@ -118,6 +136,16 @@ public class CampRest {
 			LOAD_DATE_BY_BID,
 			LOAD_DATE_RANGE_BY_BID;
 		}
+		public static final String ADD_INSTANCE = "/instance/add";
+		public static final String ADD_INSTANCES = "/s/instance/add";
+		public static final String LOAD_FIRST = "/load/first";
+		public static final String LOAD_CURRENT = "/load/current";		
+		public static final String LOAD_NEXT = "/load/next";
+		public static final String LOAD_PREVIOUS = "/load/previous";		
+		public static final String LOAD_DATE = "/load/date";		
+		public static final String LOAD_DATE_RANGE = "/load/daterange";		
+		public static final String LOAD_DATE_BY_BID = "/load/date/by/business/id";		
+		public static final String LOAD_DATE_RANGE_BY_BID = "/load/daterange/by/business/id";		
 		public static final HashMap<Request,String[]> Call;
 		
 		static {
@@ -149,6 +177,11 @@ public class CampRest {
 			DEL_REFERENCE,
 			DEL_REFERENCES;
 		}
+			public static final String LOAD = "/s/process/load/{businessId}";		
+			public static final String ADD_REFERENCE = "/process/add/{businessId}/{instanceId}/{processKey}";
+			public static final String ADD_REFERENCES = "/s/process/add/{businessId}";
+			public static final String DEL_REFERENCE = "/process/del/{businessId}/{instanceId}/{processKey}";
+			public static final String DEL_REFERENCES = "/s/process/del/{businessId}";		
 		public static final HashMap<Request,String[]> Call;
 		
 		static {
@@ -175,6 +208,11 @@ public class CampRest {
 			DEL_REFERENCE,
 			DEL_REFERENCES;
 		}
+			public static final String LOAD = "/s/load";		
+			public static final String ADD_REFERENCE = "/add";
+			public static final String ADD_REFERENCES = "/s/add";
+			public static final String DEL_REFERENCE = "/del";
+			public static final String DEL_REFERENCES = "/s/del";		
 		public static final HashMap<Request,String[]> Call;
 		
 		static {
@@ -229,6 +267,20 @@ public class CampRest {
 			GET_TASKS_KEY,
 			GET_EXECUTIONS;
 		}
+			public static final String START_PROCESS = "/process/start/{processKey}";//	package ObjectInstance
+			public static final String NOTIFY_PROCESS = "/process/notify";		
+			public static final String NOTIFY_PROCESS_GET = "/process/notify/";		
+			public static final String NOTIFY_PROCESSES = "/s/process/notify";		// package = ObjectInstance
+			public static final String NOTIFY_PROCESS_EVENT = "/process/notify"; //package = ObjectInstance		
+			public static final String SIGNAL_PROCESS = "/process/signal/{executionId}"; //package = Variables
+			public static final String SIGNAL_PROCESSES = "/s/process/signal"; //package = SignalPacket
+			public static final String CLAIM_TASK = "/task/claim";		
+			public static final String DELEGATE_TASK = "/task/delegate";		
+			public static final String COMPLETE_TASK = "/task/complete"; //package = Variables		
+			public static final String GET_TASK = "/task/get";		
+			public static final String GET_TASKS = "/s/task/get";		
+			public static final String GET_TASKS_KEY = "/s/task/key/get";		
+			public static final String GET_EXECUTIONS = "/execution/get";		
 		public static final HashMap<Request,String[]> Call;
 		
 		static {
@@ -278,6 +330,23 @@ public class CampRest {
 			DELETE_UPDATES,
 			DELETE_UPDATE;
 		};
+			public static final String LOAD_BY_ID = "/load/by/id/{id}";
+			public static final String LOAD_BY_INSTANCE_ID = "/load/by/instanceId";
+			public static final String LOAD_BY_BUSINESS_ID = "/load/by/businessId";
+			public static final String LOAD_BY_KEY = "/load/by/key";
+			public static final String SAVE = "/save";
+			public static final String SAVE_LIST = "/s/save";
+			public static final String UPDATE = "/update";
+			public static final String UPDATE_LIST = "/s/update";
+			public static final String LOAD_UPDATE = "/updates/load";
+			public static final String LOAD_UPDATES = "/s/updates/load";
+			public static final String LOAD_UPDATES_KEY = "/s/updates/key/load";
+			public static final String LOAD_UPDATES_TARGET = "/s/updates/target/load";
+			public static final String ADD_UPDATE = "/updates/add";
+			public static final String ADD_UPDATES = "/s/updates/add";
+			public static final String DELETE_ALL_UPDATES = "/s/updates/del/all";
+			public static final String DELETE_UPDATES = "/s/updates/del";
+			public static final String DELETE_UPDATE = "/updates/del";
 		public static final HashMap<Request,String[]> Call;
 		
 		static {
@@ -318,6 +387,12 @@ public class CampRest {
 			SAVE_ALL,
 			UPDATE_ALL;
 		}
+			public static final String LOAD_BY_OBJECT_ID = "/s/load/{objectId}";
+			public static final String SAVE_BY_OBJECT_ID = "/s/save/{objectId}";
+			public static final String UPDATE_BY_OBJECT_ID = "/s/update/{objectId}";
+			public static final String LOAD_ALL = "/s/load/list/{objectId}";
+			public static final String SAVE_ALL = "/s/save/list/{objectId}";
+			public static final String UPDATE_ALL = "/s/update/list/{objectId}";
 		public static final HashMap<Request,String[]> Call;
 		
 		static {
@@ -357,6 +432,22 @@ public class CampRest {
 			DELETE_BY_PARENT_ID,
 			DELETE_LIST;
 		}
+			public static final String LOAD_BY_ID = "/load/by/id/{id}";
+			public static final String LOAD_BY_BUSINESS_ID = "/load/by/business/id";
+			public static final String LOAD_BY_BUSINESS_KEY = "/s/load/by/business/key";
+			public static final String LOAD_BY_TYPE = "/s/load/by/type";
+			public static final String LOAD_BY_GROUP = "/s/load/by/group";
+			public static final String LOAD_AFTER_POSITION = "/s/load/before/position";		
+			public static final String LOAD_BEFORE_POSITION = "/s/load/after/position";		
+			public static final String LOAD_POSITION_RANGE = "/s/load/position/range";		
+			public static final String SAVE = "/save";		
+			public static final String SAVE_LIST = "/s/save";		
+			public static final String UPDATE = "/update";		
+			public static final String UPDATE_LIST = "/s/update";		
+			public static final String DELETE_BY_ID = "/delete/{id}";		
+			public static final String DELETE_BY_BUSINESS_ID = "/delete/by/business/id";		
+			public static final String DELETE_BY_PARENT_ID = "/delete/by/parent/id";		
+			public static final String DELETE_LIST = "/s/delete";		
 		public static final HashMap<Request,String[]> Call;
 		
 		static {
@@ -411,6 +502,28 @@ public class CampRest {
 			DELETE_UPDATE,
 			DELETE_UPDATES;
 		}
+			public static final String LOAD = "/load/{objectId}";
+			public static final String LOAD_LIST = "/s/load/{objectId}";
+			public static final String LOAD_BY_GROUP = "/s/load/by/group";
+			public static final String LOAD_AFTER_POSITION = "/s/load/before/position";		
+			public static final String LOAD_BEFORE_POSITION = "/s/load/after/position";		
+			public static final String LOAD_POSITION_RANGE = "/s/load/position/range";		
+			public static final String SAVE = "/save";		
+			public static final String SAVE_LIST = "/s/save";		
+			public static final String UPDATE = "/update";		
+			public static final String UPDATE_LIST = "/s/update";		
+			public static final String DELETE = "/delete";		
+			public static final String DELETE_GET = "/delete";		
+			public static final String DELETE_LIST = "/s/delete";		
+			public static final String LOAD_ALL_UPDATES = "/s/updates/load";
+			public static final String LOAD_TARGET_UPDATES = "/s/updates/target/load";		
+			public static final String LOAD_BUSINESSKEY_UPDATES = "/s/updates/key/load";		
+			public static final String LOAD_UPDATE = "/updates/load";		
+			public static final String ADD_UPDATE = "/updates/add";		
+			public static final String ADD_UPDATES = "/s/updates/add";		
+			public static final String DELETE_ALL_UPDATES = "/s/updates/del";		
+			public static final String DELETE_UPDATE = "/updates/del";		
+			public static final String DELETE_UPDATES = "/s/updates/list/del";		
 		public static final HashMap<Request,String[]> Call;
 		
 		static {
@@ -438,6 +551,9 @@ public class CampRest {
 			Call.put(Request.DELETE_UPDATE, new String[] {"/updates/del","/updates/del?attributeId=%s&objectId=%s&businessKey=%s&target=%s","GET"});		
 			Call.put(Request.DELETE_UPDATES, new String[] {"/s/updates/list/del","/s/updates/list/del?businessKey=%s&target=%s","POST"});		
 		}
+		public static String callRequest(String prefix, AttributeValueDaoService.Request request) {
+			return prefix + "/attr" + AttributeValueDaoService.Call.get(request)[1];
+		}
 		public static String path(String prefix, AttributeValueDaoService.Request request) {
 			return prefix + "/attr" + AttributeValueDaoService.Call.get(request)[0];
 		}
@@ -460,6 +576,18 @@ public class CampRest {
 			DELEGATE_TASK,
 			; // process Key is the processId as given in the bpmn2 process file. generally we use com.camsolute.code.camp.business.OrderProcess
 		}
+			public static final String AUTHENTICATE = "/identity/verify";
+			public static final String GET_TASK = "/task/{taskId}";			
+			public static final String GET_TASKS = "/task";			
+			public static final String CLAIM_TASK = "/task/{taskId}/claim";			
+			public static final String COMPLETE_TASK = "/task/{taskid}/submit-form";			
+			public static final String DELEGATE_TASK = "/task/{taskId}/delegate";			
+			public static final String SIGNAL_PROCESS = "/execution/{executionId}/signal";			
+			public static final String UPDATE_VARIABLE = "/execution/{executionId}/localVariables/{variableName}";			
+			public static final String GET_EXECUTIONS = "/execution";			
+			public static final String TRIGGER_MESSAGE_SUBSCRIPTION = "/execution/{executionId}/messageSubscriptions/{messageName}/trigger";			
+			public static final String MESSAGE_PROCESSES = "/message";			
+			public static final String START_PROCESS = "/process-definition/key/{processKey}/submit-form";			
 		public static final HashMap<Request,String[]> Call;
 		
 		static {
