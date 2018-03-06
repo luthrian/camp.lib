@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2017 Christopher Campbell (campbellccc@gmail.com)
+ * Copyright (C) 2018 Christopher Campbell
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,17 +15,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors:
- * 	Christopher Campbell (campbellccc@gmail.com) - all code prior and post initial release
+ * 	Christopher Campbell - all code prior and post initial release
  ******************************************************************************/
 package com.camsolute.code.camp.lib.contract;
 
+import com.camsolute.code.camp.lib.models.Attribute;
+
 /**
- * The has number interface indicates that the implementing element has
- * an association with an order or is and order. It therefore extends has history,
- * has customer and has order number interfaces, etc. interfaces.
+ * Objects that honer this contract will respond to the <code>attribute()</code> request
+ + with an object that extends the Attribute&lt;?&gt; class.
  * @author Christopher Campbell
  *
  */
-public interface  HasAttribute<T> {
+public interface  HasAttribute<T extends Attribute<?>> {
 	public T attribute();
 }

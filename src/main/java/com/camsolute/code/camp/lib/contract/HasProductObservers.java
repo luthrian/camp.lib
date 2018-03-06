@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2017 Christopher Campbell (campbellccc@gmail.com)
+ * Copyright (C) 2018 Christopher Campbell
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,18 +15,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors:
- * 	Christopher Campbell (campbellccc@gmail.com) - all code prior and post initial release
+ * 	Christopher Campbell - all code prior and post initial release
  ******************************************************************************/
 package com.camsolute.code.camp.lib.contract;
 
-import com.camsolute.code.camp.core.types.CampOldList;
-import com.camsolute.code.camp.models.business.ProductDefinition.productEvent;
-import com.camsolute.code.camp.models.business.ProductProcess;
+import com.camsolute.code.camp.lib.models.process.ProductProcess;
+import com.camsolute.code.camp.lib.models.process.ProductProcessList;
+import com.camsolute.code.camp.lib.models.product.Product.productEvent;
 // This is Observer Pattern
 //TODO: will make this more generic (ie. change to HasObservers)
 public interface HasProductObservers {
 	public void addProductObserver(ProductProcess observer);
 	public void notifyObservers();
-	public CampOldList<ProductProcess> observers();
+	public ProductProcessList observers();
 	public void notifyObservers(productEvent event);
 }

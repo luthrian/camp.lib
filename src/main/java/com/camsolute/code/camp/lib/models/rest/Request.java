@@ -1,0 +1,139 @@
+/*******************************************************************************
+ * Copyright (C) 2018 Christopher Campbell
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors:
+ * 	Christopher Campbell - all code prior and post initial release
+ ******************************************************************************/
+package com.camsolute.code.camp.lib.models.rest;
+
+import java.util.HashMap;
+
+import org.json.JSONObject;
+
+import com.camsolute.code.camp.lib.contract.HasProcess;
+import com.camsolute.code.camp.lib.contract.Serialization;
+import com.camsolute.code.camp.lib.models.rest.VariableValue.VariableValueType;
+import com.camsolute.code.camp.lib.utilities.Util;
+
+public class Request<T extends HasProcess<T,?>> implements Serialization<Request<?>> {
+	private String id;
+	private String key;
+	
+	private Variables  variables = new Variables();
+	private String businessKey;
+
+	public static enum RequestTypes {
+		START_PROCESS,
+		
+	};
+	
+	public Request() {
+	}
+	public Request(T o) {
+		this.businessKey = o.businessKey();
+		this.initVariables(o);
+		initKey(o);
+	}
+	
+	protected String initKey(T o) {
+		setKey(Util.Config.instance().properties().getProperty("process.key."+o.getClass().getSimpleName()));
+		return key();
+	}
+	
+	protected void initVariables(T o) {
+		updateId(String.valueOf(o.id()));
+		variables().put("objectId", new VariableValue(String.valueOf(o.id()),VariableValueType.valueOf("String"),false));
+		variables().put("objectBusinessId", new VariableValue(o.onlyBusinessId(),VariableValueType.valueOf("String"),false));
+		variables().put("objectStatus", new VariableValue(o.status().name(),VariableValueType.valueOf("String"),false));
+	}
+	
+	public Variables vars() {
+		return variables;
+	}
+
+	public HashMap<String,VariableValue> variables() {
+		return variables.variables();
+	}
+
+	public void setVariables(HashMap<String,VariableValue> variables) {
+		this.variables.setVariables(variables);
+	}
+	
+	public void setVar(Variables variables) {
+		this.variables = variables;
+	}
+
+
+	public String businessKey() {
+		return businessKey;
+	}
+
+
+	public void setBusinesskey(String businessKey) {
+		this.businessKey = businessKey;
+	}
+	public String id() {
+		return id;
+	}
+
+	public String updateId(String id) {
+		return this.id = id;
+	}
+
+	public String key() {
+		return key;
+	}
+
+	public void setKey(String key) {
+		this.key = key;
+	}
+	@Override
+	public String toJson() {
+		return null;
+	}
+	public String _toJson(Request<?> r) {
+		String json = "{";
+		json += _toInnerJson(r);
+		json += "}";
+		return json;
+	}
+	public static String _toInnerJson(Request<?> r) {
+		String json = "\"id\":\""+r.id()+"\",";
+		json += "\"key\":\""+r.key()+"\",";
+		json += "\"businessKey\":\""+r.businessKey()+"\",";
+		json += "\"variables\":"+r.vars().toJson();
+		return json;
+	}
+ 	public Request<T> fromJson(String json) {
+		return _fromJson(json);
+	}
+	
+	public static <T extends HasProcess<T,?>> Request<T> _fromJson(String json) {
+		return _fromJSONObject(new JSONObject(json));
+	}
+	public static <T extends HasProcess<T,?>> Request<T> _fromJSONObject(JSONObject jo) {
+		Request<T> o = new Request<T>();
+		String id = jo.getString("id");
+		String key = jo.getString("key");
+		String businessKey = jo.getString("businessKey");
+		Variables variables = Variables._fromJSONObject(jo.getJSONObject("variables"));
+		o.setVar(variables);
+		o.setKey(key);
+		o.setBusinesskey(businessKey);
+		o.updateId(id);
+		return o;
+	}
+}

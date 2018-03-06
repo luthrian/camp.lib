@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2017 Christopher Campbell (campbellccc@gmail.com)
+ * Copyright (C) 2018 Christopher Campbell
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,27 +15,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors:
- * 	Christopher Campbell (campbellccc@gmail.com) - all code prior and post initial release
+ * 	Christopher Campbell - all code prior and post initial release
  ******************************************************************************/
 package com.camsolute.code.camp.lib.types;
 
-import com.camsolute.code.camp.core.interfaces.IsObserver;
+import com.camsolute.code.camp.lib.contract.HasId;
+import com.camsolute.code.camp.lib.contract.IsObserver;
 
-public abstract class CampObserver<T> implements IsObserver<T>{
-	
-	private int id = 0;
-	
-	@Override
-	public int id() {
-		return this.id;
-	}
-
-	@Override
-	public int updateId(int id) {
-		int oldid = this.id;
-		this.id = id;
-		return oldid;
-	}
+public abstract class CampObserver<T> implements IsObserver<T>, HasId {
 
 	@Override
 	public abstract void notify(T observer);

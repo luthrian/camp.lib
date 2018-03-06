@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2017 Christopher Campbell (campbellccc@gmail.com)
+ * Copyright (C) 2018 Christopher Campbell
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,43 +15,42 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors:
- * 	Christopher Campbell (campbellccc@gmail.com) - all code prior and post initial release
+ * 	Christopher Campbell - all code prior and post initial release
  ******************************************************************************/
 package com.camsolute.code.camp.lib.contract;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public interface IsInstanceDao<T> {
+public interface IsInstanceDao<T> extends IsObjectInstance {
 	/**
 	 * Returns the database scheme name.
-	 * 
-	 * @return
+	 *
+	 * @return database naem
 	 */
 	public String dbName();
-	
+
 	/**
 	 * Returns the database table name in which the object instance our CampInstance belongs to is persisted.
-	 * 
-	 * @return
+	 *
+	 * @return main table name
 	 */
 	public String table();
-	
+
 	/**
-	 * Returns the database table definition (see: <code>com.camsolute.code.lib.data.CampSQL</code>) of the object instance Campinstance belongs to. 
-	 * @return
-	 * 
+	 * Returns the database table definition (see: <code>com.camsolute.code.lib.data.CampSQL</code>) of the object instance Campinstance belongs to.
+	 * @return table definition
+	 *
 	 */
 	public String[][] tabledef();
 
 	/**
 	 * Returns the database table name in which CampInstance is persisted.
-	 * 
-	 * @return
+	 *
+	 * @return instance table
 	 */
 	public String itable();
-	
+
 	public T rsToI(ResultSet rs, boolean log) throws SQLException;
-	
-	
+
 }

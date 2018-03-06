@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2017 Christopher Campbell (campbellccc@gmail.com)
+ * Copyright (C) 2018 Christopher Campbell
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,69 +15,46 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors:
- * 	Christopher Campbell (campbellccc@gmail.com) - all code prior and post initial release
+ * 	Christopher Campbell - all code prior and post initial release
  ******************************************************************************/
 package com.camsolute.code.camp.lib.types;
 
 import org.joda.time.DateTime;
 
-import com.camsolute.code.camp.lib.Attribute;
+import com.camsolute.code.camp.lib.models.Attribute;
+import com.camsolute.code.camp.lib.models.AttributeInterface;
+import com.camsolute.code.camp.lib.models.Value;
 import com.camsolute.code.camp.lib.utilities.Util;
+import static com.camsolute.code.camp.lib.utilities.Util.*;
 
-public class CampDate extends Attribute<DateTime>{
-	public static final String _F = "[CampDate]";
-	public static final boolean _DEBUG = false;
-	
-	private String attributeBusinessId = null;
+public class CampDate extends Attribute<DateValue>{
 
-	@Override
-	public String attributeBusinessId() {
-		return attributeBusinessId+Util.DB._NS+id();
-	}
-
-	@Override
-	public String attrbuteBusinessId(String id) {
-		String prev = this.attributeBusinessId;
-		this.attributeBusinessId = id;
-		return prev;
-	}
-
-	@Override
-	public String onlyAttributeBusinessId() {
-		return this.attributeBusinessId;
-	}
-
-	@Override
-	public String initialAttributeBusinessId() {
-		return attributeBusinessId+Util.DB._NS+0;
-	}
-
-
-	private DateTime value;
-	
-	private String attributeGroup = null;
-	private int attributePosition = 0;
-	
 	public CampDate(){
 		super(null, AttributeType._date, (new DateTime()).toString());
-		this.value = fromString(defaultValue());
 	}
-	
+
 	public CampDate(String name){
 		super(name, AttributeType._date, (new DateTime()).toString());
-		this.value = fromString(defaultValue());
 	}
-	
-	public CampDate(String name, String date){
-		super(name, AttributeType._date, (new DateTime()).toString());
-		this.value = fromString(date);
+
+    public CampDate(String name, String defaultValue){
+        super(name, AttributeType._date, defaultValue);
+    }
+
+    public CampDate(String name, DateTime defaultValue){
+        super(name, AttributeType._date, defaultValue.toString());
+    }
+
+    public CampDate(String name, String defaultValue, String value){
+		super(name, AttributeType._date, defaultValue.toString());
+		this.value().setValue(fromString(value));
 	}
-	
-	public CampDate(String name, DateTime date){
+
+  public CampDate(String name, DateTime date, DateValue value){
 		super(name, AttributeType._date, date.toString());
-		this.value = date;
+		this.setValue(value);
 	}
-	
+
 	public CampDate defaultInstance(){
 		return new CampDate(name(),(new DateTime()).toString());
 	}
@@ -85,55 +62,28 @@ public class CampDate extends Attribute<DateTime>{
 
 
 	public static DateTime fromString(String date){
-		return TU.dateTimeFromString(date);
+		return Time.dateTimeFromString(date);
 	}
-	
-	@Override
+
 	public final String toString(){
-		return this.value.toString("yyyy-MM-dd");
+		return this.value().value().toString("yyyy-MM-dd");
 	}
-	
+
+
 	@Override
-	public DateTime value() {
-		return this.value;
+	public DateValue valueFromString(String value) {
+		return new DateValue(fromString(value));
 	}
 
 	@Override
-	public DateTime value(DateTime value) {
-		DateTime prev = this.value;
-		this.value = value;
-		return prev;
+	public String toJson() {
+		return AttributeInterface._toJson(this);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public CampDate valueFromString(String value) {
-		value(fromString(value));
-		return this;
+	public Attribute<DateValue> fromJson(String json) {
+		return (Attribute<DateValue>) AttributeInterface._fromJson(json);
 	}
-	
-	@Override
-	public String attributeGroup() {
-		return this.attributeGroup;
-	}
-
-	@Override
-	public String attributeGroup(String group) {
-		String prev = this.attributeGroup;
-		this.attributeGroup = group;
-		return prev;
-	}
-
-	@Override
-	public int attributePosition() {
-		return this.attributePosition;
-	}
-
-	@Override
-	public int attributePosition(int position) {
-		int prev = this.attributePosition;
-		this.attributePosition = position;
-		return prev;
-	} 
-
 
 }

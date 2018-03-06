@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2017 Christopher Campbell (campbellccc@gmail.com)
+ * Copyright (C) 2018 Christopher Campbell
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,104 +15,64 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors:
- * 	Christopher Campbell (campbellccc@gmail.com) - all code prior and post initial release
+ * 	Christopher Campbell - all code prior and post initial release
  ******************************************************************************/
 package com.camsolute.code.camp.lib.types;
 
-import com.camsolute.code.camp.lib.Attribute;
+import com.camsolute.code.camp.lib.contract.IsObjectInstance;
+import com.camsolute.code.camp.lib.dao.DaoInterface;
+import com.camsolute.code.camp.lib.models.Attribute;
+import com.camsolute.code.camp.lib.models.AttributeInterface;
+import com.camsolute.code.camp.lib.models.Value;
 import com.camsolute.code.camp.lib.utilities.Util;
 
-public class CampInteger extends Attribute<Integer>{
-	private int value = 0;
-	
-	private String attributeGroup = null;
-	private int attributePosition = 0;
-	
-	private String attributeBusinessId = null;
+public class CampInteger extends Attribute<IntegerValue>{
 
-	@Override
-	public String attributeBusinessId() {
-		return attributeBusinessId+Util.DB._NS+id();
-	}
+    public CampInteger(){
+        super(null, AttributeType._integer, "0");
+    }
 
-	@Override
-	public String attrbuteBusinessId(String id) {
-		String prev = this.attributeBusinessId;
-		this.attributeBusinessId = id;
-		return prev;
-	}
-
-	@Override
-	public String onlyAttributeBusinessId() {
-		return this.attributeBusinessId;
-	}
-
-	@Override
-	public String initialAttributeBusinessId() {
-		return attributeBusinessId+Util.DB._NS+0;
-	}
-
-	public CampInteger(){
-		super(null, AttributeType._integer, "0");
-		value = Integer.valueOf("0");
-	}
-	
 	public CampInteger(String name){
 		super(name, AttributeType._integer, "0");
-		value = Integer.valueOf("0");
-	}
-	
-	public CampInteger(String name, int value){
-		super(name, AttributeType._integer, "0");
-		this.value = value;
 	}
 
-	
-	public CampInteger defaultInstance(){
-		return new CampInteger(name(),Integer.valueOf("0"));
-	}
+    public CampInteger(String name, String defaultValue){
+        super(name, AttributeType._integer, defaultValue);
+    }
 
-	@Override
-	public Integer value() {
-		return this.value;
-	}
-	@Override
-	public Integer value(Integer value) {
-		int prev = this.value;
-		this.value = value;
-		return prev;
-	}
+    public CampInteger(String name, int defaultValue){
+        super(name, AttributeType._integer, ""+defaultValue);
+    }
+
+    public CampInteger(String name, String defaultValue, String value){
+        super(name, AttributeType._integer, defaultValue);
+        this.setValue(new IntegerValue(Integer.valueOf(value)));
+    }
+
+    public CampInteger(String name, int defaultValue, int value){
+        super(name, AttributeType._integer, ""+defaultValue);
+        this.setValue(new IntegerValue(value));
+    }
 
 	@Override
-	public CampInteger valueFromString(String value) {
-		value(Integer.valueOf(value));
-		return this;
+	public IntegerValue valueFromString(String value) {
+		return new IntegerValue(Integer.valueOf(value));
 	}
 
-	@Override
-	public String attributeGroup() {
-		return this.attributeGroup;
-	}
+    @Override
+    public String toString(){
+        return AttributeInterface._toString(this);
+    }
 
-	@Override
-	public String attributeGroup(String group) {
-		String prev = this.attributeGroup;
-		this.attributeGroup = group;
-		return prev;
-	}
+    @Override
+    public String toJson(){
+        return AttributeInterface._toJson(this);
+    }
 
-	@Override
-	public int attributePosition() {
-		return this.attributePosition;
-	}
-
-	@Override
-	public int attributePosition(int position) {
-		int prev = this.attributePosition;
-		this.attributePosition = position;
-		return prev;
-	} 
-
+    @Override
+    public CampInteger fromJson(String json){
+        return (CampInteger) AttributeInterface._fromJson(json);
+    }
 
 }
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2017 Christopher Campbell (campbellccc@gmail.com)
+ * Copyright (C) 2018 Christopher Campbell
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,42 +15,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors:
- * 	Christopher Campbell (campbellccc@gmail.com) - all code prior and post initial release
+ * 	Christopher Campbell - all code prior and post initial release
  ******************************************************************************/
 package com.camsolute.code.camp.lib.types;
 
-import com.camsolute.code.camp.lib.Attribute;
+import com.camsolute.code.camp.lib.models.Attribute;
+import com.camsolute.code.camp.lib.models.AttributeInterface;
+import com.camsolute.code.camp.lib.models.Value;
+import com.camsolute.code.camp.lib.models.Attribute.AttributeType;
 import com.camsolute.code.camp.lib.utilities.Util;
 
-public class CampText extends Attribute<String>{
-	private String value;
-	
-	private String attributeGroup = null;
-	private int attributePosition = 0;
-	
-	private String attributeBusinessId = null;
-
-	@Override
-	public String attributeBusinessId() {
-		return attributeBusinessId+Util.DB._NS+id();
-	}
-
-	@Override
-	public String attrbuteBusinessId(String id) {
-		String prev = this.attributeBusinessId;
-		this.attributeBusinessId = id;
-		return prev;
-	}
-
-	@Override
-	public String onlyAttributeBusinessId() {
-		return this.attributeBusinessId;
-	}
-
-	@Override
-	public String initialAttributeBusinessId() {
-		return attributeBusinessId+Util.DB._NS+0;
-	}
+public class CampText extends Attribute<TextValue>{
 
 	public CampText(){
 		super(null, AttributeType._text, null);
@@ -60,58 +35,28 @@ public class CampText extends Attribute<String>{
 		super(name, AttributeType._text, null);
 	}
 	
-	public CampText(String name,String value){
-		super(name, AttributeType._text, null);
-		this.value = value;
+	public CampText(String name,String defaultValue){
+		super(name, AttributeType._text, defaultValue);
 	}
 	
-	public CampText defaultInstance(){
-		return new CampText(name(),defaultValue());
-	}
-
-
-
-	@Override
-	public String value() {
-		return value;
-	}
-
-	@Override
-	public String value(String value) {
-		String prev = this.value;
-		this.value = value;
-		return prev;
-	}
-
-	@Override
-	public Attribute<?> valueFromString(String value) {
-		value(value);
-		return this;
+	public CampText(String name,String defaultValue, String value){
+		super(name, AttributeType._text, defaultValue);
+		this.value().setValue(value);
 	}
 	
 	@Override
-	public String attributeGroup() {
-		return this.attributeGroup;
+	public TextValue valueFromString(String value) {
+		return new TextValue(value);
 	}
 
 	@Override
-	public String attributeGroup(String group) {
-		String prev = this.attributeGroup;
-		this.attributeGroup = group;
-		return prev;
+	public String toJson() {
+		return AttributeInterface._toJson(this);
 	}
 
 	@Override
-	public int attributePosition() {
-		return this.attributePosition;
+	public CampText fromJson(String json) {
+		return (CampText) AttributeInterface._fromJson(json);
 	}
-
-	@Override
-	public int attributePosition(int position) {
-		int prev = this.attributePosition;
-		this.attributePosition = position;
-		return prev;
-	} 
-
-
+	
 }

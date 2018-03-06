@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2017 Christopher Campbell (campbellccc@gmail.com)
+ * Copyright (C) 2018 Christopher Campbell
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,16 +15,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors:
- * 	Christopher Campbell (campbellccc@gmail.com) - all code prior and post initial release
+ * 	Christopher Campbell - all code prior and post initial release
  ******************************************************************************/
 package com.camsolute.code.camp.lib.contract;
 
-import com.camsolute.code.camp.core.types.CampOldList;
-import com.camsolute.code.camp.models.business.Process;
-// This is Observer Pattern
+import com.camsolute.code.camp.lib.models.process.Process;
+import com.camsolute.code.camp.lib.models.process.ProcessList;
+// This is Observer Pattern 
 //TODO: will make this more generic (ie. change to HasObservers)
-public interface HasObserverProcess<T extends Process<?>> {
-	public void addOrderObserver(T observer);
-	public void notifyObservers();
-	public CampOldList<T> observers();
+public interface HasObserverProcess<U,T extends Process<U,T>> {
+	public void addObserverProcess(T observer);
+	public void notifyObserverProcesess();
+	public <E extends ProcessList> E observerProcesses();
+  public <E extends ProcessList> void observerProcesses(E processes);
+
 }

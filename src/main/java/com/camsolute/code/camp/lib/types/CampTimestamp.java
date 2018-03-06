@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2017 Christopher Campbell (campbellccc@gmail.com)
+ * Copyright (C) 2018 Christopher Campbell
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,123 +15,68 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors:
- * 	Christopher Campbell (campbellccc@gmail.com) - all code prior and post initial release
+ * 	Christopher Campbell - all code prior and post initial release
  ******************************************************************************/
 package com.camsolute.code.camp.lib.types;
 
 import java.sql.Timestamp;
 
-import com.camsolute.code.camp.lib.Attribute;
+import com.camsolute.code.camp.lib.models.Attribute;
+import com.camsolute.code.camp.lib.models.AttributeInterface;
+import com.camsolute.code.camp.lib.models.Value;
 import com.camsolute.code.camp.lib.utilities.Util;
+import com.camsolute.code.camp.lib.utilities.Util.Time;
 
-public class CampTimestamp extends Attribute<Timestamp>{
-	public static final String _F = "[CampTimestamp]";
-	public static final boolean _DEBUG = false;
-	
-	private Timestamp value;
-	
-	private String attributeGroup = null;
-	private int attributePosition = 0;
-	
-	private String attributeBusinessId = null;
-
-	@Override
-	public String attributeBusinessId() {
-		return attributeBusinessId+Util.DB._NS+id();
-	}
-
-	@Override
-	public String attrbuteBusinessId(String id) {
-		String prev = this.attributeBusinessId;
-		this.attributeBusinessId = id;
-		return prev;
-	}
-
-	@Override
-	public String onlyAttributeBusinessId() {
-		return this.attributeBusinessId;
-	}
-
-	@Override
-	public String initialAttributeBusinessId() {
-		return attributeBusinessId+Util.DB._NS+0;
-	}
+public class CampTimestamp extends Attribute<TimestampValue>{
 
 	public CampTimestamp(){
-		super(null, AttributeType._timestamp, TU.timestamp().toString());
-		this.value = fromString(defaultValue());
+		super(null, AttributeType._timestamp, Util.Time.timestamp().toString());
 	}
 	
 	public CampTimestamp(String name){
-		super(name, AttributeType._timestamp, TU.timestamp().toString());
-		this.value = fromString(defaultValue());
+		super(name, AttributeType._timestamp, Time.timestamp().toString());
 	}
 	
-	public CampTimestamp(String name,String timestamp){
-		super(name, AttributeType._timestamp, timestamp);
-		this.value = fromString(timestamp);
+	public CampTimestamp(String name,String defaultValue){
+		super(name, AttributeType._timestamp, defaultValue);
 	}
 
-	public CampTimestamp(String name,Timestamp timestamp){
-		super(name, AttributeType._timestamp, timestamp.toString());
-		this.value = timestamp;
+	public CampTimestamp(String name,Timestamp defaultValue){
+		super(name, AttributeType._timestamp, defaultValue.toString());
 	}
 
-	public CampTimestamp defaultInstance(){
-		return new CampTimestamp(name(),Util.Time.timestamp().toString());
+	public CampTimestamp(String name,String defaultValue, String value){
+		super(name, AttributeType._timestamp, defaultValue);
+		this.value().setValue(Time.timestamp(value));
 	}
 
-	public static Timestamp fromString(String datetime){
-		return Util.Time.timestamp(datetime);
+	public CampTimestamp(String name,Timestamp defaultValue, Timestamp value){
+		super(name, AttributeType._timestamp, defaultValue.toString());
+		this.value().setValue(value);
+	}
+
+	public static Timestamp fromString(String timestamp){
+		return Util.Time.timestamp(timestamp);
 	}
 	
 	@Override
 	public final String toString(){
-		return this.value.toString();
-//		return this.value.toString("yyyy-MM-dd HH:mm:ss.SSS");
+		return this.value().value().toString();
 	}
 	
 	@Override
-	public Timestamp value() {
-		return this.value;
+	public TimestampValue valueFromString(String value) {
+		return new TimestampValue(Util.Time.timestamp(value));
 	}
 
 	@Override
-	public Timestamp value(Timestamp value) {
-		Timestamp prev = this.value;
-		this.value = value;
-		return prev;
+	public String toJson() {
+		return AttributeInterface._toJson(this);
 	}
 
 	@Override
-	public CampTimestamp valueFromString(String value) {
-		value(fromString(value));
-		return this;
+	public CampTimestamp fromJson(String json) {
+		return (CampTimestamp) AttributeInterface._fromJson(json);
 	}
 	
-	@Override
-	public String attributeGroup() {
-		return this.attributeGroup;
-	}
-
-	@Override
-	public String attributeGroup(String group) {
-		String prev = this.attributeGroup;
-		this.attributeGroup = group;
-		return prev;
-	}
-
-	@Override
-	public int attributePosition() {
-		return this.attributePosition;
-	}
-
-	@Override
-	public int attributePosition(int position) {
-		int prev = this.attributePosition;
-		this.attributePosition = position;
-		return prev;
-	} 
-
-
 }

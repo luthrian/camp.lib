@@ -1,3 +1,22 @@
+/*******************************************************************************
+ * Copyright (C) 2018 Christopher Campbell
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors:
+ * 	Christopher Campbell - all code prior and post initial release
+ ******************************************************************************/
 package com.camsolute.code.camp.lib.utilities;
 
 import java.io.IOException;
@@ -13,6 +32,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Properties;
+import java.util.Set;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.dbcp2.ConnectionFactory;
@@ -25,36 +47,235 @@ import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
 
-import com.camsolute.code.camp.lib.Attribute;
-import com.camsolute.code.camp.lib.Attribute.AttributeType;
 import com.camsolute.code.camp.lib.data.CampSQL;
+import com.camsolute.code.camp.lib.models.Attribute;
+import com.camsolute.code.camp.lib.models.Attribute.AttributeType;
 import com.camsolute.code.camp.lib.types.CampEnum;
-import com.camsolute.code.camp.lib.types.CampList;
 import com.camsolute.code.camp.lib.types.CampSet;
 
 public class Util {
 
+    public static final int NEW_ID = 0;
+    
+    public static final String DEFAULT_GLOBAL_SYSTEM_TARGET = "com.camsolute.code.camp.global.system.target";
+
 	public static boolean _IN_PRODUCTION =  Boolean.getBoolean(Util.Config.instance().properties().getProperty("system.in.production"));
 
-	public static class Text {
-		public static String join(String[] ar,String sep){
-			int count = ar.length;
+	public static class Math {
+		public static int addArray(int[] values) {
+			int retval = 0;
+			for(int i:values) {
+				retval += i;
+			}
+			return retval;
+		}
+	}
+    public static class Text {
+    	public static final String LOG_FORMAT = "[%15s] [%s]";
+    	
+  		public static String joinInt(Set<Integer> ar,String sep){
+  			String joined = "";
+  			boolean start = true;
+  			for(int i:ar){
+  				if(!start) {
+  					joined += sep;
+  				} else {
+  					start = false;
+  				}
+  				joined += i;
+  			}
+  			return joined;
+  		}
+
+  		public static String joinInt(int[] ar,String sep){
+  			String joined = "";
+  			boolean start = true;
+  			for(int i:ar){
+  				if(!start) {
+  					joined += sep;
+  				} else {
+  					start = false;
+  				}
+  				joined += i;
+  			}
+  			return joined;
+  		}
+
+		public static String join(Set<String> ar,String sep){
 			String joined = "";
+			boolean start = true;
 			for(String s:ar){
-				count --;
+				if(!start) {
+					joined += sep;
+				} else {
+					start = false;
+				}
 				joined += s;
-				joined += ((count>0)?sep:"");
 			}
 			return joined;
 		}
-		
+
+		public static String join(String[] ar,String sep){
+			String joined = "";
+			boolean start = true;
+			for(String s:ar){
+				if(!start) {
+					joined += sep;
+				} else {
+					start = false;
+				}
+				joined += s;
+			}
+			return joined;
+		}
+
 		public static String tag(AttributeType type){
 			return Attribute.attributeMatrix.get(type)[1];
 		}
 
 	}
+
     public static class Time {
+
+    	public static String formatMilli = "yyyy-MM-dd HH:mm:ss.SSS";
+    	public static String formatDateTime = "yyyy-MM-dd HH:mm:ss";
+    	public static String formatDate = "yyyy-MM-dd";
+    	public static String formatTime = "HH:mm:ss";
+    	
+        public static SimpleDateFormat[] FORMATS = {
+    			new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"),
+    			new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS"),
+    			new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ"),
+    			new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSz"),
+    			new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"),
+    			new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS"),
+    			new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ"),
+    			new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSz"),
+    			new SimpleDateFormat("yyyy-MM-dd"),
+    			new SimpleDateFormat("dd/MM/yyyy"),
+    			new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"),
+    			new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS"),
+    			new SimpleDateFormat("dd.MM.yyyy"),
+    			new SimpleDateFormat("dd.MM.yyyy HH:mm:ss"),
+    			new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SSSZ"),
+    			new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SSSz"),
+    			new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SSS"),
+    			new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SSSZ"),
+    			new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SSSz"),
+    			new SimpleDateFormat("yyyy.MM.dd"),
+    			new SimpleDateFormat("yyyy.MM.dd HH:mm"),
+    			new SimpleDateFormat("yyyy.MM.dd HH:mm:ss"),
+    			new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS"),
+    			new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSSZ"),
+    			new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSSz"),
+    			new SimpleDateFormat("yyyy/MM/dd HH:mm:ss"),
+    			new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"),
+       			new SimpleDateFormat("HH:mm:ss.SSSZ"),
+       			new SimpleDateFormat("HH:mm:ss.SSSz"),
+       			new SimpleDateFormat("HH:mm:ss.SSS"),
+       			new SimpleDateFormat("HH:mm:ss"),
+       			new SimpleDateFormat("HH:mm")
+			};
+
+	public final static DateTime dateTimeFromString(String datetime){
+		DateTime value = null;
+        SimpleDateFormat[] FORMATS = {
+    			new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"),
+    			new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS"),
+    			new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ"),
+    			new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSz"),
+    			new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"),
+    			new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS"),
+    			new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ"),
+    			new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSz"),
+    			new SimpleDateFormat("yyyy-MM-dd"),
+    			new SimpleDateFormat("dd/MM/yyyy"),
+    			new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"),
+    			new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS"),
+    			new SimpleDateFormat("dd.MM.yyyy"),
+    			new SimpleDateFormat("dd.MM.yyyy HH:mm:ss"),
+    			new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SSSZ"),
+    			new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SSSz"),
+    			new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SSS"),
+    			new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SSSZ"),
+    			new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SSSz"),
+    			new SimpleDateFormat("yyyy.MM.dd"),
+    			new SimpleDateFormat("yyyy.MM.dd HH:mm"),
+    			new SimpleDateFormat("yyyy.MM.dd HH:mm:ss"),
+    			new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS"),
+    			new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSSZ"),
+    			new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSSz"),
+    			new SimpleDateFormat("yyyy/MM/dd HH:mm:ss"),
+    			new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"),
+       			new SimpleDateFormat("HH:mm:ss.SSSZ"),
+       			new SimpleDateFormat("HH:mm:ss.SSSz"),
+       			new SimpleDateFormat("HH:mm:ss.SSS"),
+       			new SimpleDateFormat("HH:mm:ss"),
+       			new SimpleDateFormat("HH:mm")
+			};
+		for(SimpleDateFormat sdf:FORMATS){
+			try{
+				sdf.setLenient(false);
+				value = new DateTime(sdf.parse(datetime));
+    		return value;
+			} catch (ParseException e){
+				value = null;
+				continue;
+			}
+		}
+		return value;
+	}
+
+	public final static Timestamp timestampFromString(String datetime){
+		Timestamp value = null;
+        SimpleDateFormat[] FORMATS = {
+    			new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"),
+    			new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS"),
+    			new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ"),
+    			new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSz"),
+    			new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"),
+    			new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS"),
+    			new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ"),
+    			new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSz"),
+    			new SimpleDateFormat("yyyy-MM-dd"),
+    			new SimpleDateFormat("dd/MM/yyyy"),
+    			new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"),
+    			new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS"),
+    			new SimpleDateFormat("dd.MM.yyyy"),
+    			new SimpleDateFormat("dd.MM.yyyy HH:mm:ss"),
+    			new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SSSZ"),
+    			new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SSSz"),
+    			new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SSS"),
+    			new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SSSZ"),
+    			new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SSSz"),
+    			new SimpleDateFormat("yyyy.MM.dd"),
+    			new SimpleDateFormat("yyyy.MM.dd HH:mm"),
+    			new SimpleDateFormat("yyyy.MM.dd HH:mm:ss"),
+    			new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS"),
+    			new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSSZ"),
+    			new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSSz"),
+    			new SimpleDateFormat("yyyy/MM/dd HH:mm:ss"),
+    			new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"),
+       			new SimpleDateFormat("HH:mm:ss.SSSZ"),
+       			new SimpleDateFormat("HH:mm:ss.SSSz"),
+       			new SimpleDateFormat("HH:mm:ss.SSS"),
+       			new SimpleDateFormat("HH:mm:ss"),
+       			new SimpleDateFormat("HH:mm")
+			};
+		for(SimpleDateFormat sdf:FORMATS){
+			try{
+				sdf.setLenient(false);
+				value = Timestamp.valueOf(LocalDateTime.fromDateFields(sdf.parse(datetime)).toString());
+    			return value;
+			} catch (ParseException e){
+				value = null;
+				continue;
+			}
+		}
+		return value;
+	}
 
         /**
          *  Creates a new Timesamp with the current date and time.
@@ -76,7 +297,7 @@ public class Util {
         /**
          *  Returns the string value of  a Timesamp with format "yyyy-MM-dd HH:mm:ss:SSS".
          *
-         *  @parameter <code>Timestamp timestamp</code>: the input <code>Timestamp</code>
+         *  @param timestamp <code>Timestamp timestamp</code>: the input <code>Timestamp</code>
          *
          *  @return <code>String</code> the output string value of Timestamp with the aforementioned formatting.
          * 
@@ -97,6 +318,8 @@ public class Util {
          *  @return A new <code>java.sql.TimeStamp</code> instance set to current date and time.
          * 
          *  @author Christopher Campbell
+         *  
+         *  @param timestamp new timestamp
          * 
          */
         public static Timestamp timestamp(String timestamp) {
@@ -107,7 +330,7 @@ public class Util {
         /**
          *  Returns the string value of a <code>DateTime</code> with format "yyyy-MM-dd".
          *
-         *  @parameter <code>DateTime date</code>: the input <code>DateTime</code>
+         *  @param date <code>DateTime date</code>: the input <code>DateTime</code>
          *
          *  @return <code>String</code> the output string value of DateTime with the aforementioned formatting.
          * 
@@ -124,7 +347,7 @@ public class Util {
         /**
          *  Returns the string value of the current date/time in the requested format.
          *
-         *  @parameter <code>String format</code>: the input <code>String</code> containing the format the date should have. 
+         *  @param format <code>String format</code>: the input <code>String</code> containing the format the date should have. 
          *
          *  @return <code>String</code> the output string value of DateTime with the aforementioned formatting.
          * 
@@ -161,7 +384,7 @@ public class Util {
 		
 
     }
-    
+
     public static class DB {
     	public static final boolean _DEBUG = true;
     	private static String fmt = "[%15s] [%s]";
@@ -178,10 +401,6 @@ public class Util {
     	
     	public static final String _VS = ":";
     	
-    	public static String paTable = 
-    			CampSQL.database[CampSQL._PRODUCT_DB_INDEX]
-    			+ "."+CampSQL.Product.product_management_tables[CampSQL.Product._PRODUCT_ATTRIBUTE_TABLE_INDEX];
-
     	public static String pTable = 
     			CampSQL.database[CampSQL._PRODUCT_DB_INDEX]
     			+ "."+CampSQL.Product.product_management_tables[CampSQL.Product._PRODUCT_TABLE_INDEX];
@@ -325,14 +544,14 @@ public class Util {
     		return columns;
     	}
 */
-    	private static String attibuteValueTableFieldDef(AttributeType attributeType){
-    		return CampSQL.getValueDefinition(attributeType, CampSQL.System.product_attribute_value_definition);
+        private static String attibuteValueTableFieldDef(String field,AttributeType attributeType){
+            return CampSQL.getValueFieldDefinition(field, attributeType);
     	}
     	private static String oTableFieldDef(String field){
     		return CampSQL.getFieldDefinition(field, CampSQL.Order.order_table_definition);
     	}
     	private static String opTableFieldDef(String field){
-    		return CampSQL.getFieldDefinition(field, CampSQL.Order.order_has_order_process_table_definition);
+    		return CampSQL.getFieldDefinition(field, CampSQL.Order.order_has_order_position_table_definition);
     	}
     	private static String enumTableFieldDef(CampEnum e){
     		String def = "ENUM(";
@@ -360,7 +579,7 @@ public class Util {
     		return def;
     	}
     	public static enum dbActionType {
-    		CREATE, INSERT, UPDATE, SELECT, DELETE;
+    		CREATE, INSERT, PINSERT, UPDATE, SELECT, DELETE, MSELECT;
     	}
     	public static final String[] cColumns(){
     		return columns(CampSQL.Customer.customer_table_definition);
@@ -374,29 +593,14 @@ public class Util {
     	public static final String[] pColumns(){
     		return columns(CampSQL.Product.product_table_definition);
     	}
-    	public static final String[] paColumns(){
-    		return columns(CampSQL.Product.product_attribute_table_definition);
-    	}
-    	public static final String[] pahpColumns(){
-    		return columns(CampSQL.Product.product_attribute_has_product_table_definition);
-    	}
     	public static final String[] oColumns(){
     		return columns(CampSQL.Order.order_table_definition);
     	}
     	public static final String[] opColumns(){
     		return columns(CampSQL.Order.order_position_table_definition);
     	}
-    	public static final String[] ophoprColumns(){
-    		return columns(CampSQL.Order.order_has_order_process_table_definition);
-    	}
-    	public static final String[] ophprColumns(){
+    	public static final String[] ohpColumns(){
     		return columns(CampSQL.Order.order_has_process_table_definition);
-    	}
-    	public static final String[] ophpprColumns(){
-    		return columns(CampSQL.Order.order_has_production_process_table_definition);
-    	}
-    	public static final String[] ophpColumns(){
-    		return columns(CampSQL.Order.order_position_has_product_table_definition);
     	}
     	public static final String[] columns(String[][] cd){
     		String[] cols = new String[cd.length];
@@ -500,8 +704,8 @@ public class Util {
     	 * Check if all databases in the dbNames String Array exist.
     	 * NOTE: this only works if the postfix '_management' naming 
     	 * convention is upheld.
-    	 * @param dbNames
-    	 * @return
+    	 * @param dbNames database names
+    	 * @return boolean array 
     	 */
     	public static boolean[] dbExists(String[] dbNames){
     		return _dbExists(dbNames,true);
@@ -617,56 +821,56 @@ public class Util {
     	}
 
     	
-    	/**
-    	 * 
-    	 * @param conn
-    	 * @param o
-    	 * @return
-    	 * @throws SQLException 
-    	 */
-    	/*
-    	public static HashMap<String,HashMap<String,Boolean>> orderTablesExist(Connection conn,Order o) throws SQLException {
-    		return _orderTablesExist(o,true);
-    	}
-
-    	public static  HashMap<String,HashMap<String,Boolean>> _orderTablesExist(Order o,boolean log) throws SQLException {
-    		HashMap<String,CampList> tableMap = new HashMap<String,CampList>();
-    		for(OrderPosition op: o.orderPositions().value()){
-    			op.product().addToOrderTableCreateMap(tableMap,log);
-    		}
-    		return _orderTablesExist(tableMap,log);
-    	}
-    	public static  HashMap<String,HashMap<String,Boolean>> _orderTablesExist(HashMap<String,CampList> tableMap,Boolean log) {
-    		long startTime = System.currentTimeMillis();
-    		String _f = null;
-    		String msg = null;
-    		if(log && _DEBUG) {
-    			_f = "[_orderTablesExist]";
-    			msg = "====[ check if order tables exist ]====";LOG.info(String.format(fmt,_f,msg));
-    		}
-    				
-    		dbActionType action = dbActionType.SELECT;
-    		
-    		String columns = "";
-    		
-    		HashMap<String,HashMap<String,Boolean>> ok = new HashMap<String,HashMap<String,Boolean>>();
-    		
-    		for(String tableName:tableMap.keySet()){
-    			
-    			columns = Util.DB.getDBColumns(tableName,tableMap.get(tableName), action, log);
-
-    			String[] otColumns = columns.replace("`", "").split(",");
-    			
-    			int count = otColumns.length;
-    			while(count>1){
-    				count--;
-    				otColumns[count] = otColumns[count].trim();
-    			}
-    			ok = _getOK(action, Util.DB.order_table_db,tableName, ok, otColumns,log);
-    		}
-    		return ok;
-    	}
-    	*/
+//    	/**
+//    	 * 
+//    	 * @param conn
+//    	 * @param o
+//    	 * @return
+//    	 * @throws SQLException 
+//    	 */
+//    	/*
+///**    	public static HashMap<String,HashMap<String,Boolean>> orderTablesExist(Connection conn,Order o) throws SQLException {
+//    		return _orderTablesExist(o,true);
+//    	}
+//
+//    	public static  HashMap<String,HashMap<String,Boolean>> _orderTablesExist(Order o,boolean log) throws SQLException {
+//    		HashMap<String,CampList> tableMap = new HashMap<String,CampList>();
+//    		for(OrderPosition op: o.orderPositions().value()){
+//    			op.product().addToOrderTableCreateMap(tableMap,log);
+//    		}
+//    		return _orderTablesExist(tableMap,log);
+//    	}
+//    	public static  HashMap<String,HashMap<String,Boolean>> _orderTablesExist(HashMap<String,CampList> tableMap,Boolean log) {
+//    		long startTime = System.currentTimeMillis();
+//    		String _f = null;
+//    		String msg = null;
+//    		if(log && _DEBUG) {
+//    			_f = "[_orderTablesExist]";
+//    			msg = "====[ check if order tables exist ]====";LOG.info(String.format(fmt,_f,msg));
+//    		}
+//    				
+//    		dbActionType action = dbActionType.SELECT;
+//    		
+//    		String columns = "";
+//    		
+//    		HashMap<String,HashMap<String,Boolean>> ok = new HashMap<String,HashMap<String,Boolean>>();
+//    		
+//    		for(String tableName:tableMap.keySet()){
+//    			
+//    			columns = Util.DB.getDBColumns(tableName,tableMap.get(tableName), action, log);
+//
+//    			String[] otColumns = columns.replace("`", "").split(",");
+//    			
+//    			int count = otColumns.length;
+//    			while(count>1){
+//    				count--;
+//    				otColumns[count] = otColumns[count].trim();
+//    			}
+//    			ok = _getOK(action, Util.DB.order_table_db,tableName, ok, otColumns,log);
+//    		}
+//    		return ok;
+//    	}
+//    	*/
     	public static HashMap<String,HashMap<String,Boolean>>  _getOK(dbActionType action,
     			String dbName,String tableName,HashMap<String,HashMap<String,Boolean>>   ok,String[] otColumns,Boolean log){
     		long startTime = System.currentTimeMillis();
@@ -924,9 +1128,10 @@ public class Util {
     	}
     	/**
     	 * 
-    	 * @param tdef
+    	 * @param table table name
+    	 * @param tdef table definition
     	 * @param action type of db action
-    	 * @param log
+    	 * @param log log switch
     	 * @return a String representation of the SQL 'column_name [column_definition] [=?]' dependent on the type of DB action. 
     	 */
     	//TODO: add logging;
@@ -944,9 +1149,9 @@ public class Util {
 
     	/**
     	 * 
-    	 * @param tdef
+    	 * @param tdef table definition
     	 * @param action type of db action
-    	 * @param log
+    	 * @param log log switch
     	 * @return a String representation of the SQL 'column_name [column_definition] [=?]' dependent on the type of DB action. 
     	 */
     	//TODO: add logging;
@@ -1087,8 +1292,8 @@ public class Util {
     	/**
     	 * Assmbles a list of strings from the first column of a database query result set.
     	 * TODO: no checks are made if column contains a sting value or not. 
-    	 * @param rs
-    	 * @return
+    	 * @param rs result set
+    	 * @return array list 
     	 */
     	public static ArrayList<String> rsToStringList(ResultSet rs){
     		return _rsToStringList(rs,true);
@@ -1118,7 +1323,7 @@ public class Util {
     	}
 
     }
-    
+
     public static class Config {
 
         private static Properties properties = null;
@@ -1163,4 +1368,17 @@ public class Util {
     	}
     	
    }
+
+    public static class Test {
+    	
+       public static int coverage(int count,Class<?> clazz) {
+        	int FUNCTOTAL = clazz.getDeclaredMethods().length-2; //minus the setup before and tear down after methods
+        	return java.lang.Math.floorDiv((count*100), FUNCTOTAL);
+        }
+
+        public static int coverage(int count,int numberOfMethods) {
+        	return java.lang.Math.floorDiv((count*100), numberOfMethods);
+        }
+    }
+
 }

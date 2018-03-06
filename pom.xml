@@ -4,15 +4,15 @@
 
   <groupId>com.camsolute.code</groupId>
   <artifactId>camp.lib</artifactId>
-  <version>0.1</version>
-  <name>Camsolute PMF Libraries java library</name>
-  <description>Camsolute PMF Libraries - LGPL Java library</description>
+  <version>0.6.5</version>
+  <name>Camsolute PMF Libraries</name>
+  <description>Camsolute PMF Libraries - GPLv3 Java library for the Process Management Framework</description>
   <packaging>jar</packaging>
-  <url>https://mysite.com</url>
+  <url>https://camsolute.com</url>
 
   <organization>
-    <name>My Organization</name>
-    <url>https://myorganization.com</url>
+    <name>Camsolute Consulting</name>
+    <url>http://www.camsolute.com</url>
   </organization>
 
   <scm>
@@ -31,14 +31,214 @@
 
   <developers>
     <developer>
-      <name>Me</name>
-      <email>me@mysite.com</email>
+      <name>Christopher Campbell</name>
+      <email>campbell@camsolute.com</email>
     </developer>
   </developers>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <eclipsePluginVersion>2.8</eclipsePluginVersion>
+    <jdkName>JavaSE-1.8</jdkName>
+    <jdk.version>1.8</jdk.version>
+    <mariadb.version>1.1.7</mariadb.version>
+    <slf4j.version>1.7.25</slf4j.version>
+    <log4j2.version>2.9.0</log4j2.version>
+    <joda.time.version>2.3</joda.time.version>
+    <jsoup.version>1.10.3</jsoup.version>
+    <fasterxml.jaxrs.version>2.2.1</fasterxml.jaxrs.version>
+    <javax.annotation.version>1.0</javax.annotation.version>
+    <javax.api.version>2.1</javax.api.version>
+    <maven.surefire>3.5.0</maven.surefire>
+    <apache.commons.pool2.version>2.4.2</apache.commons.pool2.version>
+    <apache.commons.lang.version>2.6</apache.commons.lang.version>
+    <jolbox.version>0.7.1.RELEASE</jolbox.version>
+    <commons.dbcp.version>2.1.1</commons.dbcp.version>
+    <resteasy.version>3.0.8.Final</resteasy.version>
+    <jersey.version>2.26</jersey.version>
+    <eclipse.jetty.version>9.4.7.RC0</eclipse.jetty.version>
+    <javax.servlet.version>3.1.0</javax.servlet.version>
   </properties>
+
+
+  <dependencies>
+    <!-- ================== -->
+    <!-- DATABASE LIBRARIES -->   	
+    <!-- ================== -->
+   	<dependency>
+   		<groupId>org.mariadb.jdbc</groupId>
+   		<artifactId>mariadb-java-client</artifactId>
+   		<version>${mariadb.version}</version>   	
+   	</dependency>
+    <!-- ================== -->
+    <!-- Datasource -->
+    <!-- ================== -->
+	  <dependency>
+		  <groupId>com.jolbox</groupId>
+		  <artifactId>bonecp</artifactId>
+		  <version>${jolbox.version}</version>
+	  </dependency>
+    <!-- ================== -->
+    <!-- JSON LIBRARIES -->   	
+    <!-- ================== -->
+   	<dependency>
+	    <groupId>com.fasterxml.jackson.jaxrs</groupId>
+	    <artifactId>jackson-jaxrs-json-provider</artifactId>
+	    <version>${fasterxml.jaxrs.version}</version>
+   	</dependency>
+   	<dependency>
+	    <groupId>com.fasterxml.jackson.datatype</groupId>
+	    <artifactId>jackson-datatype-joda</artifactId>
+	    <version>${fasterxml.jaxrs.version}</version>
+   	</dependency>
+	  <dependency>
+	    <groupId>org.json</groupId>
+	    <artifactId>json</artifactId>
+	    <version>20170516</version>
+	  </dependency>
+	  <dependency>
+	    <groupId>org.jsoup</groupId>
+	    <artifactId>jsoup</artifactId>
+	    <version>${jsoup.version}</version>
+	  </dependency>
+<!-- ================== -->
+<!-- RESTEASY -->
+<!-- ================== -->
+	<dependency>
+		<groupId>org.jboss.resteasy</groupId>
+		<artifactId>resteasy-jaxrs</artifactId>
+		<version>${resteasy.version}</version>
+	</dependency>
+
+	<dependency>
+		<groupId>org.jboss.resteasy</groupId>
+		<artifactId>resteasy-client</artifactId>
+	  <version>${resteasy.version}</version> 
+		<!--  <version>3.1.4.Final</version>  -->
+	</dependency>
+
+	 <dependency>
+	    <groupId>org.glassfish.jersey.core</groupId>
+	    <artifactId>jersey-server</artifactId>
+	    <version>${jersey.version}</version>
+	</dependency>
+	<dependency>
+	    <groupId>org.glassfish.jersey.core</groupId>
+	    <artifactId>jersey-client</artifactId>
+	    <version>2.26</version>
+	</dependency>
+	<dependency>
+	    <groupId>org.glassfish.jersey.core</groupId>
+	    <artifactId>jersey-common</artifactId>
+	    <version>${jersey.version}</version>
+	</dependency>
+	<dependency>
+	    <groupId>org.glassfish.jersey.containers</groupId>
+	    <artifactId>jersey-container-jetty-servlet</artifactId>
+	    <version>${jersey.version}</version>
+	</dependency>
+	 <dependency>
+	   <groupId>org.glassfish.jersey.inject</groupId>
+	   <artifactId>jersey-hk2</artifactId>
+	   <version>${jersey.version}</version>
+	  </dependency>
+	  <dependency>
+	    <groupId>org.eclipse.jetty</groupId>
+	    <artifactId>jetty-server</artifactId>
+	    <version>${eclipse.jetty.version}</version>
+	  </dependency>
+	  <dependency>
+	    <groupId>org.eclipse.jetty</groupId>
+	    <artifactId>jetty-util</artifactId>
+	    <version>${eclipse.jetty.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>${javax.servlet.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- ================== -->
+    <!-- Annotation -->
+    <!-- ================== -->
+	  <dependency>
+		  <groupId>javax.annotation</groupId>
+		  <artifactId>jsr250-api</artifactId>
+		  <version>${javax.annotation.version}</version>
+	  </dependency>
+    <!-- ================== -->
+    <!--  JODA TIME -->
+    <!-- ================== -->
+	  <dependency>
+		  <groupId>joda-time</groupId>
+		  <artifactId>joda-time</artifactId>
+		  <version>${joda.time.version}</version>
+	  </dependency>
+    <!-- ================== -->
+    <!-- LOGGING -->
+    <!-- ================== -->
+ 	  <dependency>
+    	<groupId>org.slf4j</groupId>
+    	<artifactId>slf4j-api</artifactId>
+    	<version>${slf4j.version}</version>
+	  </dependency>
+  	<dependency>
+    	<groupId>org.slf4j</groupId>
+    	<artifactId>slf4j-ext</artifactId>
+    	<version>${slf4j.version}</version>
+	  </dependency>
+  	<dependency>
+    	<groupId>org.slf4j</groupId>
+    	<artifactId>slf4j-log4j12</artifactId>
+    	<version>${slf4j.version}</version>
+	  </dependency>
+	  <dependency>
+	    <groupId>org.apache.logging.log4j</groupId>
+	    <artifactId>log4j-core</artifactId>
+	    <version>${log4j2.version}</version>
+	  </dependency>
+	  <dependency>
+	    <groupId>org.apache.logging.log4j</groupId>
+	    <artifactId>log4j-taglib</artifactId>
+	    <version>${log4j2.version}</version>
+	  </dependency>
+    <!-- ================== -->
+    <!-- APACHE COMMONS -->
+    <!-- ================== -->
+    <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+      <version>${apache.commons.lang.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-dbcp2</artifactId>
+      <version>${commons.dbcp.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-pool2</artifactId>
+      <version>${apache.commons.pool2.version}</version>
+    </dependency>
+
+
+    <!-- ================== -->
+    <!-- MAVEN -->
+    <!-- ================== -->
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-plugin-api</artifactId>
+      <version>${maven.surefire}</version>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.12</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 
   <build>
     <plugins>
@@ -100,6 +300,13 @@
         </executions>
       </plugin>
       <plugin>
+   	 <groupId>org.ensime.maven.plugins</groupId>
+   	 <artifactId>ensime-maven</artifactId>
+   	 <version>1.2.0</version>	  
+      </plugin>
+
+      <!--  
+      <plugin>
         <groupId>org.sonatype.plugins</groupId>
         <artifactId>nexus-staging-maven-plugin</artifactId>
         <version>1.6.3</version>
@@ -110,16 +317,9 @@
           <autoReleaseAfterClose>true</autoReleaseAfterClose>
         </configuration>
       </plugin>
+      -->
     </plugins>
   </build>
 
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.12</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
 
 </project>

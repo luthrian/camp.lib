@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2017 Christopher Campbell (campbellccc@gmail.com)
+ * Copyright (C) 2018 Christopher Campbell
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,12 +15,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors:
- * 	Christopher Campbell (campbellccc@gmail.com) - all code prior and post initial release
+ * 	Christopher Campbell - all code prior and post initial release
  ******************************************************************************/
 package com.camsolute.code.camp.lib.contract;
 
-import com.camsolute.code.camp.lib.CampStates;
-
+/**
+ * Objects that honar this contract encapsulate the process status aspect of a business object.
+ * They must supply information about the object's status current and previous process status,
+ * and allow changes to be made to the status upon request.
+ * The process status aspect of a business object expresses itself in form of any status
+ * the object can adopt that is relevant to business processes that handle object in anyway.
+ *
+ * @author Christopher Campbell
+ */
 public interface HasStatus {
-	public CampStates states();
+    public Enum<?> status();
+
+    public Enum<?> updateStatus(Enum<?> status);
+
+    public Enum<?> updateStatus(String status);
+
+    public void setStatus(Enum<?> status);
+
+    public void setStatus(String status);
+
+    public Enum<?> previousStatus();
+
+    public void setPreviousStatus(Enum<?> status);
+
+    public void setPreviousStatus(String status);
+    
+    public <T extends IsObjectInstance<T>> void cleanStatus(T object);
+
 }

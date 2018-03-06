@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2017 Christopher Campbell (campbellccc@gmail.com)
+ * Copyright (C) 2018 Christopher Campbell
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors:
- * 	Christopher Campbell (campbellccc@gmail.com) - all code prior and post initial release
+ * 	Christopher Campbell - all code prior and post initial release
  ******************************************************************************/
 /**
  * 
@@ -27,206 +27,124 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.camsolute.code.camp.lib.Attribute;
-import com.camsolute.code.camp.lib.Attribute;
+import com.camsolute.code.camp.lib.models.Attribute;
+import com.camsolute.code.camp.lib.models.AttributeInterface;
+import com.camsolute.code.camp.lib.models.Value;
+import com.camsolute.code.camp.lib.models.ValueInterface;
 import com.camsolute.code.camp.lib.utilities.Util;
+import static com.camsolute.code.camp.lib.utilities.Util.*;
 
 
 /**
  * @author Christopher Campbell
  *
  */
-public class CampMap extends Attribute<HashMap<String,CampList>>  {
-	
-	private HashMap<String,CampList> map;
-	
-	private String attributeGroup = null;
-	private int attributePosition = 0;
-	
-	private String attributeBusinessId = null;
+public class CampMap extends Attribute<MapValue> implements CampMapInterface {
 
-	@Override
-	public String attributeBusinessId() {
-		return attributeBusinessId+Util.DB._NS+id();
-	}
+    public CampMap(){
+        super(null, AttributeType._map, null	);
+    }
 
-	@Override
-	public String attrbuteBusinessId(String id) {
-		String prev = this.attributeBusinessId;
-		this.attributeBusinessId = id;
-		return prev;
-	}
-
-	@Override
-	public String onlyAttributeBusinessId() {
-		return this.attributeBusinessId;
-	}
-
-	@Override
-	public String initialAttributeBusinessId() {
-		return attributeBusinessId+Util.DB._NS+0;
-	}
-
-	public CampMap(){
-		super(null, AttributeType._map, null	);
-		this.map = new HashMap<String,CampList>();
-	}
-	
 	public CampMap(String name){
 		super(name, AttributeType._map, null	);
-		this.map = new HashMap<String,CampList>();
-	}
-	
-	public CampMap(String name,String str,CampList al){
-		super(name, AttributeType._map, null	);
-		this.map = new HashMap<String,CampList>();
-		this.map.put(str, al);
 	}
 
-	public CampMap(String name,String str){
-		super(name, AttributeType._map, null	);
-		this.map = new HashMap<String,CampList>();
-		CampList al = new CampList();
-		this.map.put(str, al);
-	}
-	
-	public CampMap(String name,HashMap<String,CampList> map){
-		super(name, AttributeType._map, null	);
-		this.map = map;
-	}
-	
-	public CampMap defaultInstance(String name,String defaultValue){
-		return new CampMap(name);
+	public CampMap(String name,String defaultValue,MapValue value){
+		super(name, AttributeType._map, defaultValue	);
+		this.setValue(value);
 	}
 
+	public CampMap(String name,String defaultValue){
+		super(name, AttributeType._map, defaultValue	);
+	}
 
-	
+	public CampMap(String name,String defaultValue, String value){
+		super(name, AttributeType._map, defaultValue	);
+		this.setValue(new MapValue(ValueInterface._fromMapJson(value)));
+	}
+
 	public int size(){
-		return map.size();
+      return this.value().value().size();
 	}
-	
+
 	public boolean isEmpty(){
-		return map.isEmpty();
+      return this.value().value().isEmpty();
 	}
-	
-	public CampList get(String key){
-		return map.get(key);
+
+	public Attribute<?> get(String key){
+      return this.value().value().get(key);
 	}
-	
+
 	public boolean containsKey(String key){
-		return map.containsKey(key);
+      return this.value().value().containsKey(key);
 	}
-	
-	public CampList put(String key, CampList value){
-		return this.map.put(key, value);
+
+	public Attribute<?> put(String key, Attribute<?> value){
+		this.states().modify();
+      return this.value().value().put(key, value);
 	}
-	
+
 	public void putAll(CampMap map){
 		for(String k:map.keySet()){
-			CampList v = map.get(k);
-			this.map.put(k, v);
+			Attribute<?> v = map.get(k);
+			this.value().value().put(k, v);
 		}
+		this.states().modify();
 	}
-	
-	public CampList remove(String key){
-		return map.remove(key);
+
+	public Attribute<?> remove(String key){
+			this.states().modify();
+      return this.value().value().remove(key);
 	}
 
 	public void clear(){
-		map.clear();
+      this.value().value().clear();
+      this.states().modify();
 	}
-	
-	public boolean containsValue(CampList value){
-		return this.map.containsValue(value);
-	}
-	
-	public HashMap<String,CampList> clone(){
-		return  (HashMap<String, CampList>) this.map.clone();
-	}
-	
-	public Set<String> keySet(){
-		return this.map.keySet();
-	}
-	
-	public Collection<CampList> values(){
-		return this.map.values();
-	}
-	
-	public Set<Entry<String, CampList>> entrySet(){
-		return this.map.entrySet();
-	}
-	
 
-	@Override
-	public HashMap<String, CampList> value() {
-		return this.map;
+	public boolean containsValue(Attribute<?> value){
+      return this.value().value().containsValue(value);
 	}
-	
+
+	@SuppressWarnings("unchecked")
+	public HashMap<String,Attribute<?>> clone(){
+      return  (HashMap<String, Attribute<?>>) this.value().value().clone();
+	}
+
+	public Set<String> keySet(){
+      return this.value().value().keySet();
+	}
+
+	public Collection<Attribute<?>> values(){
+      return this.value().value().values();
+	}
+
+	public Set<Entry<String, Attribute<?>>> entrySet(){
+      return this.value().value().entrySet();
+	}
+
+
 	public CampList toList(){
 		CampList l = new CampList();
 		for(String key:keySet()){
-			l.addAll(get(key));
+			l.value().value().add(get(key));
 		}
 		return l;
 	}
 
 	@Override
-	public HashMap<String, CampList> value(HashMap<String, CampList> value) {
-		HashMap<String, CampList> prev = this.map;
-		this.map = value;
-		return prev;
-	}
-	
-	public final static CampMap fromDList(CampList list){
-		CampMap map = new CampMap();
-		for(Attribute<?> a: list.value()){
-			if(!map.containsKey(a.attributeGroup())) {
-				map.put(a.attributeGroup(), new CampList());
-			}
-			map.get(a.attributeGroup()).add(a);
-		}
-		return map;
-	}
-	
-	public final static CampMap fromOList(CampList list){
-		CampMap map = new CampMap();
-		for(Attribute<?> pa: list.value()){
-			if(!map.containsKey(pa.attributeGroup()))map.put(pa.attributeGroup(), new CampList());
-			map.get(pa.attributeGroup()).add(pa);
-		}
-		return map;
+	public MapValue valueFromString(String jsonValue) {
+      return new MapValue(ValueInterface._fromMapJson(jsonValue));
 	}
 
 	@Override
-	public Attribute<?> valueFromString(String value) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-
-	@Override
-	public String attributeGroup() {
-		return this.attributeGroup;
+	public String toJson() {
+		return CampMapInterface._toJson(this);
 	}
 
 	@Override
-	public String attributeGroup(String group) {
-		String prev = this.attributeGroup;
-		this.attributeGroup = group;
-		return prev;
+	public CampMap fromJson(String json) {
+		return CampMapInterface._fromJson(json);
 	}
-
-	@Override
-	public int attributePosition() {
-		return this.attributePosition;
-	}
-
-	@Override
-	public int attributePosition(int position) {
-		int prev = this.attributePosition;
-		this.attributePosition = position;
-		return prev;
-	} 
-
 
 }

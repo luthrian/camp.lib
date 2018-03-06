@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2017 Christopher Campbell (campbellccc@gmail.com)
+ * Copyright (C) 2018 Christopher Campbell
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,23 +15,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors:
- * 	Christopher Campbell (campbellccc@gmail.com) - all code prior and post initial release
+ * 	Christopher Campbell - all code prior and post initial release
  ******************************************************************************/
 package com.camsolute.code.camp.lib.contract;
 
-import com.camsolute.code.camp.models.business.OrderPosition;
-import com.camsolute.code.camp.models.business.Product;
+import com.camsolute.code.camp.lib.models.order.OrderPosition;
+import com.camsolute.code.camp.lib.models.product.Product;
 
 /**
- * The has number interface indicates that the implementing element has
- * an association with an order or is and order. It therefore extends has history,
- * has customer and has order number interfaces, etc. interfaces.
+ * Objects that honar this contract represent an order position of an order. An order position
+ * can be understood as an order item that references a product being ordered and can provide
+ * information relevant to that order item; such as the quantity of the product being ordered
+ * (in the case that the product is a tangible).
+ *
  * @author Christopher Campbell
- * @param <T>
  *
  */
-public interface  IsOrderPosition extends HasNumber, HasBusinessId, HasOrder, HasCustomer, HasHistory, HasId, HasStatus, HasOrderProduct {
-//public interface  IsOrderPosition extends HasNumber, HasBusinessId, HasOrder, HasCustomer, HasHistory, HasId, HasStatus,HasStatusChange, HasOrderProduct,IsDisplayable, IsTimestamped, IsStorable,  UpdateInstanceInterface<OrderPosition>  {
+public interface  IsOrderPosition extends HasBusinessId, HasOrderBusinessId,HasOrder, HasBusinessKey, HasHistory, HasId, HasStatus, HasOrderProduct {
+
 	public int quantity();
+ 
 	public void updateQuantity(int quantity);
 }

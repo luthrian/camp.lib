@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2017 Christopher Campbell (campbellccc@gmail.com)
+ * Copyright (C) 2018 Christopher Campbell
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,28 +15,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors:
- * 	Christopher Campbell (campbellccc@gmail.com) - all code prior and post initial release
+ * 	Christopher Campbell - all code prior and post initial release
  ******************************************************************************/
 package com.camsolute.code.camp.lib.contract;
 
-import com.camsolute.code.camp.core.types.CampHistory;
-import com.camsolute.code.camp.models.InstanceId;
+import com.camsolute.code.camp.lib.models.CampInstance;
 
 public interface  HasHistory {
-	public CampHistory<?> history();
-//	public InstanceId instanceId();
-//	public InstanceId currentInstanceId();
-//	public InstanceId initialInstanceId();
-//	public InstanceId updateInstance();
-//	public boolean firstInstance();
-//	public boolean currentInstance();
-	//TODO
-//	public <T extends HasNumber> T loadFirst(AbstractDao<T> dao);
-//	public <T extends HasNumber> T loadCurrent(AbstractDao<T> dao);
-//	public <T extends HasNumber> CampList<T> loadAll(AbstractDao<T> dao);
-//	public <T extends HasNumber> T loadPrevious(AbstractDao<T> dao);
-//	public <T extends HasNumber> T loadNext(AbstractDao<T> dao);
-//	public <T extends HasNumber> CampList<T> loadDate(AbstractDao<T> dao);
-	//TODO
+	public CampInstance history();
+  public void setHistory(CampInstance instance);
+  public int getObjectId();
+  public String getObjectBusinessId();
+  public CampInstance getObjectHistory();
+  public int getRefId();
 //	public <T extends HasNumber> ArrayList<T> loadDateRange(Timestamp fromDate, Timestamp toDate,AbstractDao<T> dao);
 }

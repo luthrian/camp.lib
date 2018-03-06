@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2017 Christopher Campbell (campbellccc@gmail.com)
+ * Copyright (C) 2018 Christopher Campbell
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,13 +15,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors:
- * 	Christopher Campbell (campbellccc@gmail.com) - all code prior and post initial release
+ * 	Christopher Campbell - all code prior and post initial release
  ******************************************************************************/
 package com.camsolute.code.camp.lib.contract;
 
-import com.camsolute.code.camp.models.business.Order;
+import com.camsolute.code.camp.lib.models.order.Order;
 
-public interface HasOrder extends HasOrderBusinessId{
+/**
+ * Objects that honar this contract reference a business order and give access to the order reference and allow this
+ * reference to be updated. Such objects also honar the HasOrderBusinessId contract.
+ *
+ * @author Christopher Campbell
+ */
+
+public interface HasOrder extends HasOrderBusinessId {
 	public Order order();
 	public Order order(Order order);
 }

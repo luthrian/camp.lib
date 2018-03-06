@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2017 Christopher Campbell (campbellccc@gmail.com)
+ * Copyright (C) 2018 Christopher Campbell
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,11 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors:
- * 	Christopher Campbell (campbellccc@gmail.com) - all code prior and post initial release
+ * 	Christopher Campbell - all code prior and post initial release
  ******************************************************************************/
 package com.camsolute.code.camp.lib.contract;
 
-import com.camsolute.code.camp.models.ModelList;
+import com.camsolute.code.camp.lib.models.Model;
+import com.camsolute.code.camp.lib.models.ModelList;
 
 /**
  * The has number interface indicates that the implementing element has
@@ -29,5 +30,11 @@ import com.camsolute.code.camp.models.ModelList;
  *
  */
 public interface  HasModel {
+	public int modelId();
+	public void setModelId(int id);
+	public void updateModelId(int id);
+	public Model model();
 	public ModelList models();
+	public void setModels(ModelList ml);
+	public void addModel(Model m);
 }

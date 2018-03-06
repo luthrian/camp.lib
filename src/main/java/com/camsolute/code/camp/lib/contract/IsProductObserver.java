@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2017 Christopher Campbell (campbellccc@gmail.com)
+ * Copyright (C) 2018 Christopher Campbell
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,13 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors:
- * 	Christopher Campbell (campbellccc@gmail.com) - all code prior and post initial release
+ * 	Christopher Campbell - all code prior and post initial release
  ******************************************************************************/
 package com.camsolute.code.camp.lib.contract;
 
-import com.camsolute.code.camp.models.business.ProductDefinition;
-// This is Observer Pattern
+import com.camsolute.code.camp.lib.models.product.Product;
 //TODO: will make this more generic in the future (ie. change to IsObserver and modify the getProcessInstanceId)
-public interface IsProductObserver extends HasId {
-	public void notify(ProductDefinition product);
+public interface IsProductObserver extends IsObserver<Product> {
 }

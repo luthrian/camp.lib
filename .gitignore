@@ -1,0 +1,10 @@
+/.ensime_cache/
+/.checkstyle
+/.classpath
+/.dir-locals.el
+/.ensime
+/.ensime.bak
+/.project
+/.settings/
+/target/
+/.meghanada/

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2017 Christopher Campbell (campbellccc@gmail.com)
+ * Copyright (C) 2018 Christopher Campbell
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,132 +15,63 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors:
- * 	Christopher Campbell (campbellccc@gmail.com) - all code prior and post initial release
+ * 	Christopher Campbell - all code prior and post initial release
  ******************************************************************************/
 package com.camsolute.code.camp.lib.types;
 
-import com.camsolute.code.camp.lib.Attribute;
-import com.camsolute.code.camp.lib.CampType;
+import com.camsolute.code.camp.lib.models.Attribute;
+import com.camsolute.code.camp.lib.models.AttributeInterface;
+import com.camsolute.code.camp.lib.models.Value;
 import com.camsolute.code.camp.lib.utilities.Util;
 
-public class CampBoolean extends Attribute<Boolean>{
-	
-	private boolean value;
-	
-	private String attributeGroup = null;
-	private int attributePosition = 0;
-	
-	private String attributeBusinessId = null;
+public class CampBoolean extends Attribute<BooleanValue>{
+    public CampBoolean(){
+        super(null,AttributeType._boolean,"false");
+    }
 
-	@Override
-	public String attributeBusinessId() {
-		return attributeBusinessId+Util.DB._NS+id();
-	}
+    public CampBoolean(String name){
+        super(name,AttributeType._boolean,"false");
+    }
 
-	@Override
-	public String attrbuteBusinessId(String id) {
-		String prev = this.attributeBusinessId;
-		this.attributeBusinessId = id;
-		return prev;
-	}
+    public CampBoolean(String name, String defaultValue){
+        super(name,AttributeType._boolean,defaultValue);
+    }
 
-	@Override
-	public String onlyAttributeBusinessId() {
-		return this.attributeBusinessId;
-	}
+    public CampBoolean(String name, Boolean defaultValue){
+        super(name,AttributeType._boolean,defaultValue.toString());
+    }
 
-	@Override
-	public String initialAttributeBusinessId() {
-		return attributeBusinessId+Util.DB._NS+0;
-	}
+    public CampBoolean(String name, String defaultValue, String value){
+        super(name,AttributeType._boolean,defaultValue.toString());
+        this.setValue(new BooleanValue(Boolean.valueOf(value)));
+    }
 
-	public CampBoolean(){
-		super(null, AttributeType._boolean, "false");
-		this.value = Boolean.valueOf("false");
-	}
-	
-	public CampBoolean(String name){
-		super(name, AttributeType._boolean, "false");
-		this.value = Boolean.valueOf("false");
-	}
-	
-	public CampBoolean(String name,String stringValue){
-		super(name, AttributeType._boolean, "false");
-		this.value = Boolean.valueOf(stringValue);
-	}
-	
-	public CampBoolean(String name,boolean value){
-		super(name, AttributeType._boolean, "false");
-		this.value = value;
-	}
+    public CampBoolean(String name, Boolean defaultValue, Boolean value){
+        super(name,AttributeType._boolean,defaultValue.toString());
+        this.setValue(new BooleanValue(value));
+    }
 
-	public CampBoolean(String name,String defaultValue,boolean value){
-		super(name, AttributeType._boolean, defaultValue);
-		this.value = value;
-	}
-	
-	public CampBoolean defaultInstance(){
-		return new CampBoolean(name(),Boolean.valueOf("false"));
-	}
-
-
-
-	@Override
-	public Boolean value() {
-		return value;
-	}
-
-	@Override
-	public Boolean value(Boolean value) {
-		boolean prev = value;
-		this.value = value;
-		return prev;
-	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public CampBoolean valueFromString(String value) {
-		value(Boolean.valueOf(value));
-		return this;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String attributeGroup() {
-		return this.attributeGroup;
+	public BooleanValue valueFromString(String value) {
+		return new BooleanValue(Boolean.valueOf(value));
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String attributeGroup(String group) {
-		String prev = this.attributeGroup;
-		this.attributeGroup = group;
-		return prev;
-	}
+    @Override
+    public String toString(){
+        return AttributeInterface._toString(this);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int attributePosition() {
-		return this.attributePosition;
-	}
+    @Override
+    public String toJson(){
+        return AttributeInterface._toJson(this);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int attributePosition(int position) {
-		int prev = this.attributePosition;
-		this.attributePosition = position;
-		return prev;
-	} 
-
-
+    @Override
+    public CampBoolean fromJson(String json){
+        return (CampBoolean)AttributeInterface._fromJson(json);
+    }
 }
