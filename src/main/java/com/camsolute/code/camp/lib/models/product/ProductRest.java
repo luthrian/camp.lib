@@ -38,6 +38,18 @@ public class ProductRest implements ProductRestInterface {
 	public static final String serverUrl = CampRest.PRODUCT_API_SERVER_URL;
 	public static final String domainUri = CampRest.PRODUCT_API_DOMAIN;
 	
+	private static ProductRest instance = null;
+	
+	private ProductRest(){
+	}
+	
+	public static ProductRest instance(){
+		if(instance == null) {
+			instance = new ProductRest();
+		}
+		return instance;
+	}
+	
 	@Override
 	public Product loadById(int id, boolean log) {
 		long startTime = System.currentTimeMillis();

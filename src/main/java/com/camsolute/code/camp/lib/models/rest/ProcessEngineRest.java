@@ -37,6 +37,18 @@ public class ProcessEngineRest implements ProcessEngineRestInterface {
 	
 	public static final String serverUrl = CampRest.PROCESS_ENGINE_API_SERVER_URL;
 	public static final String domainUri = CampRest.PROCESS_ENGINE_API_DOMAIN;
+
+	private static ProcessEngineRest instance = null;
+	
+	private ProcessEngineRest(){
+	}
+	
+	public static ProcessEngineRest instance(){
+		if(instance == null) {
+			instance = new ProcessEngineRest();
+		}
+		return instance;
+	}
 	
 	@Override
 	public UserToken authenticate(String username, String password, boolean log) {

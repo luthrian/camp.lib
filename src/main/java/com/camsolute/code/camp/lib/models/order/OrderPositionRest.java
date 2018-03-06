@@ -38,6 +38,18 @@ public class OrderPositionRest implements OrderPositionRestInterface {
 	
 	public static final String serverUrl = CampRest.ORDER_API_SERVER_URL;
 	public static final String domainUri = CampRest.ORDER_API_DOMAIN;
+
+	private static OrderPositionRest instance = null;
+	
+	private OrderPositionRest(){
+	}
+	
+	public static OrderPositionRest instance(){
+		if(instance == null) {
+			instance = new OrderPositionRest();
+		}
+		return instance;
+	}
 	
 	@Override
 	public OrderPosition loadById(int id, boolean log) {

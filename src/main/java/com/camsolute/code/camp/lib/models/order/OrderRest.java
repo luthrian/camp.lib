@@ -38,6 +38,18 @@ public class OrderRest implements OrderRestInterface {
 	
 	public static final String serverUrl = CampRest.ORDER_API_SERVER_URL;
 	public static final String domainUri = CampRest.ORDER_API_DOMAIN;
+
+	private static OrderRest instance = null;
+	
+	private OrderRest(){
+	}
+	
+	public static OrderRest instance(){
+		if(instance == null) {
+			instance = new OrderRest();
+		}
+		return instance;
+	}
 	
 	@Override
 	public Order create(String businessId, String businessKey, String date, String byDate, boolean log) {

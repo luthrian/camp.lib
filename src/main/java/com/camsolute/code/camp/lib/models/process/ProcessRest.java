@@ -39,6 +39,18 @@ public class ProcessRest implements ProcessRestInterface{
 	public static final String serverUrl = CampRest.PROCESS_API_SERVER_URL;
 	public static final String domainUri = CampRest.PROCESS_API_DOMAIN;
 
+	private static ProcessRest instance = null;
+	
+	private ProcessRest(){
+	}
+	
+	public static ProcessRest instance(){
+		if(instance == null) {
+			instance = new ProcessRest();
+		}
+		return instance;
+	}
+	
 	@Override
 	public Process<?,?> loadById(int id, boolean log) {
 		long startTime = System.currentTimeMillis();
