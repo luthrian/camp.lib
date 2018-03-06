@@ -5,9 +5,27 @@
   <groupId>com.camsolute.code</groupId>
   <artifactId>camp.lib</artifactId>
   <version>0.6.5</version>
-  <name>Camsolute PMF Libraries</name>
-  <description>Camsolute PMF Libraries - GPLv3 Java library for the Process Management Framework</description>
   <packaging>jar</packaging>
+  <name>Camsolute Process Management Framework - CAMP</name>
+  <description>Camsolute PMF Libraries - GPLv3 core Java library for the Camsolute Process Management Framework.
+  The framework is geared towards developing &quot;process driven&quot; c2b/b2b applications. 
+	 In its current form it consists of:
+	 		- business/system entities that allow the representation and definition of products/services, 
+	 		  (external/internal/business/consumer) customer orders and 
+	 		  business processes which handle the various end2end business cases 
+	 		  as well as basic life-cycle states of these entities together with 
+	 		- core functionality for JSON transformation, 
+	  persistence towards a MariaDB/MySQL database, 
+	  communication towards a process engine via a JSON REST API (for example the fabulous Camunda Engine or other JBPM/Activiti derivatives). 
+	 The framework roadmap envisions (modular) extensions for 
+	 		authorization/
+	 		encryption/
+	 		deep-learning-based-(process)-automation-plugins/
+	 		replacing the current test APIServicePoint jetty server with a tomcat servlet/
+	 		more configuration possibilities/
+	 		visualization of business/system objects and processes/
+	 		product/system/process management UI's/
+		and more... NOTE: this is a work in progress.</description>
   <url>https://camsolute.com</url>
 
   <organization>
