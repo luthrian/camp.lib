@@ -44,6 +44,7 @@ public class CampRest {
 	public static final String PROCESS_CONTROL_API_DOMAIN = Util.Config.instance().properties().getProperty("rest.process.control.api.business.domain");
 
 	public static final String ORDER_API_PATH = ORDER_API_DOMAIN + Util.Config.instance().properties().getProperty("rest.order.api.path");
+	public static final String REST_ORDER_API_PATH = ORDER_API_PATH;
 	public static final String PROCESS_API_PATH = PROCESS_API_DOMAIN + Util.Config.instance().properties().getProperty("rest.process.api.path");
 	public static final String PRODUCT_API_PATH = PRODUCT_API_DOMAIN + Util.Config.instance().properties().getProperty("rest.product.api.path");
 	public static final String CUSTOMER_API_PATH = CUSTOMER_API_DOMAIN + Util.Config.instance().properties().getProperty("rest.customer.api.path");

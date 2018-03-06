@@ -24,4 +24,4 @@ NOTE: This is work in progress...
 
 ## Configuration
 
-To use the framework in its current form you will need to edit the jars config.properties file to set the database user and password setting. The database user must be able to create/delete schema/database tables. You will also setup thethe various server urls to reflect your own setup.
+To use the framework in its current form you will need to edit the jars config.properties file to set the database user and password setting. The database user must be able to create/delete schema/database tables. You will also setup/modify the various server urls config settings to reflect your own setup.
