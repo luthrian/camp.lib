@@ -1,6 +1,6 @@
 # camp.lib
 
-A Java process driven application framework (PDAF) geared towards developing "process driven" c2b/b2b applications. 
+A Java framework geared towards developing "process driven" c2b/b2b applications. 
 In its current form it consists of: 
 - business/system entities that allow 
 + the representation and definition of products/services, (external/internal/business/consumer) customer orders and business processes which handle the various end2end business cases 
