@@ -50,6 +50,20 @@ public interface ProductServicePointInterface {
 	public String update(String product);
 	
 	public String updateList(String productList);
+
+	public String loadFirst(String businessId, boolean primary);
+	
+	public String loadNext(String product, boolean primary);
+	
+	public String loadPrevious(String product, boolean primary);
+
+	public String loadDate(String date, boolean primary);
+	
+	public String loadDateRange(String startDate, String endDate, boolean primary);
+	
+	public String loadDate(String businessId, String date, boolean primary);
+	
+	public String loadDateRange(String businessId, String startDate, String endDate, boolean primary);
 	
 	public String loadUpdates(String businessKey, String target);
 	

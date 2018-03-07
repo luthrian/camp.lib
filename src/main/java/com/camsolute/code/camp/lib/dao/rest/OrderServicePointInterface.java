@@ -45,6 +45,20 @@ public interface OrderServicePointInterface {
 
 	public String loadUpdates(String businessKey, String target);
 
+	public String loadFirst(String businessId, boolean primary);
+	
+	public String loadNext(String order, boolean primary);
+	
+	public String loadPrevious(String order, boolean primary);
+
+	public String loadDate(String date, boolean primary);
+	
+	public String loadDateRange(String startDate, String endDate, boolean primary);
+	
+	public String loadDate(String businessId, String date, boolean primary);
+	
+	public String loadDateRange(String businessId, String startDate, String endDate, boolean primary);
+	
 	public String loadUpdatesByKey(String businessKey);
 
 	public String loadUpdatesByTarget(String target);

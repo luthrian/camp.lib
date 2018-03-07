@@ -177,20 +177,20 @@ public class CampRest {
 			DEL_REFERENCE,
 			DEL_REFERENCES;
 		}
-			public static final String LOAD = "/s/process/load/{businessId}";		
-			public static final String ADD_REFERENCE = "/process/add/{businessId}/{instanceId}/{processKey}";
-			public static final String ADD_REFERENCES = "/s/process/add/{businessId}";
-			public static final String DEL_REFERENCE = "/process/del/{businessId}/{instanceId}/{processKey}";
-			public static final String DEL_REFERENCES = "/s/process/del/{businessId}";		
+			public static final String LOAD = "/s/process/load";		
+			public static final String ADD_REFERENCE = "/process/add";
+			public static final String ADD_REFERENCES = "/s/process/add";
+			public static final String DEL_REFERENCE = "/process/del";
+			public static final String DEL_REFERENCES = "/s/process/del";		
 		public static final HashMap<Request,String[]> Call;
 		
 		static {
 			Call = new HashMap<Request,String[]>();
-			Call.put(Request.LOAD, new String[]{"/s/process/load/{businessId}","/s/process/load?businessId=%s","GET"});		
-			Call.put(Request.ADD_REFERENCE, new String[]{"/process/add/{businessId}/{instanceId}/{processKey}","/process/add?businessId=%s&instanceId=%s&processKey=%s","GET"});
-			Call.put(Request.ADD_REFERENCES, new String[]{"/s/process/add/{businessId}","/s/process/add?businessId=%s","POST"});
-			Call.put(Request.DEL_REFERENCE, new String[]{"/process/del/{businessId}/{instanceId}/{processKey}","/process/del?businessId=%s&instanceId=%s&processKey=%s","GET"});
-			Call.put(Request.DEL_REFERENCES, new String[]{"/s/process/del/{businessId}","/s/process/del?businessId=%s","POST"});		
+			Call.put(Request.LOAD, new String[]{"/s/process/load","/s/process/load?businessId=%s","GET"});		
+			Call.put(Request.ADD_REFERENCE, new String[]{"/process/add","/process/add?businessId=%s&instanceId=%s&processKey=%s","GET"});
+			Call.put(Request.ADD_REFERENCES, new String[]{"/s/process/add","/s/process/add?businessId=%s","POST"});
+			Call.put(Request.DEL_REFERENCE, new String[]{"/process/del","/process/del?businessId=%s&instanceId=%s&processKey=%s","GET"});
+			Call.put(Request.DEL_REFERENCES, new String[]{"/s/process/del","/s/process/del?businessId=%s","POST"});		
 		}
 		public static String callRequest(String prefix, ProcessReferenceDaoService.Request request) {
 			return prefix + ProcessReferenceDaoService.Call.get(request)[1];
@@ -232,20 +232,22 @@ public class CampRest {
 	}
 	
 	public static class ModelReferenceDaoService {
+		public static final String Prefix = "/model";
 		public static String callRequest(String prefix, ReferenceDaoService.Request request) {
-			return prefix + "/model" + ReferenceDaoService.Call.get(request)[1];
+			return prefix + Prefix + ReferenceDaoService.Call.get(request)[1];
 		}
 		public static String path(String prefix, ReferenceDaoService.Request request) {
-			return prefix + "/model" + ReferenceDaoService.Call.get(request)[0];
+			return prefix +Prefix + ReferenceDaoService.Call.get(request)[0];
 		}
 	}
 	
 	public static class OrderPositionReferenceDaoService {
+		public static final String Prefix = "/position";
 		public static String callRequest(String prefix, ReferenceDaoService.Request request) {
-			return prefix + "/position" + ReferenceDaoService.Call.get(request)[1];
+			return prefix + Prefix + ReferenceDaoService.Call.get(request)[1];
 		}
 		public static String path(String prefix, ReferenceDaoService.Request request) {
-			return prefix + "/position" + ReferenceDaoService.Call.get(request)[0];
+			return prefix + Prefix + ReferenceDaoService.Call.get(request)[0];
 		}
 	}
 	
@@ -272,7 +274,7 @@ public class CampRest {
 			public static final String NOTIFY_PROCESS_GET = "/process/notify/";		
 			public static final String NOTIFY_PROCESSES = "/s/process/notify";		// package = ObjectInstance
 			public static final String NOTIFY_PROCESS_EVENT = "/process/notify"; //package = ObjectInstance		
-			public static final String SIGNAL_PROCESS = "/process/signal/{executionId}"; //package = Variables
+			public static final String SIGNAL_PROCESS = "/process/signal"; //package = Variables
 			public static final String SIGNAL_PROCESSES = "/s/process/signal"; //package = SignalPacket
 			public static final String CLAIM_TASK = "/task/claim";		
 			public static final String DELEGATE_TASK = "/task/delegate";		
@@ -290,7 +292,7 @@ public class CampRest {
 			Call.put(Request.NOTIFY_PROCESS_GET, new String[]{"/process/notify/","/process/notify?processInstanceId=%s&messageType=%s&objectStatus=%s&objectBusinessId=%s&objectId=%s","POST"});		
 			Call.put(Request.NOTIFY_PROCESSES, new String[]{"/s/process/notify","/s/process/notify?messageType=%s","POST"});		// package = ObjectInstance
 			Call.put(Request.NOTIFY_PROCESS_EVENT, new String[]{"/process/notify","/process/notify?messageType=%s&executionId=%s","POST"}); //package = ObjectInstance		
-			Call.put(Request.SIGNAL_PROCESS, new String[]{"/process/signal/{executionId}","/process/signal?&executionId=%s","POST"}); //package = Variables
+			Call.put(Request.SIGNAL_PROCESS, new String[]{"/process/signal","/process/signal?&executionId=%s","POST"}); //package = Variables
 			Call.put(Request.SIGNAL_PROCESSES, new String[]{"/s/process/signal","/s/process/signal","POST"}); //package = SignalPacket
 			Call.put(Request.CLAIM_TASK, new String[]{"/task/claim","/task/claim?taskId=%s&userId=%s","GET"});		
 			Call.put(Request.DELEGATE_TASK, new String[]{"/task/delegate","/task/delegate?taskId=%s&userId=%s","GET"});		

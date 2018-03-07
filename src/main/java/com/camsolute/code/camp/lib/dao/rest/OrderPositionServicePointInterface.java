@@ -39,7 +39,12 @@ public interface OrderPositionServicePointInterface {
 	public String update(String orderPosition); 
 
 	public String updateList(String orderPositionList);
-
+	
+	public String loadDateByBusinessId(String businessId, String date, boolean primary);
+	
+	public String loadDateRangeByBusinessId(String businessId, String startDate, String endDate, boolean primary);
+	
+	
 	public String loadUpdates(String businessKey, String target); 
 
 	public String loadUpdatesByKey(String businessKey); 

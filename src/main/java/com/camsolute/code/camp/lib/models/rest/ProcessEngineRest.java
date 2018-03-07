@@ -184,7 +184,7 @@ public class ProcessEngineRest implements ProcessEngineRestInterface {
 	}
 
 	@Override
-	public void updateVariables(Process<?,?> p, Variables variables, boolean log) {
+	public void updateVariables(String instanceId, String businessKey, Variables variables, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -194,7 +194,7 @@ public class ProcessEngineRest implements ProcessEngineRestInterface {
 		}
 		String prefix = CampRest.ProcessEngine.Prefix;		
 		String serviceUri = CampRest.ProcessEngineDaoService.callRequest(prefix,CampRest.ProcessEngineDaoService.Request.UPDATE_VARIABLE);
-		for(ProcessExecution pe:getProcessExecutions(p.instanceId(), p.businessKey(), log)){
+		for(ProcessExecution pe:getProcessExecutions(instanceId, businessKey, log)){
 			String executionId = pe.id();
 			for(String varName:variables.variables().keySet()) {
 				String uri = serverUrl+domainUri+String.format(serviceUri,executionId, varName, log);

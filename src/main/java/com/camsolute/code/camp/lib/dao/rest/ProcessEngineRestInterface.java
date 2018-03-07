@@ -41,7 +41,7 @@ public interface ProcessEngineRestInterface {
 	
 	public void signalProcess(String execustionId, Variables variables, boolean log);
 	
-	public void updateVariables(Process<?,?> p, Variables variables, boolean log);
+	public void updateVariables(String instanceId, String businessKey, Variables variables, boolean log);
 	
 	public void claimTask(String taskId, String userId, boolean log);
 	
