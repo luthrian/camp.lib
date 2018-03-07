@@ -42,9 +42,6 @@ public interface OrderPositionServicePointInterface {
 	
 	public String loadDateByBusinessId(String businessId, String date, boolean primary);
 	
-	public String loadDateRangeByBusinessId(String businessId, String startDate, String endDate, boolean primary);
-	
-	
 	public String loadUpdates(String businessKey, String target); 
 
 	public String loadUpdatesByKey(String businessKey); 
