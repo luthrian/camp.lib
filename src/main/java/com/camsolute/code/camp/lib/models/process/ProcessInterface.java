@@ -97,4 +97,65 @@ public interface ProcessInterface<T, U extends Process<T,U>>  extends IsProcess<
 		return null;
 	
 	}
+	
+	public static Process<?,?> _process(String businessId, String executionId, String instanceId, String businessKey, String processName, String definitionId, String tenantId, String caseInstanceId, boolean ended, boolean suspended, ProcessType type){
+		switch(type){//TODO add the other process types
+		case customer_process:
+		case customer_management_process:
+			CustomerProcess cp = new CustomerProcess(executionId, instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, type);
+			cp.setBusinessId(businessId);
+			return cp;
+		case customer_order_process:
+		case customer_order_management_process:
+		case product_order_process:
+		case product_order_management_process:
+		case order_support_process:			
+			OrderProcess op = new OrderProcess(executionId, instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, type);
+			op.setBusinessId(businessId);
+			return op;
+		case product_process:
+		case product_management_process:
+			ProductProcess pdp = new ProductProcess(executionId, instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, type);
+			pdp.setBusinessId(businessId);
+			return pdp;
+		case production_process:
+		case production_management_process:
+			ProductionProcess pp = new ProductionProcess(executionId, instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, type);
+			pp.setBusinessId(businessId);
+			return pp;
+		default:
+			break;
+		}
+		return null;
+	}
+	public static Process<?,?> _process(String businessId, String instanceId, String businessKey, String processName, String definitionId, String tenantId, String caseInstanceId, boolean ended, boolean suspended, ProcessType type){
+		switch(type){//TODO add the other process types
+		case customer_process:
+		case customer_management_process:
+			CustomerProcess cp = new CustomerProcess(instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, type);
+			cp.setBusinessId(businessId);
+			return cp;
+		case customer_order_process:
+		case customer_order_management_process:
+		case product_order_process:
+		case product_order_management_process:
+		case order_support_process:			
+			OrderProcess op = new OrderProcess(instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, type);
+			op.setBusinessId(businessId);
+			return op;
+		case product_process:
+		case product_management_process:
+			ProductProcess pdp = new ProductProcess(instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, type);
+			pdp.setBusinessId(businessId);
+			return pdp;
+		case production_process:
+		case production_management_process:
+			ProductionProcess pp = new ProductionProcess(instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, type);
+			pp.setBusinessId(businessId);
+			return pp;
+		default:
+			break;
+		}
+		return null;
+	}
 }

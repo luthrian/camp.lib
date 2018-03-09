@@ -20,6 +20,7 @@
 package com.camsolute.code.camp.lib.dao.rest;
 
 import com.camsolute.code.camp.lib.models.process.Process;
+import com.camsolute.code.camp.lib.models.process.Process.ProcessType;
 import com.camsolute.code.camp.lib.models.process.ProcessList;
 
 public interface ProcessRestDaoInterface {
@@ -30,6 +31,10 @@ public interface ProcessRestDaoInterface {
   public  ProcessList loadListByKey(String businessKey, boolean log);
 
   public  ProcessList loadListByBusinessId(String businessId, boolean log);
+  
+	public Process<?,?> create(String businessId, String executionId, String instanceId, String businessKey, String processName, String definitionId, String tenantId, String caseInstanceId, boolean ended, boolean suspended, ProcessType processType, boolean log);
+
+	public Process<?,?> create(String businessId, String instanceId, String businessKey, String processName, String definitionId, String tenantId, String caseInstanceId, boolean ended, boolean suspended, ProcessType processType, boolean log);
 
   public Process<?,?> save(Process<?,?> p, boolean log);
 

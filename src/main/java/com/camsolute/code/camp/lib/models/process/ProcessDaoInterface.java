@@ -77,7 +77,7 @@ public interface ProcessDaoInterface {
 
   public <E extends ProcessList> E saveList(E instanceList, boolean log);
 
-  public  <T extends Process<?,?>> int update(T instance, boolean log);
+  public <T extends Process<?,?>> int update(T instance, boolean log);
 
   public <E extends ProcessList> int updateList(E instanceList, boolean log);
 
@@ -91,15 +91,21 @@ public interface ProcessDaoInterface {
 
   public  <T extends Process<?,?>> T loadUpdate(T instance, String businessKey, String target, boolean log);
 
+  public <T extends Process<?,?>> int addToUpdates(String instanceId, String businessId, String businessKey, String target, boolean log);
+  
   public  <T extends Process<?,?>> int addToUpdates(T instance, String businessKey, String target, boolean log);
 
   public <E extends ProcessList> int addToUpdates(E instanceList, String businessKey, String target, boolean log);
 
   public int deleteAllFromUpdates(String businessKey, String target, boolean log);
 
+  public int deleteFromUpdatesByKey(String businessKey, boolean log);
+
+  public int deleteFromUpdatesByTarget(String target, boolean log);
+
   public int deleteFromUpdates(String instanceId, String businessId, String businessKey, String target, boolean log);
 
-  public <E extends ProcessList> int deleteFromUpdates(E instanceList, String target, boolean log);
+  public <E extends ProcessList> int deleteFromUpdates(E instanceList, String businessKey, String target, boolean log);
 
 //TODO: just an idea    public int/T _dbExecute(Util.DB.dbActionType action,String SQL, String table, String[][] tabledef, boolean log);
 

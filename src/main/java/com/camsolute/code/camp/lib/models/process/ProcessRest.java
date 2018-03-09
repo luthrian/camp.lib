@@ -27,6 +27,7 @@ import org.apache.logging.log4j.Logger;
 import com.camsolute.code.camp.lib.dao.rest.RestInterface;
 import com.camsolute.code.camp.lib.data.CampRest;
 import com.camsolute.code.camp.lib.models.process.Process;
+import com.camsolute.code.camp.lib.models.process.Process.ProcessType;
 import com.camsolute.code.camp.lib.models.process.ProcessInterface;
 import com.camsolute.code.camp.lib.models.process.ProcessList;
 import com.camsolute.code.camp.lib.utilities.Util;
@@ -138,6 +139,48 @@ public class ProcessRest implements ProcessRestInterface{
 			msg = "====[loadListByKey completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
 		return pl;
+	}
+
+	public Process<?,?> create(String businessId, String executionId, String instanceId, String businessKey, String processName, String definitionId, String tenantId, String caseInstanceId, boolean ended, boolean suspended, ProcessType processType, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[create]";
+			msg = "====[ process rest call:  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		String prefix = CampRest.Process.Prefix;		
+		String serviceUri = CampRest.DaoService.callRequest(prefix,CampRest.DaoService.Request.CREATE_PROCESS_EID);
+		String uri = serverUrl+domainUri+String.format(serviceUri,businessId, executionId, instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, processType.name());
+		String result = RestInterface.resultGET(uri, log);
+		Process<?,?> p = ProcessInterface._fromJson(result);
+		
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[create completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return p;
+	}
+
+	public Process<?,?> create(String businessId, String instanceId, String businessKey, String processName, String definitionId, String tenantId, String caseInstanceId, boolean ended, boolean suspended, ProcessType processType, boolean log){
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[create]";
+			msg = "====[ process rest call:  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		String prefix = CampRest.Process.Prefix;		
+		String serviceUri = CampRest.DaoService.callRequest(prefix,CampRest.DaoService.Request.CREATE_PROCESS);
+		String uri = serverUrl+domainUri+String.format(serviceUri,businessId, instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, processType.name());
+		String result = RestInterface.resultGET(uri, log);
+		Process<?,?> p = ProcessInterface._fromJson(result);
+		
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[create completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return p;
 	}
 
 	@Override

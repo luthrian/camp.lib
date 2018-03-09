@@ -20,6 +20,7 @@
 package com.camsolute.code.camp.lib.dao.rest;
 
 import com.camsolute.code.camp.lib.data.CampRest;
+import com.camsolute.code.camp.lib.models.process.Process.ProcessType;
 
 public interface ProcessServicePointInterface {
 
@@ -38,6 +39,9 @@ public interface ProcessServicePointInterface {
 
 	public String loadListByKey(String businessKey);
 
+	public String create(String businessId, String executionId, String instanceId, String businessKey, String processName, String definitionId, String tenantId, String caseInstanceId, boolean ended, boolean suspended, String processType);
+
+	public String create(String businessId, String instanceId, String businessKey, String processName, String definitionId, String tenantId, String caseInstanceId, boolean ended, boolean suspended, String processType);
 
 	public String save(String process);
 

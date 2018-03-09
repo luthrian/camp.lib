@@ -893,6 +893,49 @@ public class ProcessDao implements ProcessDaoInterface {
 	}
 
 	@Override
+	public <T extends Process<?, ?>> int addToUpdates(String instanceId, String businessId, String businessKey, String target, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[addToUpdates]";
+			msg = "====[ register a persisted process instance object in the updates table ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		Connection conn = null;
+		ResultSet rs = null;
+		Statement dbs = null;
+		int retVal = 0;
+		try{
+			conn = Util.DB.__conn(log);
+
+			String SQL = "INSERT INTO " + updatestable + "( " + Util.DB._columns(updatestabledef, Util.DB.dbActionType.INSERT, log)
+			+ " ) VALUES ( '"+instanceId+"','"+businessId+"','"+businessKey+"', '"+target+"')";
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
+			
+			dbs = conn.createStatement();
+			
+			retVal = dbs.executeUpdate(SQL);		
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
+			
+		} catch(SQLException e) {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
+			e.printStackTrace();
+		} finally {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ releasing connection]----";LOG.info(String.format(fmt, _f,msg));}
+			Util.DB.__release(conn,log);
+			Util.DB._releaseRS(rs, log);
+			Util.DB._releaseStatement(dbs, log);
+		}
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[addToUpdates completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return retVal;
+	}
+
+	@Override
 	public <T extends Process<?, ?>> int addToUpdates(T p, String businessKey, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
@@ -1022,6 +1065,90 @@ public class ProcessDao implements ProcessDaoInterface {
 	}
 
 	@Override
+	public int deleteFromUpdatesByKey(String businessKey, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[deleteAllFromUpdates]";
+			msg = "====[ deregister a list of process instance objects from the updates table by businessKey and target ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		Connection conn = null;
+		ResultSet rs = null;
+		Statement dbs = null;
+		int retVal = 0;
+		try{
+			conn = Util.DB.__conn(log);
+			
+			String SQL = "DELETE FROM "+updatestable()+" WHERE `_businesskey`='"+businessKey+"'";
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
+			
+			dbs = conn.createStatement();
+			
+			retVal = dbs.executeUpdate(SQL);
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
+			
+		} catch(SQLException e) {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
+			e.printStackTrace();
+		} finally {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ releasing connection]----";LOG.info(String.format(fmt, _f,msg));}
+			Util.DB.__release(conn,log);
+			Util.DB._releaseRS(rs, log);
+			Util.DB._releaseStatement(dbs, log);
+		}
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[deleteAllFromUpdates completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return retVal;
+	}
+
+	@Override
+	public int deleteFromUpdatesByTarget(String target, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[deleteAllFromUpdates]";
+			msg = "====[ deregister a list of process instance objects from the updates table by businessKey and target ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		Connection conn = null;
+		ResultSet rs = null;
+		Statement dbs = null;
+		int retVal = 0;
+		try{
+			conn = Util.DB.__conn(log);
+			
+			String SQL = "DELETE FROM "+updatestable()+" WHERE `_target`='"+target+"'";
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
+			
+			dbs = conn.createStatement();
+			
+			retVal = dbs.executeUpdate(SQL);
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
+			
+		} catch(SQLException e) {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
+			e.printStackTrace();
+		} finally {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ releasing connection]----";LOG.info(String.format(fmt, _f,msg));}
+			Util.DB.__release(conn,log);
+			Util.DB._releaseRS(rs, log);
+			Util.DB._releaseStatement(dbs, log);
+		}
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[deleteAllFromUpdates completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return retVal;
+	}
+
+	@Override
 	public int deleteFromUpdates(String instanceId, String businessId, String businessKey, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
@@ -1068,7 +1195,7 @@ public class ProcessDao implements ProcessDaoInterface {
 	}
 
 	@Override
-	public <E extends ProcessList> int deleteFromUpdates(E pl, String target, boolean log) {
+	public <E extends ProcessList> int deleteFromUpdates(E pl,String businessKey, String target, boolean log) {
 			long startTime = System.currentTimeMillis();
 			String _f = null;
 			String msg = null;
@@ -1087,7 +1214,7 @@ public class ProcessDao implements ProcessDaoInterface {
 				
 				for(Process<?, ?> p: pl){
 					String SQL = "DELETE FROM "+updatestable()+" WHERE "
-							+ "`_businesskey`='"+p.businessKey()+"' "
+							+ "`_businesskey`='"+businessKey+"' "
 							+ " AND `_target`='"+target+"'"
 							+ " AND `_instance_id`='"+p.instanceId()+"'"
 							+ " AND `_business_id`='"+p.onlyBusinessId()+"'";

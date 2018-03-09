@@ -62,6 +62,8 @@ public class CampRest {
 			CREATE_PRODUCT, 
 			CREATE_ATTRIBUTE, 
 			CREATE_MODEL, 
+			CREATE_PROCESS, 
+			CREATE_PROCESS_EID, 
 			SAVE,
 			SAVE_LIST,
 			UPDATE,
@@ -86,6 +88,8 @@ public class CampRest {
 		public static final String CREATE_PRODUCT = "/create";
 		public static final String CREATE_ATTRIBUTE = "/create";
 		public static final String CREATE_MODEL = "/create";
+		public static final String CREATE_PROCESS = "/create";
+		public static final String CREATE_PROCESS_EID = "/create/eid";
 		public static final String SAVE = "/save";
 		public static final String SAVE_LIST = "/s/save";
 		public static final String UPDATE = "/update";
@@ -113,6 +117,8 @@ public class CampRest {
 			Call.put(Request.CREATE_PRODUCT, new String[] {"/create","/create?businessId=%s&businessKey=%s&date=%s&byDate=%s","GET"});
 			Call.put(Request.CREATE_ATTRIBUTE, new String[] {"/create","/create?businessId=%s&businessKey=%s&date=%s&byDate=%s","GET"});
 			Call.put(Request.CREATE_MODEL, new String[] {"/create","/create?businessId=%s&businessKey=%s&date=%s&byDate=%s","GET"});
+			Call.put(Request.CREATE_PROCESS, new String[] {"/create","/create?businessId=%s&instanceId=%s&businessKey=%s&processName=%s&definitionId=%s&tenantId=%s&caseInstanceId=%s&ended=%s&suspended=%s&type=%s","GET"});
+			Call.put(Request.CREATE_PROCESS_EID, new String[] {"/create/eid","/create/eid?businessId=%s&executionId=%s&instanceId=%s&businessKey=%s&processName=%s&definitionId=%s&tenantId=%s&caseInstanceId=%s&ended=%s&suspended=%s&type=%s","GET"});
 			Call.put(Request.SAVE, new String[] {"/save","/save","POST"});
 			Call.put(Request.SAVE_LIST, new String[] {"/s/save","/s/save","POST"});
 			Call.put(Request.UPDATE, new String[] {"/update","/update","POST"});
