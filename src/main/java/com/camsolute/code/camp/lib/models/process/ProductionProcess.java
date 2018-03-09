@@ -30,7 +30,14 @@ public class ProductionProcess extends Process<Order,ProductionProcess> implemen
 		super(id, instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, type);
 	}
 
-	@Override
+	public ProductionProcess(String executionId, String instanceId, String businessKey, String processName, String definitionId, String tenantId, String caseInstanceId, boolean ended, boolean suspended, ProcessType type) {
+		super(executionId, instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, type);
+	}
+
+	public ProductionProcess(int id, String executionId, String instanceId, String businessKey, String processName, String definitionId, String tenantId, String caseInstanceId, boolean ended, boolean suspended, ProcessType type) {
+		super(id, executionId, instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, type);
+	}
+
 	public void notify(Order observed) {
 		// TODO Auto-generated method stub
 		

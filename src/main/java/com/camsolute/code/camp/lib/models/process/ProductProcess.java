@@ -30,6 +30,14 @@ public class ProductProcess extends Process<Product,ProductProcess> implements P
 		super(id, instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, type);
 	}
 
+	public ProductProcess(String executionId, String instanceId, String businessKey, String processName, String definitionId, String tenantId, String caseInstanceId, boolean ended, boolean suspended, ProcessType type) {
+		super(executionId, instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, type);
+	}
+
+	public ProductProcess(int id, String executionId, String instanceId, String businessKey, String processName, String definitionId, String tenantId, String caseInstanceId, boolean ended, boolean suspended, ProcessType type) {
+		super(id, executionId, instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, type);
+	}
+
 	@Override
 	public void notify(Product observed) {
 		// TODO Auto-generated method stub

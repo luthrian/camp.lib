@@ -27,10 +27,18 @@ public class OrderProcess extends Process<Order,OrderProcess> implements OrderPr
 		super(instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, type);
 	}
 
+	public OrderProcess(String executionId, String instanceId, String businessKey, String processName, String definitionId, String tenantId, String caseInstanceId, boolean ended, boolean suspended, ProcessType type) {
+		super(executionId ,instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, type);
+	}
+
 	public OrderProcess(int id, String instanceId, String businessKey, String processName, String definitionId, String tenantId, String caseInstanceId, boolean ended, boolean suspended, ProcessType type) {
 		super(id, instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, type);
 	}
 
+	public OrderProcess(int id, String executionId, String instanceId, String businessKey, String processName, String definitionId, String tenantId, String caseInstanceId, boolean ended, boolean suspended, ProcessType type) {
+		super(id, executionId, instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, type);
+	}
+	
 	@Override
 	public void notify(Order observed) {
 		// TODO Auto-generated method stub

@@ -34,6 +34,7 @@ public interface ProcessInterface<T, U extends Process<T,U>>  extends IsProcess<
 	public static <U extends Process<?,U>> String _toJson(Process<?,U> p) {
 		String json = "{";
 		json += "\"id\":"+p.id()+",";
+		json += "\"executionId\":\""+p.executionId+",";
 		json += "\"instanceId\":\""+p.instanceId+",";
 		json += "\"businessKey\":\""+p.businessKey()+"\","; 
 		json += "\"businessId\":\""+p.onlyBusinessId()+"\","; 
@@ -55,6 +56,7 @@ public interface ProcessInterface<T, U extends Process<T,U>>  extends IsProcess<
 	@SuppressWarnings("unchecked")
 	public static <U extends Process<?,U>> U _fromJSONObject(JSONObject jo) {
 		int id = jo.getInt("id");
+		String executionId = jo.getString("executionId");
 		String instanceId = jo.getString("instanceId");
 		String businessKey = jo.getString("businessKey"); 
 		String businessId = jo.getString("businessId"); 
@@ -65,10 +67,10 @@ public interface ProcessInterface<T, U extends Process<T,U>>  extends IsProcess<
 		boolean ended = jo.getBoolean("ended");
 		boolean suspended = jo.getBoolean("suspended");
 		ProcessType type = ProcessType.valueOf(ProcessType.class,jo.getString("type"));
-		switch(type){
+		switch(type){//TODO add the other process types
 		case customer_process:
 		case customer_management_process:
-			CustomerProcess cp = new CustomerProcess(id, instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, type);
+			CustomerProcess cp = new CustomerProcess(id, executionId, instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, type);
 			cp.setBusinessId(businessId);
 			return (U) cp;
 		case customer_order_process:
@@ -76,17 +78,17 @@ public interface ProcessInterface<T, U extends Process<T,U>>  extends IsProcess<
 		case product_order_process:
 		case product_order_management_process:
 		case order_support_process:			
-			OrderProcess op = new OrderProcess(id, instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, type);
+			OrderProcess op = new OrderProcess(id, executionId, instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, type);
 			op.setBusinessId(businessId);
 			return (U) op;
 		case product_process:
 		case product_management_process:
-			ProductProcess pdp = new ProductProcess(id, instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, type);
+			ProductProcess pdp = new ProductProcess(id, executionId, instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, type);
 			pdp.setBusinessId(businessId);
 			return (U) pdp;
 		case production_process:
 		case production_management_process:
-			ProductionProcess pp = new ProductionProcess(id, instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, type);
+			ProductionProcess pp = new ProductionProcess(id, executionId, instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, type);
 			pp.setBusinessId(businessId);
 			return (U) pp;
 		default:

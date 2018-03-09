@@ -41,22 +41,36 @@ public class Process<T,U extends Process<T,U>> implements ProcessInterface<T,U>{
 	public static final String DEFAULT_MANAGEMENT_PROCESS_KEY = "com.camsolute.code.camp.lib.models.ManagementProcess";
 
 	public static enum ProcessType {
+		order_process,
+		customer_order_process,
+		order_order_process,
+		production_order_process,
+		product_order_process,
+		product_attribute_order_process,
+		product_model_order_process,
+		production_process,
+		product_process,
+		product_attribute_process,
+		product_model_process,
 		customer_process,
 		customer_management_process,
-		customer_order_process,
-		customer_order_management_process,
-		product_process,
 		product_management_process,
-		product_order_process,
-		product_order_management_process,
-		production_process,
 		production_management_process,
-		production_order_process,
+		order_management_process,
+		customer_order_management_process,
+		product_order_management_process,
+		product_attribute_order_management_process,
+		product_model_order_management_process,
 		production_order_management_process,
-		order_support_process;
+		order_support_process,
+		customer_support_process,
+		product_support_process,
+		production_support_process
+		;
 	};
 
 	int id = Util.NEW_ID;
+	String executionId;
 	String instanceId;
 	String businessId;
 	String businessKey; 
@@ -82,6 +96,19 @@ public class Process<T,U extends Process<T,U>> implements ProcessInterface<T,U>{
 	this.type = type;
 	}
 
+	public Process(String executionId,String instanceId, String businessKey, String processName, String definitionId, String tenantId, String caseInstanceId, boolean ended, boolean suspended, ProcessType type) {
+		this.executionId = executionId;
+		this.instanceId = instanceId;
+		this.businessKey = businessKey; 
+		this.processName = processName;
+		this.definitionId = definitionId;
+		this.tenantId = tenantId;
+		this.caseInstanceId = caseInstanceId;
+		this.ended = ended;
+		this.suspended = suspended;
+		this.type = type;
+	}
+
 	public Process(int id, String instanceId, String businessKey, String processName, String definitionId, String tenantId, String caseInstanceId, boolean ended, boolean suspended, ProcessType type) {
 	this.id = id;
 	this.instanceId = instanceId;
@@ -95,6 +122,20 @@ public class Process<T,U extends Process<T,U>> implements ProcessInterface<T,U>{
 	this.type = type;
 	}
 
+
+	public Process(int id, String executionId,String instanceId, String businessKey, String processName, String definitionId, String tenantId, String caseInstanceId, boolean ended, boolean suspended, ProcessType type) {
+		this.id = id;
+		this.executionId = executionId;
+		this.instanceId = instanceId;
+		this.businessKey = businessKey; 
+		this.processName = processName;
+		this.definitionId = definitionId;
+		this.tenantId = tenantId;
+		this.caseInstanceId = caseInstanceId;
+		this.ended = ended;
+		this.suspended = suspended;
+		this.type = type;
+	}
 
 	@Override
 	public int id() {
@@ -118,6 +159,14 @@ public class Process<T,U extends Process<T,U>> implements ProcessInterface<T,U>{
 	@Override
 	public CampStates states() {
 		return this.states;
+	}
+
+	public String executionId() {
+		return this.executionId;
+	}
+	
+	public void executionId(String executionId) {
+		this.executionId = executionId;
 	}
 	
 	public String instanceId() {

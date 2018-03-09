@@ -516,6 +516,7 @@ public class CampSQL {
 		};
 		public static final String[][] process_table_definition = {
 				{"_process_id_", "int(11) NOT NULL AUTO_INCREMENT"},
+				{"execution_id", "varchar(45) DEFAULT NULL"},
 				{"instance_id", "varchar(45) NOT NULL"},
 				{"business_id", "VARCHAR(100) NOT NULL"},
 				{"businesskey", "varchar(45) NOT NULL"},

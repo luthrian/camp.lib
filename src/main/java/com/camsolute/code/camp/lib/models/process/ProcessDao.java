@@ -1120,6 +1120,7 @@ public class ProcessDao implements ProcessDaoInterface {
 	@Override
 	public String insertValues(Process<?,?> p, boolean log) {
 		String values = "";
+		values += "'"+p.executionId()+"',";
 		values += "'"+p.instanceId()+"',";
 		values += "'"+p.onlyBusinessId()+"',";
 		values += "'"+p.businessKey()+"',"; 
@@ -1185,6 +1186,7 @@ public class ProcessDao implements ProcessDaoInterface {
 	@Override
 	public String formatUpdateSQL(String SQL, Process<?,?> p, boolean log) {
 		String fSQL = String.format(SQL, 
+				"'"+p.executionId()+"'",
 				"'"+p.instanceId()+"'",
 				"'"+p.onlyBusinessId()+"'",
 				"'"+p.businessKey()+"'", 
