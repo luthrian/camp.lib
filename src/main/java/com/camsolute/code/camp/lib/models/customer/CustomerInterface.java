@@ -23,14 +23,16 @@ import org.json.JSONObject;
 
 import com.camsolute.code.camp.lib.contract.HasAddress;
 import com.camsolute.code.camp.lib.contract.HasContactDetails;
+import com.camsolute.code.camp.lib.contract.HasProcess;
 import com.camsolute.code.camp.lib.contract.IsObjectInstance;
+import com.camsolute.code.camp.lib.models.process.CustomerProcess;
 import com.camsolute.code.camp.lib.models.CampInstance;
 import com.camsolute.code.camp.lib.models.CampInstanceInterface;
 import com.camsolute.code.camp.lib.models.CampStates;
 import com.camsolute.code.camp.lib.models.CampStatesInterface;
 import com.camsolute.code.camp.lib.models.customer.Customer.Status;
 //TODO
-public interface CustomerInterface extends IsObjectInstance<CustomerInterface> , HasAddress, HasContactDetails{
+public interface CustomerInterface extends IsObjectInstance<Customer> , HasAddress, HasContactDetails, HasProcess<Customer,CustomerProcess>{
 	
 	public String firstName();
 	public String updateFirstName(String name);

@@ -23,11 +23,19 @@ import org.json.JSONObject;
 
 import com.camsolute.code.camp.lib.contract.IsObjectInstance;
 import com.camsolute.code.camp.lib.models.CampInstance;
-import com.camsolute.code.camp.lib.models.CampInstanceInterface;
 import com.camsolute.code.camp.lib.models.CampStates;
-import com.camsolute.code.camp.lib.models.CampStatesInterface;
 import com.camsolute.code.camp.lib.models.Group;
 import com.camsolute.code.camp.lib.models.Version;
+import com.camsolute.code.camp.lib.models.process.CustomerProcess;
+import com.camsolute.code.camp.lib.models.process.CustomerProcessList;
+import com.camsolute.code.camp.lib.models.process.Process;
+import com.camsolute.code.camp.lib.models.process.Process.ProcessType;
+import com.camsolute.code.camp.lib.models.process.ProcessList;
+import com.camsolute.code.camp.lib.models.rest.CustomerProcessMessage;
+import com.camsolute.code.camp.lib.models.rest.CustomerProcessMessage.CustomerMessage;
+import com.camsolute.code.camp.lib.models.rest.Message;
+import com.camsolute.code.camp.lib.models.rest.MessageList;
+import com.camsolute.code.camp.lib.models.rest.Request;
 import com.camsolute.code.camp.lib.utilities.Util;
 //TODO
 public class Customer implements CustomerInterface {
@@ -80,6 +88,7 @@ public class Customer implements CustomerInterface {
 	private Status previousStatus = Status.CLEAN;
 	private Address address = null;
 	private ContactDetails contact = null;
+	private CustomerProcessList processes = new CustomerProcessList();
 	
 	public Customer(int id, String title, String firstName, String surName, String businessKey){
 		this.id = id;
@@ -341,4 +350,123 @@ public class Customer implements CustomerInterface {
 	public void setContact(ContactDetails contactDetails) {
 		this.contact = contactDetails;
 	}
+
+
+
+	@Override
+	public ProcessList processInstances() {
+		return this.processes;
+	}
+	@Override
+	public void addProcess(CustomerProcess process) {
+		process.states().modify();
+		this.processes.add(process);
+		this.states.modify();
+	}
+
+	@Override
+	public <E extends ProcessList> void addProcesses(E processes) {
+		for(Process<?,?> p: processes) {
+			p.states().modify();
+		}
+		processes.addAll(processes);
+		this.states.modify();
+	}
+	@Override
+	public CustomerProcess deleteProcess(String instanceId) {
+		int count = 0;
+		for(Process<?,?> p: processes) {
+			if(p.instanceId().equals(instanceId)){
+				this.states.modify();
+				return (CustomerProcess) processes.remove(count);
+			}
+			count++;
+		}
+		return null;
+	}
+
+	@Override
+	public <E extends ProcessList> void setProcesses(E pl) {
+		this.processes = (CustomerProcessList) pl;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public <E extends ProcessList> E processes() {
+		return (E) processes;
+	}
+	@SuppressWarnings("unchecked")
+	@Override
+	public <E extends ProcessList> E processes(ProcessType type) {
+		CustomerProcessList opl = new CustomerProcessList();
+		for(Process<?,?> op: processes){
+			if(op.type().name().equals(type.name())){
+				opl.add((CustomerProcess)op);
+			}
+		}
+		return (E) opl;
+	}
+	@SuppressWarnings("unchecked")
+	@Override
+	public void notifyProcesses() {
+		for(Process<?,?> op:processes) {
+			((Process<Customer,?>)op).notify(this);
+		}
+	}
+	@SuppressWarnings("unchecked")
+	@Override
+	public void notifyProcesses(ProcessType type) {
+		for(Process<?,?> op:processes) {
+			if(op.type().name().equals(type.name())){
+				((Process<Customer,?>)op).notify(this);
+			}
+		}
+	}
+	@SuppressWarnings("unchecked")
+	@Override
+	public void notifyProcesses(Enum<?> event) {
+		for(Process<?,?> op: processes){
+			((Process<Customer,?>)op).notify(this, event);
+		}
+	}
+	@SuppressWarnings("unchecked")
+	@Override
+	public void notifyProcesses(ProcessType type, Enum<?> event) {
+		for(Process<?,?> op: processes){
+			if(op.type().name().equals(type.name())){
+				((Process<Customer,?>)op).notify(this, event);
+			}
+		}
+	}
+
+	@Override
+	public Message prepareMessage(String insanceId, Enum<?> message) {
+		CustomerMessage msg = CustomerMessage.valueOf(message.name());
+		CustomerProcessMessage m = new CustomerProcessMessage(msg, this);
+		for(Process<?,?> p: processes){
+			m.setProcessInstanceId(p.instanceId());
+			m.setTenantId(p.tenantId());
+		}
+		return m;
+	}
+	@Override
+	public MessageList prepareMessages(Enum<?> message) {
+		CustomerMessage msg = CustomerMessage.valueOf(message.name());
+		
+		MessageList ml = new MessageList();
+		
+		for(Process<?,?> p: processes){
+			CustomerProcessMessage m = new CustomerProcessMessage(msg, this);
+			m.setProcessInstanceId(p.instanceId());
+			m.setTenantId(p.tenantId());
+			ml.add(m);
+		}
+		
+		return ml;
+	}
+	@Override
+	public Request<?> prepareRequest() {
+		return new Request<Customer>(this);
+	}
+	
 }

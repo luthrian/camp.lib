@@ -20,46 +20,52 @@
 package com.camsolute.code.camp.lib.models.rest;
 
 
+import com.camsolute.code.camp.lib.models.customer.Customer;
 import com.camsolute.code.camp.lib.models.order.Order;
+import com.camsolute.code.camp.lib.models.process.CustomerProcess;
 import com.camsolute.code.camp.lib.models.process.OrderProcess;
 import com.camsolute.code.camp.lib.models.rest.VariableValue.VariableValueType;
 
 public class CustomerProcessMessage extends Message{
-
-	public static enum OrderPositionMessage {
-		cmp_orderrejected, opp_ordershipped, cop_ordercancelled, cop_orderupdated, cop_ordersubmitted,cmp_orderreleased
+	//TODO: add correct messages
+	public static enum CustomerMessage {
+		cpm_customer_created, cpm_customer_new, cpm_customer_id_unverified, cpm_customer_id_verified, cpm_customer_credit_unverified,cpm_customer_credit_verified,
+		cpm_customer_active,cpm_customer_deactiviated
+		;
 	}
-	public static final OrderPositionMessage ORDER_REJECTED_MSG = OrderPositionMessage.cmp_orderrejected;
-	public static final OrderPositionMessage ORDER_SHIPPED_MSG = OrderPositionMessage.opp_ordershipped;
-	public static final OrderPositionMessage ORDER_CANCELLED_MSG = OrderPositionMessage.cop_ordercancelled;
-	public static final OrderPositionMessage ORDER_UPDATED_MSG = OrderPositionMessage.cop_orderupdated;
-	public static final OrderPositionMessage ORDER_SUBMITTED_MSG = OrderPositionMessage.cop_ordersubmitted;
-	public static final OrderPositionMessage ORDER_RELEASED_MSG = OrderPositionMessage.cmp_orderreleased;
+	public static final CustomerMessage CUSTOMER_CREATED = CustomerMessage.cpm_customer_created;
+	public static final CustomerMessage CUSTOMER_NEW = CustomerMessage.cpm_customer_new;
+	public static final CustomerMessage CUSTOMER_ID_UNVERIFIED = CustomerMessage.cpm_customer_id_unverified;
+	public static final CustomerMessage CUSTOMER_ID_VERIFIED = CustomerMessage.cpm_customer_id_verified;
+	public static final CustomerMessage CUSTOMER_CREDIT_UNVERIFIED = CustomerMessage.cpm_customer_credit_unverified;
+	public static final CustomerMessage CUSTOMER_CREDIT_VERIFIED = CustomerMessage.cpm_customer_credit_verified;
+	public static final CustomerMessage CUSTOMER_ACTIVE = CustomerMessage.cpm_customer_active;
+	public static final CustomerMessage CUSTOMER_DEACTIVIATED = CustomerMessage.cpm_customer_deactiviated;
 	
-	public CustomerProcessMessage(OrderPositionMessage messageName, Order o) {
-		super(messageName.name(),o.businessKey());
-		OrderProcess p = (OrderProcess) o.processInstances().get(0);
+	public CustomerProcessMessage(CustomerMessage messageName, Customer c) {
+		super(messageName.name(),c.businessKey());
+		CustomerProcess p = (CustomerProcess) c.processInstances().get(0);
 		this.tenantId = p.tenantId();
 		this.processInstanceId = p.instanceId();
-		this.correlationKeys.variables().put("objectBusinessId", new VariableValue(o.businessId(),VariableValueType.valueOf("String")));
-		this.correlationKeys.variables().put("objectId", new VariableValue(String.valueOf(o.id()),VariableValueType.valueOf("String")));
-		this.processVariables.variables().put("objectBusinessId", new VariableValue(o.businessId(),VariableValueType.valueOf("String")));
-		this.processVariables.variables().put("objectId", new VariableValue(String.valueOf(o.id()),VariableValueType.valueOf("String")));
-		this.processVariables.variables().put("objectStatus",new VariableValue(o.status().name(), VariableValueType.valueOf("String")));
+		this.correlationKeys.variables().put("objectBusinessId", new VariableValue(c.businessId(),VariableValueType.valueOf("String")));
+		this.correlationKeys.variables().put("objectId", new VariableValue(String.valueOf(c.id()),VariableValueType.valueOf("String")));
+		this.processVariables.variables().put("objectBusinessId", new VariableValue(c.businessId(),VariableValueType.valueOf("String")));
+		this.processVariables.variables().put("objectId", new VariableValue(String.valueOf(c.id()),VariableValueType.valueOf("String")));
+		this.processVariables.variables().put("objectStatus",new VariableValue(c.status().name(), VariableValueType.valueOf("String")));
 		
 	}
 	
-	public CustomerProcessMessage(OrderPositionMessage messageName, String orderStatus, String orderNumber, int orderId, String businessKey) {
+	public CustomerProcessMessage(CustomerMessage messageName, String customerStatus, String customerBusinessId, int customerId, String businessKey) {
 		super(messageName.name(),businessKey);
-		this.correlationKeys.variables().put("objectBusinessId", new VariableValue(orderNumber,VariableValueType.valueOf("String")));
-		this.correlationKeys.variables().put("objectId", new VariableValue(String.valueOf(orderId),VariableValueType.valueOf("String")));
-		this.processVariables.variables().put("objectBusinessId", new VariableValue(orderNumber,VariableValueType.valueOf("String")));
-		this.processVariables.variables().put("objectId", new VariableValue(String.valueOf(orderId),VariableValueType.valueOf("String")));
-		this.processVariables.variables().put("objectStatus",new VariableValue(orderStatus, VariableValueType.valueOf("String")));
+		this.correlationKeys.variables().put("objectBusinessId", new VariableValue(customerBusinessId,VariableValueType.valueOf("String")));
+		this.correlationKeys.variables().put("objectId", new VariableValue(String.valueOf(customerId),VariableValueType.valueOf("String")));
+		this.processVariables.variables().put("objectBusinessId", new VariableValue(customerBusinessId,VariableValueType.valueOf("String")));
+		this.processVariables.variables().put("objectId", new VariableValue(String.valueOf(customerId),VariableValueType.valueOf("String")));
+		this.processVariables.variables().put("objectStatus",new VariableValue(customerStatus, VariableValueType.valueOf("String")));
 	}
 	
-	public OrderPositionMessage message() {
-		return OrderPositionMessage.valueOf(this.messageName);
+	public CustomerMessage message() {
+		return CustomerMessage.valueOf(this.messageName);
 	}
 	
 }
