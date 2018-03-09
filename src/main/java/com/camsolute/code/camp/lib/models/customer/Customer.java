@@ -19,26 +19,114 @@
  ******************************************************************************/
 package com.camsolute.code.camp.lib.models.customer;
 
+import org.json.JSONObject;
+
 import com.camsolute.code.camp.lib.contract.IsObjectInstance;
 import com.camsolute.code.camp.lib.models.CampInstance;
+import com.camsolute.code.camp.lib.models.CampInstanceInterface;
 import com.camsolute.code.camp.lib.models.CampStates;
+import com.camsolute.code.camp.lib.models.CampStatesInterface;
 import com.camsolute.code.camp.lib.models.Group;
 import com.camsolute.code.camp.lib.models.Version;
 import com.camsolute.code.camp.lib.utilities.Util;
 //TODO
-public class Customer implements IsObjectInstance<Customer> {
-	private int id;
+public class Customer implements CustomerInterface {
+	
+	public static enum Status {
+		CREATED,
+		NEW,
+		ID_UNVERIFIED,
+		ID_VERIFIED,
+		CREDIT_UNVERIFIED,
+		CREDIT_VERIFIED,
+		ACTIVE,
+		DEACTIVATED,
+		MODIFIED,
+		DIRTY,
+		CLEAN
+		;
+	};
+	
+	public static enum Type {
+		INT_CONSUMER,
+		INT_BUSINESS,
+		EXT_CONSUMER,
+		EXT_BUSINESS,
+		ORG_CONSUMER,
+		ORG_BUSINESS,
+		NGO_CONSUMER,
+		NGO_BUSINESS,
+		GOV_CONSUMER,
+		GOV_BUSINESS,
+		MIL_CONSUMER,
+		MIL_BUSINESS
+		;
+	}
+	public static enum Origin {
+		LOCAL,
+		FOREIGN
+	}
+	
+	private int id = Util.NEW_ID;
 	private String title;
 	private String firstName;
 	private String surName;
+	private String businessKey;
+	private Group group;
+	private Version version;
+	private CampInstance history = new CampInstance();
+	private CampStates states = new CampStates();
+	private Status status = Status.CREATED;
+	private Status previousStatus = Status.CLEAN;
+	private Address address = null;
+	private ContactDetails contact = null;
+	
+	public Customer(int id, String title, String firstName, String surName, String businessKey){
+		this.id = id;
+		this.title = title;
+		this.firstName = firstName;
+		this.surName = surName;
+		this.businessKey = businessKey;
+	}
+	
+	public Customer(String title, String firstName, String surName, String businessKey){
+		this.title = title;
+		this.firstName = firstName;
+		this.surName = surName;
+		this.businessKey = businessKey;
+	}
+	
 	@Override
-	public int id() {
-		return 0;
+ 	public int id() {
+		return this.id;
 	}
 	@Override
 	public int updateId(int id) {
-		// TODO Auto-generated method stub
-		return 0;
+		int prev = this.id;
+		this.id = id;
+		return prev;
+	}
+	public String firstName() {
+		return firstName;
+	}
+	public String updateFirstName(String name) {
+		String prev = this.firstName;
+		this.firstName = name;
+		return prev;
+	}
+	public void setFirstName(String name) {
+		this.firstName = name;
+	}
+	public String surName() {
+		return surName;
+	}
+	public String updateSurName(String name) {
+		String prev = this.surName;
+		this.surName = name;
+		return prev;
+	}
+	public void setSurName(String name) {
+		this.surName = name;
 	}
 	@Override
 	public String name() {
@@ -65,172 +153,192 @@ public class Customer implements IsObjectInstance<Customer> {
 	}
 	@Override
 	public Version version() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.version;
 	}
 	@Override
 	public void updateVersion(String version) {
-		// TODO Auto-generated method stub
-		
+		this.version = new Version(version);
+		this.states.modify();
 	}
 	@Override
 	public void updateVersion(Version version) {
-		// TODO Auto-generated method stub
-		
+		this.version = version;
+		this.states.modify();
 	}
 	@Override
 	public void setVersion(String version) {
-		// TODO Auto-generated method stub
-		
+		this.version = new Version(version);
 	}
 	@Override
 	public Group group() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.group;
 	}
 	@Override
 	public void updateGroup(Group group) {
-		// TODO Auto-generated method stub
-		
+		this.group = group;
+		this.states.modify();
 	}
 	@Override
 	public void updateGroup(String group) {
-		// TODO Auto-generated method stub
-		
+		this.group = new Group(group);
+		this.states.modify();
 	}
 	@Override
 	public void setGroup(String group) {
-		// TODO Auto-generated method stub
-		
+		this.group = new Group(group);
 	}
 	@Override
 	public String initialBusinessId() {
-		// TODO Auto-generated method stub
-		return null;
+		return name();
 	}
 	@Override
 	public String businessId() {
-		// TODO Auto-generated method stub
-		return null;
+		return name();
 	}
 	@Override
 	public String updateBusinessId(String newId) {
-		// TODO Auto-generated method stub
-		return null;
+		return updateName(newId);
 	}
 	@Override
 	public void setBusinessId(String newId) {
-		// TODO Auto-generated method stub
-		
+		setName(newId);
 	}
 	@Override
 	public String onlyBusinessId() {
-		// TODO Auto-generated method stub
-		return null;
+		return name();
 	}
 	@Override
 	public String businessKey() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.businessKey;
 	}
 	@Override
 	public void updateBusinessKey(String businessKey) {
-		// TODO Auto-generated method stub
-		
+		this.businessKey = businessKey;
+		this.states.modify();
 	}
 	@Override
 	public void setBusinessKey(String businessKey) {
-		// TODO Auto-generated method stub
-		
+		this.businessKey = businessKey;
 	}
 	@Override
 	public CampInstance history() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.history;
 	}
 	@Override
 	public void setHistory(CampInstance instance) {
-		// TODO Auto-generated method stub
-		
+		this.history = instance;
 	}
 	@Override
 	public int getObjectId() {
-		// TODO Auto-generated method stub
-		return 0;
+		return id();
 	}
 	@Override
 	public String getObjectBusinessId() {
-		// TODO Auto-generated method stub
-		return null;
+		return businessId();
 	}
 	@Override
 	public CampInstance getObjectHistory() {
-		// TODO Auto-generated method stub
-		return null;
+		return history();
 	}
 	@Override
 	public int getRefId() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 	@Override
 	public CampStates states() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.states();
 	}
 	@Override
 	public Enum<?> status() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.status;
 	}
 	@Override
 	public Enum<?> updateStatus(Enum<?> status) {
-		// TODO Auto-generated method stub
-		return null;
+		Status prev = this.status;
+		this.status = (Status) status;
+		this.states.modify();
+		return prev;
 	}
 	@Override
 	public Enum<?> updateStatus(String status) {
-		// TODO Auto-generated method stub
-		return null;
+		Status prev = this.status;
+		this.status = Status.valueOf(status);
+		this.states.modify();
+		return prev;
 	}
 	@Override
 	public void setStatus(Enum<?> status) {
-		// TODO Auto-generated method stub
-		
+		this.status = (Status) status;
 	}
 	@Override
 	public void setStatus(String status) {
-		// TODO Auto-generated method stub
-		
+		this.status = Status.valueOf(status);
 	}
 	@Override
 	public Enum<?> previousStatus() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.previousStatus;
 	}
 	@Override
 	public void setPreviousStatus(Enum<?> status) {
-		// TODO Auto-generated method stub
-		
+		this.previousStatus = (Status) status;
 	}
 	@Override
 	public void setPreviousStatus(String status) {
-		// TODO Auto-generated method stub
-		
+		this.previousStatus = Status.valueOf(status);
 	}
 	@Override
 	public <T extends IsObjectInstance<T>> void cleanStatus(T object) {
-		// TODO Auto-generated method stub
-		
+		if(this.status.name().equals(Status.MODIFIED.name())){
+			this.status = this.previousStatus;
+			this.previousStatus = Status.CLEAN;
+		}
+	}
+	
+	public String title() {
+		return this.title();
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	public String updateTitle(String title) {
+		String prev = this.title;
+		this.title = title;
+		this.states.modify();
+		return prev;
+	}
+	
+	public Address address(){ 
+		return this.address;
+	}
+	public void setAddress(Address address) {
+		this.address = address;
+	}
+	public void updateAddress(Address address) {
+		this.address = address;
+		this.states.modify();
 	}
 	@Override
 	public String toJson() {
-		// TODO Auto-generated method stub
-		return null;
+		return CustomerInterface._toJson(this);
 	}
 	@Override
 	public Customer fromJson(String json) {
-		// TODO Auto-generated method stub
-		return null;
+		return CustomerInterface._fromJson(json);
+	}
+
+	@Override
+	public ContactDetails contact() {
+		return this.contact;
+	}
+
+	@Override
+	public void updateContact(ContactDetails contactDetails) {
+		this.contact = contactDetails;
+		this.states.modify();
+	}
+
+	@Override
+	public void setContact(ContactDetails contactDetails) {
+		this.contact = contactDetails;
 	}
 }

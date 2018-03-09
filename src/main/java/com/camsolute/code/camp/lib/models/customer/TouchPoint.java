@@ -1,7 +1,6 @@
 package com.camsolute.code.camp.lib.models.customer;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 
 import com.camsolute.code.camp.lib.contract.IsObjectInstance;
 import com.camsolute.code.camp.lib.models.CampInstance;
@@ -201,69 +200,76 @@ public void setBusinessIdCustomer(String businessIdCustomer) {
 
 	@Override
 	public String name() {
-		return this.topic;
+		return topic();
 	}
 
 	@Override
 	public String updateName(String topic) {
+		return updateTopic(topic);
+	}
+
+	@Override
+	public void setName(String topic) {
+		setTopic(topic);
+	}
+
+	public String topic() {
+		return this.topic;
+	}
+
+	public String updateTopic(String topic) {
 		String prev = this.topic;
 		this.topic = topic;
 		this.states.modify();
 		return prev;
 	}
 
-	@Override
-	public void setName(String name) {
-		// TODO Auto-generated method stub
-		
+	public void setTopic(String topic) {
+		this.topic = topic;
 	}
 
 	@Override
 	public Version version() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.version;
 	}
 
 	@Override
 	public void updateVersion(String version) {
-		// TODO Auto-generated method stub
-		
+		this.version = new Version(version);
+		this.states.modify();
 	}
 
 	@Override
 	public void updateVersion(Version version) {
-		// TODO Auto-generated method stub
-		
+		this.version = version;
+		this.states.modify();
 	}
 
 	@Override
 	public void setVersion(String version) {
-		// TODO Auto-generated method stub
-		
+		this.version = new Version(version);
 	}
 
 	@Override
 	public Group group() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.group;
 	}
 
 	@Override
 	public void updateGroup(Group group) {
-		// TODO Auto-generated method stub
-		
+		this.group = group;
+		this.states.modify();
 	}
 
 	@Override
 	public void updateGroup(String group) {
-		// TODO Auto-generated method stub
-		
+		this.group = new Group(group);
+		this.states.modify();
 	}
 
 	@Override
 	public void setGroup(String group) {
-		// TODO Auto-generated method stub
-		
+		this.group = new Group(group);
 	}
 
 	@Override
@@ -418,14 +424,12 @@ public void setBusinessIdCustomer(String businessIdCustomer) {
 
 	@Override
 	public String toJson() {
-		// TODO Auto-generated method stub
-		return null;
+		return TouchPointInterface._toJson(this);
 	}
 
 	@Override
 	public TouchPoint fromJson(String json) {
-		// TODO Auto-generated method stub
-		return null;
+		return TouchPointInterface._fromJson(json);
 	}
 	
 }
