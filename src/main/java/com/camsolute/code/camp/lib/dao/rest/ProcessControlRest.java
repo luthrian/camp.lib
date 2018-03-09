@@ -27,6 +27,7 @@ import com.camsolute.code.camp.lib.data.CampRest;
 import com.camsolute.code.camp.lib.models.process.Process;
 import com.camsolute.code.camp.lib.models.process.ProcessInterface;
 import com.camsolute.code.camp.lib.models.process.ProcessList;
+import com.camsolute.code.camp.lib.models.rest.ProcessStartRequest;
 import com.camsolute.code.camp.lib.models.rest.SignalPacket;
 import com.camsolute.code.camp.lib.models.rest.Task;
 import com.camsolute.code.camp.lib.models.rest.TaskList;
@@ -50,7 +51,8 @@ if(log && !Util._IN_PRODUCTION) {
 	_f = "[startProcess]";
 	msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 }
-String json = object.toJson();
+ProcessStartRequest<T> request = new ProcessStartRequest<T>(object); 
+String json = request.toJson();
 String prefix = CampRest.ProcessControl.Prefix;		
 String serviceUri = CampRest.ProcessControlDaoService.callRequest(prefix,CampRest.ProcessControlDaoService.Request.START_PROCESS);
 String uri = serverUrl+domainUri+String.format(serviceUri,processKey);
@@ -65,7 +67,7 @@ return p;
 	}
 
 	@Override
-	public <T extends HasProcess<T, ?>> void messageProcess(Enum<?> messageType, T object, boolean log) {
+	public <T extends HasProcess<T, ?>> void messageProcess(Enum<?> messageType, Enum<?> messageName, T object, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -76,7 +78,7 @@ return p;
 		String json = object.toJson();
 		String prefix = CampRest.ProcessControl.Prefix;		
 		String serviceUri = CampRest.ProcessControlDaoService.callRequest(prefix,CampRest.ProcessControlDaoService.Request.NOTIFY_PROCESSES);
-		String uri = serverUrl+domainUri+String.format(serviceUri,messageType.name());
+		String uri = serverUrl+domainUri+String.format(serviceUri,messageType.name(),messageName.name());
 		String result = RestInterface.resultPost(uri, json, log);
 		if(log && !Util._IN_PRODUCTION){msg = "----[RestServiceCall result: "+result+"]----";LOG.info(String.format(fmt, _f,msg));}
 		
@@ -87,7 +89,7 @@ return p;
 	}
 
 	@Override
-	public <T extends HasProcess<T, ?>> void messageProcess(String processInstanceId, Enum<?> messageType, T object, boolean log) {
+	public <T extends HasProcess<T, ?>> void messageProcess(String processInstanceId, Enum<?> messageType, Enum<?> messageName, T object, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -98,7 +100,7 @@ return p;
 		String json = object.toJson();
 		String prefix = CampRest.ProcessControl.Prefix;		
 		String serviceUri = CampRest.ProcessControlDaoService.callRequest(prefix,CampRest.ProcessControlDaoService.Request.NOTIFY_PROCESS);
-		String uri = serverUrl+domainUri+String.format(serviceUri,processInstanceId, messageType.name());
+		String uri = serverUrl+domainUri+String.format(serviceUri,processInstanceId, messageType.name(),messageName.name());
 		String result = RestInterface.resultPost(uri, json, log);
 		if(log && !Util._IN_PRODUCTION){msg = "----[RestServiceCall result: "+result+"]----";LOG.info(String.format(fmt, _f,msg));}
 		
@@ -109,7 +111,7 @@ return p;
 	}
 
 	@Override
-	public <T extends HasProcess<T, ?>> void messageProcess(String processInstanceId, Enum<?> messageType, String objectStatus, String objectBusinessId, int objectId, boolean log) {
+	public <T extends HasProcess<T, ?>> void messageProcess(String processInstanceId, Enum<?> messageName, String businessKey, String objectStatus, String objectBusinessId, int objectId, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -119,7 +121,7 @@ return p;
 		}
 		String prefix = CampRest.ProcessControl.Prefix;		
 		String serviceUri = CampRest.ProcessControlDaoService.callRequest(prefix,CampRest.ProcessControlDaoService.Request.NOTIFY_PROCESS_GET);
-		String uri = serverUrl+domainUri+String.format(serviceUri,processInstanceId, messageType.name(), objectStatus, objectBusinessId, objectId);
+		String uri = serverUrl+domainUri+String.format(serviceUri,processInstanceId, messageName.name(),businessKey, objectStatus, objectBusinessId, objectId);
 		String result = RestInterface.resultGET(uri, log);
 		if(log && !Util._IN_PRODUCTION){msg = "----[RestServiceCall result: "+result+"]----";LOG.info(String.format(fmt, _f,msg));}
 		
@@ -130,7 +132,7 @@ return p;
 	}
 
 	@Override
-	public void triggerMessageEvent(String executionId, Enum<?> messageType, Variables variables, boolean log) {
+	public void triggerMessageEvent(String processInstanceId, String businessKey, Enum<?> messageName, Variables variables, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -141,7 +143,7 @@ return p;
 		String json = variables.toJson();
 		String prefix = CampRest.ProcessControl.Prefix;		
 		String serviceUri = CampRest.ProcessControlDaoService.callRequest(prefix,CampRest.ProcessControlDaoService.Request.NOTIFY_PROCESS_EVENT);
-		String uri = serverUrl+domainUri+String.format(serviceUri,executionId, messageType.name());
+		String uri = serverUrl+domainUri+String.format(serviceUri, processInstanceId, businessKey, messageName.name());
 		String result = RestInterface.resultPost(uri, json, log);
 		if(log && !Util._IN_PRODUCTION){msg = "----[RestServiceCall result: "+result+"]----";LOG.info(String.format(fmt, _f,msg));}
 		
@@ -152,7 +154,7 @@ return p;
 	}
 
 	@Override
-	public <T extends HasProcess<T, ?>> void signalProcess(Variables variables, T object, boolean log) {
+	public void signalProcess(Variables variables, ProcessList processList, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -160,8 +162,7 @@ return p;
 			_f = "[signalProcess]";
 			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
-		ProcessList pl = object.processInstances();
-		SignalPacket sp = new SignalPacket(pl,variables);
+		SignalPacket sp = new SignalPacket(processList,variables);
 		
 		String json = sp.toJson();
 		String prefix = CampRest.ProcessControl.Prefix;		
@@ -177,7 +178,7 @@ return p;
 	}
 
 	@Override
-	public void signalProcess(String execustionId, Variables variables, boolean log) {
+	public void signalProcess(String processInstanceId, String businessKey, Variables variables, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -188,7 +189,7 @@ return p;
 		String json = variables.toJson();
 		String prefix = CampRest.ProcessControl.Prefix;		
 		String serviceUri = CampRest.ProcessControlDaoService.callRequest(prefix,CampRest.ProcessControlDaoService.Request.SIGNAL_PROCESS);
-		String uri = serverUrl+domainUri+String.format(serviceUri,execustionId);
+		String uri = serverUrl+domainUri+String.format(serviceUri,processInstanceId, businessKey);
 		String result = RestInterface.resultPost(uri, json, log);
 		if(log && !Util._IN_PRODUCTION){msg = "----[RestServiceCall result: "+result+"]----";LOG.info(String.format(fmt, _f,msg));}
 		

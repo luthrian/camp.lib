@@ -37,4 +37,17 @@ public interface OrderPositionDaoInterface extends HasProcessReference<OrderPosi
 //
 	public String insertProcessReferenceValues(String businessId, ProcessList pl, boolean log);
 
+	public OrderPosition loadFirst(String businessId);
+
+	public OrderPosition loadPrevious(OrderPosition orderPosition);
+
+	public OrderPosition loadNext(OrderPosition orderPosition);
+
+	public OrderPositionList loadDate(String businessId, String date);
+
+	public OrderPositionList loadDateRange(String businessId, String startDate, String endDate);
+
+	public OrderPositionList loadDate(String date);
+
+	public OrderPositionList loadDateRange(String startDate, String endDate);
 }

@@ -43,6 +43,8 @@ public interface ProductServicePointInterface {
 	
 	public String loadListByBusinessKey(String businessKey);
 	
+	public String create(String businessId, String businessKey, String group, String version, String date);
+	
 	public String save(String product);
 	
 	public String saveList(String productList);
@@ -50,6 +52,8 @@ public interface ProductServicePointInterface {
 	public String update(String product);
 	
 	public String updateList(String productList);
+
+	public int addInstance(String product, boolean useObjectId);
 
 	public String loadFirst(String businessId, boolean primary);
 	

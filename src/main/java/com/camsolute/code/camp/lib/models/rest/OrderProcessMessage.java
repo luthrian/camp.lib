@@ -42,9 +42,9 @@ public class OrderProcessMessage extends Message{
 		this.tenantId = p.tenantId();
 		this.processInstanceId = p.instanceId();
 		this.correlationKeys.variables().put("objectBusinessId", new VariableValue(o.businessId(),VariableValueType.valueOf("String")));
-		this.correlationKeys.variables().put("objectId", new VariableValue(String.valueOf(o.id()),VariableValueType.valueOf("String")));
+		this.correlationKeys.variables().put("objectId", new VariableValue(String.valueOf(o.id()),VariableValueType.valueOf("Integer")));
 		this.processVariables.variables().put("objectBusinessId", new VariableValue(o.businessId(),VariableValueType.valueOf("String")));
-		this.processVariables.variables().put("objectId", new VariableValue(String.valueOf(o.id()),VariableValueType.valueOf("String")));
+		this.processVariables.variables().put("objectId", new VariableValue(String.valueOf(o.id()),VariableValueType.valueOf("Integer")));
 		this.processVariables.variables().put("objectStatus",new VariableValue(o.status().name(), VariableValueType.valueOf("String")));
 		
 	}
@@ -52,9 +52,9 @@ public class OrderProcessMessage extends Message{
 	public OrderProcessMessage(CustomerOrderMessage messageName, String orderStatus, String orderNumber, int orderId, String businessKey) {
 		super(messageName.name(),businessKey);
 		this.correlationKeys.variables().put("objectBusinessId", new VariableValue(orderNumber,VariableValueType.valueOf("String")));
-		this.correlationKeys.variables().put("objectId", new VariableValue(String.valueOf(orderId),VariableValueType.valueOf("String")));
+		this.correlationKeys.variables().put("objectId", new VariableValue(String.valueOf(orderId),VariableValueType.valueOf("Integer")));
 		this.processVariables.variables().put("objectBusinessId", new VariableValue(orderNumber,VariableValueType.valueOf("String")));
-		this.processVariables.variables().put("objectId", new VariableValue(String.valueOf(orderId),VariableValueType.valueOf("String")));
+		this.processVariables.variables().put("objectId", new VariableValue(String.valueOf(orderId),VariableValueType.valueOf("Integer")));
 		this.processVariables.variables().put("objectStatus",new VariableValue(orderStatus, VariableValueType.valueOf("String")));
 	}
 	

@@ -59,11 +59,11 @@ public class ProductProcessMessage extends Message{
 	
 	public ProductProcessMessage(ProductMessage messageName, String status, String productName, int productId, String businessKey) {
 		super(messageName.name(),businessKey);
-		this.correlationKeys.variables().put("orderNumber", new VariableValue(productName,VariableValueType.valueOf("String")));
-		this.correlationKeys.variables().put("orderId", new VariableValue(String.valueOf(productId),VariableValueType.valueOf("String")));
-		this.processVariables.variables().put("orderNumber", new VariableValue(productName,VariableValueType.valueOf("String")));
-		this.processVariables.variables().put("orderId", new VariableValue(String.valueOf(productId),VariableValueType.valueOf("String")));
-		this.processVariables.variables().put("orderStatus",new VariableValue(status, VariableValueType.valueOf("String")));
+		this.correlationKeys.variables().put("objectBusinessId", new VariableValue(productName,VariableValueType.valueOf("String")));
+		this.correlationKeys.variables().put("objectId", new VariableValue(String.valueOf(productId),VariableValueType.valueOf("Integer")));
+		this.processVariables.variables().put("objectBusinessId", new VariableValue(productName,VariableValueType.valueOf("String")));
+		this.processVariables.variables().put("objectId", new VariableValue(String.valueOf(productId),VariableValueType.valueOf("Integer")));
+		this.processVariables.variables().put("objectStatus",new VariableValue(status, VariableValueType.valueOf("String")));
 	}
 
 	public ProductMessage message() {

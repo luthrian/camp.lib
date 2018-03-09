@@ -73,6 +73,10 @@ public interface OrderServicePointInterface {
 	
 	public int deleteAllFromUpdates(String businessKey, String target);
 	
+	public int deleteFromUpdatesByKey(String businessKey);
+
+	public int deleteFromUpdatesByTarget(String target);
+
 	public int deleteFromUpdates(String businessId, String businessKey, String target);
 	
 	public int deleteListFromUpdates(String orderList, String businessKey, String target);

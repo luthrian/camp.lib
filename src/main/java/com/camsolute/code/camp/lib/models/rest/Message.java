@@ -20,13 +20,26 @@
 package com.camsolute.code.camp.lib.models.rest;
 
 
-import java.util.HashMap;
-
 import org.json.JSONObject;
 
 import com.camsolute.code.camp.lib.contract.Serialization;
 
 public class Message implements Serialization<Message>{
+	
+	public static enum MessageType {
+		OrderProcessMessage,
+		OrderOrderProcessMessage, //TODO
+		ProductionOrderProcessMessage, //TODO
+		ProductOrderProcessMessage, //TODO
+		AttributeOrderProcessMessage, //TODO
+		ModelOrderProcessMessage, //TODO
+		OrderPositionProcessMessage, 
+		ProductProcessMessage,
+		AttributeProcessMessage, //TODO
+		ModelProcessMessage, //TODO
+		ProductionProcessMessage, //TODO
+		CustomerProcessMessage; //TODO
+	};
 	protected String messageName;
 	protected String businessKey;
 	protected String tenantId;

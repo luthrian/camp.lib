@@ -76,6 +76,10 @@ public interface DaoInterface<T extends IsObjectInstance<T>> {
 
     public int deleteAllFromUpdates(String businessKey, String target, boolean log);
 
+  	public int deleteFromUpdatesByKey(String businessKey, boolean log);
+
+  	public int deleteFromUpdatesByTarget(String target, boolean log);
+
     public int deleteFromUpdates(String instanceId, String businessKey, String target, boolean log);
 
     public <E extends ArrayList<T>> int deleteFromUpdates(E instanceList, String businessKey, String target, boolean log);

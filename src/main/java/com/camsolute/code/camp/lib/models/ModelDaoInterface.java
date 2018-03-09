@@ -25,4 +25,18 @@ import com.camsolute.code.camp.lib.dao.database.DBDaoInterface;
 
 public interface ModelDaoInterface extends InstanceDaoInterface<Model>, DaoInterface<Model>, DBDaoInterface<Model> {
 
+	public Model loadFirst(String businessId);
+
+	public Model loadPrevious(Model model);
+
+	public Model loadNext(Model model);
+
+	public ModelList loadDate(String businessId, String date);
+
+	public ModelList loadDateRange(String businessId, String startDate, String endDate);
+
+	public ModelList loadDate(String date);
+
+	public ModelList loadDateRange(String startDate, String endDate);
+
 }

@@ -24,22 +24,23 @@ import com.camsolute.code.camp.lib.models.rest.TaskList;
 import com.camsolute.code.camp.lib.models.rest.Variables;
 import com.camsolute.code.camp.lib.contract.HasProcess;
 import com.camsolute.code.camp.lib.models.process.Process;
+import com.camsolute.code.camp.lib.models.process.ProcessList;
 
 public interface ProcessControlRestInterface {
 
 	public <T extends HasProcess<T,?>> Process<?,?> startProcess(String processKey, T object, boolean log);
 	
-	public <T extends HasProcess<T,?>> void messageProcess(Enum<?> messageType, T object, boolean log);
+	public <T extends HasProcess<T,?>> void messageProcess(Enum<?> messageType, Enum<?> messageName, T object, boolean log);
 	
-	public <T extends HasProcess<T,?>> void messageProcess(String processInstanceId, Enum<?> messageType, T object, boolean log);
+	public <T extends HasProcess<T,?>> void messageProcess(String processInstanceId, Enum<?> messageType, Enum<?> messageName, T object, boolean log);
 	
-	public <T extends HasProcess<T,?>> void messageProcess(String processInstanceId, Enum<?> messageType, String objectStatus, String objectBusinessId, int objectId, boolean log);
+	public <T extends HasProcess<T,?>> void messageProcess(String processInstanceId, Enum<?> messageName, String businessKey, String objectStatus, String objectBusinessId, int objectId, boolean log);
 	
-	public void triggerMessageEvent(String executionId, Enum<?> messageType, Variables variables, boolean log);
+	public void triggerMessageEvent(String processInstanceId, String businessKey, Enum<?> messageName, Variables variables, boolean log);
 	
-	public <T extends HasProcess<T,?>> void signalProcess(Variables variables, T object, boolean log);
+	public void signalProcess(Variables variables, ProcessList processList, boolean log);
 	
-	public void signalProcess(String execustionId, Variables variables, boolean log);
+	public void signalProcess(String processInstanceId, String businessKey, Variables variables, boolean log);
 	
 	public void claimTask(String taskId, String userId, boolean log);
 	

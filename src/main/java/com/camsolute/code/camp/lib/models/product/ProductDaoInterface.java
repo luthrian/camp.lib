@@ -24,6 +24,9 @@ import com.camsolute.code.camp.lib.dao.HasModelReference;
 import com.camsolute.code.camp.lib.dao.HasProcessReference;
 import com.camsolute.code.camp.lib.dao.InstanceDaoInterface;
 import com.camsolute.code.camp.lib.dao.database.DBDaoInterface;
+import com.camsolute.code.camp.lib.models.AttributeList;
+import com.camsolute.code.camp.lib.models.AttributeMap;
+import com.camsolute.code.camp.lib.models.Model;
 import com.camsolute.code.camp.lib.models.ModelList;
 import com.camsolute.code.camp.lib.models.process.ProcessList;
 
@@ -37,9 +40,7 @@ public interface ProductDaoInterface extends HasProcessReference<Product>, HasMo
 //
 //	public int delModelReferences(Product p, boolean log);
 //
-	public Product saveModels(Product p, boolean log);
-
-	public ProductList saveModels(ProductList pl, boolean log);
+	public ModelList saveModels(ModelList ml, boolean log);
 
 //	public int addProcessReferences(Product p, boolean log);
 //
@@ -49,20 +50,28 @@ public interface ProductDaoInterface extends HasProcessReference<Product>, HasMo
 //
 //	public int delProcessReferences(Product p, boolean log);
 
-	public Product saveAttributes(Product p, boolean log);
+	public AttributeMap saveAttributes(int productId, AttributeMap a, boolean log);
 
-	public ProductList saveAttributes(ProductList pl, boolean log);
+	public AttributeMap updateAttributes(int productId, AttributeMap a, boolean log);
 
-	public Product updateAttributes(Product p, boolean log);
-
-	public ProductList updateAttributes(ProductList pl, boolean log);
-
-	public Product loadAttributes(Product p, boolean log);
-
-	public ProductList loadAttributes(ProductList pl, boolean log);
+	public AttributeMap loadAttributes(int productId, boolean log);
 
 	public String insertProcessReferenceValues(String businessId,ProcessList pl, boolean log);
 
 	public String insertModelReferenceValues(String businessId, ModelList ml, boolean log);
+
+	public Product loadFirst(String businessId);
+
+	public Product loadPrevious(Product attribute);
+
+	public Product loadNext(Product attribute);
+
+	public ProductList loadDate(String businessId, String date);
+
+	public ProductList loadDateRange(String businessId, String startDate, String endDate);
+
+	public ProductList loadDate(String date);
+
+	public ProductList loadDateRange(String startDate, String endDate);
 
 }

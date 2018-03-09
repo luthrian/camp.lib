@@ -21,29 +21,29 @@ package com.camsolute.code.camp.lib.dao.rest;
 
 public interface ProcessControlServicePointInterface {
 
-	public String startProcess(String processKey, String object, boolean log);
+	public String startProcess(String processKey, String request);
 	
-	public void messageProcess(String messageType, String object, boolean log);
+	public void messageProcesses(String messageType, String messageName, String object);
 	
-	public void messageProcess(String processInstanceId, String messageType, String object, boolean log);
+	public void messageProcess(String processInstanceId, String messageType, String messageName, String object);
 	
-	public void messageProcess(String processInstanceId, String messageType, String objectStatus, String objectBusinessId, int objectId, boolean log);
+	public void messageProcess(String processInstanceId, String messageName, String businessKey, String objectStatus, String objectBusinessId, int objectId);
 	
-	public void triggerMessageEvent(String executionId, String messageType, String String, boolean log);
+	public void triggerMessageEvent(String processInstanceId, String businessKey, String messageName, String variables);
 	
-	public void signalProcessList(String variables, String signalPacket, boolean log);
+	public void signalProcessList(String signalPacket);
 	
-	public void signalProcess(String execustionId, String variables, boolean log);
+	public void signalProcess(String processInstanceId, String businessKey, String variables);
 	
-	public void claimTask(String taskId, String userId, boolean log);
+	public void claimTask(String taskId, String userId);
 	
-	public void delegateTask(String taskId, String userId, boolean log);
+	public void delegateTask(String taskId, String userId);
 	
-	public void completeTask(String taskId, String variables, boolean log);
+	public void completeTask(String taskId, String variables);
 	
-	public String getTask(String taskId, boolean log);
+	public String getTask(String taskId);
 	
-	public String getTasks(String processInstanceId, String businessKey, boolean log);
+	public String getTasks(String processInstanceId, String businessKey);
 	
-	public String getTasks(String processInstanceId, boolean log);
+	public String getTasks(String processInstanceId);
 }

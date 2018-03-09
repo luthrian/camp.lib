@@ -75,6 +75,10 @@ public interface ProcessServicePointInterface {
 	public int deleteAllFromUpdates(String businessKey, String target);
 
 
+	public int deleteFromUpdatesByKey(String businessKey);
+
+	public int deleteFromUpdatesByTarget(String target);
+
 	public int deleteFromUpdates(String instanceId, String businessId, String businessKey, String target);
 
 

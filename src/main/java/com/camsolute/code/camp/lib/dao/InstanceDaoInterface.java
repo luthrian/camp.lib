@@ -25,6 +25,7 @@ import java.util.ArrayList;
 
 import com.camsolute.code.camp.lib.contract.IsObjectInstance;
 import com.camsolute.code.camp.lib.dao.database.DBDaoInterface;
+import com.camsolute.code.camp.lib.models.Model;
 
 public interface InstanceDaoInterface<T extends IsObjectInstance<T>> extends DaoInterface<T> {
 

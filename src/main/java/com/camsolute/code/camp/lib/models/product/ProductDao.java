@@ -852,6 +852,92 @@ public class ProductDao implements ProductDaoInterface {
 	}
 
 	@Override
+	public int deleteFromUpdatesByKey(String businessKey, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[deleteFromUpdatesByKey]";
+			msg = "====[ deregister a list of product object instances from the updates table that share the common business key aspect  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		Connection conn = null;
+		ResultSet rs = null;
+		Statement dbs = null;
+		int retVal = 0;
+		try{
+			conn = Util.DB.__conn(log);
+			
+			dbs = conn.createStatement();
+			
+			String SQL = "DELETE FROM "+updatestable+" WHERE "
+					+"`_product_businesskey`='"+businessKey+"'";
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
+			
+			retVal = dbs.executeUpdate(SQL);
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
+			
+		} catch(SQLException e) {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
+			e.printStackTrace();
+		} finally {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ releasing connection]----";LOG.info(String.format(fmt, _f,msg));}
+			Util.DB.__release(conn,log);
+			Util.DB._releaseRS(rs, log);
+			Util.DB._releaseStatement(dbs, log);
+		}
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[deleteFromUpdatesByKey completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return retVal;
+	}
+
+	@Override
+	public int deleteFromUpdatesByTarget(String target, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[deleteFromUpdatesByTarget]";
+			msg = "====[ deregister a list of product object instances from the updates table that share the common target identifer aspect values ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		Connection conn = null;
+		ResultSet rs = null;
+		Statement dbs = null;
+		int retVal = 0;
+		try{
+			conn = Util.DB.__conn(log);
+			
+			dbs = conn.createStatement();
+			
+			String SQL = "DELETE FROM "+updatestable+" WHERE "
+					+" AND `_product_target`='"+target+"'";
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
+			
+			retVal = dbs.executeUpdate(SQL);
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
+			
+		} catch(SQLException e) {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
+			e.printStackTrace();
+		} finally {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ releasing connection]----";LOG.info(String.format(fmt, _f,msg));}
+			Util.DB.__release(conn,log);
+			Util.DB._releaseRS(rs, log);
+			Util.DB._releaseStatement(dbs, log);
+		}
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[deleteFromUpdatesByTarget completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return retVal;
+	}
+
+	@Override
 	public int deleteFromUpdates(String businessId, String businessKey, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
@@ -1674,7 +1760,7 @@ public class ProductDao implements ProductDaoInterface {
 	}
 
 	@Override
-	public Product saveModels(Product p, boolean log) {
+	public ModelList saveModels(ModelList ml, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -1682,38 +1768,17 @@ public class ProductDao implements ProductDaoInterface {
 			_f = "[saveModels]";
 			msg = "====[ persist all models associated with a product ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
-		ModelList ml = p.models();
 		ml = ModelDao.instance().saveList(ml, log);
-		p.setModels(ml);
 		
 		if(log && !Util._IN_PRODUCTION) {
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[saveModels completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
-		return p;
+		return ml;
 	}
 
 	@Override
-	public ProductList saveModels(ProductList pl, boolean log) {
-		long startTime = System.currentTimeMillis();
-		String _f = null;
-		String msg = null;
-		if(log && !Util._IN_PRODUCTION) {
-			_f = "[saveModels]";
-			msg = "====[ persist all models associated with a list of product object instances ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
-		}
-		for(Product p: pl) {
-			p = saveModels(p,log);
-		}
-		if(log && !Util._IN_PRODUCTION) {
-			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
-			msg = "====[saveModels completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
-		}
-		return pl;
-	}
-
-	@Override
-	public Product saveAttributes(Product p, boolean log) {
+	public AttributeMap saveAttributes(int productId, AttributeMap a, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -1721,39 +1786,18 @@ public class ProductDao implements ProductDaoInterface {
 			_f = "[saveAttributes]";
 			msg = "====[ persist all product attributes associated with a product ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
-		AttributeMap a = p.attributes();
-		a = (AttributeMap) AttributeDao.instance().saveByObjectId(p.id(),a);
+		a = AttributeDao.instance().saveByObjectId(productId,a);
 //		a = (AttributeMap) AttributeDao.instance().save(p.id(), a);
-		p.setAttributes(a);
 		
 		if(log && !Util._IN_PRODUCTION) {
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[saveAttributes completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
-		return p;
+		return a;
 	}
 
 	@Override
-	public ProductList saveAttributes(ProductList pl, boolean log) {
-		long startTime = System.currentTimeMillis();
-		String _f = null;
-		String msg = null;
-		if(log && !Util._IN_PRODUCTION) {
-			_f = "[saveAttributes]";
-			msg = "====[ persist all product attributes associated with a list of product object instances ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
-		}
-		for(Product p: pl) {
-			p = saveAttributes(p,log);
-		}
-		if(log && !Util._IN_PRODUCTION) {
-			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
-			msg = "====[saveAttributes completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
-		}
-		return pl;
-	}
-
-	@Override
-	public Product updateAttributes(Product p, boolean log) {
+	public AttributeMap updateAttributes(int productId, AttributeMap a, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -1761,42 +1805,19 @@ public class ProductDao implements ProductDaoInterface {
 			_f = "[saveAttributes]";
 			msg = "====[ update the definition and value aspects of all product attributes associated with a product ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
-		AttributeMap a = p.attributes();
-		int retVal = AttributeDao._updateByObjectId(p.id(), a,log);
+		int retVal = AttributeDao._updateByObjectId(productId, a,log);
 
 		if (log && !Util._IN_PRODUCTION) { msg = "----[ '" + retVal + "' entr"+((retVal>1)?"ies":"y")+" updated ]----"; LOG.info(String.format(fmt, _f, msg)); }
-		
-		p.setAttributes(a);
 		
 		if(log && !Util._IN_PRODUCTION) {
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[saveAttributes completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
-		return p;
-	}
-
-
-	@Override
-	public ProductList updateAttributes(ProductList pl, boolean log) {
-		long startTime = System.currentTimeMillis();
-		String _f = null;
-		String msg = null;
-		if(log && !Util._IN_PRODUCTION) {
-			_f = "[updateAttributes]";
-			msg = "====[ update the value aspects of all product attributes associated with a of product attributes ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
-		}
-		for(Product p: pl) {
-			p = updateAttributes(p,log);
-		}
-		if(log && !Util._IN_PRODUCTION) {
-			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
-			msg = "====[updateAttributes completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
-		}
-		return pl;
+		return a;
 	}
 
 	@Override
-	public Product loadAttributes(Product p, boolean log) {
+	public AttributeMap loadAttributes(int productId, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -1805,36 +1826,14 @@ public class ProductDao implements ProductDaoInterface {
 			msg = "====[ load all product attributes assoiated with a product ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		
-		AttributeMap a = AttributeDao._loadByObjectId(p.id(), log);
-		p.setAttributes(a);
+		AttributeMap a = AttributeDao._loadByObjectId(productId, log);
 		
 		if(log && !Util._IN_PRODUCTION) {
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[loadAttributes completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
-		return p;
+		return a;
 	}
-
-	@Override
-	public ProductList loadAttributes(ProductList pl, boolean log) {
-		long startTime = System.currentTimeMillis();
-		String _f = null;
-		String msg = null;
-		if(log && !Util._IN_PRODUCTION) {
-			_f = "[loadAttributes]";
-			msg = "====[ load all product attributes assoiated with a list of products ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
-		}
-		for(Product p: pl){
-			p = loadAttributes(p,log);
-		}
-		if(log && !Util._IN_PRODUCTION) {
-			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
-			msg = "====[loadAttributes completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
-		}
-		return pl;
-	}
-
-
 
 	@Override
 	public String insertProcessReferenceValues(String businessId, ProcessList pl, boolean log) {
@@ -2002,5 +2001,188 @@ public class ProductDao implements ProductDaoInterface {
 	public String businessIdColumn(boolean primary) {
 		return "product_name";
 	}
+
+	@Override
+	public Product loadFirst(String businessId) {
+		return _loadFirst(businessId, !Util._IN_PRODUCTION);
+	}
+	public static Product _loadFirst(String businessId, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[_loadFirst]";
+			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		Product p = null;
+		try {
+			p = CampInstanceDao.instance()._loadFirst(businessId, ProductDao.instance(), false,log);
+		} catch (SQLException e) {
+			if(log && !Util._IN_PRODUCTION){msg = "----[SQL EXCEPTION! loadFirst FAILED]----";LOG.info(String.format(fmt, _f,msg));}
+			e.printStackTrace();
+		}
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[_loadFirst completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return p;
+	}
+
+	@Override
+	public Product loadPrevious(Product product) {
+		return _loadPrevious(product, !Util._IN_PRODUCTION);
+	}
+	public static Product _loadPrevious(Product product,boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[_loadPrevious]";
+			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		Product p = null;
+		try {
+			p = CampInstanceDao.instance()._loadPrevious(product, ProductDao.instance(), false, log);
+		} catch(SQLException e) {
+			if(log && !Util._IN_PRODUCTION){msg = "----[SQL EXCEPTION! _loadPrevious FAILED]----";LOG.info(String.format(fmt, _f,msg));}
+			e.printStackTrace();
+		}
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[_loadPrevious completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return p;
+	}
+
+	@Override
+	public Product loadNext(Product product) {
+		return _loadNext(product, !Util._IN_PRODUCTION);
+	}
+	public static Product _loadNext(Product product, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[_loadNext]";
+			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		Product p = null;
+		try {
+			p = CampInstanceDao.instance()._loadNext(product, ProductDao.instance(), false, log);
+		} catch(SQLException e) {
+			if(log && !Util._IN_PRODUCTION){msg = "----[SQL EXCEPTION! _loadNext FAILED]----";LOG.info(String.format(fmt, _f,msg));}
+			e.printStackTrace();
+		}
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[_loadNext completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return p;
+	}
+
+	@Override
+	public ProductList loadDate(String businessId, String date) {
+		return _loadDate(businessId, date, !Util._IN_PRODUCTION);
+	}
+	public static ProductList _loadDate(String businessId, String date, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[_loadDate]";
+			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		ProductList pl = null;
+		try {
+			pl = CampInstanceDao.instance()._loadDate(businessId, date, ProductDao.instance(), false,log);
+		} catch (SQLException e) {
+			if(log && !Util._IN_PRODUCTION){msg = "----[SQL EXCEPTION! _loadDate FAILED]----";LOG.info(String.format(fmt, _f,msg));}
+			e.printStackTrace();
+		}
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[_loadDate completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return pl;
+	}
+
+	@Override
+	public ProductList loadDateRange(String businessId, String startDate, String endDate) {
+		return _loadDateRange(businessId, startDate, endDate, !Util._IN_PRODUCTION);
+	}
+	public static ProductList _loadDateRange(String businessId, String startDate, String endDate, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[_loadDateRange]";
+			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		ProductList pl = null;
+		try {
+			pl = CampInstanceDao.instance()._loadDateRange(businessId, startDate, endDate, ProductDao.instance(), false,log);
+		} catch (SQLException e) {
+			if(log && !Util._IN_PRODUCTION){msg = "----[SQL EXCEPTION! _loadDateRange FAILED]----";LOG.info(String.format(fmt, _f,msg));}
+			e.printStackTrace();
+		}
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[_loadDateRange completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return pl;
+	}
+
+	@Override
+	public ProductList loadDate(String date) {
+		return _loadDate(date,!Util._IN_PRODUCTION);
+	}
+	public static ProductList _loadDate(String date,boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[_loadDate]";
+			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		ProductList pl = null;
+		try {
+			pl = CampInstanceDao.instance()._loadDate(date, ProductDao.instance(), false,log);
+		} catch (SQLException e) {
+			if(log && !Util._IN_PRODUCTION){msg = "----[SQL EXCEPTION! _loadDate FAILED]----";LOG.info(String.format(fmt, _f,msg));}
+			e.printStackTrace();
+		}
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[_loadDate completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return pl;
+	}
+
+	@Override
+	public ProductList loadDateRange(String startDate, String endDate) {
+		return _loadDateRange(startDate,endDate,!Util._IN_PRODUCTION);
+	}
+	public static ProductList _loadDateRange(String startDate, String endDate, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[_loadDateRange]";
+			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		ProductList pl = null;
+		try {
+			pl = CampInstanceDao.instance()._loadDateRange(startDate, endDate, ProductDao.instance(), false,log);
+		} catch (SQLException e) {
+			if(log && !Util._IN_PRODUCTION){msg = "----[SQL EXCEPTION! _loadDateRange FAILED]----";LOG.info(String.format(fmt, _f,msg));}
+			e.printStackTrace();
+		}
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[_loadDateRange completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return pl;
+	}
+
 
 }

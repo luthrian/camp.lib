@@ -37,6 +37,10 @@
  */
 package com.camsolute.code.camp.lib.models;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+import com.camsolute.code.camp.lib.contract.IsObjectInstance;
 import com.camsolute.code.camp.lib.dao.DaoInterface;
 import com.camsolute.code.camp.lib.dao.InstanceDaoInterface;
 import com.camsolute.code.camp.lib.models.Attribute;
@@ -236,30 +240,6 @@ public interface AttributeDaoInterface extends DaoInterface<Attribute<?>>, Insta
    * @return num deleted
    */
     public int deleteList(int objectId, AttributeList attributeList);
-//
-//  /**
-//   * delete a list of attribute by the root attribute id
-//   *
-//   * @param rootId
-//   * @return
-//   */
-//    public int deleteList(int objectId, int rootId);
-
-    /**
-     * delete a list of attribute by the root attribute name
-     *
-     * @param rootName
-     * @return
-     */
-//    public int deleteList(int objectId, String rootName);
-//
-//  /**
-//   * load an attribute by its id
-//   *
-//   * @param id
-//   * @return
-//   */
-//    public Attribute<?> load(Attribute<?> attribute);
 
   /**
    * load an attribute by its def id and object id
@@ -280,36 +260,20 @@ public interface AttributeDaoInterface extends DaoInterface<Attribute<?>>, Insta
 
     public AttributeList loadRange(AttributeList attributeList, int objectId, int startPosition, int endPosition);
 
-//    /**
-//     * add a reference to the one to many relationship between an object and attributes (object[1]-->[1]rootAttr[1]-->[*]attribute)
-//     *
-//     * @param rootId
-//     * @param objectId
-//     * @param attribute
-//     * @param rootGroupName
-//     * @return
-//     */
-//
-//    /**
-//     * add references to the one to many relationship between an object and attributes (object[1]-->[1]rootAttr[1]-->[*]attribute)
-//     *
-//     * @param rootId
-//     * @param objectId
-//     * @param attributeList
-//     * @param rootGroupName
-//     * @return
-//     */
-//
-//  /**
-//   * persists the root attribute aspect of an object to the database. the root attribute aspect encapsulates all attribute aspects
-//   * of an object. the root attribute aspect is expressed as a <code>CampMap</code> object.
-//   *
-//   * @param objectId
-//   * @param rootAttribute
-//   * @return
-//   */
+    public Attribute<?> loadFirst(String businessId);
 
+    public Attribute<?> loadPrevious(Attribute<?> attribute);
 
+    public Attribute<?> loadNext(Attribute<?> attribute);
+   
+    public AttributeList loadDate(String businessId, String date);
+    
+    public AttributeList loadDateRange(String businessId, String startDate, String endDate);
+    
+    public AttributeList loadDate(String date);
+    
+    public AttributeList loadDateRange(String startDate, String endDate);
+    
     public int createTable(boolean log);
 
     public int clearTables(boolean log);

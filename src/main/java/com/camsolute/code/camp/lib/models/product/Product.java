@@ -53,7 +53,7 @@ public class Product implements ProductInterface {
 
 	private int						id							= Util.NEW_ID;
 	private String				name;
-	private String				businesskey;
+	private String				businessKey;
 	private int 					modelId = 0;
 	private Model					model = null;
 	private ModelList			models;
@@ -71,9 +71,14 @@ public class Product implements ProductInterface {
 		this.name = name;
 	}
 
+	public Product(String name, String businessKey) {
+		this.name = name;
+		this.businessKey = businessKey;
+	}
+
 	public Product(String name, String businessKey, Group group, Version version, Timestamp date) {
 		this.name = name;
-		this.businesskey = businessKey;
+		this.businessKey = businessKey;
 		this.group = group;
 		this.version = version;
 		this.date = date;
@@ -82,7 +87,7 @@ public class Product implements ProductInterface {
 	public Product(int id, String name, String businessKey, Group group, Version version, Timestamp date) {
 		this.id = id;
 		this.name = name;
-		this.businesskey = businessKey;
+		this.businessKey = businessKey;
 		this.group = group;
 		this.version = version;
 		this.date = date;
@@ -257,18 +262,18 @@ public class Product implements ProductInterface {
 
 	@Override
 	public String businessKey() {
-		return this.businesskey;
+		return this.businessKey;
 	}
 
 	@Override
 	public void updateBusinessKey(String businessKey) {
-		this.businesskey = businessKey;
+		this.businessKey = businessKey;
 		this.states.modify();
 	}
 
 	@Override
 	public void setBusinessKey(String businessKey) {
-		this.businesskey = businessKey;
+		this.businessKey = businessKey;
 	}
 
 	@Override

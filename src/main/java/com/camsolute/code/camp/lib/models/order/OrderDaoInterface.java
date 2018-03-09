@@ -25,7 +25,23 @@ import com.camsolute.code.camp.lib.dao.HasOrderPositionReference;
 import com.camsolute.code.camp.lib.dao.HasProcessReference;
 import com.camsolute.code.camp.lib.dao.InstanceDaoInterface;
 import com.camsolute.code.camp.lib.dao.database.DBDaoInterface;
+import com.camsolute.code.camp.lib.models.Model;
+import com.camsolute.code.camp.lib.models.ModelList;
 
 public interface OrderDaoInterface extends InstanceDaoInterface<Order>, DaoInterface<Order>, DBDaoInterface<Order>, HasProcessReference<Order>, HasOrderPositionReference {
+
+	Order loadFirst(String businessId);
+
+	Order loadPrevious(Order order);
+
+	Order loadNext(Order order);
+
+	OrderList loadDate(String businessId, String date);
+
+	OrderList loadDateRange(String businessId, String startDate, String endDate);
+
+	OrderList loadDate(String date);
+
+	OrderList loadDateRange(String startDate, String endDate);
 
 }

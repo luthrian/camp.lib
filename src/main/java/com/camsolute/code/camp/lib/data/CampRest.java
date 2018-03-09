@@ -58,7 +58,10 @@ public class CampRest {
 			LOAD_BY_ID,
 			LOAD,
 			LOAD_BY_KEY,
-			CREATE, 
+			CREATE_ORDER, 
+			CREATE_PRODUCT, 
+			CREATE_ATTRIBUTE, 
+			CREATE_MODEL, 
 			SAVE,
 			SAVE_LIST,
 			UPDATE,
@@ -71,13 +74,18 @@ public class CampRest {
 			ADD_UPDATE,
 			ADD_UPDATES,
 			DELETE_ALL_UPDATES,
+			DELETE_KEY_UPDATES,
+			DELETE_TARGET_UPDATES,
 			DELETE_UPDATES,
 			DELETE_UPDATE;
 		};
 		public static final String LOAD_BY_ID = "/load/by/id/{id}";
 		public static final String LOAD = "/load/by/businessId";
 		public static final String LOAD_BY_KEY = "/load/by/key";
-		public static final String CREATE = "/create";
+		public static final String CREATE_ORDER = "/create";
+		public static final String CREATE_PRODUCT = "/create";
+		public static final String CREATE_ATTRIBUTE = "/create";
+		public static final String CREATE_MODEL = "/create";
 		public static final String SAVE = "/save";
 		public static final String SAVE_LIST = "/s/save";
 		public static final String UPDATE = "/update";
@@ -90,6 +98,8 @@ public class CampRest {
 		public static final String ADD_UPDATE = "/updates/add";
 		public static final String ADD_UPDATES = "/s/updates/add";
 		public static final String DELETE_ALL_UPDATES = "/s/updates/del/all";
+		public static final String DELETE_KEY_UPDATES = "/s/updates/del/key";
+		public static final String DELETE_TARGET_UPDATES = "/s/updates/del/target";
 		public static final String DELETE_UPDATES = "/s/updates/del";
 		public static final String DELETE_UPDATE = "/updates/del";
 		public static final HashMap<Request,String[]> Call;
@@ -99,7 +109,10 @@ public class CampRest {
 			Call.put(Request.LOAD_BY_ID, new String[] {"/load/by/id/{id}","/load/by/id/%s","GET"});
 			Call.put(Request.LOAD, new String[] {"/load/by/businessId","/load/by/businessId?businessId=%s","GET"});
 			Call.put(Request.LOAD_BY_KEY, new String[] {"/load/by/key","/load/by/key?businessKey=%s","GET"});
-			Call.put(Request.CREATE, new String[] {"/create","/create?businessId=%s&businessKey=%s&date=%s&byDate=%s","GET"});
+			Call.put(Request.CREATE_ORDER, new String[] {"/create","/create?businessId=%s&businessKey=%s&date=%s&byDate=%s","GET"});
+			Call.put(Request.CREATE_PRODUCT, new String[] {"/create","/create?businessId=%s&businessKey=%s&date=%s&byDate=%s","GET"});
+			Call.put(Request.CREATE_ATTRIBUTE, new String[] {"/create","/create?businessId=%s&businessKey=%s&date=%s&byDate=%s","GET"});
+			Call.put(Request.CREATE_MODEL, new String[] {"/create","/create?businessId=%s&businessKey=%s&date=%s&byDate=%s","GET"});
 			Call.put(Request.SAVE, new String[] {"/save","/save","POST"});
 			Call.put(Request.SAVE_LIST, new String[] {"/s/save","/s/save","POST"});
 			Call.put(Request.UPDATE, new String[] {"/update","/update","POST"});
@@ -112,6 +125,8 @@ public class CampRest {
 			Call.put(Request.ADD_UPDATE, new String[] {"/updates/add","/updates/add?businessId=%s&businessKey=%s&target=%s","GET"});
 			Call.put(Request.ADD_UPDATES, new String[] {"/s/updates/add","/s/updates/add?businessKey=%s&target=%s","POST"});
 			Call.put(Request.DELETE_ALL_UPDATES, new String[] {"/s/updates/del/all","/s/updates/del/all?businessKey=%s&target=%s","GET"});
+			Call.put(Request.DELETE_KEY_UPDATES, new String[] {"/s/updates/del/key","/s/updates/del/key?businessKey=%s","GET"});
+			Call.put(Request.DELETE_TARGET_UPDATES, new String[] {"/s/updates/del/target","/s/updates/del/target?target=%s","GET"});
 			Call.put(Request.DELETE_UPDATES, new String[] {"/s/updates/del","/s/updates/del?businessKey=%s&target=%s","POST"});
 			Call.put(Request.DELETE_UPDATE, new String[] {"/updates/del","/updates/del?businessId=%s&businessKey=%s&target=%s","GET"});
 		}
@@ -271,9 +286,9 @@ public class CampRest {
 		}
 			public static final String START_PROCESS = "/process/start/{processKey}";//	package ObjectInstance
 			public static final String NOTIFY_PROCESS = "/process/notify";		
-			public static final String NOTIFY_PROCESS_GET = "/process/notify/";		
+			public static final String NOTIFY_PROCESS_GET = "/process/notify/get";		
 			public static final String NOTIFY_PROCESSES = "/s/process/notify";		// package = ObjectInstance
-			public static final String NOTIFY_PROCESS_EVENT = "/process/notify"; //package = ObjectInstance		
+			public static final String NOTIFY_PROCESS_EVENT = "/process/notify/event"; //package = ObjectInstance		
 			public static final String SIGNAL_PROCESS = "/process/signal"; //package = Variables
 			public static final String SIGNAL_PROCESSES = "/s/process/signal"; //package = SignalPacket
 			public static final String CLAIM_TASK = "/task/claim";		
@@ -288,11 +303,11 @@ public class CampRest {
 		static {
 			Call = new HashMap<Request,String[]>();
 			Call.put(Request.START_PROCESS, new String[]{"/process/start/{processKey}","/process/start?processKey=%s","POST"});//	package ObjectInstance
-			Call.put(Request.NOTIFY_PROCESS, new String[]{"/process/notify","/process/notify?processInstanceId=%s&messageType=%s","POST"});		
-			Call.put(Request.NOTIFY_PROCESS_GET, new String[]{"/process/notify/","/process/notify?processInstanceId=%s&messageType=%s&objectStatus=%s&objectBusinessId=%s&objectId=%s","POST"});		
-			Call.put(Request.NOTIFY_PROCESSES, new String[]{"/s/process/notify","/s/process/notify?messageType=%s","POST"});		// package = ObjectInstance
-			Call.put(Request.NOTIFY_PROCESS_EVENT, new String[]{"/process/notify","/process/notify?messageType=%s&executionId=%s","POST"}); //package = ObjectInstance		
-			Call.put(Request.SIGNAL_PROCESS, new String[]{"/process/signal","/process/signal?&executionId=%s","POST"}); //package = Variables
+			Call.put(Request.NOTIFY_PROCESS, new String[]{"/process/notify","/process/notify?processInstanceId=%s&messageType=%s&messageName=%s","POST"});		
+			Call.put(Request.NOTIFY_PROCESS_GET, new String[]{"/process/notify/get","/process/notify/get?processInstanceId=%s&messageName=%s&businessKey=%s&objectStatus=%s&objectBusinessId=%s&objectId=%s","POST"});		
+			Call.put(Request.NOTIFY_PROCESSES, new String[]{"/s/process/notify","/s/process/notify?messageType=%s&messageName=%s","POST"});		// package = ObjectInstance
+			Call.put(Request.NOTIFY_PROCESS_EVENT, new String[]{"/process/notify/event","/process/notify/event?processInstanceId=%s&businessKey=%s&messageName=%s","POST"}); //package = ObjectInstance		
+			Call.put(Request.SIGNAL_PROCESS, new String[]{"/process/signal","/process/signal?processInstanceId=%s&businessKey=%s","POST"}); //package = Variables
 			Call.put(Request.SIGNAL_PROCESSES, new String[]{"/s/process/signal","/s/process/signal","POST"}); //package = SignalPacket
 			Call.put(Request.CLAIM_TASK, new String[]{"/task/claim","/task/claim?taskId=%s&userId=%s","GET"});		
 			Call.put(Request.DELEGATE_TASK, new String[]{"/task/delegate","/task/delegate?taskId=%s&userId=%s","GET"});		
@@ -381,6 +396,7 @@ public class CampRest {
 	
 
 	public static class AttributeDaoService {
+		public static final String Prefix = "/attr"; 
 		public static enum Request {
 			LOAD_BY_OBJECT_ID,
 			SAVE_BY_OBJECT_ID,
@@ -389,33 +405,34 @@ public class CampRest {
 			SAVE_ALL,
 			UPDATE_ALL;
 		}
-			public static final String LOAD_BY_OBJECT_ID = "/s/load/{objectId}";
-			public static final String SAVE_BY_OBJECT_ID = "/s/save/{objectId}";
-			public static final String UPDATE_BY_OBJECT_ID = "/s/update/{objectId}";
-			public static final String LOAD_ALL = "/s/load/list/{objectId}";
-			public static final String SAVE_ALL = "/s/save/list/{objectId}";
-			public static final String UPDATE_ALL = "/s/update/list/{objectId}";
+			public static final String LOAD_BY_OBJECT_ID = Prefix+"/s/load";
+			public static final String SAVE_BY_OBJECT_ID = Prefix+"/s/save";
+			public static final String UPDATE_BY_OBJECT_ID = Prefix+"/s/update";
+			public static final String LOAD_ALL = Prefix+"/s/load/list";
+			public static final String SAVE_ALL = Prefix+"/s/save/list";
+			public static final String UPDATE_ALL = Prefix+"/s/update/list";
 		public static final HashMap<Request,String[]> Call;
 		
 		static {
 			Call = new HashMap<Request,String[]>();
-			Call.put(Request.LOAD_BY_OBJECT_ID, new String[]{"/s/load/{objectId}","/s/load/%s","GET"});
-			Call.put(Request.SAVE_BY_OBJECT_ID, new String[]{"/s/save/{objectId}","/s/save/%s","POST"});
-			Call.put(Request.UPDATE_BY_OBJECT_ID, new String[]{"/s/update/{objectId}","/s/update/%s","POST"});
-			Call.put(Request.LOAD_ALL, new String[]{"/s/load/list/{objectId}","/s/load/list/%s","GET"});
-			Call.put(Request.SAVE_ALL, new String[]{"/s/save/list/{objectId}","/s/save/list/%s","POST"});
-			Call.put(Request.UPDATE_ALL, new String[]{"/s/update/list/{objectId}","/s/update/list/%s","POST"});
+			Call.put(Request.LOAD_BY_OBJECT_ID, new String[]{"/s/load","/s/load?objectId=%s","GET"});
+			Call.put(Request.SAVE_BY_OBJECT_ID, new String[]{"/s/save","/s/save?objectId=%s","POST"});
+			Call.put(Request.UPDATE_BY_OBJECT_ID, new String[]{"/s/update","/s/update?objectId=%s","POST"});
+			Call.put(Request.LOAD_ALL, new String[]{"/s/load/list","/s/load/list?objectId=%s","GET"});
+			Call.put(Request.SAVE_ALL, new String[]{"/s/save/list","/s/save/list?objectId=%s","POST"});
+			Call.put(Request.UPDATE_ALL, new String[]{"/s/update/list","/s/update/list?objectId=%s","POST"});
 		}
 		
 		public static String callRequest(String prefix, AttributeDaoService.Request request) {
-			return prefix + "/attr" + AttributeDaoService.Call.get(request)[1];
+			return prefix + Prefix + AttributeDaoService.Call.get(request)[1];
 		}
 		public static String path(String prefix, AttributeDaoService.Request request) {
-			return prefix + "/attr" + AttributeDaoService.Call.get(request)[0];
+			return prefix + Prefix + AttributeDaoService.Call.get(request)[0];
 		}
 
 	}
 	public static class AttributeDefinitionDaoService {
+		public static final String Prefix = "/attrd";
 		public static enum Request {
 			LOAD_BY_ID,
 			LOAD_BY_BUSINESS_ID,
@@ -434,22 +451,22 @@ public class CampRest {
 			DELETE_BY_PARENT_ID,
 			DELETE_LIST;
 		}
-			public static final String LOAD_BY_ID = "/load/by/id/{id}";
-			public static final String LOAD_BY_BUSINESS_ID = "/load/by/business/id";
-			public static final String LOAD_BY_BUSINESS_KEY = "/s/load/by/business/key";
-			public static final String LOAD_BY_TYPE = "/s/load/by/type";
-			public static final String LOAD_BY_GROUP = "/s/load/by/group";
-			public static final String LOAD_AFTER_POSITION = "/s/load/before/position";		
-			public static final String LOAD_BEFORE_POSITION = "/s/load/after/position";		
-			public static final String LOAD_POSITION_RANGE = "/s/load/position/range";		
-			public static final String SAVE = "/save";		
-			public static final String SAVE_LIST = "/s/save";		
-			public static final String UPDATE = "/update";		
-			public static final String UPDATE_LIST = "/s/update";		
-			public static final String DELETE_BY_ID = "/delete/{id}";		
-			public static final String DELETE_BY_BUSINESS_ID = "/delete/by/business/id";		
-			public static final String DELETE_BY_PARENT_ID = "/delete/by/parent/id";		
-			public static final String DELETE_LIST = "/s/delete";		
+			public static final String LOAD_BY_ID = Prefix + "/load/by/id/{id}";
+			public static final String LOAD_BY_BUSINESS_ID = Prefix + "/load/by/business/id";
+			public static final String LOAD_BY_BUSINESS_KEY = Prefix + "/s/load/by/business/key";
+			public static final String LOAD_BY_TYPE = Prefix + "/s/load/by/type";
+			public static final String LOAD_BY_GROUP = Prefix + "/s/load/by/group";
+			public static final String LOAD_AFTER_POSITION = Prefix + "/s/load/before/position";		
+			public static final String LOAD_BEFORE_POSITION = Prefix + "/s/load/after/position";		
+			public static final String LOAD_POSITION_RANGE = Prefix + "/s/load/position/range";		
+			public static final String SAVE = Prefix + "/save";		
+			public static final String SAVE_LIST = Prefix + "/s/save";		
+			public static final String UPDATE = Prefix + "/update";		
+			public static final String UPDATE_LIST = Prefix + "/s/update";		
+			public static final String DELETE_BY_ID = Prefix + "/delete/{id}";		
+			public static final String DELETE_BY_BUSINESS_ID = Prefix + "/delete/by/business/id";		
+			public static final String DELETE_BY_PARENT_ID = Prefix + "/delete/by/parent/id";		
+			public static final String DELETE_LIST = Prefix + "/s/delete";		
 		public static final HashMap<Request,String[]> Call;
 		
 		static {
@@ -472,14 +489,17 @@ public class CampRest {
 			Call.put(Request.DELETE_LIST, new String[] {"/s/delete","/s/delete","POST"});		
 		}
 		public static String callRequest(String prefix, AttributeDefinitionDaoService.Request request) {
-			return prefix + "/attr" + AttributeDefinitionDaoService.Call.get(request)[1];
+			return prefix + Prefix + AttributeDefinitionDaoService.Call.get(request)[1];
 		}
 		public static String path(String prefix, AttributeDefinitionDaoService.Request request) {
-			return prefix + "/attr" + AttributeDefinitionDaoService.Call.get(request)[0];
+			return prefix + Prefix + AttributeDefinitionDaoService.Call.get(request)[0];
 		}
 
 	}
 	public static class AttributeValueDaoService {
+		
+		public static final String Prefix = "/attrv";
+		
 		public static enum Request {
 			LOAD,//v
 			LOAD_LIST,
@@ -501,47 +521,51 @@ public class CampRest {
 			ADD_UPDATE,
 			ADD_UPDATES,
 			DELETE_ALL_UPDATES,
+			DELETE_KEY_UPDATES,
+			DELETE_TARGET_UPDATES,
 			DELETE_UPDATE,
 			DELETE_UPDATES;
 		}
-			public static final String LOAD = "/load/{objectId}";
-			public static final String LOAD_LIST = "/s/load/{objectId}";
-			public static final String LOAD_BY_GROUP = "/s/load/by/group";
-			public static final String LOAD_AFTER_POSITION = "/s/load/before/position";		
-			public static final String LOAD_BEFORE_POSITION = "/s/load/after/position";		
-			public static final String LOAD_POSITION_RANGE = "/s/load/position/range";		
-			public static final String SAVE = "/save";		
-			public static final String SAVE_LIST = "/s/save";		
-			public static final String UPDATE = "/update";		
-			public static final String UPDATE_LIST = "/s/update";		
-			public static final String DELETE = "/delete";		
-			public static final String DELETE_GET = "/delete";		
-			public static final String DELETE_LIST = "/s/delete";		
-			public static final String LOAD_ALL_UPDATES = "/s/updates/load";
-			public static final String LOAD_TARGET_UPDATES = "/s/updates/target/load";		
-			public static final String LOAD_BUSINESSKEY_UPDATES = "/s/updates/key/load";		
-			public static final String LOAD_UPDATE = "/updates/load";		
-			public static final String ADD_UPDATE = "/updates/add";		
-			public static final String ADD_UPDATES = "/s/updates/add";		
-			public static final String DELETE_ALL_UPDATES = "/s/updates/del";		
-			public static final String DELETE_UPDATE = "/updates/del";		
-			public static final String DELETE_UPDATES = "/s/updates/list/del";		
+			public static final String LOAD = Prefix + "/load";
+			public static final String LOAD_LIST = Prefix + "/s/load";
+			public static final String LOAD_BY_GROUP = Prefix + "/s/load/by/group";
+			public static final String LOAD_AFTER_POSITION = Prefix + "/s/load/before/position";		
+			public static final String LOAD_BEFORE_POSITION = Prefix + "/s/load/after/position";		
+			public static final String LOAD_POSITION_RANGE = Prefix + "/s/load/position/range";		
+			public static final String SAVE = Prefix + "/save";		
+			public static final String SAVE_LIST = Prefix + "/s/save";		
+			public static final String UPDATE = Prefix + "/update";		
+			public static final String UPDATE_LIST = Prefix + "/s/update";		
+			public static final String DELETE = Prefix + "/delete";		
+			public static final String DELETE_GET = Prefix + "/delete/get";		
+			public static final String DELETE_LIST = Prefix + "/s/delete";		
+			public static final String LOAD_ALL_UPDATES = Prefix + "/s/updates/load";
+			public static final String LOAD_TARGET_UPDATES = Prefix + "/s/updates/target/load";		
+			public static final String LOAD_BUSINESSKEY_UPDATES = Prefix + "/s/updates/key/load";		
+			public static final String LOAD_UPDATE = Prefix + "/updates/load";		
+			public static final String ADD_UPDATE = Prefix + "/updates/add";		
+			public static final String ADD_UPDATES = Prefix + "/s/updates/add";		
+			public static final String DELETE_ALL_UPDATES = Prefix + "/s/updates/del";		
+			public static final String DELETE_KEY_UPDATES = Prefix + "/s/updates/del/key";		
+			public static final String DELETE_TARGET_UPDATES = Prefix + "/s/updates/del/target";		
+			public static final String DELETE_UPDATE = Prefix + "/updates/del";		
+			public static final String DELETE_UPDATES = Prefix + "/s/updates/list/del";		
 		public static final HashMap<Request,String[]> Call;
 		
 		static {
 			Call = new HashMap<Request,String[]>();
-			Call.put(Request.LOAD, new String[] {"/load/{objectId}","/load/%s","POST"});
-			Call.put(Request.LOAD_LIST, new String[] {"/s/load/{objectId}","/s/load/%s","POST"});
-			Call.put(Request.LOAD_BY_GROUP, new String[] {"/s/load/by/group","/s/load/by/group?group=%s&objectId=%","POST"});
-			Call.put(Request.LOAD_AFTER_POSITION, new String[] {"/s/load/before/position","/s/load/before/position?objectid=%s&position=%","POST"});		
-			Call.put(Request.LOAD_BEFORE_POSITION, new String[] {"/s/load/after/position","/s/load/after/position?objectid=%s&position=%","POST"});		
-			Call.put(Request.LOAD_POSITION_RANGE, new String[] {"/s/load/position/range","/s/load/position/range?objectid=%s&startPosition=%&endPosition=%","POST"});		
+			Call.put(Request.LOAD, new String[] {"/load","/load/?objectId=%s","POST"});
+			Call.put(Request.LOAD_LIST, new String[] {"/s/load","/s/load/?objectId=%s","POST"});
+			Call.put(Request.LOAD_BY_GROUP, new String[] {"/s/load/by/group","/s/load/by/group?group=%s&objectId=%s","POST"});
+			Call.put(Request.LOAD_AFTER_POSITION, new String[] {"/s/load/before/position","/s/load/before/position?objectid=%s&position=%s","POST"});		
+			Call.put(Request.LOAD_BEFORE_POSITION, new String[] {"/s/load/after/position","/s/load/after/position?objectid=%s&position=%s","POST"});		
+			Call.put(Request.LOAD_POSITION_RANGE, new String[] {"/s/load/position/range","/s/load/position/range?objectid=%s&startPosition=%&endPosition=%s","POST"});		
 			Call.put(Request.SAVE, new String[] {"/save","/save?objectId=%s","POST"});		
 			Call.put(Request.SAVE_LIST, new String[] {"/s/save","/s/save?objectId=%s","POST"});		
 			Call.put(Request.UPDATE, new String[] {"/update","/update?objectId=%s","POST"});		
 			Call.put(Request.UPDATE_LIST, new String[] {"/s/update","/s/update?objectId=%s","POST"});		
-			Call.put(Request.DELETE, new String[] {"/delete","/delete?objectId=%s&attributeId=%s&valueId=%s&type=%s","GET"});		
-			Call.put(Request.DELETE_GET, new String[] {"/delete","/delete?objectId=%s&attributeId=%s&valueId=%s&type=%s","GET"});		
+			Call.put(Request.DELETE, new String[] {"/delete","/delete?objectId=%s","POST"});		
+			Call.put(Request.DELETE_GET, new String[] {"/delete/get","/delete/get?objectId=%s&attributeId=%s&valueId=%s&type=%s","GET"});		
 			Call.put(Request.DELETE_LIST, new String[] {"/s/delete","/s/delete","POST"});		
 			Call.put(Request.LOAD_ALL_UPDATES, new String[] {"/s/updates/load","/s/updates/load?businessKey=%s&target=%s","GET"});
 			Call.put(Request.LOAD_TARGET_UPDATES, new String[] {"/s/updates/target/load","/s/updates/target/load?target=%s","GET"});		
@@ -550,14 +574,16 @@ public class CampRest {
 			Call.put(Request.ADD_UPDATE, new String[] {"/updates/add","/updates/add?businessKey=%s&target=%s","POST"});		
 			Call.put(Request.ADD_UPDATES, new String[] {"/s/updates/add","/s/updates/add?businessKey=%s&target=%s","POST"});		
 			Call.put(Request.DELETE_ALL_UPDATES, new String[] {"/s/updates/del","/s/updates/del?businessKey=%s&target=%s","GET"});		
+			Call.put(Request.DELETE_KEY_UPDATES, new String[] {"/s/updates/del/key","/s/updates/del/key?businessKey=%s","GET"});
+			Call.put(Request.DELETE_TARGET_UPDATES, new String[] {"/s/updates/del/target","/s/updates/del/target?target=%s","GET"});
 			Call.put(Request.DELETE_UPDATE, new String[] {"/updates/del","/updates/del?attributeId=%s&objectId=%s&businessKey=%s&target=%s","GET"});		
 			Call.put(Request.DELETE_UPDATES, new String[] {"/s/updates/list/del","/s/updates/list/del?businessKey=%s&target=%s","POST"});		
 		}
 		public static String callRequest(String prefix, AttributeValueDaoService.Request request) {
-			return prefix + "/attr" + AttributeValueDaoService.Call.get(request)[1];
+			return prefix + Prefix + AttributeValueDaoService.Call.get(request)[1];
 		}
 		public static String path(String prefix, AttributeValueDaoService.Request request) {
-			return prefix + "/attr" + AttributeValueDaoService.Call.get(request)[0];
+			return prefix + Prefix + AttributeValueDaoService.Call.get(request)[0];
 		}
 
 	}
@@ -573,6 +599,7 @@ public class CampRest {
 			UPDATE_VARIABLE,
 			GET_TASK,
 			GET_TASKS,
+			GET_TASKS_KEY,
 			CLAIM_TASK,
 			COMPLETE_TASK,
 			DELEGATE_TASK,
@@ -581,6 +608,7 @@ public class CampRest {
 			public static final String AUTHENTICATE = "/identity/verify";
 			public static final String GET_TASK = "/task/{taskId}";			
 			public static final String GET_TASKS = "/task";			
+			public static final String GET_TASKS_KEY = "/task";			
 			public static final String CLAIM_TASK = "/task/{taskId}/claim";			
 			public static final String COMPLETE_TASK = "/task/{taskid}/submit-form";			
 			public static final String DELEGATE_TASK = "/task/{taskId}/delegate";			
@@ -596,7 +624,8 @@ public class CampRest {
 			Call = new HashMap<Request,String[]>();
 			Call.put(Request.AUTHENTICATE, new String[] {"/identity/verify","/identity/verify","POST"});
 			Call.put(Request.GET_TASK, new String[] {"/task/{taskId}","/task/%s","GET"});			
-			Call.put(Request.GET_TASKS, new String[] {"/task","/task?processInstanceId=%s&businessKey=%s","GET"});			
+			Call.put(Request.GET_TASKS, new String[] {"/task","/task?processInstanceId=%s","GET"});			
+			Call.put(Request.GET_TASKS_KEY, new String[] {"/task","/task?processInstanceId=%s&businessKey=%s","GET"});			
 			Call.put(Request.CLAIM_TASK, new String[] {"/task/{taskId}/claim","/task/%s/claim","POST"});			
 			Call.put(Request.COMPLETE_TASK, new String[] {"/task/{taskid}/submit-form","/task/%s/submit-form","POST"});			
 			Call.put(Request.DELEGATE_TASK, new String[] {"/task/{taskId}/delegate","/task/%s/delegate","POST"});			
@@ -627,22 +656,22 @@ public class CampRest {
 		public static final String Prefix = "/procctrsc";
 	}
  	public static class Product {
-		public static final String Prefix = "/prodsc";
+		public static final String Prefix = "";
 	}
 	public static class Attribute {
-		public static String Prefix = "/afc";
+		public static final String Prefix = "/afc";
 	}
 	public static class AttributeDefinition {
-		public static String Prefix = "/adfc";
+		public static final String Prefix = "/adfc";
 	}
 	public static class AttributeValue {
-		public static String Prefix = "/avfc";
+		public static final String Prefix = "/avfc";
 	}
 	public static class Model {
 		public static final String Prefix = "/mfc";
 	}
 	public static class ProcessEngine {
-		public static String Prefix="";
+		public static final String Prefix="";
 	}
 	//TODO
 //	public static void initAuthentication(HttpMethod httpMethod, HttpClient client) {
