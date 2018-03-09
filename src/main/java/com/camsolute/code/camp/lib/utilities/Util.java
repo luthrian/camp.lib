@@ -994,7 +994,6 @@ public class Util {
     		instance();
     		Connection connection = null;
     		try {
-
     			connection = DriverManager.getConnection(CampSQL._DBLINK, CampSQL._USER, CampSQL._PASSWORD);
     		} catch (SQLException e) {
     			// TODO Auto-generated catch block
