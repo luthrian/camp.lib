@@ -411,6 +411,57 @@ public class OrderDao implements OrderDaoInterface {
 	}
 
 	@Override
+	public Order updateAttribute(Order.UpdateAttribute type, String businessId, String newValue, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[update]";
+			msg = "====[ update a specific order instance oject attribute]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		int retVal = 0;
+		Order o = loadByBusinessId(businessId, log);
+		if(o == null) {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ERROR! updateAttribute FAILED. Could not load Order]----";LOG.info(String.format(fmt, _f,msg));}
+			return null;
+		}
+		switch(type){
+		case BUSINESSKEY:
+			o.updateBusinessKey(newValue);
+			break;
+		case STATUS:
+			o.updateStatus(Order.Status.valueOf(newValue));
+			break;
+		case BY_DATE:
+			o.updateByDate(Util.Time.timestamp(newValue));
+			break;
+			default:
+				break;
+		}
+		// we save this purposely
+		o = save(o,log);
+		
+		o.history().stamptime();
+		o.history().updateInstance();
+			try{
+			
+			CampInstanceDao.instance()._addInstance(o, false, log);
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" updated ]----";LOG.info(String.format(fmt,_f,msg));}
+			
+			o.states().ioAction(IOAction.UPDATE);
+		} catch(SQLException e) {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
+			e.printStackTrace();
+		}
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[update completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return o;
+	}
+
+	@Override
 	public <E extends ArrayList<Order>> E updateList(E ol, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;

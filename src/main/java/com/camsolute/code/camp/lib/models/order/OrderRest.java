@@ -65,7 +65,7 @@ public class OrderRest implements OrderRestInterface {
 		}
 		Order o = null;
 		
-		String serviceUri =  CampRest.DaoService.callRequest(CampRest.Order.Prefix, CampRest.DaoService.Request.CREATE); 
+		String serviceUri =  CampRest.DaoService.callRequest(CampRest.Order.Prefix, CampRest.DaoService.Request.CREATE_ORDER); 
 		
 		String uri = serverUrl+domainUri+String.format(serviceUri, businessId,businessKey,date,byDate);
 		
@@ -300,6 +300,32 @@ public class OrderRest implements OrderRestInterface {
 		return ol;
 	}
 
+	@Override
+	public Order updateAttribute(Order.UpdateAttribute attributeType, String businessId, String newValue, boolean log) {
+		return updateAttribute(serverUrl, attributeType, businessId, newValue, log); 
+	}
+	public Order updateAttribute(String serverUrl, Order.UpdateAttribute attributeType, String businessId, String attributeValue, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[updateAttribute]";
+			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		Order o = null;
+		String prefix = CampRest.Order.Prefix;		
+		String serviceUri = CampRest.DaoService.callRequest(prefix,CampRest.DaoService.Request.UPDATE_ATTRIBUTE);
+		String uri = serverUrl+domainUri+String.format(serviceUri,serverUrl, attributeType.name(), businessId, attributeValue);
+		String result = RestInterface.resultGET(uri, log);
+		o = OrderInterface._fromJson(result);
+		
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[updateAttribute completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return o;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public <E extends ArrayList<Order>> E loadUpdates(String businessKey, String target, boolean log) {
 		return (E) loadUpdates(serverUrl,businessKey,target,log);

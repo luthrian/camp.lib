@@ -37,6 +37,8 @@ public interface OrderServicePointInterface {
 
 	public String updateList(String orderList);
 
+	public String updateAttribute(String attributeType, String businessId, String newValue);
+	
 	public String loadById(int id); 
 
 	public String loadByBusinessId(String businessId);

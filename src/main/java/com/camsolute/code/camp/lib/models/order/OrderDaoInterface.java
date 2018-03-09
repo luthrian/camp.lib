@@ -44,4 +44,6 @@ public interface OrderDaoInterface extends InstanceDaoInterface<Order>, DaoInter
 
 	OrderList loadDateRange(String startDate, String endDate);
 
+	public Order updateAttribute(Order.UpdateAttribute attribute, String businessId, String newValue, boolean log);
+	
 }

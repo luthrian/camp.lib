@@ -27,6 +27,7 @@ import com.camsolute.code.camp.lib.dao.rest.RestInterface;
 public interface OrderRestInterface extends RestInterface<Order>, DaoInterface<Order>, HasProcessReference<Order>, HasOrderPositionReference {
 
 	public Order create(String businessId, String businessKey, String date, String byDate, boolean log);
-	
+
+	public Order updateAttribute(Order.UpdateAttribute attribute, String businessId, String newValue, boolean log);
 }
 

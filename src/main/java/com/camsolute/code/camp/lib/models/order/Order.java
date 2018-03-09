@@ -56,7 +56,15 @@ public class Order implements OrderInterface {
         MODIFIED,
         DIRTY;
     }
-    
+   
+    public static enum UpdateAttribute {
+    	STATUS,
+    	BUSINESSKEY,
+    	BY_DATE,
+//    	GROUP,
+//    	VERSION
+    	;
+    }
   	private int id= Util.NEW_ID;
   	
   	private String orderNumber;

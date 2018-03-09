@@ -66,7 +66,7 @@ public class CampRest {
 			SAVE_LIST,
 			UPDATE,
 			UPDATE_LIST,
-//			UPDATE_ATTRIBUTE, // TODO: consider this - selective update to reduce traffic load - is this required
+			UPDATE_ATTRIBUTE, // TODO: consider this - selective update to reduce traffic load - is this required
 			LOAD_UPDATE,
 			LOAD_UPDATES,
 			LOAD_UPDATES_KEY,
@@ -90,7 +90,7 @@ public class CampRest {
 		public static final String SAVE_LIST = "/s/save";
 		public static final String UPDATE = "/update";
 		public static final String UPDATE_LIST = "/s/update";
-		public static final String UPDATE_ATTRIBUTE = "/update/{businessId}/attribute/{name}/{value}";
+		public static final String UPDATE_ATTRIBUTE = "/update/attribute";
 		public static final String LOAD_UPDATE = "/updates/load";
 		public static final String LOAD_UPDATES = "/s/updates/load";
 		public static final String LOAD_UPDATES_KEY = "/s/updates/key/load";
@@ -117,7 +117,7 @@ public class CampRest {
 			Call.put(Request.SAVE_LIST, new String[] {"/s/save","/s/save","POST"});
 			Call.put(Request.UPDATE, new String[] {"/update","/update","POST"});
 			Call.put(Request.UPDATE_LIST, new String[] {"/s/update","/s/update","POST"});
-//			Call.put(Request.UPDATE_ATTRIBUTE, new String[] {"/update/{businessId}/attribute/{name}/{value}","/update/%s/attribute/%s/%s"});
+			Call.put(Request.UPDATE_ATTRIBUTE, new String[] {"/update/attribute","/update/attribute?attributeType=%s&businessId=%s&attributeValue=%s"});
 			Call.put(Request.LOAD_UPDATE, new String[] {"/updates/load","/updates/load?businessId=%s&businessKey=%s&target=%s","GET"});
 			Call.put(Request.LOAD_UPDATES, new String[] {"/s/updates/load","/s/updates/load?businessKey=%s&target=%s","GET"});
 			Call.put(Request.LOAD_UPDATES_KEY, new String[] {"/s/updates/key/load","/s/updates/key/load?businessKey=%s","GET"});
