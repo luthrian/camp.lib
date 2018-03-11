@@ -44,6 +44,9 @@ public class ProcessControlRest implements ProcessControlRestInterface {
 	
 	@Override
 	public <T extends HasProcess<T, ?>> Process<?, ?> startProcess(String processKey, T object, boolean log) {
+		return startProcess(serverUrl, processKey, object, log);
+	}
+	public <T extends HasProcess<T, ?>> Process<?, ?> startProcess(String serverUrl, String processKey, T object, boolean log) {
 long startTime = System.currentTimeMillis();
 String _f = null;
 String msg = null;
@@ -68,6 +71,9 @@ return p;
 
 	@Override
 	public <T extends HasProcess<T, ?>> void messageProcess(Enum<?> messageType, Enum<?> messageName, T object, boolean log) {
+		_messageProcess(serverUrl, messageType, messageName, object, log);
+	}
+	public <T extends HasProcess<T, ?>> void _messageProcess(String serverUrl, Enum<?> messageType, Enum<?> messageName, T object, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -90,6 +96,9 @@ return p;
 
 	@Override
 	public <T extends HasProcess<T, ?>> void messageProcess(String processInstanceId, Enum<?> messageType, Enum<?> messageName, T object, boolean log) {
+		_messageProcess(serverUrl, processInstanceId, messageType, messageName, object, log);
+	}
+	public <T extends HasProcess<T, ?>> void _messageProcess(String serverUrl, String processInstanceId, Enum<?> messageType, Enum<?> messageName, T object, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -112,6 +121,9 @@ return p;
 
 	@Override
 	public <T extends HasProcess<T, ?>> void messageProcess(String processInstanceId, Enum<?> messageName, String businessKey, String objectStatus, String objectBusinessId, int objectId, boolean log) {
+		_messageProcess(serverUrl, processInstanceId, messageName, businessKey, objectStatus, objectBusinessId, objectId, log);
+	}
+	public <T extends HasProcess<T, ?>> void _messageProcess(String serverUrl, String processInstanceId, Enum<?> messageName, String businessKey, String objectStatus, String objectBusinessId, int objectId, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -133,6 +145,9 @@ return p;
 
 	@Override
 	public void triggerMessageEvent(String processInstanceId, String businessKey, Enum<?> messageName, Variables variables, boolean log) {
+		_triggerMessageEvent(serverUrl, processInstanceId, businessKey, messageName, variables, log);
+	}
+	public void _triggerMessageEvent(String serverUrl, String processInstanceId, String businessKey, Enum<?> messageName, Variables variables, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -155,6 +170,9 @@ return p;
 
 	@Override
 	public void signalProcess(Variables variables, ProcessList processList, boolean log) {
+		_signalProcess(serverUrl, variables, processList, log);
+	}
+	public void _signalProcess(String serverUrl, Variables variables, ProcessList processList, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -179,6 +197,9 @@ return p;
 
 	@Override
 	public void signalProcess(String processInstanceId, String businessKey, Variables variables, boolean log) {
+		_signalProcess(serverUrl, processInstanceId, businessKey, variables, log);
+	}
+	public void _signalProcess(String serverUrl, String processInstanceId, String businessKey, Variables variables, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -201,6 +222,9 @@ return p;
 
 	@Override
 	public void claimTask(String taskId, String userId, boolean log) {
+		_claimTask(serverUrl, taskId, userId, log);
+	}
+	public void _claimTask(String serverUrl, String taskId, String userId, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -222,6 +246,9 @@ return p;
 
 	@Override
 	public void delegateTask(String taskId, String userId, boolean log) {
+		_delegateTask(serverUrl, taskId, userId, log);
+	}
+	public void _delegateTask(String serverUrl, String taskId, String userId, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -243,6 +270,9 @@ return p;
 
 	@Override
 	public void completeTask(String taskId, Variables variables, boolean log) {
+		_completeTask(serverUrl, taskId, variables, log);
+	}
+	public void _completeTask(String serverUrl, String taskId, Variables variables, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -265,6 +295,9 @@ return p;
 
 	@Override
 	public Task getTask(String taskId, boolean log) {
+		return _getTask(serverUrl, taskId, log);
+	}
+	public Task _getTask(String serverUrl, String taskId, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -287,6 +320,9 @@ return p;
 
 	@Override
 	public TaskList getTasks(String processInstanceId, String businessKey, boolean log) {
+		return _getTasks(serverUrl, processInstanceId, businessKey, log);
+	}
+	public TaskList _getTasks(String serverUrl, String processInstanceId, String businessKey, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -309,6 +345,9 @@ return p;
 
 	@Override
 	public TaskList getTasks(String processInstanceId, boolean log) {
+		return _getTasks(serverUrl, processInstanceId, log);
+	}
+	public TaskList _getTasks(String serverUrl, String processInstanceId, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
