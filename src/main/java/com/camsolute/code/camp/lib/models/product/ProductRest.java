@@ -169,6 +169,31 @@ public class ProductRest implements ProductRestInterface {
 	}
 
 	@Override
+	public Product create(String businessId, String businessKey, String date, String endOfLife, String group, String version, boolean log) {
+		return create(serverUrl,businessId,businessKey,date,endOfLife,group,version,log);
+	}
+	public Product create(String serverUrl,String businessId, String businessKey, String date, String endOfLife, String group, String version, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[create]";
+			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		String prefix = CampRest.Product.Prefix;		
+		String serviceUri = CampRest.DaoService.callRequest(prefix,CampRest.DaoService.Request.CREATE_PRODUCT);
+		String uri = serverUrl+domainUri+String.format(serviceUri,businessId,businessKey,date,endOfLife,group,version);
+		if(log && !Util._IN_PRODUCTION){msg = "----[product service call: generated URI("+uri+")]----";LOG.info(String.format(fmt, _f,msg));}
+		String result = RestInterface.resultGET(uri, log);
+		Product o = ProductInterface._fromJson(result);
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[create completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return o;
+	}
+
+	@Override
 	public Product save(Product p, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;

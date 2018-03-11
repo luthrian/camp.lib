@@ -59,7 +59,7 @@ public class Product implements ProductInterface {
 	private ModelList			models;
 	private Group					group;
 	private Version				version;
-	private Timestamp			date;
+	private Timestamp			date = Util.Time.timestamp();
 	private Status				status					= Status.CREATED;
 	private Status				previousStatus	= Status.CLEAN;
 	private CampStates		states					= new CampStates();

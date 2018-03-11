@@ -26,6 +26,8 @@ import com.camsolute.code.camp.lib.models.AttributeMap;
 
 public interface ProductRestInterface extends DaoInterface<Product>, HasModelReference, HasProcessReference<Product> {
 
+	public Product create(String businessId, String businessKey, String date, String endOfLife, String group, String version, boolean log);
+	
 	public AttributeMap saveAttributes(int objectId, AttributeMap am, boolean log);
 
 	public AttributeMap updateAttributes(int objectId, AttributeMap am, boolean log);

@@ -47,7 +47,7 @@ public interface ProductServicePointInterface {
 
 	public String loadListByGroupVersion(String group, String version);
 
-	public String create(String businessId, String businessKey, String group, String version, String date);
+	public String create(String businessId, String businessKey, String date, String endOfLife, String group, String version);
 	
 	public String save(String product);
 	

@@ -67,9 +67,6 @@ public interface ProcessServicePointInterface {
 	public String loadUpdate(String instanceId, String businessId, String businessKey, String target);
 
 
-	public String loadUpdate(String process, String businessKey, String target);
-
-
 	public int addToUpdates(String instanceId, String businessId, String businessKey, String target);
 
 

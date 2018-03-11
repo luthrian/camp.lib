@@ -37,11 +37,17 @@ public class CampRest {
 	public static final String CUSTOMER_API_SERVER_URL = Util.Config.instance().properties().getProperty("rest.customer.api.server.url");
 	public static final String PROCESS_CONTROL_API_SERVER_URL = Util.Config.instance().properties().getProperty("rest.process.control.api.server.url");
 
-	public static final String ORDER_API_DOMAIN = Util.Config.instance().properties().getProperty("rest.order.api.business.domain");
-	public static final String PROCESS_API_DOMAIN = Util.Config.instance().properties().getProperty("rest.process.api.business.domain");
-	public static final String PRODUCT_API_DOMAIN = Util.Config.instance().properties().getProperty("rest.product.api.business.domain");
-	public static final String CUSTOMER_API_DOMAIN = Util.Config.instance().properties().getProperty("rest.customer.api.business.domain");
-	public static final String PROCESS_CONTROL_API_DOMAIN = Util.Config.instance().properties().getProperty("rest.process.control.api.business.domain");
+//	public static final String ORDER_API_DOMAIN = Util.Config.instance().properties().getProperty("rest.order.api.business.domain");
+//	public static final String PROCESS_API_DOMAIN = Util.Config.instance().properties().getProperty("rest.process.api.business.domain");
+//	public static final String PRODUCT_API_DOMAIN = Util.Config.instance().properties().getProperty("rest.product.api.business.domain");
+//	public static final String CUSTOMER_API_DOMAIN = Util.Config.instance().properties().getProperty("rest.customer.api.business.domain");
+//	public static final String PROCESS_CONTROL_API_DOMAIN = Util.Config.instance().properties().getProperty("rest.process.control.api.business.domain");
+//
+	public static final String ORDER_API_DOMAIN = "";
+	public static final String PROCESS_API_DOMAIN = "";
+	public static final String PRODUCT_API_DOMAIN = "";
+	public static final String CUSTOMER_API_DOMAIN = "";
+	public static final String PROCESS_CONTROL_API_DOMAIN = "";
 
 	public static final String ORDER_API_PATH = ORDER_API_DOMAIN + Util.Config.instance().properties().getProperty("rest.order.api.path");
 	public static final String REST_ORDER_API_PATH = ORDER_API_PATH;
@@ -64,8 +70,6 @@ public class CampRest {
 			CREATE_PRODUCT, 
 			CREATE_ATTRIBUTE, 
 			CREATE_MODEL, 
-			CREATE_PROCESS, 
-			CREATE_PROCESS_EID, 
 			SAVE,
 			SAVE_LIST,
 			UPDATE,
@@ -92,8 +96,6 @@ public class CampRest {
 		public static final String CREATE_PRODUCT = "/create";
 		public static final String CREATE_ATTRIBUTE = "/create";
 		public static final String CREATE_MODEL = "/create";
-		public static final String CREATE_PROCESS = "/create";
-		public static final String CREATE_PROCESS_EID = "/create/eid";
 		public static final String SAVE = "/save";
 		public static final String SAVE_LIST = "/s/save";
 		public static final String UPDATE = "/update";
@@ -120,11 +122,9 @@ public class CampRest {
 			Call.put(Request.LOAD_BY_GROUP, new String[] {"/load/by/group","/load/by/group?group=%s","GET"});
 			Call.put(Request.LOAD_BY_GROUP_VERSION, new String[] {"/load/by/group/version","/load/by/group/version?group=%s&version=%s","GET"});
 			Call.put(Request.CREATE_ORDER, new String[] {"/create","/create?businessId=%s&businessKey=%s&date=%s&byDate=%s","GET"});
-			Call.put(Request.CREATE_PRODUCT, new String[] {"/create","/create?businessId=%s&businessKey=%s&date=%s&byDate=%s","GET"});
+			Call.put(Request.CREATE_PRODUCT, new String[] {"/create","/create?businessId=%s&businessKey=%s&date=%s&endOfLife=%s&group=%s&version=%s","GET"});
 			Call.put(Request.CREATE_ATTRIBUTE, new String[] {"/create","/create?businessId=%s&businessKey=%s&date=%s&byDate=%s","GET"});
 			Call.put(Request.CREATE_MODEL, new String[] {"/create","/create?businessId=%s&businessKey=%s&date=%s&byDate=%s","GET"});
-			Call.put(Request.CREATE_PROCESS, new String[] {"/create","/create?businessId=%s&instanceId=%s&businessKey=%s&processName=%s&definitionId=%s&tenantId=%s&caseInstanceId=%s&ended=%s&suspended=%s&type=%s","GET"});
-			Call.put(Request.CREATE_PROCESS_EID, new String[] {"/create/eid","/create/eid?businessId=%s&executionId=%s&instanceId=%s&businessKey=%s&processName=%s&definitionId=%s&tenantId=%s&caseInstanceId=%s&ended=%s&suspended=%s&type=%s","GET"});
 			Call.put(Request.SAVE, new String[] {"/save","/save","POST"});
 			Call.put(Request.SAVE_LIST, new String[] {"/s/save","/s/save","POST"});
 			Call.put(Request.UPDATE, new String[] {"/update","/update","POST"});
@@ -303,13 +303,13 @@ public class CampRest {
 			GET_TASKS_KEY,
 			GET_EXECUTIONS;
 		}
-			public static final String START_PROCESS = "/process/start/{processKey}";//	package ObjectInstance
-			public static final String NOTIFY_PROCESS = "/process/notify";		
-			public static final String NOTIFY_PROCESS_GET = "/process/notify/get";		
-			public static final String NOTIFY_PROCESSES = "/s/process/notify";		// package = ObjectInstance
-			public static final String NOTIFY_PROCESS_EVENT = "/process/notify/event"; //package = ObjectInstance		
-			public static final String SIGNAL_PROCESS = "/process/signal"; //package = Variables
-			public static final String SIGNAL_PROCESSES = "/s/process/signal"; //package = SignalPacket
+			public static final String START_PROCESS = "/start/{processKey}";//	package ObjectInstance
+			public static final String NOTIFY_PROCESS = "/notify";		
+			public static final String NOTIFY_PROCESS_GET = "/notify/get";		
+			public static final String NOTIFY_PROCESSES = "/s/notify";		// package = ObjectInstance
+			public static final String NOTIFY_PROCESS_EVENT = "/notify/event"; //package = ObjectInstance		
+			public static final String SIGNAL_PROCESS = "/signal"; //package = Variables
+			public static final String SIGNAL_PROCESSES = "/s/signal"; //package = SignalPacket
 			public static final String CLAIM_TASK = "/task/claim";		
 			public static final String DELEGATE_TASK = "/task/delegate";		
 			public static final String COMPLETE_TASK = "/task/complete"; //package = Variables		
@@ -321,13 +321,13 @@ public class CampRest {
 		
 		static {
 			Call = new HashMap<Request,String[]>();
-			Call.put(Request.START_PROCESS, new String[]{"/process/start/{processKey}","/process/start?processKey=%s","POST"});//	package ObjectInstance
-			Call.put(Request.NOTIFY_PROCESS, new String[]{"/process/notify","/process/notify?processInstanceId=%s&messageType=%s&messageName=%s","POST"});		
-			Call.put(Request.NOTIFY_PROCESS_GET, new String[]{"/process/notify/get","/process/notify/get?processInstanceId=%s&messageName=%s&businessKey=%s&objectStatus=%s&objectBusinessId=%s&objectId=%s","POST"});		
-			Call.put(Request.NOTIFY_PROCESSES, new String[]{"/s/process/notify","/s/process/notify?messageType=%s&messageName=%s","POST"});		// package = ObjectInstance
-			Call.put(Request.NOTIFY_PROCESS_EVENT, new String[]{"/process/notify/event","/process/notify/event?processInstanceId=%s&businessKey=%s&messageName=%s","POST"}); //package = ObjectInstance		
-			Call.put(Request.SIGNAL_PROCESS, new String[]{"/process/signal","/process/signal?processInstanceId=%s&businessKey=%s","POST"}); //package = Variables
-			Call.put(Request.SIGNAL_PROCESSES, new String[]{"/s/process/signal","/s/process/signal","POST"}); //package = SignalPacket
+			Call.put(Request.START_PROCESS, new String[]{"/start/{processKey}","/start?processKey=%s","POST"});//	package ObjectInstance
+			Call.put(Request.NOTIFY_PROCESS, new String[]{"/notify","/notify?processInstanceId=%s&messageType=%s&messageName=%s","POST"});		
+			Call.put(Request.NOTIFY_PROCESS_GET, new String[]{"/notify/get","/notify/get?processInstanceId=%s&messageName=%s&businessKey=%s&objectStatus=%s&objectBusinessId=%s&objectId=%s","POST"});		
+			Call.put(Request.NOTIFY_PROCESSES, new String[]{"/s/notify","/s/notify?messageType=%s&messageName=%s","POST"});		// package = ObjectInstance
+			Call.put(Request.NOTIFY_PROCESS_EVENT, new String[]{"/notify/event","/notify/event?processInstanceId=%s&businessKey=%s&messageName=%s","POST"}); //package = ObjectInstance		
+			Call.put(Request.SIGNAL_PROCESS, new String[]{"/signal","/signal?processInstanceId=%s&businessKey=%s","POST"}); //package = Variables
+			Call.put(Request.SIGNAL_PROCESSES, new String[]{"/s/signal","/s/signal","POST"}); //package = SignalPacket
 			Call.put(Request.CLAIM_TASK, new String[]{"/task/claim","/task/claim?taskId=%s&userId=%s","GET"});		
 			Call.put(Request.DELEGATE_TASK, new String[]{"/task/delegate","/task/delegate?taskId=%s&userId=%s","GET"});		
 			Call.put(Request.COMPLETE_TASK, new String[]{"/task/complete","/task/complete?taskId=%s","POST"}); //package = Variables		
@@ -352,6 +352,8 @@ public class CampRest {
 			LOAD_BY_INSTANCE_ID,
 			LOAD_BY_BUSINESS_ID,
 			LOAD_BY_KEY,
+			CREATE, 
+			CREATE_EID, 
 			SAVE,
 			SAVE_LIST,
 			UPDATE,
@@ -363,6 +365,8 @@ public class CampRest {
 			ADD_UPDATE,
 			ADD_UPDATES,
 			DELETE_ALL_UPDATES,
+			DELETE_KEY_UPDATES,
+			DELETE_TARGET_UPDATES,
 			DELETE_UPDATES,
 			DELETE_UPDATE;
 		};
@@ -370,6 +374,8 @@ public class CampRest {
 			public static final String LOAD_BY_INSTANCE_ID = "/load/by/instanceId";
 			public static final String LOAD_BY_BUSINESS_ID = "/load/by/businessId";
 			public static final String LOAD_BY_KEY = "/load/by/key";
+			public static final String CREATE = "/create";
+			public static final String CREATE_EID = "/create/eid";
 			public static final String SAVE = "/save";
 			public static final String SAVE_LIST = "/s/save";
 			public static final String UPDATE = "/update";
@@ -381,6 +387,8 @@ public class CampRest {
 			public static final String ADD_UPDATE = "/updates/add";
 			public static final String ADD_UPDATES = "/s/updates/add";
 			public static final String DELETE_ALL_UPDATES = "/s/updates/del/all";
+			public static final String DELETE_KEY_UPDATES = "/s/updates/del/key";
+			public static final String DELETE_TARGET_UPDATES = "/s/updates/del/target";
 			public static final String DELETE_UPDATES = "/s/updates/del";
 			public static final String DELETE_UPDATE = "/updates/del";
 		public static final HashMap<Request,String[]> Call;
@@ -391,6 +399,8 @@ public class CampRest {
 			Call.put(Request.LOAD_BY_INSTANCE_ID, new String[] {"/load/by/instanceId","/load/by/instanceId?instanceId=%s","GET"});
 			Call.put(Request.LOAD_BY_BUSINESS_ID, new String[] {"/load/by/businessId","/load/by/businessId?businessId=%s","GET"});
 			Call.put(Request.LOAD_BY_KEY, new String[] {"/load/by/key","/load/by/key?businessKey=%s","GET"});
+			Call.put(Request.CREATE, new String[] {"/create","/create?businessId=%s&instanceId=%s&businessKey=%s&processName=%s&definitionId=%s&tenantId=%s&caseInstanceId=%s&ended=%s&suspended=%s&type=%s","GET"});
+			Call.put(Request.CREATE_EID, new String[] {"/create/eid","/create/eid?businessId=%s&executionId=%s&instanceId=%s&businessKey=%s&processName=%s&definitionId=%s&tenantId=%s&caseInstanceId=%s&ended=%s&suspended=%s&type=%s","GET"});
 			Call.put(Request.SAVE, new String[] {"/save","/save","POST"});
 			Call.put(Request.SAVE_LIST, new String[] {"/s/save","/s/save","POST"});
 			Call.put(Request.UPDATE, new String[] {"/update","/update","POST"});
@@ -402,14 +412,16 @@ public class CampRest {
 			Call.put(Request.ADD_UPDATE, new String[] {"/updates/add","/updates/add?businessId=%s&businessKey=%s&target=%s","GET"});
 			Call.put(Request.ADD_UPDATES, new String[] {"/s/updates/add","/s/updates/add?businessKey=%s&target=%s","POST"});
 			Call.put(Request.DELETE_ALL_UPDATES, new String[] {"/s/updates/del/all","/s/updates/del/all?businessKey=%s&target=%s","GET"});
+			Call.put(Request.DELETE_KEY_UPDATES, new String[] {"/s/updates/del/key","/s/updates/del/key?businessKey=%s","GET"});
+			Call.put(Request.DELETE_TARGET_UPDATES, new String[] {"/s/updates/del/target","/s/updates/del/target?target=%s","GET"});
 			Call.put(Request.DELETE_UPDATES, new String[] {"/s/updates/del","/s/updates/del?businessKey=%s&target=%s","POST"});
 			Call.put(Request.DELETE_UPDATE, new String[] {"/updates/del","/updates/del?instanceId=%s&businessId=%s&businessKey=%s&target=%s","GET"});
 		}
-		public static String callRequest(String prefix, DaoService.Request request) {
-			return prefix + DaoService.Call.get(request)[1];
+		public static String callRequest(String prefix, ProcessDaoService.Request request) {
+			return prefix + ProcessDaoService.Call.get(request)[1];
 		}
-		public static String path(String prefix, DaoService.Request request) {
-			return prefix + DaoService.Call.get(request)[0];
+		public static String path(String prefix, ProcessDaoService.Request request) {
+			return prefix + ProcessDaoService.Call.get(request)[0];
 		}
 	}
 	
@@ -666,31 +678,31 @@ public class CampRest {
 		}
 	}		
  	public static class Order {
-		public static final String Prefix = "";
+		public static final String Prefix = "/order";
 	}
 	public static class OrderPosition {
-		public static final String Prefix = "";
+		public static final String Prefix = "/order/position";
 	}
 	public static class Process {
-		public static final String Prefix = "";
+		public static final String Prefix = "/process";
 	}
 	public static class ProcessControl {
-		public static final String Prefix = "";
+		public static final String Prefix = "/process";
 	}
  	public static class Product {
-		public static final String Prefix = "";
+		public static final String Prefix = "/product";
 	}
 	public static class Attribute {
-		public static final String Prefix = "";
+		public static final String Prefix = "/product/attribute";
 	}
 	public static class AttributeDefinition {
-		public static final String Prefix = "";
+		public static final String Prefix = "/product/attribute";
 	}
 	public static class AttributeValue {
-		public static final String Prefix = "";
+		public static final String Prefix = "/product/attribute";
 	}
 	public static class Model {
-		public static final String Prefix = "";
+		public static final String Prefix = "/model";
 	}
 	public static class ProcessEngine {
 		public static final String Prefix="";

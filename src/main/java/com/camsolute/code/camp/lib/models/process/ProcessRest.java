@@ -150,7 +150,7 @@ public class ProcessRest implements ProcessRestInterface{
 			msg = "====[ process rest call:  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		String prefix = CampRest.Process.Prefix;		
-		String serviceUri = CampRest.DaoService.callRequest(prefix,CampRest.DaoService.Request.CREATE_PROCESS_EID);
+		String serviceUri = CampRest.ProcessDaoService.callRequest(prefix,CampRest.ProcessDaoService.Request.CREATE_EID);
 		String uri = serverUrl+domainUri+String.format(serviceUri,businessId, executionId, instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, processType.name());
 		String result = RestInterface.resultGET(uri, log);
 		Process<?,?> p = ProcessInterface._fromJson(result);
@@ -171,7 +171,7 @@ public class ProcessRest implements ProcessRestInterface{
 			msg = "====[ process rest call:  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		String prefix = CampRest.Process.Prefix;		
-		String serviceUri = CampRest.DaoService.callRequest(prefix,CampRest.DaoService.Request.CREATE_PROCESS);
+		String serviceUri = CampRest.ProcessDaoService.callRequest(prefix,CampRest.ProcessDaoService.Request.CREATE);
 		String uri = serverUrl+domainUri+String.format(serviceUri,businessId, instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, processType.name());
 		String result = RestInterface.resultGET(uri, log);
 		Process<?,?> p = ProcessInterface._fromJson(result);

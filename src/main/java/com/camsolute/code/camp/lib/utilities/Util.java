@@ -301,7 +301,7 @@ public class Util {
         }
 
         /**
-         *  Returns the string value of  a Timesamp with format "yyyy-MM-dd HH:mm:ss:SSS".
+         *  Returns the string value of  a Timesamp with format "yyyy-MM-dd HH:mm:ss".
          *
          *  @param timestamp <code>Timestamp timestamp</code>: the input <code>Timestamp</code>
          *
@@ -312,9 +312,45 @@ public class Util {
          *  @see org.joda.time.DateTime
          *
          */
-        public static String timestamp(Timestamp timestamp) {
+        public static String datetime(Timestamp timestamp) {
             DateTime dt = new DateTime(timestamp);
-            String stimestamp = dt.toString("yyyy-MM-dd HH:mm:ss.SSS");
+            String stimestamp = dt.toString("yyyy-MM-dd HH:mm:ss");
+            return stimestamp;
+        }
+		
+        /**
+         *  Returns the string value of  a Timesamp with format "yyyy-MM-dd".
+         *
+         *  @param timestamp <code>Timestamp timestamp</code>: the input <code>Timestamp</code>
+         *
+         *  @return <code>String</code> the output string value of Timestamp with the aforementioned formatting.
+         * 
+         *  @author Christopher Campbell
+         * 
+         *  @see org.joda.time.DateTime
+         *
+         */
+        public static String date(Timestamp timestamp) {
+            DateTime dt = new DateTime(timestamp);
+            String stimestamp = dt.toString("yyyy-MM-dd");
+            return stimestamp;
+        }
+		
+        /**
+         *  Returns the string value of  a Timesamp with format "HH:mm:ss".
+         *
+         *  @param timestamp <code>Timestamp timestamp</code>: the input <code>Timestamp</code>
+         *
+         *  @return <code>String</code> the output string value of Timestamp with the aforementioned formatting.
+         * 
+         *  @author Christopher Campbell
+         * 
+         *  @see org.joda.time.DateTime
+         *
+         */
+        public static String time(Timestamp timestamp) {
+            DateTime dt = new DateTime(timestamp);
+            String stimestamp = dt.toString("HH:mm:ss");
             return stimestamp;
         }
 		
