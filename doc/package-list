@@ -1,1 +1,14 @@
+com.camsolute.code.camp.lib.contract
+com.camsolute.code.camp.lib.dao
+com.camsolute.code.camp.lib.dao.database
+com.camsolute.code.camp.lib.dao.rest
+com.camsolute.code.camp.lib.data
+com.camsolute.code.camp.lib.exceptions
 com.camsolute.code.camp.lib.models
+com.camsolute.code.camp.lib.models.customer
+com.camsolute.code.camp.lib.models.order
+com.camsolute.code.camp.lib.models.process
+com.camsolute.code.camp.lib.models.product
+com.camsolute.code.camp.lib.models.rest
+com.camsolute.code.camp.lib.types
+com.camsolute.code.camp.lib.utilities

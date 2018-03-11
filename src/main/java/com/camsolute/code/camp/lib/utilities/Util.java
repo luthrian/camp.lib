@@ -397,7 +397,7 @@ public class Util {
     	
     	private static final Logger LOG = LogManager.getLogger(DB.class);
     	
-    	public static DataSource dataSource;
+    	public static DataSource dataSource = null;
 
     	public static final String _NO_DB_TABLE = "_no_db_table_";
     	
@@ -437,6 +437,7 @@ public class Util {
 //						// TODO Auto-generated catch block
 //						e.printStackTrace();
 //					}
+    		if(dataSource ==null) {
           PoolProperties p = new PoolProperties();
           p.setName("CAMPDBPOOL");
           p.setUrl(CampSQL._DBLINK);
@@ -463,6 +464,7 @@ public class Util {
             "org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer");
           dataSource = new DataSource();
           dataSource.setPoolProperties(p);
+    		}
     	}
     	public static DB instance(){
     		if(DB.instance == null){

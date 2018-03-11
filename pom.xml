@@ -71,6 +71,7 @@
     <maven.surefire>3.5.0</maven.surefire>
     <apache.commons.pool2.version>2.4.2</apache.commons.pool2.version>
     <apache.commons.lang.version>2.6</apache.commons.lang.version>
+    <apache.tomcat.jdbc>8.0.36</apache.tomcat.jdbc>
     <jolbox.version>0.7.1.RELEASE</jolbox.version>
     <commons.dbcp.version>2.1.1</commons.dbcp.version>
     <resteasy.version>3.0.8.Final</resteasy.version>
@@ -240,6 +241,18 @@
       <artifactId>commons-pool2</artifactId>
       <version>${apache.commons.pool2.version}</version>
     </dependency>
+<!-- https://mvnrepository.com/artifact/org.apache.tomcat/tomcat-jdbc -->
+<dependency>
+    <groupId>org.apache.tomcat</groupId>
+    <artifactId>tomcat-jdbc</artifactId>
+    <version>${apache.tomcat.jdbc}</version>
+</dependency>
+<!-- https://mvnrepository.com/artifact/org.apache.tomcat/tomcat-juli -->
+<dependency>
+    <groupId>org.apache.tomcat</groupId>
+    <artifactId>tomcat-juli</artifactId>
+    <version>${apache.tomcat.jdbc}</version>
+</dependency>
 
 
     <!-- ================== -->
