@@ -165,7 +165,7 @@ public class ModelDao implements ModelDaoInterface {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <E extends ArrayList<Model>> E loadListByBusinessKey(String businessKey, boolean log) {
+	public ModelList loadListByBusinessKey(String businessKey, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -217,7 +217,122 @@ public class ModelDao implements ModelDaoInterface {
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[loadListByKey completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
-		return (E) ml;
+		return ml;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public ModelList loadListByGroup(String group, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[loadListByGroup]";
+			msg = "====[ load all persisted model object instances with group = '"+group+"'  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		
+		ModelList ml = new ModelList();
+		Connection conn = null;
+		ResultSet rs = null;
+		Statement dbs = null;
+		int retVal = 0;
+		try{
+			conn = Util.DB.__conn(log);
+			
+			String SQL = "SELECT * FROM "+table+" AS t, "+CampInstanceDao.table+" AS ci WHERE "
+					+ " ci.`_group_name`='"+group+"'"
+					+ " AND t.`model_group`=ci.`_group_name`"
+					+ " AND ci.`_instance_id`=ci.`_current_instance_id`"
+					+ " AND t.`"+tabledef[0][0]+"`=ci.`_object_id`"
+					+ " ORDER BY ci.`_group_name`, ci.`_object_business_id`";
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
+			
+			dbs = conn.createStatement();
+			
+			rs = dbs.executeQuery(SQL);		
+			
+			while (rs.next()) {
+				Model m = rsToI(rs,log);
+				m.setHistory(CampInstanceDao.instance().rsToI(rs, log));
+				m.states().ioAction(IOAction.LOAD);
+				ml.add(m);
+			} 
+			if(log && !Util._IN_PRODUCTION) {retVal = ml.size();msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
+			
+		} catch(SQLException e) {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
+			e.printStackTrace();
+		} finally {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ releasing connection]----";LOG.info(String.format(fmt, _f,msg));}
+			Util.DB.__release(conn,log);
+			Util.DB._releaseRS(rs, log);
+			Util.DB._releaseStatement(dbs, log);
+		}
+		
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[loadListByGroup completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return ml;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public ModelList loadListByGroupVersion(String group, String version, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[loadListByGroupVersion]";
+			msg = "====[ load all persisted model object instances with group = '"+group+"' and version = '"+version+"' ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		
+		ModelList ml = new ModelList();
+		Connection conn = null;
+		ResultSet rs = null;
+		Statement dbs = null;
+		int retVal = 0;
+		try{
+			conn = Util.DB.__conn(log);
+			
+			String SQL = "SELECT * FROM "+table+" AS t, "+CampInstanceDao.table+" AS ci WHERE "
+					+ " ci.`_group_name`='"+group+"'"
+					+ " AND ci.`_version_value`='"+version+"'"
+					+ " AND t.`model_group`=ci.`_group_name`"
+					+ " AND ci.`_instance_id`=ci.`_current_instance_id`"
+					+ " AND t.`"+tabledef[0][0]+"`=ci.`_object_id`"
+					+ " ORDER BY ci.`_group_name`, ci.`_object_business_id`";
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
+			
+			dbs = conn.createStatement();
+			
+			rs = dbs.executeQuery(SQL);		
+			
+			while (rs.next()) {
+				Model m = rsToI(rs,log);
+				m.setHistory(CampInstanceDao.instance().rsToI(rs, log));
+				m.states().ioAction(IOAction.LOAD);
+				ml.add(m);
+			} 
+			if(log && !Util._IN_PRODUCTION) {retVal = ml.size();msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
+			
+		} catch(SQLException e) {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
+			e.printStackTrace();
+		} finally {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ releasing connection]----";LOG.info(String.format(fmt, _f,msg));}
+			Util.DB.__release(conn,log);
+			Util.DB._releaseRS(rs, log);
+			Util.DB._releaseStatement(dbs, log);
+		}
+		
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[loadListByGroupVersion completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return ml;
 	}
 
 	@Override

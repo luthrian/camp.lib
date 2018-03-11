@@ -58,6 +58,8 @@ public class CampRest {
 			LOAD_BY_ID,
 			LOAD,
 			LOAD_BY_KEY,
+			LOAD_BY_GROUP,
+			LOAD_BY_GROUP_VERSION,
 			CREATE_ORDER, 
 			CREATE_PRODUCT, 
 			CREATE_ATTRIBUTE, 
@@ -84,6 +86,8 @@ public class CampRest {
 		public static final String LOAD_BY_ID = "/load/by/id/{id}";
 		public static final String LOAD = "/load/by/businessId";
 		public static final String LOAD_BY_KEY = "/load/by/key";
+		public static final String LOAD_BY_GROUP = "/load/by/group";
+		public static final String LOAD_BY_GROUP_VERSION = "/load/by/group/version";
 		public static final String CREATE_ORDER = "/create";
 		public static final String CREATE_PRODUCT = "/create";
 		public static final String CREATE_ATTRIBUTE = "/create";
@@ -113,6 +117,8 @@ public class CampRest {
 			Call.put(Request.LOAD_BY_ID, new String[] {"/load/by/id/{id}","/load/by/id/%s","GET"});
 			Call.put(Request.LOAD, new String[] {"/load/by/businessId","/load/by/businessId?businessId=%s","GET"});
 			Call.put(Request.LOAD_BY_KEY, new String[] {"/load/by/key","/load/by/key?businessKey=%s","GET"});
+			Call.put(Request.LOAD_BY_GROUP, new String[] {"/load/by/group","/load/by/group?group=%s","GET"});
+			Call.put(Request.LOAD_BY_GROUP_VERSION, new String[] {"/load/by/group/version","/load/by/group/version?group=%s&version=%s","GET"});
 			Call.put(Request.CREATE_ORDER, new String[] {"/create","/create?businessId=%s&businessKey=%s&date=%s&byDate=%s","GET"});
 			Call.put(Request.CREATE_PRODUCT, new String[] {"/create","/create?businessId=%s&businessKey=%s&date=%s&byDate=%s","GET"});
 			Call.put(Request.CREATE_ATTRIBUTE, new String[] {"/create","/create?businessId=%s&businessKey=%s&date=%s&byDate=%s","GET"});
@@ -452,6 +458,7 @@ public class CampRest {
 			LOAD_BY_BUSINESS_KEY,
 			LOAD_BY_TYPE,
 			LOAD_BY_GROUP,
+			LOAD_BY_GROUP_VERSION,
 			LOAD_AFTER_POSITION,
 			LOAD_BEFORE_POSITION,
 			LOAD_POSITION_RANGE,
@@ -469,6 +476,7 @@ public class CampRest {
 			public static final String LOAD_BY_BUSINESS_KEY = Prefix + "/s/load/by/business/key";
 			public static final String LOAD_BY_TYPE = Prefix + "/s/load/by/type";
 			public static final String LOAD_BY_GROUP = Prefix + "/s/load/by/group";
+			public static final String LOAD_BY_GROUP_VERSION = Prefix + "/s/load/by/group/version";
 			public static final String LOAD_AFTER_POSITION = Prefix + "/s/load/before/position";		
 			public static final String LOAD_BEFORE_POSITION = Prefix + "/s/load/after/position";		
 			public static final String LOAD_POSITION_RANGE = Prefix + "/s/load/position/range";		
@@ -488,7 +496,8 @@ public class CampRest {
 			Call.put(Request.LOAD_BY_BUSINESS_ID, new String[] {"/load/by/business/id","/load/by/business/id?businessId=%s","GET"});
 			Call.put(Request.LOAD_BY_BUSINESS_KEY, new String[] {"/s/load/by/business/key","/s/load/by/business/key?businessKey=%s","GET"});
 			Call.put(Request.LOAD_BY_TYPE, new String[] {"/s/load/by/type","/s/load/by/type?type=%s","GET"});
-			Call.put(Request.LOAD_BY_GROUP, new String[] {"/s/load/by/group","/s/load/by/group?group=%s&parentId=%","GET"});
+			Call.put(Request.LOAD_BY_GROUP, new String[] {"/s/load/by/group","/s/load/by/group?group=%s&version=%s","GET"});
+			Call.put(Request.LOAD_BY_GROUP_VERSION, new String[] {"/s/load/by/group/version","/s/load/by/group/version?group=%s&version=%s","GET"});
 			Call.put(Request.LOAD_AFTER_POSITION, new String[] {"/s/load/before/position","/s/load/before/position?id=%s&position=%","GET"});		
 			Call.put(Request.LOAD_BEFORE_POSITION, new String[] {"/s/load/after/position","/s/load/after/position?id=%s&position=%","GET"});		
 			Call.put(Request.LOAD_POSITION_RANGE, new String[] {"/s/load/position/range","/s/load/position/range?id=%s&startPosition=%&endPosition=%","GET"});		
@@ -657,31 +666,31 @@ public class CampRest {
 		}
 	}		
  	public static class Order {
-		public static final String Prefix = "/osc";
+		public static final String Prefix = "";
 	}
 	public static class OrderPosition {
-		public static final String Prefix = "/opsc";
+		public static final String Prefix = "";
 	}
 	public static class Process {
-		public static final String Prefix = "/procsc";
+		public static final String Prefix = "";
 	}
 	public static class ProcessControl {
-		public static final String Prefix = "/procctrsc";
+		public static final String Prefix = "";
 	}
  	public static class Product {
 		public static final String Prefix = "";
 	}
 	public static class Attribute {
-		public static final String Prefix = "/afc";
+		public static final String Prefix = "";
 	}
 	public static class AttributeDefinition {
-		public static final String Prefix = "/adfc";
+		public static final String Prefix = "";
 	}
 	public static class AttributeValue {
-		public static final String Prefix = "/avfc";
+		public static final String Prefix = "";
 	}
 	public static class Model {
-		public static final String Prefix = "/mfc";
+		public static final String Prefix = "";
 	}
 	public static class ProcessEngine {
 		public static final String Prefix="";

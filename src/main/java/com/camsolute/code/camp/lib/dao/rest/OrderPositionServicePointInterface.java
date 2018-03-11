@@ -32,6 +32,10 @@ public interface OrderPositionServicePointInterface {
 
 	public String loadListByBusinessKey(String businessKey); 
 
+	public String loadListByGroup(String group);
+
+	public String loadListByGroupVersion(String group, String version);
+
 	public String save(String orderPosition); 
 	
 	public String saveList(String orderPositionList); 

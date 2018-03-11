@@ -436,8 +436,8 @@ public class CampSQL {
 				{"op_business_id", "varchar(45) NOT NULL"},
 				{"op_order_business_id", "varchar(45) NOT NULL"},
 				{"op_businesskey", "varchar(45) NOT NULL"},
-				{"op_group", "varchar(45) NOT NULL"},
-				{"op_version", "varchar(45) NOT NULL"},
+				{"op_group", "varchar(45) NOT NULL"},// TODO: remove since in instance
+				{"op_version", "varchar(45) NOT NULL"},// TODO: remove since in instance
 				{"extra", "PRIMARY KEY (`_order_position_id_`)"
 						+ ",UNIQUE INDEX `op_order_position_id_UNIQUE` (`_order_position_id_` ASC)"
 						+ ",INDEX `op_business_id_idx` (`op_business_id` ASC)"
@@ -680,8 +680,8 @@ public class CampSQL {
 				{"product_name", "varchar(45) NOT NULL"},
 				{"product_businesskey", "varchar(45) NOT NULL"},
 				{"product_date", "timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP"},
-				{"product_group", "varchar(45) NOT NULL"},
-				{"product_version", "varchar(45) NOT NULL"},
+				{"product_group", "varchar(45) NOT NULL"},//TODO: remove since in instance
+				{"product_version", "varchar(45) NOT NULL"},//TODO: remove since in instance
 //				{"product_status", "varchar(45) NOT NULL"},
 				{"extra", "PRIMARY KEY (`_product_id_`),UNIQUE KEY `product_id_UNIQUE` (`_product_id_` ASC),"
 					+ "INDEX `product_group_idx` (`product_group` ASC)"}

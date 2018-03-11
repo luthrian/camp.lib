@@ -34,6 +34,10 @@ public interface AttributeServicePointInterface {
 
 	public String loadListByBusinessKey(String businessKey);
 
+	public String loadListByGroup(String group);
+
+	public String loadListByGroupVersion(String group, String version);
+
 	public String save(String attribute);
 
 	public String saveList(String attributeList);

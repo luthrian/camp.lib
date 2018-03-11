@@ -43,6 +43,10 @@ public interface ProductServicePointInterface {
 	
 	public String loadListByBusinessKey(String businessKey);
 	
+	public String loadListByGroup(String group);
+
+	public String loadListByGroupVersion(String group, String version);
+
 	public String create(String businessId, String businessKey, String group, String version, String date);
 	
 	public String save(String product);

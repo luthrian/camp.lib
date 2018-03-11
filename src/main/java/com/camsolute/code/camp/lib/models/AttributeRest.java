@@ -107,6 +107,52 @@ public class AttributeRest implements AttributeRestInterface {
 		return al;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public AttributeList loadListByGroup(String group, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[loadListByGroup]";
+			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		
+		String prefix = CampRest.AttributeDefinition.Prefix;		
+		String serviceUri = CampRest.AttributeDefinitionDaoService.callRequest(prefix,CampRest.AttributeDefinitionDaoService.Request.LOAD_BY_GROUP);
+		String uri = serverUrl+domainUri+String.format(serviceUri,group);
+		String result = RestInterface.resultGET(uri, log);
+		AttributeList al = AttributeList._fromJson(result);
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[loadListByGroup completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return al;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public AttributeList loadListByGroupVersion(String group, String version, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[loadListByGroupVersion]";
+			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		
+		String prefix = CampRest.AttributeDefinition.Prefix;		
+		String serviceUri = CampRest.AttributeDefinitionDaoService.callRequest(prefix,CampRest.AttributeDefinitionDaoService.Request.LOAD_BY_GROUP_VERSION);
+		String uri = serverUrl+domainUri+String.format(serviceUri,group,version);
+		String result = RestInterface.resultGET(uri, log);
+		AttributeList al = AttributeList._fromJson(result);
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[loadListByGroupVersion completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return al;
+	}
+
 	@Override
 	public Attribute<?> save(Attribute<?> instance, boolean log) {
 		long startTime = System.currentTimeMillis();

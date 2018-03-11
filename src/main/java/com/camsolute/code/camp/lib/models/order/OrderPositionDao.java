@@ -287,6 +287,122 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 		return (E) pl;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public OrderPositionList loadListByGroup(String group, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[loadListByGroup]";
+			msg = "====[ load a list of persisted order position object instances that share the same group. ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		OrderPositionList ol = new OrderPositionList();
+		Connection conn = null;
+		ResultSet rs = null;
+		Statement dbs = null;
+		int retVal = 0;
+		try{
+			conn = Util.DB.__conn(log);
+			
+			dbs = conn.createStatement();
+			
+			String SQL = "SELECT * FROM "+table+" AS t, , "+reftable+" AS rt, "+CampInstanceDao.table+" AS i WHERE "
+					+ " i.`_group_name`='"+group+"' "
+					+ " AND i.`_object_id`=t.`"+tabledef[0][0]+"` "
+					+ " AND i.`_object_business_id`=t.`order_number` "
+					+ " AND rt.`"+reftabledef[0][0]+"`=ti.`_object_ref_id`"
+					+ " AND i.`_instance_id`=i.`_current_instance_id` "
+					+ " ORDER BY rt.`op_position`" 
+					;
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
+			
+			rs = dbs.executeQuery(SQL);		
+			while (rs.next()) {		
+				OrderPosition o = rsToI(rs,log);
+				o.setHistory(CampInstanceDao.instance().rsToI(rs, log));
+				o.states().ioAction(IOAction.LOAD);
+				ol.add(o);
+			}
+			retVal = ol.size();
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" loaded ]----";LOG.info(String.format(fmt,_f,msg));}
+			
+		} catch(SQLException e) {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
+			e.printStackTrace();
+		} finally {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ releasing connection]----";LOG.info(String.format(fmt, _f,msg));}
+			Util.DB.__release(conn,log);
+			Util.DB._releaseRS(rs, log);
+			Util.DB._releaseStatement(dbs, log);
+		}
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[loadListByGroup completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return ol;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public OrderPositionList loadListByGroupVersion(String group, String version, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[loadListByKey]";
+			msg = "====[ load a list of persisted order position object instances that share the same group and version aspects ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		OrderPositionList ol = new OrderPositionList();
+		Connection conn = null;
+		ResultSet rs = null;
+		Statement dbs = null;
+		int retVal = 0;
+		try{
+			conn = Util.DB.__conn(log);
+			
+			dbs = conn.createStatement();
+			
+			String SQL = "SELECT * FROM "+table+" AS t, "+CampInstanceDao.table+" AS i WHERE "
+					+ " i.`_group_name`='"+group+"' "
+					+ " AND i.`_version_value`='"+version+"' "
+					+ " AND i.`_object_id`=t.`"+tabledef[0][0]+"` "
+					+ " AND i.`_object_business_id`=t.`order_number` "
+					+ " AND rt.`"+reftabledef[0][0]+"`=ti.`_object_ref_id`"
+					+ " AND i.`_instance_id`=i.`_current_instance_id` "
+					+ " ORDER BY rt.`op_position`" 
+					;
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
+			
+			rs = dbs.executeQuery(SQL);		
+			while (rs.next()) {		
+				OrderPosition o = rsToI(rs,log);
+				o.setHistory(CampInstanceDao.instance().rsToI(rs, log));
+				o.states().ioAction(IOAction.LOAD);
+				ol.add(o);
+			}
+			retVal = ol.size();
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" loaded ]----";LOG.info(String.format(fmt,_f,msg));}
+			
+		} catch(SQLException e) {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
+			e.printStackTrace();
+		} finally {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ releasing connection]----";LOG.info(String.format(fmt, _f,msg));}
+			Util.DB.__release(conn,log);
+			Util.DB._releaseRS(rs, log);
+			Util.DB._releaseStatement(dbs, log);
+		}
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[loadListByGroupVersion completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return ol;
+	}
+
+
 	@Override
 	public OrderPosition save(OrderPosition op, boolean log) {
 		long startTime = System.currentTimeMillis();

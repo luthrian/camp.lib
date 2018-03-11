@@ -120,6 +120,54 @@ public class ProductRest implements ProductRestInterface {
 		return (E)o;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public ProductList loadListByGroup(String group, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[loadListByGroup]";
+			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		ProductList o = null;
+		String prefix = CampRest.Product.Prefix;		
+		String serviceUri = CampRest.DaoService.callRequest(prefix,CampRest.DaoService.Request.LOAD_BY_GROUP);
+		String uri = serverUrl+domainUri+String.format(serviceUri,group);
+		String result = RestInterface.resultGET(uri, log);
+		o = ProductList._fromJson(result);
+		
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[loadListByGroup completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return o;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public ProductList loadListByGroupVersion(String group, String version, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[loadListByGroupVersion]";
+			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		ProductList o = null;
+		String prefix = CampRest.Product.Prefix;		
+		String serviceUri = CampRest.DaoService.callRequest(prefix,CampRest.DaoService.Request.LOAD_BY_GROUP_VERSION);
+		String uri = serverUrl+domainUri+String.format(serviceUri,group,version);
+		String result = RestInterface.resultGET(uri, log);
+		o = ProductList._fromJson(result);
+		
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[loadListByGroupVersion completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return o;
+	}
+
 	@Override
 	public Product save(Product p, boolean log) {
 		long startTime = System.currentTimeMillis();

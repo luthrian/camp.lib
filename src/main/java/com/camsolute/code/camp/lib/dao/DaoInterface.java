@@ -54,6 +54,10 @@ public interface DaoInterface<T extends IsObjectInstance<T>> {
 
     public <E extends ArrayList<T>> E loadListByBusinessKey(String businessKey, boolean log);
 
+    public <E extends ArrayList<T>> E loadListByGroup(String group, boolean log);
+    
+    public <E extends ArrayList<T>> E loadListByGroupVersion(String group, String version, boolean log);
+    
     public  T save(T instance, boolean log);
 
     public <E extends ArrayList<T>> E saveList(E instanceList, boolean log);

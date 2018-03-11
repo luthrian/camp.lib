@@ -252,6 +252,123 @@ public class ProductDao implements ProductDaoInterface {
 		return pl;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public ProductList loadListByGroup(String group, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[loadListByGroup]";
+			msg = "====[ load a list of persisted product object instances that share a common group aspect ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		ProductList pl = new ProductList();
+		Connection conn = null;
+		ResultSet rs = null;
+		Statement dbs = null;
+		int retVal = 0;
+		try{
+			conn = Util.DB.__conn(log);
+			
+			dbs = conn.createStatement();
+			
+			String SQL = "SELECT * FROM "+table+" AS t, "+CampInstanceDao.table+" AS ci WHERE "
+					+ "ci.`_group_name`='"+group+"'"
+					+ " AND ci.`_instance_id`=ci.`_current_instance_id`"
+					+ " AND t.`"+tabledef[0][0]+"`=ci.`_object_id`"
+					+ " ORDER BY t.`"+tabledef[0][0]+"` ASC ";
+//					+ ", t.`product_name` ASC "
+//					+ ",  t.`product_date` ASC ";
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
+			
+			rs = dbs.executeQuery(SQL);		
+			while (rs.next()) {		
+				Product p = rsToI(rs, log);
+				p.setHistory(CampInstanceDao.instance().rsToI(rs, log));
+				p.states().ioAction(IOAction.LOAD);
+				pl.add(p);
+			}
+			retVal = pl.size();
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
+			
+		} catch(SQLException e) {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
+			e.printStackTrace();
+		} finally {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ releasing connection]----";LOG.info(String.format(fmt, _f,msg));}
+			Util.DB.__release(conn,log);
+			Util.DB._releaseRS(rs, log);
+			Util.DB._releaseStatement(dbs, log);
+		}
+		//return retVal;
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[loadListByGroup completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return pl;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public ProductList loadListByGroupVersion(String group, String version, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[loadListByGroupVersion]";
+			msg = "====[ load a list of persisted product object instances that share a common group and version aspects ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		ProductList pl = new ProductList();
+		Connection conn = null;
+		ResultSet rs = null;
+		Statement dbs = null;
+		int retVal = 0;
+		try{
+			conn = Util.DB.__conn(log);
+			
+			dbs = conn.createStatement();
+			
+			String SQL = "SELECT * FROM "+table+" AS t, "+CampInstanceDao.table+" AS ci WHERE "
+					+ "ci.`_group_name`='"+group+"'"
+					+ " AND ci.`_version_value`='"+version+"'"
+					+ " AND ci.`_instance_id`=ci.`_current_instance_id`"
+					+ " AND t.`"+tabledef[0][0]+"`=ci.`_object_id`"
+					+ " ORDER BY t.`"+tabledef[0][0]+"` ASC ";
+//					+ ", t.`product_name` ASC "
+//					+ ",  t.`product_date` ASC ";
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
+			
+			rs = dbs.executeQuery(SQL);		
+			while (rs.next()) {		
+				Product p = rsToI(rs, log);
+				p.setHistory(CampInstanceDao.instance().rsToI(rs, log));
+				p.states().ioAction(IOAction.LOAD);
+				pl.add(p);
+			}
+			retVal = pl.size();
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
+			
+		} catch(SQLException e) {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
+			e.printStackTrace();
+		} finally {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ releasing connection]----";LOG.info(String.format(fmt, _f,msg));}
+			Util.DB.__release(conn,log);
+			Util.DB._releaseRS(rs, log);
+			Util.DB._releaseStatement(dbs, log);
+		}
+		//return retVal;
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[loadListByGroupVersion completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return pl;
+	}
+
 	@Override
 	public Product save(Product p, boolean log) {
 		long startTime = System.currentTimeMillis();

@@ -45,6 +45,10 @@ public interface OrderServicePointInterface {
 	
 	public String loadListByBusinessKey(String businessKey);
 
+	public String loadListByGroup(String group);
+
+	public String loadListByGroupVersion(String group, String version);
+
 	public String loadUpdates(String businessKey, String target);
 
 	public String loadFirst(String businessId, boolean primary);

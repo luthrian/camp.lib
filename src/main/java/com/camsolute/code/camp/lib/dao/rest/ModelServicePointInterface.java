@@ -27,6 +27,10 @@ public interface ModelServicePointInterface {
 
   public String loadListByBusinessKey(String businessKey);
 
+	public String loadListByGroup(String group);
+
+	public String loadListByGroupVersion(String group, String version);
+
   public String save(String model);
 
   public String saveList(String modelList);

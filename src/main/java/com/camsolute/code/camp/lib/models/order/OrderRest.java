@@ -172,6 +172,70 @@ public class OrderRest implements OrderRestInterface {
 		return ol;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public OrderList loadListByGroup(String group, boolean log) {
+		return loadListByGroup(serverUrl,group,log);
+	}
+	public OrderList loadListByGroup(String serverUrl, String group, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[loadListByGroup]";
+			msg = "====[ load a list of order position object instances via rest call  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		OrderList ol = new OrderList();
+		
+		String prefix = CampRest.Order.Prefix;
+		
+		String serviceUri = CampRest.DaoService.callRequest(prefix, CampRest.DaoService.Request.LOAD_BY_GROUP);
+		
+		String uri = serverUrl+domainUri+String.format(serviceUri,group);
+		
+		String result = RestInterface.resultGET(uri, log);
+		
+		ol = OrderList._fromJson(result);
+		
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[loadListByGroup completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return ol;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public OrderList loadListByGroupVersion(String group, String version, boolean log) {
+		return loadListByGroupVersion(serverUrl,group,version,log);
+	}
+	public OrderList loadListByGroupVersion(String serverUrl, String group, String version, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[loadListByGroupVersion]";
+			msg = "====[ load a list of order object instances via rest call  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		OrderList ol = new OrderList();
+		
+		String prefix = CampRest.Order.Prefix;
+		
+		String serviceUri = CampRest.DaoService.callRequest(prefix, CampRest.DaoService.Request.LOAD_BY_GROUP_VERSION);
+		
+		String uri = serverUrl+domainUri+String.format(serviceUri,group,version);
+		
+		String result = RestInterface.resultGET(uri, log);
+		
+		ol = OrderList._fromJson(result);
+		
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[loadListByGroupVersion completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return ol;
+	}
+
 	@Override
 	public Order save(Order o, boolean log) {
 		return save(serverUrl,o,log);

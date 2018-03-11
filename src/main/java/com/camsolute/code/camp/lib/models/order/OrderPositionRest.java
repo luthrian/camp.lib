@@ -98,7 +98,7 @@ public class OrderPositionRest implements OrderPositionRestInterface {
 	}
 
 	@Override
-	public <E extends ArrayList<OrderPosition>> E loadListByBusinessKey(String businessKey, boolean log) {
+	public OrderPositionList loadListByBusinessKey(String businessKey, boolean log) {
 		long startTime = System.currentTimeMillis();
 				String _f = null;
 				String msg = null;
@@ -116,10 +116,55 @@ public class OrderPositionRest implements OrderPositionRestInterface {
 					String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 					msg = "====[loadListByBusinessKey completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 				}
-				return (E)op;
+				return op;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
+	public OrderPositionList loadListByGroup(String group, boolean log) {
+		long startTime = System.currentTimeMillis();
+				String _f = null;
+				String msg = null;
+				if(log && !Util._IN_PRODUCTION) {
+					_f = "[loadListByGroup]";
+					msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+				}
+				OrderPositionList op = null;
+				String prefix = CampRest.OrderPosition.Prefix;		
+				String serviceUri = CampRest.DaoService.callRequest(prefix,CampRest.DaoService.Request.LOAD_BY_GROUP);
+				String uri = serverUrl+domainUri+String.format(serviceUri,group);
+				String result = RestInterface.resultGET(uri, log);
+				op = OrderPositionList._fromJson(result);
+				if(log && !Util._IN_PRODUCTION) {
+					String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+					msg = "====[loadListByGroup completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+				}
+				return op;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public OrderPositionList loadListByGroupVersion(String group, String version, boolean log) {
+		long startTime = System.currentTimeMillis();
+				String _f = null;
+				String msg = null;
+				if(log && !Util._IN_PRODUCTION) {
+					_f = "[loadListByGroupVersion]";
+					msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+				}
+				OrderPositionList op = null;
+				String prefix = CampRest.OrderPosition.Prefix;		
+				String serviceUri = CampRest.DaoService.callRequest(prefix,CampRest.DaoService.Request.LOAD_BY_GROUP_VERSION);
+				String uri = serverUrl+domainUri+String.format(serviceUri,group,version);
+				String result = RestInterface.resultGET(uri, log);
+				op = OrderPositionList._fromJson(result);
+				if(log && !Util._IN_PRODUCTION) {
+					String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+					msg = "====[loadListByGroupVersion completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+				}
+				return op;
+	}
+
 	public OrderPosition save(OrderPosition op, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
@@ -186,6 +231,7 @@ public class OrderPositionRest implements OrderPositionRestInterface {
 				return op;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public <E extends ArrayList<OrderPosition>> E updateList(E opl, boolean log) {
 		long startTime = System.currentTimeMillis();
@@ -209,6 +255,7 @@ public class OrderPositionRest implements OrderPositionRestInterface {
 				
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public <E extends ArrayList<OrderPosition>> E loadUpdates(String businessKey, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
