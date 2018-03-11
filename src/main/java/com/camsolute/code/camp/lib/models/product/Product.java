@@ -93,6 +93,26 @@ public class Product implements ProductInterface {
 		this.date = date;
 	}
 
+	public Product(String name, String businessKey, Group group, Version version, Timestamp date, Timestamp endOfLife) {
+		this.name = name;
+		this.businessKey = businessKey;
+		this.group = group;
+		this.version = version;
+		this.date = date;
+		this.history.endOfLife(endOfLife);
+	}
+
+	public Product(int id, String name, String businessKey, Group group, Version version, Timestamp date, Timestamp endOfLife) {
+		this.id = id;
+		this.name = name;
+		this.businessKey = businessKey;
+		this.group = group;
+		this.version = version;
+		this.date = date;
+		this.history.endOfLife(endOfLife);
+	}
+
+
 	@Override
 	public int modelId() {
 		return this.modelId;

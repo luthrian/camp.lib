@@ -52,6 +52,9 @@ public class ProductRest implements ProductRestInterface {
 	
 	@Override
 	public Product loadById(int id, boolean log) {
+	return loadById(serverUrl,id, log);
+	}
+	public Product loadById(String serverUrl,int id, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -75,6 +78,9 @@ public class ProductRest implements ProductRestInterface {
 
 	@Override
 	public Product loadByBusinessId(String businessId, boolean log) {
+	return loadByBusinessId(serverUrl,businessId, log);
+	}
+	public Product loadByBusinessId(String serverUrl,String businessId, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -96,9 +102,12 @@ public class ProductRest implements ProductRestInterface {
 		return o;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public <E extends ArrayList<Product>> E loadListByBusinessKey(String businessKey, boolean log) {
+	return loadListByBusinessKey(serverUrl,businessKey, log);
+	}
+	@SuppressWarnings("unchecked")
+	public <E extends ArrayList<Product>> E loadListByBusinessKey(String serverUrl,String businessKey, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -123,6 +132,9 @@ public class ProductRest implements ProductRestInterface {
 	@SuppressWarnings("unchecked")
 	@Override
 	public ProductList loadListByGroup(String group, boolean log) {
+	return loadListByGroup(serverUrl,group, log);
+	}
+	public ProductList loadListByGroup(String serverUrl,String group, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -147,6 +159,9 @@ public class ProductRest implements ProductRestInterface {
 	@SuppressWarnings("unchecked")
 	@Override
 	public ProductList loadListByGroupVersion(String group, String version, boolean log) {
+	return loadListByGroupVersion(serverUrl,group, version, log);
+	}
+	public ProductList loadListByGroupVersion(String serverUrl,String group, String version, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -195,6 +210,9 @@ public class ProductRest implements ProductRestInterface {
 
 	@Override
 	public Product save(Product p, boolean log) {
+		return save(serverUrl,p,log);
+	}
+	public Product save(String serverUrl,Product p, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -215,9 +233,12 @@ public class ProductRest implements ProductRestInterface {
 		return o;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public <E extends ArrayList<Product>> E saveList(E pl, boolean log) {
+		return saveList(serverUrl,pl, log);
+	}
+	@SuppressWarnings("unchecked")
+	public <E extends ArrayList<Product>> E saveList(String serverUrl,E pl, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -240,6 +261,9 @@ public class ProductRest implements ProductRestInterface {
 
 	@Override
 	public Product update(Product p, boolean log) {
+		return update(serverUrl,p,log);
+	}
+	public Product update(String serverUrl,Product p, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -260,9 +284,12 @@ public class ProductRest implements ProductRestInterface {
 		return o;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public <E extends ArrayList<Product>> E updateList(E pl, boolean log) {
+	return updateList(serverUrl,pl,log);
+	}
+	@SuppressWarnings("unchecked")
+	public <E extends ArrayList<Product>> E updateList(String serverUrl,E pl, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -283,9 +310,12 @@ public class ProductRest implements ProductRestInterface {
 		return (E)o;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public <E extends ArrayList<Product>> E loadUpdates(String businessKey, String target, boolean log) {
+	return loadUpdates(serverUrl,businessKey, target, log);
+	}
+	@SuppressWarnings("unchecked")
+	public <E extends ArrayList<Product>> E loadUpdates(String serverUrl,String businessKey, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -309,6 +339,10 @@ public class ProductRest implements ProductRestInterface {
 
 	@Override
 	public <E extends ArrayList<Product>> E loadUpdatesByKey(String businessKey, boolean log) {
+	return loadUpdatesByKey(serverUrl,businessKey, log);
+	}
+	@SuppressWarnings("unchecked")
+	public <E extends ArrayList<Product>> E loadUpdatesByKey(String serverUrl,String businessKey, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -332,6 +366,10 @@ public class ProductRest implements ProductRestInterface {
 
 	@Override
 	public <E extends ArrayList<Product>> E loadUpdatesByTarget(String target, boolean log) {
+	return loadUpdatesByTarget(serverUrl,target, log);
+	}
+	@SuppressWarnings("unchecked")
+	public <E extends ArrayList<Product>> E loadUpdatesByTarget(String serverUrl,String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -355,6 +393,9 @@ public class ProductRest implements ProductRestInterface {
 
 	@Override
 	public Product loadUpdate(Product p, String businessKey, String target, boolean log) {
+	return loadUpdate(serverUrl,p, businessKey, target, log);
+	}
+	public Product loadUpdate(String serverUrl,Product p, String businessKey, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -378,6 +419,9 @@ public class ProductRest implements ProductRestInterface {
 
 	@Override
 	public int addToUpdates(Product p, String businessKey, String target, boolean log) {
+	return addToUpdates(serverUrl,p, businessKey, target, log);
+	}
+	public int addToUpdates(String serverUrl,Product p, String businessKey, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -401,6 +445,9 @@ public class ProductRest implements ProductRestInterface {
 
 	@Override
 	public <E extends ArrayList<Product>> int addToUpdates(E pl, String businessKey, String target, boolean log) {
+	return addToUpdates(serverUrl,pl, businessKey, target, log);
+	}
+	public <E extends ArrayList<Product>> int addToUpdates(String serverUrl,E pl, String businessKey, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -425,6 +472,9 @@ public class ProductRest implements ProductRestInterface {
 
 	@Override
 	public int deleteAllFromUpdates(String businessKey, String target, boolean log) {
+	return deleteAllFromUpdates(serverUrl,businessKey, target, log);
+	}
+	public int deleteAllFromUpdates(String serverUrl,String businessKey, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -448,6 +498,9 @@ public class ProductRest implements ProductRestInterface {
 
 	@Override
 	public int deleteFromUpdatesByKey(String businessKey, boolean log) {
+	return deleteFromUpdatesByKey(serverUrl,businessKey, log);
+	}
+	public int deleteFromUpdatesByKey(String serverUrl,String businessKey, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -471,6 +524,9 @@ public class ProductRest implements ProductRestInterface {
 
 	@Override
 	public int deleteFromUpdatesByTarget(String target, boolean log) {
+	return deleteFromUpdatesByTarget(serverUrl,target, log);
+	}
+	public int deleteFromUpdatesByTarget(String serverUrl,String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -494,6 +550,9 @@ public class ProductRest implements ProductRestInterface {
 
 	@Override
 	public int deleteFromUpdates(String businessId, String businessKey, String target, boolean log) {
+	return deleteFromUpdates(serverUrl,businessId, businessKey, target, log);
+	}
+	public int deleteFromUpdates(String serverUrl,String businessId, String businessKey, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -516,8 +575,10 @@ public class ProductRest implements ProductRestInterface {
 	}
 
 	@Override
-	public <E extends ArrayList<Product>> int deleteFromUpdates(E pl, String businessKey, String target,
-			boolean log) {
+	public <E extends ArrayList<Product>> int deleteFromUpdates(E pl, String businessKey, String target, boolean log) {
+	return deleteFromUpdates(serverUrl,pl, businessKey, target, log);
+	}
+	public <E extends ArrayList<Product>> int deleteFromUpdates(String serverUrl,E pl, String businessKey, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -542,6 +603,9 @@ public class ProductRest implements ProductRestInterface {
 
 	@Override
 	public int addModelReference(String businessId, int modelId, boolean log) {
+	return addModelReference(serverUrl,businessId, modelId, log);
+	}
+	public int addModelReference(String serverUrl,String businessId, int modelId, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -565,6 +629,9 @@ public class ProductRest implements ProductRestInterface {
 
 	@Override
 	public int addModelReferences(String businessId, ModelList ml, boolean log) {
+	return addModelReferences(serverUrl,businessId, ml, log);
+	}
+	public int addModelReferences(String serverUrl,String businessId, ModelList ml, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -589,6 +656,9 @@ public class ProductRest implements ProductRestInterface {
 
 	@Override
 	public int delModelReference(String businessId, int modelId, boolean log) {
+	return delModelReference(serverUrl,businessId, modelId, log);
+	}
+	public int delModelReference(String serverUrl,String businessId, int modelId, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -612,6 +682,9 @@ public class ProductRest implements ProductRestInterface {
 
 	@Override
 	public int delAllModelReferences(String businessId, boolean log) {
+	return delAllModelReferences(serverUrl,businessId, log);
+	}
+	public int delAllModelReferences(String serverUrl,String businessId, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -635,6 +708,9 @@ public class ProductRest implements ProductRestInterface {
 
 	@Override
 	public int delModelReferences(String businessId, ModelList ml, boolean log) {
+	return delModelReferences(serverUrl,businessId, ml, log);
+	}
+	public int delModelReferences(String serverUrl,String businessId, ModelList ml, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -659,6 +735,9 @@ public class ProductRest implements ProductRestInterface {
 
 	@Override
 	public ModelList loadModels(String businessId, boolean log) {
+	return loadModels(serverUrl,businessId, log);
+	}
+	public ModelList loadModels(String serverUrl,String businessId, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -682,6 +761,9 @@ public class ProductRest implements ProductRestInterface {
 
 	@Override
 	public int addProcessReference(String businessId, String instanceId, String processKey, boolean log) {
+	return addProcessReference(serverUrl,businessId, instanceId, processKey, log);
+	}
+	public int addProcessReference(String serverUrl,String businessId, String instanceId, String processKey, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -705,6 +787,9 @@ public class ProductRest implements ProductRestInterface {
 
 	@Override
 	public int addProcessReferences(String businessId, ProcessList pl, boolean log) {
+	return addProcessReferences(serverUrl,businessId, pl, log);
+	}
+	public int addProcessReferences(String serverUrl,String businessId, ProcessList pl, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -728,6 +813,9 @@ public class ProductRest implements ProductRestInterface {
 
 	@Override
 	public int delProcessReference(String businessId, String instanceId, String processKey, boolean log) {
+	return delProcessReference(serverUrl,businessId, instanceId, processKey, log);
+	}
+	public int delProcessReference(String serverUrl,String businessId, String instanceId, String processKey, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -750,6 +838,9 @@ public class ProductRest implements ProductRestInterface {
 
 	@Override
 	public int delAllProcessReferences(String businessId, boolean log) {
+	return delAllProcessReferences(serverUrl,businessId, log);
+	}
+	public int delAllProcessReferences(String serverUrl,String businessId, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -771,6 +862,9 @@ public class ProductRest implements ProductRestInterface {
 	}
 
 	public int delProcessReferences(String businessId,ProcessList pl, boolean log) {
+	return delProcessReferences(serverUrl,businessId,pl, log);
+	}
+	public int delProcessReferences(String serverUrl,String businessId,ProcessList pl, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -792,9 +886,12 @@ public class ProductRest implements ProductRestInterface {
 		return retVal;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public <E extends ArrayList<Process<?, ?>>> E loadProcessReferences(String businessId, boolean log) {
+	return loadProcessReferences(serverUrl,businessId, log);
+	}
+	@SuppressWarnings("unchecked")
+	public <E extends ArrayList<Process<?, ?>>> E loadProcessReferences(String serverUrl,String businessId, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -819,6 +916,9 @@ public class ProductRest implements ProductRestInterface {
 
 	@Override
 	public AttributeMap saveAttributes(int objectId, AttributeMap am, boolean log) {
+	return saveAttributes(serverUrl,objectId, am, log);
+	}
+	public AttributeMap saveAttributes(String serverUrl,int objectId, AttributeMap am, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -841,6 +941,9 @@ public class ProductRest implements ProductRestInterface {
 
 	@Override
 	public AttributeMap updateAttributes(int objectId, AttributeMap am, boolean log) {
+	return updateAttributes(serverUrl,objectId, am, log);
+	}
+	public AttributeMap updateAttributes(String serverUrl,int objectId, AttributeMap am, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -863,6 +966,9 @@ public class ProductRest implements ProductRestInterface {
 
 	@Override
 	public AttributeMap loadAttributes(int objectId, boolean log) {
+	return loadAttributes(serverUrl,objectId, log);
+	}
+	public AttributeMap loadAttributes(String serverUrl,int objectId, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
