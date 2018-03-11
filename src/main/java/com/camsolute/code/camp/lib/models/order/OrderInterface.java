@@ -74,7 +74,8 @@ public interface OrderInterface extends HasOrderPositionList , HasDate, HasByDat
 	}
 	
 	public static Order _fromJSONObject(JSONObject jo) {
-		int id = jo.getInt("id");
+		int id = 0;
+		if(jo.has("id")) id = jo.getInt("id");
 		String orderNumber = jo.getString("orderNumber");
 		String businessKey = jo.getString("businessKey");
 		Timestamp date = Util.Time.timestamp(jo.getString("date"));

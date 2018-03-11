@@ -105,8 +105,10 @@ public interface TouchPointInterface extends HasDate, IsObjectInstance<TouchPoin
 		return _fromJSONObject(new JSONObject(json));
 	}
 	public static TouchPoint _fromJSONObject(JSONObject jo) {
-		int id = jo.getInt("id");
-		int refId = jo.getInt("refId");
+		int id = 0;
+		if(jo.has("id")) id = jo.getInt("id");
+		int refId = 0;
+		if(jo.has("refId")) id = jo.getInt("refId");
 		String businessKeyResponsible = jo.getString("businessKeyResponsible");
 		String businessIdResponsible = jo.getString("businessIdResponsible");
 		String businessKeyCustomer = jo.getString("businessKeyCustomer");

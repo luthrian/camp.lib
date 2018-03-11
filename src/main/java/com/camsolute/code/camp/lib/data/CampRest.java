@@ -64,6 +64,7 @@ public class CampRest {
 			LOAD_BY_ID,
 			LOAD,
 			LOAD_BY_KEY,
+			LOAD_CHILD_BY_GROUP,
 			LOAD_BY_GROUP,
 			LOAD_BY_GROUP_VERSION,
 			CREATE_ORDER, 
@@ -90,6 +91,7 @@ public class CampRest {
 		public static final String LOAD_BY_ID = "/load/by/id/{id}";
 		public static final String LOAD = "/load/by/businessId";
 		public static final String LOAD_BY_KEY = "/load/by/key";
+		public static final String LOAD_CHILD_BY_GROUP = "/load/child/by/group";
 		public static final String LOAD_BY_GROUP = "/load/by/group";
 		public static final String LOAD_BY_GROUP_VERSION = "/load/by/group/version";
 		public static final String CREATE_ORDER = "/create";
@@ -119,6 +121,7 @@ public class CampRest {
 			Call.put(Request.LOAD_BY_ID, new String[] {"/load/by/id/{id}","/load/by/id/%s","GET"});
 			Call.put(Request.LOAD, new String[] {"/load/by/businessId","/load/by/businessId?businessId=%s","GET"});
 			Call.put(Request.LOAD_BY_KEY, new String[] {"/load/by/key","/load/by/key?businessKey=%s","GET"});
+			Call.put(Request.LOAD_CHILD_BY_GROUP, new String[] {"/load/child/by/group","/load/child/by/group?parentId=%s&group=%s","GET"});
 			Call.put(Request.LOAD_BY_GROUP, new String[] {"/load/by/group","/load/by/group?group=%s","GET"});
 			Call.put(Request.LOAD_BY_GROUP_VERSION, new String[] {"/load/by/group/version","/load/by/group/version?group=%s&version=%s","GET"});
 			Call.put(Request.CREATE_ORDER, new String[] {"/create","/create?businessId=%s&businessKey=%s&date=%s&byDate=%s","GET"});

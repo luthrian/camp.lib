@@ -20,6 +20,7 @@
 package com.camsolute.code.camp.lib.models.product;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -65,8 +66,10 @@ public class ProductList extends ArrayList<Product> implements Serialization<Pro
 	
 	public static ProductList _fromJSONArray(JSONArray ja) {
 		ProductList pl = new ProductList();
-		for(Object jo:ja.toList()) {
-			pl.add(ProductInterface._fromJSONObject((JSONObject) jo));
+		Iterator<Object> i = ja.iterator();
+		while(i.hasNext()) {
+			JSONObject jo = (JSONObject) i.next();
+			pl.add(ProductInterface._fromJSONObject(jo));
 		}
 		return pl;
 	}

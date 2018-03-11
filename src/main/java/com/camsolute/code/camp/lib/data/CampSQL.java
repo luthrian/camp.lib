@@ -82,7 +82,7 @@ public class CampSQL {
 				{"_log_id_", "INT(11) NOT NULL AUTO_INCREMENT"},
 				{"_object_id", "INT(11) NOT NULL"},
 				{"_object_type", "VARCHAR(45) NOT NULL"},
-				{"_object_business_id", "VARCHAR(45) NOT NULL"},
+				{"_object_business_id", "VARCHAR(100) NOT NULL"},
 				{"_instance_id", "varchar(45) NOT NULL"},
 				{"_current_instance_id", "varchar(45) NOT NULL"},
 				{"_initial_instance_id", "varchar(45) NOT NULL"},
@@ -141,7 +141,7 @@ public class CampSQL {
 				{"type", "varchar(45) NOT NULL"},
 				{"parent_id", "int(11) NOT NULL"},
 				{"default_value", "LONGTEXT NULL"},
-				{"business_id", "varchar(45) NOT NULL"},
+				{"business_id", "varchar(100) NOT NULL"},
 				{"businesskey", "varchar(45) NULL"},
 				{"group", "varchar(45) NOT NULL"},
 				{"version", "varchar(45) NOT NULL"},
@@ -182,13 +182,13 @@ public class CampSQL {
 					+",INDEX `au_businesskey_idx` (`_au_businesskey` ASC)"}
 		};
 		public static final String[][] _attribute_has_process_table_definition = {
-				{"_ahp_attribute_business_id", "varchar(45) NOT NULL"},
-				{"_ahp_business_id", "varchar(45) NOT NULL"},
+				{"_ahp_attribute_business_id", "varchar(100) NOT NULL"},
+				{"_ahp_business_id", "varchar(100) NOT NULL"},
 				{"_ahp_process_instance_id", "varchar(45) NOT NULL"},
 				{"_ahp_process_key", "varchar(45) NOT NULL"},
 				{"extra", "INDEX `ahp_attribute_business_id_idx` (`_ahp_attribute_business_id` ASC)"
 					+",INDEX `ahp_business_id_idx` (`_ahp_business_id` ASC)"
-					  + "INDEX `ahp_process_key_idx` (`_ahp_process_key` ASC)"
+					  + ",INDEX `ahp_process_key_idx` (`_ahp_process_key` ASC)"
 						+ ",KEY `fk_ahp_process2_idx` (`_ahp_process_instance_id`)"
 						+ ",KEY `fk_ahp_order2_idx` (`_ahp_business_id`)"}
 		};
@@ -339,7 +339,7 @@ public class CampSQL {
 	
 		public static final String[][] _instance_table_definition = {
 				{"_object_id", "INT(11) NOT NULL"},
-				{"_object_business_id", "VARCHAR(45) NOT NULL"},
+				{"_object_business_id", "VARCHAR(100) NOT NULL"},
 				{"_object_ref_id", "INT(11) NOT NULL"},
 				{"_instance_id", "varchar(45) NOT NULL"},
 				{"_current_instance_id", "varchar(45) NOT NULL"},
@@ -386,7 +386,7 @@ public class CampSQL {
 				{"extra", "INDEX `c_updates_customer_id_idx` (`customer_id` ASC)"}
 		};
 		public static final String[][] customer_has_process_table_definition = {
-				{"_chp_business_id", "varchar(45) NOT NULL"},
+				{"_chp_business_id", "varchar(100) NOT NULL"},
 				{"_chp_process_instance_id", "varchar(45) NOT NULL"},
 				{"_chp_process_key", "varchar(45) NOT NULL"},
 				{"extra", "INDEX `chp_business_id_idx` (`_chp_business_id` ASC)"
@@ -677,8 +677,8 @@ public class CampSQL {
 		};
 		public static final String[][] product_table_definition = {
 				{"_product_id_", "int(11) NOT NULL AUTO_INCREMENT"},
-				{"product_name", "varchar(45) NOT NULL"},
-				{"product_businesskey", "varchar(45) NOT NULL"},
+				{"product_name", "varchar(100) NOT NULL"},
+				{"product_businesskey", "varchar(100) NOT NULL"},
 				{"product_date", "timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP"},
 				{"product_group", "varchar(45) NOT NULL"},//TODO: remove since in instance
 				{"product_version", "varchar(45) NOT NULL"},//TODO: remove since in instance
@@ -688,7 +688,7 @@ public class CampSQL {
 		};
 		public static final String[][] product_model_table_definition = {
 				{"_model_id_", "int(11) NOT NULL AUTO_INCREMENT"},
-				{"model_name", "varchar(45) NOT NULL"},
+				{"model_name", "varchar(100) NOT NULL"},
 				{"model_release_date", "timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP"},
 				{"model_end_of_life", "timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP"},
 				{"model_businesskey", "varchar(45) NOT NULL"},
@@ -700,7 +700,7 @@ public class CampSQL {
 		};
 		//to hell!!! with both of you for this. seriously
 		public static final String[][] product_updates_table_definition = {
-				{"_product_name", "varchar(45) NOT NULL"},
+				{"_product_name", "varchar(100) NOT NULL"},
 				{"_model_id", "int(11) NOT NULL"},
 				{"_product_businesskey", "varchar(45) NOT NULL"},
 				{"_product_target", "varchar(45) NOT NULL"},
@@ -709,7 +709,7 @@ public class CampSQL {
 					+ ",INDEX `product_updates_product_businesskey_idx` (`_product_businesskey` ASC)"}
 		};
 		public static final String[][] product_model_updates_table_definition = {
-				{"_model_name", "varchar(45) NOT NULL"},
+				{"_model_name", "varchar(100) NOT NULL"},
 				{"_model_businesskey", "varchar(45) NOT NULL"},
 				{"_model_target", "varchar(45) NOT NULL"},
 				{"_model_timestamp", "TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP"},
@@ -728,7 +728,7 @@ public class CampSQL {
 		};
 		public static final String[][] order_product_updates_table_definition = {
 				{"op_product_id", "int(11) NOT NULL"},
-				{"op_product_name", "varchar(45) NOT NULL"},
+				{"op_product_name", "varchar(100) NOT NULL"},
 				{"op_model_id", "int(11) NOT NULL"},
 				{"op_order_position_number", "varchar("+CampFormats._ORDER_POSITION_NUMBER_SIZE+") NULL"},
 				{"op_order_business_id", "varchar("+CampFormats._ORDER_NUMBER_SIZE+") NOT NULL"},

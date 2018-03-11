@@ -221,7 +221,8 @@ public interface AttributeInterface<U extends Value<?>> extends HasValue<U>, Has
     
 	public static  Attribute<?> _fromJSONObject(JSONObject jo){
         Attribute<?> a = null;
-        int id = jo.getInt("id");
+    		int id = 0;
+    		if(jo.has("id")) id = jo.getInt("id");
         int attributeId = jo.getInt("attributeId");
         String name = jo.getString("name");
         AttributeType type = AttributeType.valueOf(jo.getString("type"));

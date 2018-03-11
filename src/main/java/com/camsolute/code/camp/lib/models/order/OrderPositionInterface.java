@@ -84,7 +84,8 @@ public interface OrderPositionInterface extends HasDate, HasRefId, HasRefBusines
 	}
 	
 	public static OrderPosition _fromJSONObject(JSONObject jo){
-		int id = jo.getInt("id");
+		int id = 0;
+		if(jo.has("id")) id = jo.getInt("id");
 		int productId = jo.getInt("productId");
 		int modelId = jo.getInt("modelId");
 		String  businessId = jo.getString("businessId");

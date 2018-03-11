@@ -45,7 +45,7 @@ import com.camsolute.code.camp.lib.models.Attribute.AttributeType;
 
 public interface AttributeDaoInterface extends HasProcessReference<Attribute<?>>, DaoInterface<Attribute<?>>, InstanceDaoInterface<Attribute<?>>{
 	//DEFINITION ASPECTS
-
+	
   /**
    * create a new attribute definition. an attribute definition does not have any values set yet,
    * only default values. in the case of complex attributes the default value contains a list of
@@ -270,6 +270,8 @@ public interface AttributeDaoInterface extends HasProcessReference<Attribute<?>>
     public AttributeList loadDate(String date);
     
     public AttributeList loadDateRange(String startDate, String endDate);
+    
+   
     
     public int createTable(boolean log);
 

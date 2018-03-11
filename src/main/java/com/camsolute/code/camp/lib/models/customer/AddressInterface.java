@@ -84,7 +84,8 @@ public interface AddressInterface extends IsObjectInstance<AddressInterface> {
 		return _fromJSONObject(new JSONObject(json));
 	}
 	public static Address _fromJSONObject(JSONObject jo) {
-		int id = jo.getInt("id");
+		int id = 0;
+		if(jo.has("id")) id = jo.getInt("id");
 		String country = jo.getString("country");
 		String state = jo.getString("state");
 		String postCode = jo.getString("postCode");

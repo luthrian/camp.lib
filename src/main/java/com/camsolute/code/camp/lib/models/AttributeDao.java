@@ -78,6 +78,7 @@ public class  AttributeDao implements AttributeDaoInterface{
     public static String loadVByIOidSQL = "SELECT * FROM " + valuetable + " AS t, "+CampInstanceDao.table+" AS i WHERE t.`object_id`=%s AND t.`attribute_type_id`=%s AND i.`_instance_id`=i.`_current_instance_id` AND t.`"+valuetabledef[0][0]+"`=i.`_object_id` AND i.`_object_business_id`=t.`attribute_businesskey`";
     public static String loadVByOidSQL = "SELECT * FROM " + valuetable + " AS t, "+CampInstanceDao.table+" AS i WHERE t.`object_id`=%s AND i.`_instance_id`=i.`_current_instance_id` AND t.`"+valuetabledef[0][0]+"`=i.`_object_id` AND i.`_object_business_id`='%s' AND i.`_object_business_id`=t.`attribute_businesskey`";
     public static String loadVByKeySQL = "SELECT * FROM " + valuetable + " AS t, "+CampInstanceDao.table+" AS i WHERE t.`attribute_businesskey`='%s' AND i.`_instance_id`=i.`_current_instance_id` AND t.`"+valuetabledef[0][0]+"`=i.`_object_id` AND i.`_object_business_id`=t.`attribute_businesskey`";
+    public static String loadListVByGroupSQL = "SELECT * FROM " + valuetable + " AS t, "+CampInstanceDao.table+" AS i WHERE t.`object_id`=%s AND i.`_group_name`='%s' AND i.`_instance_id`=i.`_current_instance_id` AND t.`"+valuetabledef[0][0]+"`=i.`_object_id` AND i.`_object_business_id`=t.`attribute_businesskey`";
     public static String loadVByGroupSQL = "SELECT * FROM " + valuetable + " AS t, "+CampInstanceDao.table+" AS i WHERE t.`object_id`=%s AND i.`_group_name`='%s' AND i.`_instance_id`=i.`_current_instance_id` AND t.`"+valuetabledef[0][0]+"`=i.`_object_id` AND i.`_object_business_id`=t.`attribute_businesskey`";
     public static String loadVByGroupVersionSQL = "SELECT * FROM " + valuetable + " AS t, "+CampInstanceDao.table+" AS i WHERE t.`object_id`=%s AND i.`_group_name`='%s' AND i.`_version_value`='%s' AND i.`_instance_id`=i.`_current_instance_id` AND t.`"+valuetabledef[0][0]+"`=i.`_object_id` AND i.`_object_business_id`=t.`attribute_businesskey`";
     public static String loadVByPosGTSQL = "SELECT * FROM " + valuetable + " AS t, "+CampInstanceDao.table+" AS i WHERE t.`object_id`=%s AND t.`attribute_position`>%s AND i.`_instance_id`=i.`_current_instance_id` AND t.`"+valuetabledef[0][0]+"`=i.`_object_id` AND i.`_object_business_id`=t.`attribute_businesskey`";
@@ -87,8 +88,10 @@ public class  AttributeDao implements AttributeDaoInterface{
     public static String loadByNameSQL = "SELECT * FROM " + table + " AS t, "+CampInstanceDao.table+" AS i WHERE t.`name`='%s' AND i.`_instance_id`=i.`_current_instance_id` AND t.`"+tabledef[0][0]+"`=i.`_object_id` AND i.`_object_business_id`=t.`business_id";
     public static String loadByKeySQL = "SELECT * FROM " + table + " AS t, "+CampInstanceDao.table+" AS i WHERE t.`businesskey`='%s' AND i.`_instance_id`=i.`_current_instance_id` AND t.`"+tabledef[0][0]+"`=i.`_object_id` AND i.`_object_business_id`=t.`business_id";
     public static String loadByTypeSQL = "SELECT * FROM " + table + " AS t, "+CampInstanceDao.table+" AS i WHERE t.`type`='%s' AND i.`_instance_id`=i.`_current_instance_id` AND t.`"+tabledef[0][0]+"`=i.`_object_id` AND i.`_object_business_id`=t.`business_id";
-    public static String loadByGroupSQL = "SELECT * FROM " + table + " AS t, "+CampInstanceDao.table+" AS i WHERE t.`parent_id`=0 AND i.`_group_name`='%s' AND i.`_instance_id`=i.`_current_instance_id` AND t.`"+tabledef[0][0]+"`=i.`_object_id` AND i.`_object_business_id`=t.`business_id";
-    public static String loadByGroupVersionSQL = "SELECT * FROM " + table + " AS t, "+CampInstanceDao.table+" AS i WHERE t.`parent_id`=0 AND i.`_group_name`='%s' AND i.`_version_value`='%s' AND i.`_instance_id`=i.`_current_instance_id` AND t.`"+tabledef[0][0]+"`=i.`_object_id` AND i.`_object_business_id`=t.`business_id";
+    public static String loadListByGroupSQL = "SELECT * FROM " + table + " AS t, "+CampInstanceDao.table+" AS i WHERE t.`parent_id`=0 AND i.`_group_name`='%s' AND i.`_instance_id`=i.`_current_instance_id` AND t.`"+tabledef[0][0]+"`=i.`_object_id` AND i.`_object_business_id`=t.`business_id";
+    public static String loadByGroupSQL = "SELECT * FROM " + table + " AS t, "+CampInstanceDao.table+" AS i WHERE t.`parent_id`=%s AND i.`_group_name`='%s' AND i.`_instance_id`=i.`_current_instance_id` AND t.`"+tabledef[0][0]+"`=i.`_object_id` AND i.`_object_business_id`=t.`business_id";
+    public static String loadListByGroupVersionSQL = "SELECT * FROM " + table + " AS t, "+CampInstanceDao.table+" AS i WHERE t.`parent_id`=0 AND i.`_group_name`='%s' AND i.`_version_value`='%s' AND i.`_instance_id`=i.`_current_instance_id` AND t.`"+tabledef[0][0]+"`=i.`_object_id` AND i.`_object_business_id`=t.`business_id";
+    public static String loadByGroupVersionSQL = "SELECT * FROM " + table + " AS t, "+CampInstanceDao.table+" AS i WHERE t.`parent_id`=%s AND i.`_group_name`='%s' AND i.`_version_value`='%s' AND i.`_instance_id`=i.`_current_instance_id` AND t.`"+tabledef[0][0]+"`=i.`_object_id` AND i.`_object_business_id`=t.`business_id";
     public static String loadByPosGTSQL = "SELECT * FROM " + table + " AS t, "+CampInstanceDao.table+" AS i WHERE t.`parent_id`=%s AND t.`position`>%s AND i.`_instance_id`=i.`_current_instance_id` AND t.`"+tabledef[0][0]+"`=i.`_object_id` AND i.`_object_business_id`=t.`business_id";
     public static String loadByPosLTSQL = "SELECT * FROM " + table + " AS t, "+CampInstanceDao.table+" AS i WHERE t.`parent_id`=%s AND t.`position`<=%s AND i.`_instance_id`=i.`_current_instance_id` AND t.`"+tabledef[0][0]+"`=i.`_object_id` AND i.`_object_business_id`=t.`business_id";
     public static String loadByPosRangeSQL = "SELECT * FROM " + table + " AS t, "+CampInstanceDao.table+" AS i WHERE t.`parent_id`=%s AND t.`position`>%s AND t.`position`<=%s AND i.`_instance_id`=i.`_current_instance_id` AND t.`"+tabledef[0][0]+"`=i.`_object_id` AND i.`_object_business_id`=t.`business_id";
@@ -179,7 +182,7 @@ public class  AttributeDao implements AttributeDaoInterface{
       }
 
       public static AttributeList _loadListByGroup(String group, boolean log) {
-        AttributeList al = _loadAttributeList(String.format(loadByGroupSQL, group), log);
+        AttributeList al = _loadAttributeList(String.format(loadListByGroupSQL, group), log);
         for(Attribute<?> at:al) {
         	at.states().ioAction(IOAction.LOAD);
         }
@@ -201,7 +204,7 @@ public class  AttributeDao implements AttributeDaoInterface{
       }
 
       public static AttributeList _loadListByGroupVersion(String group, String version, boolean log) {
-        AttributeList al = _loadAttributeList(String.format(loadByGroupVersionSQL, group, version), log);
+        AttributeList al = _loadAttributeList(String.format(loadListByGroupVersionSQL, group, version), log);
         for(Attribute<?> at:al) {
         	at.states().ioAction(IOAction.LOAD);
         }
@@ -1198,7 +1201,9 @@ public class  AttributeDao implements AttributeDaoInterface{
     }
 
     public static AttributeList _loadGroup(int parentId, String groupName, boolean log) {
-      AttributeList al = _loadAttributeList(String.format(loadByGroupSQL, parentId, groupName), log);
+    	String SQL = String.format(loadByGroupSQL, parentId, groupName);
+    	if(log && !Util._IN_PRODUCTION){String msg = "----[SQL : "+SQL+"]----";LOG.info(String.format(fmt,"_loadGroup",msg));}
+      AttributeList al = _loadAttributeList(SQL, log);
       for(Attribute<?> at:al) {
       	at.states().ioAction(IOAction.LOAD);
       }

@@ -76,7 +76,8 @@ public interface CustomerInterface extends IsObjectInstance<Customer> , HasAddre
 		return _fromJSONObject(new JSONObject(json));
 	}
 	public static Customer _fromJSONObject(JSONObject jo) {
-		int id = jo.getInt("id");
+		int id = 0;
+		if(jo.has("id")) id = jo.getInt("id");
 		int refId = jo.getInt("refId");
 		String title = jo.getString("title");
 		String firstName = jo.getString("firstName");

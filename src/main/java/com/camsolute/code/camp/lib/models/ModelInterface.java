@@ -82,7 +82,8 @@ public interface ModelInterface extends HasModelLifeCycle, HasProduct, IsObjectI
   }
   
   public static Model _fromJSONObject(JSONObject jo) {
-  	int id = jo.getInt("id");
+		int id = 0;
+		if(jo.has("id")) id = jo.getInt("id");
   	int productId = jo.getInt("productId");
   	String name = jo.getString("name");
   	String businessKey = jo.getString("businessKey");

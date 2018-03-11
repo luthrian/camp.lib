@@ -80,7 +80,8 @@ public interface ContactDetailsInterface extends Serialization<ContactDetails>, 
 		return _fromJSONObject(new JSONObject(json));
 	}
 	public static ContactDetails _fromJSONObject(JSONObject jo) {
-		int id = jo.getInt("id");
+		int id = 0;
+		if(jo.has("id")) id = jo.getInt("id");
 		String email = jo.getString("email");
 		String mobile = jo.getString("mobile");
 		String telephone = jo.getString("telephone");

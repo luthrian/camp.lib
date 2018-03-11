@@ -118,7 +118,7 @@ public interface CampStatesInterface
 		json += "\"deleted\":" + cs.isDeleted() + ",";
 		json += "\"isNew\":" + cs.isNew() + ",";
 		json += "\"dirty\":" + cs.isDirty() + ",";
-		json += "\"modified\":" + cs.isModified() + ",";
+		json += "\"modified\":" + cs.isModified() ;
 		json += "}";
 		return json;
 	}

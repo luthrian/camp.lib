@@ -129,6 +129,8 @@ public class ProductRest implements ProductRestInterface {
 		return (E)o;
 	}
 
+
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public ProductList loadListByGroup(String group, boolean log) {
@@ -173,6 +175,7 @@ public class ProductRest implements ProductRestInterface {
 		String prefix = CampRest.Product.Prefix;		
 		String serviceUri = CampRest.DaoService.callRequest(prefix,CampRest.DaoService.Request.LOAD_BY_GROUP_VERSION);
 		String uri = serverUrl+domainUri+String.format(serviceUri,group,version);
+		if(log && !Util._IN_PRODUCTION){msg = "----[product service call: URI('"+uri+"')]----";LOG.info(String.format(fmt, _f,msg));}
 		String result = RestInterface.resultGET(uri, log);
 		o = ProductList._fromJson(result);
 		

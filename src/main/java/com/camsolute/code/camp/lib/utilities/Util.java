@@ -404,10 +404,25 @@ public class Util {
             return dt.toString(format);
         }
 	
+        public static String dateMinus(int days, Timestamp date, String format) {
+            DateTime dt = new DateTime(date);
+            dt = dt.minusDays(days);
+		
+            if(format == null || format.isEmpty()) return dt.toString().substring(0,19);
+            return dt.toString(format);
+        }
+	
         public static String nowMinus(int days,String format) {
             DateTime dt = new DateTime();
             dt = dt.minusDays(days);
 		
+            if(format == null || format.isEmpty()) return dt.toString().substring(0,19);
+            return dt.toString(format);
+        }
+	
+        public static String datePlus(int days,Timestamp date, String format) {
+            DateTime dt = new DateTime(date);
+            dt = dt.plusDays(days);
             if(format == null || format.isEmpty()) return dt.toString().substring(0,19);
             return dt.toString(format);
         }

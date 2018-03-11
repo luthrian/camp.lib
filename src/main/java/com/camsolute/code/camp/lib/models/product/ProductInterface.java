@@ -67,7 +67,7 @@ public interface ProductInterface extends HasProcess<Product,ProductProcess>, Ha
 		json += "\"previousStatus\":\""+p.previousStatus().name()+"\",";
 		json += "\"states\":"+p.states().toJson()+",";
 		json += "\"history\":"+p.history().toJson()+",";
-		json += "\"attributes\":"+((p.attributes() != null && p.attributes().size() > 0)?p.attributes().toJson():"[]")+",";
+		json += "\"attributes\":"+((p.attributes() != null && p.attributes().size() > 0)?p.attributes().toJson():"{}")+",";
 		json += "\"processes\":"+((p.processes() != null && p.processes().size() >0)?p.processes().toJson():"[]");
 		return json;
 	}
@@ -77,7 +77,8 @@ public interface ProductInterface extends HasProcess<Product,ProductProcess>, Ha
 	}
 	
 	public static Product _fromJSONObject(JSONObject jo) {
-		int id = jo.getInt("id");
+		int id = 0;
+		if(jo.has("id")) id = jo.getInt("id");
 		String name = jo.getString("name");
 		int modelId = jo.getInt("modelId");
 		String businesskey = jo.getString("businesskey");

@@ -55,7 +55,8 @@ public interface ProcessInterface<T, U extends Process<T,U>>  extends IsProcess<
 	
 	@SuppressWarnings("unchecked")
 	public static <U extends Process<?,U>> U _fromJSONObject(JSONObject jo) {
-		int id = jo.getInt("id");
+		int id = 0;
+		if(jo.has("id")) id = jo.getInt("id");
 		String executionId = jo.getString("executionId");
 		String instanceId = jo.getString("instanceId");
 		String businessKey = jo.getString("businessKey"); 
