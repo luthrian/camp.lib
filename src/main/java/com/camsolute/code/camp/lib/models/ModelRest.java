@@ -36,6 +36,9 @@ public class ModelRest implements ModelRestInterface {
 	
 	@Override
 	public Model loadById(int id, boolean log) {
+		return loadById(serverUrl, id, log);
+	}
+	public Model loadById(String serverUrl, int id, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -58,6 +61,9 @@ public class ModelRest implements ModelRestInterface {
 
 	@Override
 	public Model loadByBusinessId(String businessId, boolean log) {
+		return loadByBusinessId(serverUrl, businessId, log);
+	}
+	public Model loadByBusinessId(String serverUrl, String businessId, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -81,6 +87,9 @@ public class ModelRest implements ModelRestInterface {
 	@SuppressWarnings("unchecked")
 	@Override
 	public ModelList loadListByBusinessKey(String businessKey, boolean log) {
+		return loadListByBusinessKey(serverUrl, businessKey, log);
+	}
+	public ModelList loadListByBusinessKey(String serverUrl, String businessKey, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -104,6 +113,9 @@ public class ModelRest implements ModelRestInterface {
 	@SuppressWarnings("unchecked")
 	@Override
 	public ModelList loadListByGroup(String group, boolean log) {
+		return loadListByGroup(serverUrl, group, log);
+	}
+	public ModelList loadListByGroup(String serverUrl, String group, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -127,6 +139,9 @@ public class ModelRest implements ModelRestInterface {
 	@SuppressWarnings("unchecked")
 	@Override
 	public ModelList loadListByGroupVersion(String group, String version, boolean log) {
+		return loadListByGroupVersion(serverUrl, group, version, log);
+	}
+	public ModelList loadListByGroupVersion(String serverUrl, String group, String version, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -149,6 +164,9 @@ public class ModelRest implements ModelRestInterface {
 
 	@Override
 	public Model save(Model m, boolean log) {
+		return save(serverUrl, m, log);
+	}
+	public Model save(String serverUrl, Model m, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -169,9 +187,12 @@ public class ModelRest implements ModelRestInterface {
 		return m;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public <E extends ArrayList<Model>> E saveList(E ml, boolean log) {
+		return saveList(serverUrl, ml, log);
+	}
+	@SuppressWarnings("unchecked")
+	public <E extends ArrayList<Model>> E saveList(String serverUrl, E ml, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -194,6 +215,9 @@ public class ModelRest implements ModelRestInterface {
 
 	@Override
 	public Model update(Model m, boolean log) {
+		return update(serverUrl, m, log);
+	}
+	public Model update(String serverUrl, Model m, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -214,9 +238,12 @@ public class ModelRest implements ModelRestInterface {
 		return m;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public <E extends ArrayList<Model>> E updateList(E ml, boolean log) {
+		return updateList(serverUrl, ml, log);
+	}
+	@SuppressWarnings("unchecked")
+	public <E extends ArrayList<Model>> E updateList(String serverUrl, E ml, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -237,9 +264,12 @@ public class ModelRest implements ModelRestInterface {
 		return ml;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public <E extends ArrayList<Model>> E loadUpdates(String businessKey, String target, boolean log) {
+		return loadUpdates(serverUrl, businessKey, target, log);
+	}
+	@SuppressWarnings("unchecked")
+	public <E extends ArrayList<Model>> E loadUpdates(String serverUrl, String businessKey, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -260,9 +290,12 @@ public class ModelRest implements ModelRestInterface {
 		return (E)ml;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public <E extends ArrayList<Model>> E loadUpdatesByKey(String businessKey, boolean log) {
+		return loadUpdatesByKey(serverUrl, businessKey, log);
+	}
+	@SuppressWarnings("unchecked")
+	public <E extends ArrayList<Model>> E loadUpdatesByKey(String serverUrl, String businessKey, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -283,9 +316,12 @@ public class ModelRest implements ModelRestInterface {
 		return (E)ml;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public <E extends ArrayList<Model>> E loadUpdatesByTarget(String target, boolean log) {
+		return loadUpdatesByTarget(serverUrl, target, log);
+	}
+	@SuppressWarnings("unchecked")
+	public <E extends ArrayList<Model>> E loadUpdatesByTarget(String serverUrl, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -308,6 +344,9 @@ public class ModelRest implements ModelRestInterface {
 
 	@Override
 	public Model loadUpdate(Model m, String businessKey, String target, boolean log) {
+		return loadUpdate(serverUrl, m, businessKey, target, log);
+	}
+	public Model loadUpdate(String serverUrl, Model m, String businessKey, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -330,6 +369,9 @@ public class ModelRest implements ModelRestInterface {
 
 	@Override
 	public int addToUpdates(Model m, String businessKey, String target, boolean log) {
+		return addToUpdates(serverUrl, m, businessKey, target, log);
+	}
+	public int addToUpdates(String serverUrl, Model m, String businessKey, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -353,6 +395,9 @@ public class ModelRest implements ModelRestInterface {
 
 	@Override
 	public <E extends ArrayList<Model>> int addToUpdates(E ml, String businessKey, String target, boolean log) {
+		return addToUpdates(serverUrl, ml, businessKey, target, log);
+	}
+	public <E extends ArrayList<Model>> int addToUpdates(String serverUrl, E ml, String businessKey, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -376,6 +421,9 @@ public class ModelRest implements ModelRestInterface {
 
 	@Override
 	public int deleteAllFromUpdates(String businessKey, String target, boolean log) {
+		return deleteAllFromUpdates(serverUrl, businessKey, target, log);
+	}
+	public int deleteAllFromUpdates(String serverUrl, String businessKey, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -399,6 +447,9 @@ public class ModelRest implements ModelRestInterface {
 
 	@Override
 	public int deleteFromUpdatesByKey(String businessKey, boolean log) {
+		return deleteFromUpdatesByKey(serverUrl, businessKey, log);
+	}
+	public int deleteFromUpdatesByKey(String serverUrl, String businessKey, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -422,6 +473,9 @@ public class ModelRest implements ModelRestInterface {
 
 	@Override
 	public int deleteFromUpdatesByTarget(String target, boolean log) {
+		return deleteFromUpdatesByTarget(serverUrl, target, log);
+	}
+	public int deleteFromUpdatesByTarget(String serverUrl, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -445,6 +499,9 @@ public class ModelRest implements ModelRestInterface {
 
 	@Override
 	public int deleteFromUpdates(String instanceId, String businessKey, String target, boolean log) {
+		return deleteFromUpdates(serverUrl, instanceId, businessKey, target, log);
+	}
+	public int deleteFromUpdates(String serverUrl, String instanceId, String businessKey, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -467,8 +524,10 @@ public class ModelRest implements ModelRestInterface {
 	}
 
 	@Override
-	public <E extends ArrayList<Model>> int deleteFromUpdates(E ml, String businessKey, String target,
-			boolean log) {
+	public <E extends ArrayList<Model>> int deleteFromUpdates(E ml, String businessKey, String target, boolean log) {
+		return deleteFromUpdates(serverUrl, ml, businessKey, target, log);
+	}
+	public <E extends ArrayList<Model>> int deleteFromUpdates(String serverUrl, E ml, String businessKey, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;

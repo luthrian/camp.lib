@@ -54,6 +54,9 @@ public class ProcessRest implements ProcessRestInterface{
 	
 	@Override
 	public Process<?,?> loadById(int id, boolean log) {
+	return loadById(serverUrl,id, log);
+	}
+	public Process<?,?> loadById(String serverUrl,int id, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -76,6 +79,9 @@ public class ProcessRest implements ProcessRestInterface{
 
 	@Override
 	public Process<?,?> loadByInstanceId(String instanceId, boolean log) {
+	return loadByInstanceId(serverUrl,instanceId, log);
+	}
+	public Process<?,?> loadByInstanceId(String serverUrl,String instanceId, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -98,6 +104,9 @@ public class ProcessRest implements ProcessRestInterface{
 
 	@Override
 	public ProcessList loadListByBusinessId(String businessId, boolean log) {
+	return loadListByBusinessId(serverUrl,businessId, log);
+	}
+	public ProcessList loadListByBusinessId(String serverUrl,String businessId, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -121,6 +130,9 @@ public class ProcessRest implements ProcessRestInterface{
 
 	@Override
 	public ProcessList loadListByKey(String businessKey, boolean log) {
+	return loadListByKey(serverUrl,businessKey, log);
+	}
+	public ProcessList loadListByKey(String serverUrl,String businessKey, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -142,6 +154,9 @@ public class ProcessRest implements ProcessRestInterface{
 	}
 
 	public Process<?,?> create(String businessId, String executionId, String instanceId, String businessKey, String processName, String definitionId, String tenantId, String caseInstanceId, boolean ended, boolean suspended, ProcessType processType, boolean log) {
+	return _create(serverUrl,businessId, executionId, instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, processType, log);
+	}
+	public Process<?,?> _create(String serverUrl,String businessId, String executionId, String instanceId, String businessKey, String processName, String definitionId, String tenantId, String caseInstanceId, boolean ended, boolean suspended, ProcessType processType, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -163,6 +178,9 @@ public class ProcessRest implements ProcessRestInterface{
 	}
 
 	public Process<?,?> create(String businessId, String instanceId, String businessKey, String processName, String definitionId, String tenantId, String caseInstanceId, boolean ended, boolean suspended, ProcessType processType, boolean log){
+	return _create(serverUrl,businessId, instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, processType, log);
+	}
+	public Process<?,?> _create(String serverUrl,String businessId, String instanceId, String businessKey, String processName, String definitionId, String tenantId, String caseInstanceId, boolean ended, boolean suspended, ProcessType processType, boolean log){
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -185,6 +203,9 @@ public class ProcessRest implements ProcessRestInterface{
 
 	@Override
 	public Process<?,?> save(Process<?,?> p, boolean log) {
+	return save(serverUrl,p, log);
+	}
+	public Process<?,?> save(String serverUrl,Process<?,?> p, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -207,6 +228,9 @@ public class ProcessRest implements ProcessRestInterface{
 
 	@Override
 	public ProcessList saveList(ProcessList pl, boolean log) {
+		 return saveList(serverUrl, pl, log);
+	}
+	public ProcessList saveList(String serverUrl, ProcessList pl, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -229,6 +253,9 @@ public class ProcessRest implements ProcessRestInterface{
 
 	@Override
 	public int update(Process<?,?> p, boolean log) {
+		return update(serverUrl, p, log);
+	}
+	public int update(String serverUrl, Process<?,?> p, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -253,6 +280,9 @@ public class ProcessRest implements ProcessRestInterface{
 
 	@Override
 	public int updateList(ProcessList pl, boolean log) {
+		return updateList(serverUrl, pl, log);
+	}
+	public int updateList(String serverUrl, ProcessList pl, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -277,6 +307,9 @@ public class ProcessRest implements ProcessRestInterface{
 
 	@Override
 	public ProcessList loadUpdates(String businessKey, String target, boolean log) {
+		return loadUpdates(serverUrl, businessKey, target, log);
+	}
+	public ProcessList loadUpdates(String serverUrl, String businessKey, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -299,6 +332,9 @@ public class ProcessRest implements ProcessRestInterface{
 
 	@Override
 	public ProcessList loadUpdatesByKey(String businessKey, boolean log) {
+		return loadUpdatesByKey(serverUrl, businessKey, log);
+	}
+	public ProcessList loadUpdatesByKey(String serverUrl, String businessKey, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -322,6 +358,9 @@ public class ProcessRest implements ProcessRestInterface{
 
 	@Override
 	public ProcessList loadUpdatesByTarget(String target, boolean log) {
+		return loadUpdatesByTarget(serverUrl, target, log);
+	}
+	public ProcessList loadUpdatesByTarget(String serverUrl, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -345,6 +384,9 @@ public class ProcessRest implements ProcessRestInterface{
 
 	@Override
 	public Process<?,?> loadUpdate(String instanceId, String businessId, String businessKey, String target, boolean log) {
+		return loadUpdate(serverUrl, instanceId, businessId, businessKey, target, log);
+	}
+	public Process<?,?> loadUpdate(String serverUrl, String instanceId, String businessId, String businessKey, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -368,6 +410,9 @@ public class ProcessRest implements ProcessRestInterface{
 
 	@Override
 	public Process<?,?> loadUpdate(Process<?,?> p, String businessKey, String target, boolean log) {
+		return loadUpdate(serverUrl, p, businessKey, target, log);
+	}
+	public Process<?,?> loadUpdate(String serverUrl, Process<?,?> p, String businessKey, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -391,6 +436,9 @@ public class ProcessRest implements ProcessRestInterface{
 
 	@Override
 	public int addToUpdates(String instanceId, String businessId, String businessKey, String target, boolean log) {
+		return addToUpdates(serverUrl, instanceId, businessId, businessKey, target, log);
+	}
+	public int addToUpdates(String serverUrl, String instanceId, String businessId, String businessKey, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -414,6 +462,9 @@ public class ProcessRest implements ProcessRestInterface{
 
 	@Override
 	public int addToUpdates(ProcessList pl, String businessKey, String target, boolean log) {
+		return addToUpdates(serverUrl, pl, businessKey, target, log);
+	}
+	public int addToUpdates(String serverUrl, ProcessList pl, String businessKey, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -438,6 +489,9 @@ public class ProcessRest implements ProcessRestInterface{
 
 	@Override
 	public int deleteAllFromUpdates(String businessKey, String target, boolean log) {
+		return deleteAllFromUpdates(serverUrl, businessKey, target, log);
+	}
+	public int deleteAllFromUpdates(String serverUrl, String businessKey, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -461,6 +515,9 @@ public class ProcessRest implements ProcessRestInterface{
 
 	@Override
 	public int deleteFromUpdates(String instanceId, String businessId, String businessKey, String target, boolean log) {
+		return deleteFromUpdates(serverUrl, instanceId, businessId, businessKey, target, log);
+	}
+	public int deleteFromUpdates(String serverUrl, String instanceId, String businessId, String businessKey, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -484,6 +541,9 @@ public class ProcessRest implements ProcessRestInterface{
 
 	@Override
 	public int deleteFromUpdates(ProcessList pl, String businessKey, String target, boolean log) {
+		return deleteFromUpdates(serverUrl, pl, businessKey, target, log);
+	}
+	public int deleteFromUpdates(String serverUrl, ProcessList pl, String businessKey, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
