@@ -39,20 +39,16 @@
  */
 package com.camsolute.code.camp.lib.dao;
 
-import com.camsolute.code.camp.lib.models.ModelList;
+import com.camsolute.code.camp.lib.models.customer.AddressList;
 
-public interface HasModelReference {
+public interface HasAddressListReference {
 
-	public int addModelReference(String businessId, int modelId, boolean log);
+	public int addAddressReferences(String businessId, AddressList al, boolean log);
 
-	public int addModelReferences(String businessId, ModelList ml, boolean log);
+	public int delAllAddressReferences(String businessId, boolean log);
 
-	public int delModelReference(String businessId, int modelId,  boolean log);
+	public int delAddressReferences(String businessId, AddressList ml, boolean log);
 
-	public int delAllModelReferences(String businessId, boolean log);
-
-	public int delModelReferences(String businessId, ModelList ml, boolean log);
-
-	public ModelList loadModels(String businessId, boolean log);
+	public AddressList loadAddresses(String businessId, boolean log);
 
 }

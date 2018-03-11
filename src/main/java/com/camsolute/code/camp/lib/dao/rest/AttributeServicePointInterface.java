@@ -1,5 +1,12 @@
 package com.camsolute.code.camp.lib.dao.rest;
 
+import java.util.ArrayList;
+
+import com.camsolute.code.camp.lib.data.CampRest;
+import com.camsolute.code.camp.lib.models.process.Process;
+import com.camsolute.code.camp.lib.models.process.ProcessList;
+import com.camsolute.code.camp.lib.utilities.Util;
+
 public interface AttributeServicePointInterface {
 
 	public String loadById(int id);
@@ -108,4 +115,15 @@ public interface AttributeServicePointInterface {
   
   public String  loadDateRange(String startDate, String endDate);
   
+	public int addProcessReference(String objectBusinessId, String instanceId, String processKey);
+
+	public int addProcessReferences(String businessId, String processList);
+
+	public int delProcessReference(String businessId, String instanceId, String processKey);
+
+	public int delAllProcessReferences(String businessId);
+
+	public int delProcessReferences(String businessId,String processList);
+
+	public String loadProcessReferences(String businessId);
 }

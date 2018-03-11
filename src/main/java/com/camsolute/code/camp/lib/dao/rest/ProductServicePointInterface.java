@@ -97,6 +97,8 @@ public interface ProductServicePointInterface {
 	
 	public int delModelReferences(String businessId, String modelList);
 	
+	public int delAllModelReferences(String businessId);
+	
 	public String loadModels(String businessId);
 	
 	public int addProcessReference(String businessId, String instanceId, String processKey);
@@ -105,7 +107,9 @@ public interface ProductServicePointInterface {
 	
 	public int delProcessReference(String businessId, String instanceId, String processKey);
 	
-	public int delProcessReferences(String businessId);
+	public int delProcessReferences(String businessId, String processList);
+	
+	public int delAllProcessReferences(String businessId);
 	
 	public String loadProcessReferences(String businessId);
 	

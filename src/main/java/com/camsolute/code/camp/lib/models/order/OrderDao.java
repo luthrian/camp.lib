@@ -1500,7 +1500,7 @@ public class OrderDao implements OrderDaoInterface {
 	}
 
 	@Override
-	public int delProcessReferences(String orderBusinessId, boolean log) {
+	public int delAllProcessReferences(String orderBusinessId, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -1542,6 +1542,58 @@ public class OrderDao implements OrderDaoInterface {
 	}
 
 	@Override
+	public int delProcessReferences(String orderBusinessId, ProcessList pl, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[delProcessReferences]";
+			msg = "====[ deregister a list of associated process instances from the reference table ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		Connection conn = null;
+		ResultSet rs = null;
+		Statement dbs = null;
+		int retVal = 0;
+		try{
+			conn = Util.DB.__conn(log);
+			
+			dbs = conn.createStatement();
+			String SQL = "DELETE FROM "+ohptable+ " WHERE "
+						+ "`_ohp_business_id`='"+orderBusinessId+"'";
+
+			boolean start = true;
+			for(Process<?,?>p:pl) {
+				if(!start) {
+					SQL += " OR";
+				} else {
+					SQL += " AND";
+					start = false;
+				}
+				SQL += " (`_ohp_instance_id`='"+p.instanceId()+"' AND `_ohp_businesskey`='"+p.businessKey()+"')";
+			}
+
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
+
+			retVal = dbs.executeUpdate(SQL);
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" deleted ]----";LOG.info(String.format(fmt,_f,msg));}
+			
+		} catch(SQLException e) {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
+			e.printStackTrace();
+		} finally {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ releasing connection]----";LOG.info(String.format(fmt, _f,msg));}
+			Util.DB.__release(conn,log);
+			Util.DB._releaseRS(rs, log);
+			Util.DB._releaseStatement(dbs, log);
+		}
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[delProcessReferences completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return retVal;
+	}
+
 	public int addOrderPositionReference(String orderBusinessId, String orderPositionBusinessId, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;

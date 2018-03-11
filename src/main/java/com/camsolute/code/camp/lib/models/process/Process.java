@@ -19,19 +19,7 @@
  ******************************************************************************/
 package com.camsolute.code.camp.lib.models.process;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.camsolute.code.camp.lib.data.CampSQL;
-import com.camsolute.code.camp.lib.models.CampInstanceDao;
 import com.camsolute.code.camp.lib.models.CampStates;
-import com.camsolute.code.camp.lib.models.CampStatesInterface.IOAction;
 import com.camsolute.code.camp.lib.utilities.Util;
 
 public class Process<T,U extends Process<T,U>> implements ProcessInterface<T,U>{
@@ -65,6 +53,7 @@ public class Process<T,U extends Process<T,U>> implements ProcessInterface<T,U>{
 		order_support_process,
 		customer_support_process,
 		product_support_process,
+		product_attribute_support_process,
 		production_support_process
 		;
 	};

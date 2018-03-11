@@ -21,6 +21,8 @@ package com.camsolute.code.camp.lib.models.product;
 
 import java.sql.Timestamp;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
 import com.camsolute.code.camp.lib.contract.HasAttributes;
@@ -28,7 +30,6 @@ import com.camsolute.code.camp.lib.contract.HasDate;
 import com.camsolute.code.camp.lib.contract.HasModel;
 import com.camsolute.code.camp.lib.contract.HasProcess;
 import com.camsolute.code.camp.lib.contract.IsObjectInstance;
-import com.camsolute.code.camp.lib.contract.Serialization;
 import com.camsolute.code.camp.lib.models.AttributeMap;
 import com.camsolute.code.camp.lib.models.CampInstance;
 import com.camsolute.code.camp.lib.models.CampInstanceInterface;
@@ -39,19 +40,26 @@ import com.camsolute.code.camp.lib.models.ModelList;
 import com.camsolute.code.camp.lib.models.Version;
 import com.camsolute.code.camp.lib.models.process.ProcessList;
 import com.camsolute.code.camp.lib.models.process.ProductProcess;
-import com.camsolute.code.camp.lib.types.CampMap;
-import com.camsolute.code.camp.lib.types.CampMapInterface;
 import com.camsolute.code.camp.lib.utilities.Util;
 
 public interface ProductInterface extends HasProcess<Product,ProductProcess>, HasAttributes, HasModel ,HasDate, IsObjectInstance<Product>{
-
+	public static final Logger LOG = LogManager.getLogger(ProductInterface.class);
+	public static String fmt = "[%15s] [%s]";
+	
 	public static String _toJson(Product p){
 		String json = "{";
+		json += _toInnerJson(p);
+		json += "}";
+		return json;
+	}
+	
+	public static String _toInnerJson(Product p) {
+		String json = "";
 		json += "\"id\":"+p.id()+",";
 		json += "\"name\":\""+p.name()+"\",";
 		json += "\"businesskey\":\""+p.businessKey()+"\",";
 		json += "\"modelId\":"+p.modelId()+",";
-		json += "\"models\":"+p.models().toJson()+",";
+		json += "\"models\":"+((p.models() != null && p.models().size() > 0)?p.models().toJson():"[]")+",";
 		json += "\"group\":\""+p.group().name()+"\",";
 		json += "\"version\":\""+p.version().value()+"\",";
 		json += "\"date\":\""+p.date().toString()+"\",";
@@ -59,9 +67,8 @@ public interface ProductInterface extends HasProcess<Product,ProductProcess>, Ha
 		json += "\"previousStatus\":\""+p.previousStatus().name()+"\",";
 		json += "\"states\":"+p.states().toJson()+",";
 		json += "\"history\":"+p.history().toJson()+",";
-		json += "\"attributes\":"+p.attributes().toJson();
-		json += "\"processes\":"+p.processes().toJson();
-		json += "}";
+		json += "\"attributes\":"+((p.attributes() != null && p.attributes().size() > 0)?p.attributes().toJson():"[]")+",";
+		json += "\"processes\":"+((p.processes() != null && p.processes().size() >0)?p.processes().toJson():"[]");
 		return json;
 	}
 	
@@ -74,7 +81,13 @@ public interface ProductInterface extends HasProcess<Product,ProductProcess>, Ha
 		String name = jo.getString("name");
 		int modelId = jo.getInt("modelId");
 		String businesskey = jo.getString("businesskey");
-		ModelList models = ModelList._fromJSONArray(jo.getJSONArray("models"));
+		ModelList models = new ModelList();
+		try {
+			models = ModelList._fromJSONArray(jo.getJSONArray("models"));
+		} catch (Exception e) {
+			if(!Util._IN_PRODUCTION){String msg = "----[JSON Error! Model list is empty.]----";LOG.info(String.format(fmt, "_fromJSONObject",msg));}
+			e.printStackTrace();
+		}
 		Group group = new Group(jo.getString("group"));
 		Version version = new Version(jo.getString("version"));
 		Timestamp date = Util.Time.timestamp(jo.getString("date"));
@@ -82,8 +95,20 @@ public interface ProductInterface extends HasProcess<Product,ProductProcess>, Ha
 		String previousStatus = jo.getString("previousStatus");
 		CampStates states = CampStatesInterface._fromJSONObject(jo.getJSONObject("states"));
 		CampInstance history = CampInstanceInterface._fromJSONObject(jo.getJSONObject("history"));
-		AttributeMap attributes = AttributeMap._fromJSONObject(jo.getJSONObject("attributes"));
-		ProcessList processes = ProcessList._fromJSONArray(jo.getJSONArray("processes"));
+		AttributeMap attributes = new AttributeMap();
+		try {
+			attributes = AttributeMap._fromJSONObject(jo.getJSONObject("attributes"));
+		} catch (Exception e) {
+			if(!Util._IN_PRODUCTION){String msg = "----[JSON Error! Product attributes missing. ]----";LOG.info(String.format(fmt, "_fromJSONObject",msg));}
+			e.printStackTrace();
+		}
+		ProcessList processes = new ProcessList();
+		try {
+			processes = ProcessList._fromJSONArray(jo.getJSONArray("processes"));
+		} catch (Exception e) {
+			if(!Util._IN_PRODUCTION){String msg = "----[JSON Error. Process list is empty.]----";LOG.info(String.format(fmt, "_fromJSONObject",msg));}
+			e.printStackTrace();			
+		}
 		Product p = new Product(id, name, businesskey, group, version, date);
 		p.setStatus(status);
 		p.setPreviousStatus(previousStatus);

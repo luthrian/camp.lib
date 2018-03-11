@@ -123,6 +123,13 @@ public interface ProcessInterface<T, U extends Process<T,U>>  extends IsProcess<
 			ProductionProcess pp = new ProductionProcess(executionId, instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, type);
 			pp.setBusinessId(businessId);
 			return pp;
+		case product_attribute_order_process:
+		case product_attribute_process:
+		case product_attribute_order_management_process:
+		case product_attribute_support_process:
+			ProductAttributeProcess pap = new ProductAttributeProcess(executionId,instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, type);
+			pap.setBusinessId(businessId);
+			return pap;
 		default:
 			break;
 		}
@@ -153,6 +160,13 @@ public interface ProcessInterface<T, U extends Process<T,U>>  extends IsProcess<
 			ProductionProcess pp = new ProductionProcess(instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, type);
 			pp.setBusinessId(businessId);
 			return pp;
+		case product_attribute_order_process:
+		case product_attribute_process:
+		case product_attribute_order_management_process:
+		case product_attribute_support_process:
+			ProductAttributeProcess pap = new ProductAttributeProcess(instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, type);
+			pap.setBusinessId(businessId);
+			return pap;
 		default:
 			break;
 		}

@@ -94,7 +94,7 @@ public class CampInstance implements CampInstanceInterface {
 		MODIFIED;
 	}
 
-	private int objectRefId = 0;
+	private int objectRefId = Util.NEW_ID;
 	
   private InstanceId id;
 

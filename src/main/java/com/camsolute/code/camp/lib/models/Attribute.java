@@ -51,6 +51,21 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.camsolute.code.camp.lib.types.*;
 import com.camsolute.code.camp.lib.contract.IsObjectInstance;
 import com.camsolute.code.camp.lib.models.Attribute;
+import com.camsolute.code.camp.lib.models.order.Order;
+import com.camsolute.code.camp.lib.models.process.Process.ProcessType;
+import com.camsolute.code.camp.lib.models.process.ProductAttributeProcess;
+import com.camsolute.code.camp.lib.models.process.ProductAttributeProcessList;
+import com.camsolute.code.camp.lib.models.process.Process;
+import com.camsolute.code.camp.lib.models.process.ProcessList;
+import com.camsolute.code.camp.lib.models.process.ProductAttributeProcess;
+import com.camsolute.code.camp.lib.models.process.ProductAttributeProcessList;
+import com.camsolute.code.camp.lib.models.rest.Message;
+import com.camsolute.code.camp.lib.models.rest.MessageList;
+import com.camsolute.code.camp.lib.models.rest.OrderProcessMessage;
+import com.camsolute.code.camp.lib.models.rest.Request;
+import com.camsolute.code.camp.lib.models.rest.OrderProcessMessage.CustomerOrderMessage;
+import com.camsolute.code.camp.lib.models.rest.ProductAttributeProcessMessage;
+import com.camsolute.code.camp.lib.models.rest.ProductAttributeProcessMessage.ProductAttributeMessage;
 import com.camsolute.code.camp.lib.utilities.Util;
 
 public abstract  class Attribute<U extends Value<?>> implements AttributeInterface<U> {
@@ -89,6 +104,8 @@ public abstract  class Attribute<U extends Value<?>> implements AttributeInterfa
 
   private Enum<?> status = AttributeStatus.CREATED;
   private Enum<?> previousStatus = AttributeStatus.CLEAN;
+  
+  private ProductAttributeProcessList processes = new ProductAttributeProcessList();
   
   public Attribute(String name, AttributeType type, String defaultValue) {
     this.name = name;
@@ -787,5 +804,135 @@ public abstract  class Attribute<U extends Value<?>> implements AttributeInterfa
   public static String typeToS(AttributeType type) {
     return attributeMatrix.get(type)[1];
   }
+
+
+
+
+	@Override
+	public String toJson() {
+		return AttributeInterface._toJson(this);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Attribute<U> fromJson(String json) {
+		return (Attribute<U>) AttributeInterface._fromJson(json);
+	}
+	@Override
+	public ProductAttributeProcessList processInstances() {
+		return processes;
+	}
+	@Override
+	public void addProcess(ProductAttributeProcess<U> process) {
+		process.states().modify();
+		processes.add(process);
+		states.modify();
+	}
+	@Override
+	public <E extends ProcessList> void addProcesses(E processes) {
+		for(Process<?,?> p: processes) {
+			p.states().modify();
+		}
+		processes.addAll(processes);
+		this.states.modify();
+	}
+	@SuppressWarnings("unchecked")
+	@Override
+	public ProductAttributeProcess<U> deleteProcess(String instanceId) {
+		int count = 0;
+		for(Process<?,?> op: processes) {
+			if(op.instanceId().equals(instanceId)){
+				this.states.modify();
+				return (ProductAttributeProcess<U>) processes.remove(count);
+			}
+			count++;
+		}
+		return null;
+	}
+
+	@Override
+	public <E extends ProcessList> void setProcesses(E pl) {
+		this.processes = (ProductAttributeProcessList) pl;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public <E extends ProcessList> E processes() {
+		return (E) processes;
+	}
+	@SuppressWarnings("unchecked")
+	@Override
+	public <E extends ProcessList> E processes(ProcessType type) {
+		ProductAttributeProcessList opl = new ProductAttributeProcessList();
+		for(Process<?,?> op: processes){
+			if(op.type().name().equals(type.name())){
+				opl.add((ProductAttributeProcess<?>)op);
+			}
+		}
+		return (E) opl;
+	}
+	@SuppressWarnings("unchecked")
+	@Override
+	public void notifyProcesses() {
+		for(Process<?,?> op:processes) {
+			((Process<Attribute<U>,?>)op).notify(this);
+		}
+	}
+	@SuppressWarnings("unchecked")
+	@Override
+	public void notifyProcesses(ProcessType type) {
+		for(Process<?,?> op:processes) {
+			if(op.type().name().equals(type.name())){
+				((Process<Attribute<U>,?>)op).notify(this);
+			}
+		}
+	}
+	@SuppressWarnings("unchecked")
+	@Override
+	public void notifyProcesses(Enum<?> event) {
+		for(Process<?,?> op: processes){
+			((Process<Attribute<U>,?>)op).notify(this, event);
+		}
+	}
+	@SuppressWarnings("unchecked")
+	@Override
+	public void notifyProcesses(ProcessType type, Enum<?> event) {
+		for(Process<?,?> op: processes){
+			if(op.type().name().equals(type.name())){
+				((Process<Attribute<U>,?>)op).notify(this, event);
+			}
+		}
+	}
+
+	@Override
+	public Message prepareMessage(String insanceId, Enum<?> message) {
+		ProductAttributeMessage msg = ProductAttributeMessage.valueOf(message.name());
+		ProductAttributeProcessMessage m = new ProductAttributeProcessMessage(msg, this);
+		for(Process<?,?> p: processes){
+			m.setProcessInstanceId(p.instanceId());
+			m.setTenantId(p.tenantId());
+		}
+		return m;
+	}
+	@Override
+	public MessageList prepareMessages(Enum<?> message) {
+		ProductAttributeMessage msg = ProductAttributeMessage.valueOf(message.name());
+		
+		MessageList ml = new MessageList();
+		
+		for(Process<?,?> p: processes){
+			ProductAttributeProcessMessage m = new ProductAttributeProcessMessage(msg, this);
+			m.setProcessInstanceId(p.instanceId());
+			m.setTenantId(p.tenantId());
+			ml.add(m);
+		}
+		
+		return ml;
+	}
+	@Override
+	public Request<?> prepareRequest() {
+		return new Request<Attribute<U>>(this);
+	}
+	
 
 }

@@ -107,27 +107,29 @@ public class CampSQL {
 		public static final int _ATTRIBUTE_TYPE_INDEX = 0;
 		public static final int _ATTRIBUTE_VALUE_INDEX = 1;
 		public static final int _ATTRIBUTE_UPDATES_INDEX = 2;
-    public static final int _INTEGER_VALUE_INDEX = 3;
-    public static final int _STRING_VALUE_INDEX = 4;
-    public static final int _TIMESTAMP_VALUE_INDEX = 5;
-    public static final int _BOOLEAN_VALUE_INDEX = 6;
-    public static final int _TEXT_VALUE_INDEX = 7;
-    public static final int _COMPLEX_VALUE_INDEX = 8;
-    public static final int _BLOB_VALUE_INDEX = 9;
-		public static final int _INSTANCE_INDEX = 10;
+		public static final int _ATTRIBUTE_HAS_PROCESS_INDEX = 3;
+    public static final int _INTEGER_VALUE_INDEX = 4;
+    public static final int _STRING_VALUE_INDEX = 5;
+    public static final int _TIMESTAMP_VALUE_INDEX = 6;
+    public static final int _BOOLEAN_VALUE_INDEX = 7;
+    public static final int _TEXT_VALUE_INDEX = 8;
+    public static final int _COMPLEX_VALUE_INDEX = 9;
+    public static final int _BLOB_VALUE_INDEX = 10;
+		public static final int _INSTANCE_INDEX = 11;
 
 		public static final String[] system_tables = {
 				"_attribute_type", //0
 				"_attribute_value", //1
 				"_attribute_updates",//2
-				"_integer_value", //3
-				"_string_value", //4
-				"_timestamp_value", //5
-				"_boolean_value", //6
-				"_text_value", //7
-				"_complex_value", //8
-				"_blob_value", //9
-				"_instance",//10
+				"_attribute_has_process",//3
+				"_integer_value", //4
+				"_string_value", //5
+				"_timestamp_value", //6
+				"_boolean_value", //7
+				"_text_value", //8
+				"_complex_value", //9
+				"_blob_value", //10
+				"_instance",//11
 		};
 
 		/**
@@ -179,6 +181,18 @@ public class CampSQL {
 				{"extra", "INDEX `au_target_idx` (`_au_target` ASC)"
 					+",INDEX `au_businesskey_idx` (`_au_businesskey` ASC)"}
 		};
+		public static final String[][] _attribute_has_process_table_definition = {
+				{"_ahp_attribute_business_id", "varchar(45) NOT NULL"},
+				{"_ahp_business_id", "varchar(45) NOT NULL"},
+				{"_ahp_process_instance_id", "varchar(45) NOT NULL"},
+				{"_ahp_process_key", "varchar(45) NOT NULL"},
+				{"extra", "INDEX `ahp_attribute_business_id_idx` (`_ahp_attribute_business_id` ASC)"
+					+",INDEX `ahp_business_id_idx` (`_ahp_business_id` ASC)"
+					  + "INDEX `ahp_process_key_idx` (`_ahp_process_key` ASC)"
+						+ ",KEY `fk_ahp_process2_idx` (`_ahp_process_instance_id`)"
+						+ ",KEY `fk_ahp_order2_idx` (`_ahp_business_id`)"}
+		};
+
 
 		/** 
 		 * table for the concrete value aspects of an attribute
@@ -346,10 +360,12 @@ public class CampSQL {
 	public static class Customer {
 		public static final int _CUSTOMER_TABLE_INDEX = 0;
 		public static final int _CUSTOMER_UPDATES_TABLE_INDEX = 1;
+		public static final int _CUSTOMER_HAS_PROCESS_TABLE_INDEX = 1;
 
 		public static final String[] customer_management_tables = {
 				"customer",
-				"customer_updates"
+				"customer_updates",
+				"customer_has_process"
 		};
 		
 		public static final String[][] customer_table_definition = {
@@ -368,6 +384,15 @@ public class CampSQL {
 				{"businesskey", "VARCHAR(45) NOT NULL"},
 				{"target", "varchar(45) NOT NULL"},
 				{"extra", "INDEX `c_updates_customer_id_idx` (`customer_id` ASC)"}
+		};
+		public static final String[][] customer_has_process_table_definition = {
+				{"_chp_business_id", "varchar(45) NOT NULL"},
+				{"_chp_process_instance_id", "varchar(45) NOT NULL"},
+				{"_chp_process_key", "varchar(45) NOT NULL"},
+				{"extra", "INDEX `chp_business_id_idx` (`_chp_business_id` ASC)"
+					  + "INDEX `chp_process_key_idx` (`_chp_process_key` ASC)"
+						+ ",KEY `fk_chp_process2_idx` (`_chp_process_instance_id`)"
+						+ ",KEY `fk_chp_order2_idx` (`_chp_business_id`)"}
 		};
 	}
 	

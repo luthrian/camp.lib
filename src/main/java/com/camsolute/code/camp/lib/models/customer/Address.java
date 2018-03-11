@@ -359,63 +359,10 @@ public class Address implements IsObjectInstance<Address> {
 	}
 	@Override
 	public String toJson() {
-		return _toJson(this);
-	}
-	public static String _toJson(Address a) {
-		return "{"+_toInnerJson(a)+"}";
-	}
-	public static String _toInnerJson(Address a) {
-		String json = "";
-		json += "\"id\":"+a.id()+",";
-		json += "\"country\":\""+a.country()+"\",";
-		json += "\"state\":\""+a.state()+"\",";
-		json += "\"postCode\":\""+a.postCode()+"\",";
-		json += "\"city\":\""+a.city()+"\",";
-		json += "\"street\":\""+a.street()+"\",";
-		json += "\"streetNumber\":\""+a.streetNumber()+"\",";
-		json += "\"floor\":\""+a.floor()+"\",";
-		json += "\"roomNumber\":\""+a.roomNumber()+"\",";
-		json += "\"businessKey\":\""+a.businessKey()+"\",";
-		json += "\"group\":\""+a.group()+"\",";
-		json += "\"version\":\""+a.version()+"\",";
-		json += "\"status\":\""+a.status().name()+"\",";
-		json += "\"previousStatus\":\""+a.previousStatus().name()+"\",";
-		json += "\"history\":"+a.history().toJson()+",";
-		json += "\"states\":"+a.states().toJson();
-		return json;
+		return AddressInterface._toJson(this);
 	}
 	@Override
 	public Address fromJson(String json) {
-		return _fromJson(json);
-	}
-	public static Address _fromJson(String json) {
-		return _fromJSONObject(new JSONObject(json));
-	}
-	public static Address _fromJSONObject(JSONObject jo) {
-		int id = jo.getInt("id");
-		String country = jo.getString("country");
-		String state = jo.getString("state");
-		String postCode = jo.getString("postCode");
-		String city = jo.getString("city");
-		String street = jo.getString("street");
-		String streetNumber = jo.getString("streetNumber");
-		String floor = jo.getString("floor");
-		String roomNumber = jo.getString("roomNumber");
-		String businessKey = jo.getString("businessKey");
-		String group = jo.getString("group");
-		String version = jo.getString("version");
-		Status status = Status.valueOf(jo.getString("status"));
-		Status previousStatus = Status.valueOf(jo.getString("previousStatus"));
-		CampInstance history = CampInstanceInterface._fromJSONObject(jo.getJSONObject("history"));
-		CampStates states = CampStatesInterface._fromJSONObject(jo.getJSONObject("states"));
-		Address a = new Address(id,country,state,postCode,city,street,streetNumber,floor,roomNumber);
-		a.setBusinessKey(businessKey);
-		a.setGroup(group);
-		a.setVersion(version);
-		a.setStatus(status);
-		a.setPreviousStatus(previousStatus);
-		a.setHistory(history);
-		a.states().update(states);
-		return a;
+		return AddressInterface._fromJson(json);
 	}
 }

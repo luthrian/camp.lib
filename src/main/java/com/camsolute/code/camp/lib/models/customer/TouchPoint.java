@@ -36,14 +36,15 @@ public class TouchPoint implements TouchPointInterface{
 		MODIFIED, DIRTY, CLEAN;
 	}
 	private int id = Util.NEW_ID;
+	private int refId = Util.NEW_ID;
 	private String businessKeyResponsible;
 	private String businessIdResponsible;
 	private String businessKeyCustomer;
 	private String businessIdCustomer;
 	private Timestamp date;
-	private Timestamp nextDate;
-	private String topic;
-	private String minutes;
+	private Timestamp nextDate; //ref
+	private String topic; 
+	private String minutes; //ref
 	private CampInstance history = new CampInstance();
 	private CampStates states = new CampStates();
 	private Status status;
@@ -73,6 +74,11 @@ public class TouchPoint implements TouchPointInterface{
 		return prev;
 	}
 
+	@Override
+	public void setRefId(int id) {
+		this.refId = id;
+	}
+	
 	@Override
 	public String businessKeyResponsible() {
 		return businessKeyResponsible;
@@ -360,7 +366,7 @@ public void setBusinessIdCustomer(String businessIdCustomer) {
 
 	@Override
 	public int getRefId() {
-		return 0;
+		return this.refId;
 	}
 
 	@Override

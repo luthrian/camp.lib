@@ -33,17 +33,23 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Properties;
 import java.util.Set;
+
+import javax.naming.InitialContext;
+
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 
-import org.apache.commons.dbcp2.BasicDataSource;
-import org.apache.commons.dbcp2.ConnectionFactory;
-import org.apache.commons.dbcp2.DriverManagerConnectionFactory;
-import org.apache.commons.dbcp2.PoolableConnection;
-import org.apache.commons.dbcp2.PoolableConnectionFactory;
-import org.apache.commons.dbcp2.PoolingDriver;
-import org.apache.commons.pool2.ObjectPool;
-import org.apache.commons.pool2.impl.GenericObjectPool;
+import org.apache.tomcat.jdbc.pool.DataSource;
+import org.apache.tomcat.jdbc.pool.PoolProperties;
+
+//import org.apache.commons.dbcp2.BasicDataSource;
+//import org.apache.commons.dbcp2.ConnectionFactory;
+//import org.apache.commons.dbcp2.DriverManagerConnectionFactory;
+//import org.apache.commons.dbcp2.PoolableConnection;
+//import org.apache.commons.dbcp2.PoolableConnectionFactory;
+//import org.apache.commons.dbcp2.PoolingDriver;
+//import org.apache.commons.pool2.ObjectPool;
+//import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
@@ -391,7 +397,7 @@ public class Util {
     	
     	private static final Logger LOG = LogManager.getLogger(DB.class);
     	
-    	public static BasicDataSource dataSource;
+    	public static DataSource dataSource;
 
     	public static final String _NO_DB_TABLE = "_no_db_table_";
     	
@@ -425,24 +431,38 @@ public class Util {
     	}
 
     	private static void init(){
-    		 ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(CampSQL._DBLINK, CampSQL._USER, CampSQL._PASSWORD);
-    		 PoolableConnectionFactory poolableConnectionFactory = new PoolableConnectionFactory(connectionFactory, null);
-    		 ObjectPool<PoolableConnection> connectionPool = new GenericObjectPool<>(poolableConnectionFactory);
-    		 poolableConnectionFactory.setPool(connectionPool);
-    		 
-    		 dataSource = new BasicDataSource();
-    		 dataSource.setUrl(CampSQL._DBLINK);
-    		 dataSource.setUsername(CampSQL._USER);
-    		 dataSource.setPassword(CampSQL._PASSWORD);
-    		 dataSource.setMaxOpenPreparedStatements(100);
-    		 dataSource.setMinIdle(5);
-    		 dataSource.setMaxIdle(10);
-    		 
-//    				 new PoolingDataSource<>(connectionPool);
-    		 
-    		 PoolingDriver driver = new PoolingDriver();
-    		 
-    		 driver.registerPool("camppool",connectionPool);
+//    			try {
+//						Class.forName("com.mariadb.jdbc.Driver");
+//					} catch (ClassNotFoundException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+          PoolProperties p = new PoolProperties();
+          p.setName("CAMPDBPOOL");
+          p.setUrl(CampSQL._DBLINK);
+          p.setDriverClassName("org.mariadb.jdbc.Driver");
+          p.setUsername(CampSQL._USER);
+          p.setPassword(CampSQL._PASSWORD);
+          p.setJmxEnabled(true);
+          p.setTestWhileIdle(false);
+          p.setTestOnBorrow(true);
+          p.setValidationQuery("SELECT 1");
+          p.setTestOnReturn(false);
+          p.setValidationInterval(30000);
+          p.setTimeBetweenEvictionRunsMillis(30000);
+          p.setMaxActive(100);
+          p.setInitialSize(10);
+          p.setMaxWait(10000);
+          p.setRemoveAbandonedTimeout(60);
+          p.setMinEvictableIdleTimeMillis(30000);
+          p.setMinIdle(10);
+          p.setLogAbandoned(true);
+          p.setRemoveAbandoned(true);
+          p.setJdbcInterceptors(
+            "org.apache.tomcat.jdbc.pool.interceptor.ConnectionState;"+
+            "org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer");
+          dataSource = new DataSource();
+          dataSource.setPoolProperties(p);
     	}
     	public static DB instance(){
     		if(DB.instance == null){
@@ -994,11 +1014,15 @@ public class Util {
     		instance();
     		Connection connection = null;
     		try {
-    			connection = DriverManager.getConnection(CampSQL._DBLINK, CampSQL._USER, CampSQL._PASSWORD);
+    		 			connection = dataSource.getConnection();
+//    			connection = DriverManager.getConnection(CampSQL._DBLINK, CampSQL._USER, CampSQL._PASSWORD);
     		} catch (SQLException e) {
     			// TODO Auto-generated catch block
     			e.printStackTrace();
-    		}
+    		} 
+//    		catch (Exception e1) {
+//    			e1.printStackTrace();
+//    		}
     		return connection;
     	}
     	public static Connection _conn(boolean log){

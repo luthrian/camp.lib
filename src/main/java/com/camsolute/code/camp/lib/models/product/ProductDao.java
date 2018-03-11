@@ -1491,12 +1491,12 @@ public class ProductDao implements ProductDaoInterface {
 	}
 
 	@Override
-	public int delProcessReferences(String businessId, boolean log) {
+	public int delAllProcessReferences(String businessId, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
-			_f = "[delProcessReferences]";
+			_f = "[delAllProcessReferences]";
 			msg = "====[ deregister all associated processes in the reference database table ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		Connection conn = null;
@@ -1528,12 +1528,65 @@ public class ProductDao implements ProductDaoInterface {
 		}
 		if(log && !Util._IN_PRODUCTION) {
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
-			msg = "====[delProcessReferences completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+			msg = "====[delAllProcessReferences completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
 		return retVal;
 	}
 
 	@Override 
+	public int delProcessReferences(String businessId,ProcessList pl, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[delProcessReferences]";
+			msg = "====[ deregister a list of associated processes in the reference database table ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		Connection conn = null;
+		ResultSet rs = null;
+		Statement dbs = null;
+		int retVal = 0;
+		try{
+			conn = Util.DB.__conn(log);
+			
+			dbs = conn.createStatement();
+			
+			String SQL = "DELETE FROM " + phptable + " WHERE " 
+			+ " `_php_product_business_id`='"+businessId+"'";
+			
+			boolean start = true;
+			for(Process<?,?>p:pl) {
+				if(!start) {
+					SQL += " OR";
+				} else {
+					SQL += " AND";
+					start = false;
+				}
+				SQL += " (`_php_process_instance_id`='"+p.instanceId()+"' AND `_php_process_key`='"+p.businessKey()+"')";
+			}
+
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
+			
+			retVal = dbs.executeUpdate(SQL);
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
+			
+		} catch(SQLException e) {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
+			e.printStackTrace();
+		} finally {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ releasing connection]----";LOG.info(String.format(fmt, _f,msg));}
+			Util.DB.__release(conn,log);
+			Util.DB._releaseRS(rs, log);
+			Util.DB._releaseStatement(dbs, log);
+		}
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[delProcessReferences completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return retVal;
+	}
+
 	public int addModelReference(String businessId, int modelId, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
@@ -1664,6 +1717,49 @@ public class ProductDao implements ProductDaoInterface {
 	}
 
 	@Override
+	public int delAllModelReferences(String businessId, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[delModelReferences]";
+			msg = "====[ deregister all associated models in the model reference database table ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		Connection conn = null;
+		ResultSet rs = null;
+		Statement dbs = null;
+		int retVal = 0;
+		try{
+			conn = Util.DB.__conn(log);
+			
+			dbs = conn.createStatement();
+			
+			String SQL = "DELETE FROM " + phmtable + " WHERE " 
+			+ " `_product_business_id`='"+businessId+"'";
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
+			
+			retVal = dbs.executeUpdate(SQL);
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
+			
+		} catch(SQLException e) {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
+			e.printStackTrace();
+		} finally {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ releasing connection]----";LOG.info(String.format(fmt, _f,msg));}
+			Util.DB.__release(conn,log);
+			Util.DB._releaseRS(rs, log);
+			Util.DB._releaseStatement(dbs, log);
+		}
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[delModelReferences completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return retVal;
+	}
+
+	@Override
 	public int delModelReferences(String businessId, ModelList ml, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
@@ -1683,6 +1779,17 @@ public class ProductDao implements ProductDaoInterface {
 			
 			String SQL = "DELETE FROM " + phmtable + " WHERE " 
 			+ " `_product_business_id`='"+businessId+"'";
+			
+			boolean start = true;
+			for(Model m: ml) {
+				if(!start) {
+					SQL += " OR";
+				} else {
+					SQL += " AND";
+					start = false;
+				}
+				SQL += " `_model_id`="+m.id();
+			}
 			
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
 			

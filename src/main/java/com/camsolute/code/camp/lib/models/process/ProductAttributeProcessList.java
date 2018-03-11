@@ -17,25 +17,13 @@
  * Contributors:
  * 	Christopher Campbell - all code prior and post initial release
  ******************************************************************************/
-package com.camsolute.code.camp.lib.dao;
+package com.camsolute.code.camp.lib.models.process;
 
-import java.util.ArrayList;
+public class ProductAttributeProcessList extends ProcessList{
 
-import com.camsolute.code.camp.lib.contract.HasProcess;
-import com.camsolute.code.camp.lib.models.process.Process;
-import com.camsolute.code.camp.lib.models.process.ProcessList;
-
-public interface HasProcessReference<T extends HasProcess<T,?>> {
-
-	public int addProcessReference(String businessId, String instanceId, String processKey, boolean log);
-
-	public int addProcessReferences(String businessId, ProcessList pl, boolean log);
-
-	public int delProcessReference(String businessId, String instanceId, String processKey, boolean log);
-
-	public int delAllProcessReferences(String businessId, boolean log);
-
-	public int delProcessReferences(String businessId, ProcessList pl, boolean log);
-
-	public <E extends ArrayList<Process<?,?>>> E loadProcessReferences(String businessId, boolean log);
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3658215186105755251L;
+    // static final long serialVersionUID = 0;
 }

@@ -76,6 +76,7 @@ public class Customer implements CustomerInterface {
 	}
 	
 	private int id = Util.NEW_ID;
+	private int refId = Util.NEW_ID;
 	private String title;
 	private String firstName;
 	private String surName;
@@ -86,7 +87,8 @@ public class Customer implements CustomerInterface {
 	private CampStates states = new CampStates();
 	private Status status = Status.CREATED;
 	private Status previousStatus = Status.CLEAN;
-	private Address address = null;
+	private int addressId = Util.NEW_ID;
+	private Address address = null;//
 	private ContactDetails contact = null;
 	private CustomerProcessList processes = new CustomerProcessList();
 	
@@ -114,6 +116,9 @@ public class Customer implements CustomerInterface {
 		int prev = this.id;
 		this.id = id;
 		return prev;
+	}
+	public void setRefId(int id) {
+		this.refId = id;
 	}
 	public String firstName() {
 		return firstName;
@@ -251,7 +256,7 @@ public class Customer implements CustomerInterface {
 	}
 	@Override
 	public int getRefId() {
-		return 0;
+		return this.refId;
 	}
 	@Override
 	public CampStates states() {
@@ -316,6 +321,12 @@ public class Customer implements CustomerInterface {
 		return prev;
 	}
 	
+	public int addressId() {
+		return this.addressId;
+	}
+	public void setAddressId(int id) {
+		this.addressId = id;
+	}
 	public Address address(){ 
 		return this.address;
 	}

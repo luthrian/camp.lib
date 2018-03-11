@@ -68,7 +68,9 @@ public interface OrderPositionServicePointInterface {
 
 	public int delProcessReference(String businessId, String instanceId, String processKey);
 
-	public int delProcessReferences(String businessId);
+	public int delProcessReferences(String businessIdi, String processList);
+
+	public int delAllProcessReferences(String businessId);
 
 	public String loadProcessReferences(String businessId);	
 

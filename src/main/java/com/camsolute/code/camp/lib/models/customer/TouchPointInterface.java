@@ -2,6 +2,8 @@ package com.camsolute.code.camp.lib.models.customer;
 
 import java.sql.Timestamp;
 
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.json.JSONObject;
 
 import com.camsolute.code.camp.lib.contract.HasDate;
@@ -15,6 +17,11 @@ import com.camsolute.code.camp.lib.utilities.Util;
 
 public interface TouchPointInterface extends HasDate, IsObjectInstance<TouchPoint> {
 
+	public static final Logger LOG = LogManager.getLogger(TouchPointInterface.class);
+	public static String fmt = "[%15s] [%s]";
+		
+	public void setRefId(int id);
+		
 	public String businessKeyResponsible();
 
 	public void setBusinessKeyResponsible(String businessKeyResponsible);
@@ -57,12 +64,13 @@ public interface TouchPointInterface extends HasDate, IsObjectInstance<TouchPoin
 	public static String _toInnerJson(TouchPoint a) {
 		String json = "";
 		json += "\"id\":"+a.id()+",";
+		json += "\"refId\":"+a.getRefId()+",";
 		json += "\"businessKeyResponsible\":\""+a.businessKeyResponsible()+"\",";
 		json += "\"businessIdResponsible\":\""+a.businessIdResponsible()+"\",";
 		json += "\"businessKeyCustomer\":\""+a.businessKeyCustomer()+"\",";
 		json += "\"businessIdCustomer\":\""+a.businessIdCustomer()+"\",";
 		json += "\"date\":\""+a.date().toString()+"\",";
-		json += "\"nextDate\":\""+a.nextDate().toString()+"\",";
+		json += "\"nextDate\":\""+((a.nextDate()!=null)?a.nextDate().toString():"")+"\",";
 		json += "\"topic\":\""+a.topic()+"\",";
 		json += "\"minutes\":\""+a.minutes()+"\",";
 		json += "\"history\":"+a.history().toJson()+",";
@@ -79,12 +87,19 @@ public interface TouchPointInterface extends HasDate, IsObjectInstance<TouchPoin
 	}
 	public static TouchPoint _fromJSONObject(JSONObject jo) {
 		int id = jo.getInt("id");
+		int refId = jo.getInt("refId");
 		String businessKeyResponsible = jo.getString("businessKeyResponsible");
 		String businessIdResponsible = jo.getString("businessIdResponsible");
 		String businessKeyCustomer = jo.getString("businessKeyCustomer");
 		String businessIdCustomer = jo.getString("businessIdCustomer");
 		Timestamp date = Util.Time.timestamp(jo.getString("date"));
-		Timestamp nextDate = Util.Time.timestamp(jo.getString("nextDate"));
+		Timestamp nextDate = null;
+		try {
+			nextDate = Util.Time.timestamp(jo.getString("nextDate"));
+		} catch (Exception e) {
+			if(!Util._IN_PRODUCTION){String msg = "----[ JSON Error! No next date set .]----";LOG.info(String.format(fmt,"_fromJSONObject",msg));}
+			e.printStackTrace();
+		}
 		String topic = jo.getString("topic");
 		String minutes = jo.getString("minutes");
 		CampInstance history = CampInstanceInterface._fromJSONObject(jo.getJSONObject("history"));
@@ -94,6 +109,8 @@ public interface TouchPointInterface extends HasDate, IsObjectInstance<TouchPoin
 		String group = jo.getString("group");
 		String version = jo.getString("version");
 		TouchPoint t = new TouchPoint(businessKeyResponsible, businessIdResponsible, businessKeyCustomer, businessIdCustomer, date, topic, minutes);
+		t.updateId(id);
+		t.setRefId(refId);
 		t.setNextDate(nextDate);
 		t.setHistory(history);
 		t.states().update(states);

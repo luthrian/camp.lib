@@ -21,6 +21,8 @@ package com.camsolute.code.camp.lib.models.order;
 
 import java.sql.Timestamp;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
 import com.camsolute.code.camp.lib.contract.HasByDate;
@@ -28,9 +30,7 @@ import com.camsolute.code.camp.lib.contract.HasDate;
 import com.camsolute.code.camp.lib.contract.HasOrderPositionList;
 import com.camsolute.code.camp.lib.contract.HasProcess;
 import com.camsolute.code.camp.lib.contract.HasStatus;
-import com.camsolute.code.camp.lib.contract.HasTimestamp;
 import com.camsolute.code.camp.lib.contract.IsObjectInstance;
-import com.camsolute.code.camp.lib.contract.Serialization;
 import com.camsolute.code.camp.lib.models.CampInstance;
 import com.camsolute.code.camp.lib.models.CampInstanceInterface;
 import com.camsolute.code.camp.lib.models.CampStates;
@@ -42,9 +42,18 @@ import com.camsolute.code.camp.lib.models.process.ProcessList;
 import com.camsolute.code.camp.lib.utilities.Util;
 
 public interface OrderInterface extends HasOrderPositionList , HasDate, HasByDate,HasProcess<Order,OrderProcess>, HasStatus ,IsObjectInstance<Order> {
-    
+   public static final Logger LOG = LogManager.getLogger(OrderInterface.class);
+   public static String fmt = "[%15s] [%s]";
+	 
 	public static String _toJson(Order o) {
 		String json = "{";
+		json += _fromInnerJson(o);
+		json += "}";
+		return json;
+	}
+
+	public static String _fromInnerJson(Order o) {
+		String json = "";
   	json += "\"id\":"+o.id()+",";
   	json += "\"orderNumber\":\""+o.onlyBusinessId()+"\",";
   	json += "\"businessKey\":\""+o.businessKey()+"\",";
@@ -52,16 +61,14 @@ public interface OrderInterface extends HasOrderPositionList , HasDate, HasByDat
   	json += "\"byDate\":\""+o.byDate().toString()+"\",";
   	json += "\"status\":\""+o.status().name()+"\",";
   	json += "\"previousStatus\":\""+o.previousStatus().name()+"\",";
-  	json += "\"processInstances\":"+o.processInstances().toJson()+",";
-  	json += "\" orderPositions\":"+o. orderPositions().toJson()+",";
   	json += "\"group\":\""+o.group().name()+"\",";
   	json += "\"version\":\""+o.version().value()+"\",";
   	json += "\"states\":\""+o.states().toJson()+",";
-  	json += "\"history\":\""+o.history().toJson();
-		json += "}";
+  	json += "\"history\":\""+o.history().toJson()+",";
+  	json += "\" orderPositions\":"+((o. orderPositions() != null && o. orderPositions().size() > 0)?o. orderPositions().toJson():"[]")+",";
+  	json += "\"processInstances\":"+((o.processInstances() != null && o.processInstances().size() > 0)?o.processInstances().toJson():"[]");
 		return json;
 	}
-	
 	public static Order _fromJson(String json) {
 		return _fromJSONObject(new JSONObject(json));
 	}
@@ -78,8 +85,21 @@ public interface OrderInterface extends HasOrderPositionList , HasDate, HasByDat
 		CampInstance history = CampInstanceInterface._fromJSONObject(jo.getJSONObject("history"));
 		String group = jo.getString("group");
 		String version = jo.getString("version");
-		OrderProcessList pl = (OrderProcessList) ProcessList._fromJSONArray(jo.getJSONArray("processInstances"));
-		OrderPositionList opl = OrderPositionList._fromJSONArray(jo.getJSONArray("orderPositions"));
+		OrderProcessList pl = new OrderProcessList();
+		try {
+			pl = (OrderProcessList) ProcessList._fromJSONArray(jo.getJSONArray("processInstances"));
+		} catch (Exception e) {
+			if(!Util._IN_PRODUCTION){String msg = "----[JSON Error! Order has no associted Process.]----";LOG.info(String.format(fmt, "_fromJSONObject",msg));}
+			e.printStackTrace();
+		}
+		OrderPositionList opl = new OrderPositionList();
+		try {
+			opl = OrderPositionList._fromJSONArray(jo.getJSONArray("orderPositions"));
+		} catch (Exception e) {
+			if(!Util._IN_PRODUCTION){String msg = "----[JSON Error! Order has no associted order positions.]----";LOG.info(String.format(fmt, "_fromJSONObject",msg));}
+			e.printStackTrace();
+		}
+			
 		Order o = new Order(orderNumber);
 		o.updateId(id);
 		o.updateBusinessKey(businessKey);

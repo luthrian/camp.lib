@@ -21,6 +21,8 @@ package com.camsolute.code.camp.lib.models.order;
 
 import java.sql.Timestamp;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
 import com.camsolute.code.camp.lib.contract.HasDate;
@@ -45,6 +47,9 @@ import com.camsolute.code.camp.lib.utilities.Util;
 
 public interface OrderPositionInterface extends HasDate, HasRefId, HasRefBusinessId, HasQuantity, HasProcess<OrderPosition,OrderPositionProcess>, HasPosition, HasModelId, HasProduct, HasOrder ,IsObjectInstance<OrderPosition>{
 
+	public static final Logger LOG = LogManager.getLogger(OrderPositionInterface.class);
+	public static String fmt = "[%15s] [%s]";
+	
 	public static String _toJson(OrderPosition op){
 		String json = "{";
 		json += _toInnerJson(op);
@@ -70,7 +75,7 @@ public interface OrderPositionInterface extends HasDate, HasRefId, HasRefBusines
 		json += "\"previousStatus\":\""+op.previousStatus().name()+"\",";
 		json += "\"group\":\""+op.group()+"\",";
 		json += "\"version\":\""+op.version()+"\",";
-		json += "\"processes\":"+op.processes().toJson();
+		json += "\"processes\":"+((op.processes()!=null && op.processes().size() >0)?op.processes().toJson():"[]");
 
 		return json;
 	}
@@ -93,7 +98,13 @@ public interface OrderPositionInterface extends HasDate, HasRefId, HasRefBusines
 		CampInstance history = CampInstanceInterface._fromJSONObject(jo.getJSONObject("history"));
 		Status status = Status.valueOf(jo.getString("status"));
 		Status previousStatus = Status.valueOf(jo.getString("previousStatus"));
-		ProcessList processes = ProcessList._fromJSONArray(jo.getJSONArray("processes"));
+		ProcessList processes = new ProcessList();
+		try {
+			processes = ProcessList._fromJSONArray(jo.getJSONArray("processes"));
+		} catch (Exception e) {
+			if(!Util._IN_PRODUCTION){String msg = "----[ JSON EXCEPTION! transform FAILED.]----";LOG.info(String.format(fmt,"_fromJSONObject",msg));}
+			e.printStackTrace();
+		}
 		OrderPosition op = new OrderPosition(id, businessId, orderBusinessId, position);
 		op.setQuantity(quantity);
 		op.setProductId(productId);

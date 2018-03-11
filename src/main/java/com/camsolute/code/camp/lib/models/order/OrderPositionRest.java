@@ -546,7 +546,31 @@ public class OrderPositionRest implements OrderPositionRestInterface {
 	}
 
 	@Override
-	public int delProcessReferences(String businessId, boolean log) {
+	public int delAllProcessReferences(String businessId, boolean log) {
+		long startTime = System.currentTimeMillis();
+				String _f = null;
+				String msg = null;
+				if(log && !Util._IN_PRODUCTION) {
+					_f = "[delAllProcessReferences]";
+					msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+				}
+				String prefix = CampRest.OrderPosition.Prefix;		
+				String serviceUri = CampRest.ProcessReferenceDaoService.callRequest(prefix,CampRest.ProcessReferenceDaoService.Request.DEL_ALL_REFERENCES);
+				String uri = serverUrl+domainUri+String.format(serviceUri,businessId);
+				String result = RestInterface.resultGET(uri, log);
+				int retVal = Integer.valueOf(result);
+				if (log && !Util._IN_PRODUCTION) { msg = "----[ '" + retVal + "' entr"+((retVal>1)?"ies":"y")+" deleted ]----"; LOG.info(String.format(fmt, _f, msg)); }
+				
+				if(log && !Util._IN_PRODUCTION) {
+					String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+					msg = "====[delAllProcessReferences completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+				}
+				return retVal;
+				
+	}
+
+	@Override
+	public int delProcessReferences(String businessId,ProcessList pl, boolean log) {
 		long startTime = System.currentTimeMillis();
 				String _f = null;
 				String msg = null;
@@ -554,10 +578,11 @@ public class OrderPositionRest implements OrderPositionRestInterface {
 					_f = "[delProcessReferences]";
 					msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 				}
+				String json = pl.toJson();
 				String prefix = CampRest.OrderPosition.Prefix;		
 				String serviceUri = CampRest.ProcessReferenceDaoService.callRequest(prefix,CampRest.ProcessReferenceDaoService.Request.DEL_REFERENCES);
 				String uri = serverUrl+domainUri+String.format(serviceUri,businessId);
-				String result = RestInterface.resultGET(uri, log);
+				String result = RestInterface.resultPost(uri,json, log);
 				int retVal = Integer.valueOf(result);
 				if (log && !Util._IN_PRODUCTION) { msg = "----[ '" + retVal + "' entr"+((retVal>1)?"ies":"y")+" deleted ]----"; LOG.info(String.format(fmt, _f, msg)); }
 				
@@ -569,8 +594,6 @@ public class OrderPositionRest implements OrderPositionRestInterface {
 				
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
 	public <E extends ArrayList<Process<?, ?>>> E loadProcessReferences(String businessId, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;

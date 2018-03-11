@@ -20,13 +20,14 @@
 package com.camsolute.code.camp.lib.models;
 
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
 import com.camsolute.code.camp.lib.contract.AttributeSerialization;
 import com.camsolute.code.camp.lib.contract.HasDefaultValue;
-import com.camsolute.code.camp.lib.contract.HasHistory;
-import com.camsolute.code.camp.lib.contract.HasParent;
 import com.camsolute.code.camp.lib.contract.HasPosition;
+import com.camsolute.code.camp.lib.contract.HasProcess;
 import com.camsolute.code.camp.lib.contract.HasValue;
 import com.camsolute.code.camp.lib.contract.HasValueHistory;
 import com.camsolute.code.camp.lib.contract.HasValueId;
@@ -34,11 +35,18 @@ import com.camsolute.code.camp.lib.contract.HasValueStates;
 import com.camsolute.code.camp.lib.contract.IsObjectInstance;
 import com.camsolute.code.camp.lib.models.Attribute;
 import com.camsolute.code.camp.lib.models.Attribute.AttributeType;
+import com.camsolute.code.camp.lib.models.process.ProcessList;
+import com.camsolute.code.camp.lib.models.process.ProductAttributeProcess;
+import com.camsolute.code.camp.lib.models.process.ProductAttributeProcessList;
 import com.camsolute.code.camp.lib.types.*;
+import com.camsolute.code.camp.lib.utilities.Util;
 
 
 
-public interface AttributeInterface<U extends Value<?>> extends HasValue<U>, HasValueId, HasValueHistory, HasValueStates, HasDefaultValue, HasPosition, IsObjectInstance<Attribute<U>>, AttributeSerialization<Attribute<U>> {
+public interface AttributeInterface<U extends Value<?>> extends HasValue<U>, HasValueId, HasValueHistory, HasValueStates, HasDefaultValue, HasPosition, HasProcess<Attribute<U>,ProductAttributeProcess<U>>, IsObjectInstance<Attribute<U>>, AttributeSerialization<Attribute<U>> {
+	public static final Logger LOG = LogManager.getLogger(AttributeInterface.class);
+	public static String fmt = "[%15s] [%s]";
+	
 	/**
 	 * ask for the id of the attribute type
 	 * @return
@@ -234,7 +242,13 @@ public interface AttributeInterface<U extends Value<?>> extends HasValue<U>, Has
         int attributeParentId = jo.getInt("attributeParentId");
         CampInstance history = CampInstanceInterface._fromJSONObject(jo.getJSONObject("history")); 
         CampInstance valueHistory = CampInstanceInterface._fromJSONObject(jo.getJSONObject("valueHistory")); 
-        
+        ProductAttributeProcessList processes = new ProductAttributeProcessList();
+        try {
+        	processes = (ProductAttributeProcessList) ProcessList._fromJSONArray(jo.getJSONArray("processes"));
+        } catch (Exception e) {
+        	if(!Util._IN_PRODUCTION){String msg = "----[ JSON ERROR! product attribute process list is empty.]----";LOG.info(String.format(fmt, "_fromJSONObject",msg));}
+        	e.printStackTrace();
+        }
         switch(type){
         case _boolean:
             a = new CampBoolean(name,defaultValue);
@@ -304,6 +318,7 @@ public interface AttributeInterface<U extends Value<?>> extends HasValue<U>, Has
         a.setHistory(history);
         a.valueStates().update(valueStates);
         a.setValueHistory(valueHistory);
+        a.setProcesses(processes);
         return a;
     }
 
@@ -335,7 +350,8 @@ public interface AttributeInterface<U extends Value<?>> extends HasValue<U>, Has
         json += "\"valueStates\":"+a.valueStates().toJson()+",";
         json += "\"history\":"+a.history().toJson()+",";
         json += "\"valueHistory\":"+a.valueHistory().toJson()+",";
-        json += "\"value\":"+a.value().toJson();
+        json += "\"value\":"+a.value().toJson()+",";
+        json += "\"processes\":"+((a.processes() != null && a.processes().size() >0)?a.processes().toJson():"[]");
         return json;
     }
 }

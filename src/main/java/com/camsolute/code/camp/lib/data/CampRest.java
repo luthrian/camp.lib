@@ -196,13 +196,15 @@ public class CampRest {
 			ADD_REFERENCE,
 			ADD_REFERENCES,
 			DEL_REFERENCE,
-			DEL_REFERENCES;
+			DEL_REFERENCES,
+			DEL_ALL_REFERENCES;
 		}
 			public static final String LOAD = "/s/process/load";		
 			public static final String ADD_REFERENCE = "/process/add";
 			public static final String ADD_REFERENCES = "/s/process/add";
 			public static final String DEL_REFERENCE = "/process/del";
 			public static final String DEL_REFERENCES = "/s/process/del";		
+			public static final String DEL_ALL_REFERENCES = "/s/process/del/all";		
 		public static final HashMap<Request,String[]> Call;
 		
 		static {
@@ -212,6 +214,7 @@ public class CampRest {
 			Call.put(Request.ADD_REFERENCES, new String[]{"/s/process/add","/s/process/add?businessId=%s","POST"});
 			Call.put(Request.DEL_REFERENCE, new String[]{"/process/del","/process/del?businessId=%s&instanceId=%s&processKey=%s","GET"});
 			Call.put(Request.DEL_REFERENCES, new String[]{"/s/process/del","/s/process/del?businessId=%s","POST"});		
+			Call.put(Request.DEL_ALL_REFERENCES, new String[]{"/s/process/del/all","/s/process/del/all?businessId=%s","GET"});		
 		}
 		public static String callRequest(String prefix, ProcessReferenceDaoService.Request request) {
 			return prefix + ProcessReferenceDaoService.Call.get(request)[1];
@@ -227,13 +230,16 @@ public class CampRest {
 			ADD_REFERENCE,
 			ADD_REFERENCES,
 			DEL_REFERENCE,
-			DEL_REFERENCES;
+			DEL_REFERENCES,
+			DEL_ALL_REFERENCES
+			;
 		}
 			public static final String LOAD = "/s/load";		
 			public static final String ADD_REFERENCE = "/add";
 			public static final String ADD_REFERENCES = "/s/add";
 			public static final String DEL_REFERENCE = "/del";
 			public static final String DEL_REFERENCES = "/s/del";		
+			public static final String DEL_ALL_REFERENCES = "/s/del/all";		
 		public static final HashMap<Request,String[]> Call;
 		
 		static {
@@ -243,6 +249,7 @@ public class CampRest {
 			Call.put(Request.ADD_REFERENCES, new String[]{"/s/add","/s/add?parentBusinessId=%s","POST"});
 			Call.put(Request.DEL_REFERENCE, new String[]{"/del","/del?parentBusinessId=%s&businessId=%s","GET"});
 			Call.put(Request.DEL_REFERENCES, new String[]{"/s/del","/s/del?parentBusinessId=%s","POST"});		
+			Call.put(Request.DEL_ALL_REFERENCES, new String[]{"/s/del/all","/s/del/all?parentBusinessId=%s","GET"});		
 		}
 		public static String callRequest(String prefix, ReferenceDaoService.Request request) {
 			return prefix + ReferenceDaoService.Call.get(request)[1];

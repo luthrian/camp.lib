@@ -19,6 +19,9 @@
  ******************************************************************************/
 package com.camsolute.code.camp.lib.models.customer;
 
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+
 import org.json.JSONObject;
 
 import com.camsolute.code.camp.lib.contract.HasAddress;
@@ -26,6 +29,7 @@ import com.camsolute.code.camp.lib.contract.HasContactDetails;
 import com.camsolute.code.camp.lib.contract.HasProcess;
 import com.camsolute.code.camp.lib.contract.IsObjectInstance;
 import com.camsolute.code.camp.lib.models.process.CustomerProcess;
+import com.camsolute.code.camp.lib.utilities.Util;
 import com.camsolute.code.camp.lib.models.CampInstance;
 import com.camsolute.code.camp.lib.models.CampInstanceInterface;
 import com.camsolute.code.camp.lib.models.CampStates;
@@ -33,7 +37,10 @@ import com.camsolute.code.camp.lib.models.CampStatesInterface;
 import com.camsolute.code.camp.lib.models.customer.Customer.Status;
 //TODO
 public interface CustomerInterface extends IsObjectInstance<Customer> , HasAddress, HasContactDetails, HasProcess<Customer,CustomerProcess>{
-	
+	public static final Logger LOG = LogManager.getLogger(CustomerInterface.class);
+	public static String fmt = "[%15s] [%s]";
+
+	public void setRefId(int id);
 	public String firstName();
 	public String updateFirstName(String name);
 	public void setFirstName(String name);
@@ -49,6 +56,7 @@ public interface CustomerInterface extends IsObjectInstance<Customer> , HasAddre
 	public static String _toInnerJson(Customer c){
 		String json = "";
 		json += "\"id\":"+c.id()+",";
+		json += "\"refId\":"+c.getRefId()+",";
 		json += "\"title\":\""+c.title()+"\",";
 		json += "\"firstName\":\""+c.firstName()+"\",";
 		json += "\"surName\":\""+c.surName()+"\",";
@@ -59,8 +67,9 @@ public interface CustomerInterface extends IsObjectInstance<Customer> , HasAddre
 		json += "\"previousStatus\":\""+c.previousStatus()+"\",";
 		json += "\"history\":"+c.history().toJson()+",";
 		json += "\"states\":"+c.states().toJson()+",";
-		json += "\"address\":"+c.address().toJson()+",";
-		json += "\"contact\":"+c.contact().toJson();
+		json += "\"addressId\":"+c.addressId()+",";
+		json += "\"address\":"+((c.address() != null)?c.address().toJson():"")+",";
+		json += "\"contact\":"+((c.contact() != null)?c.contact().toJson():"");
 		return json;
 	}
 	public static Customer _fromJson(String json){
@@ -68,6 +77,7 @@ public interface CustomerInterface extends IsObjectInstance<Customer> , HasAddre
 	}
 	public static Customer _fromJSONObject(JSONObject jo) {
 		int id = jo.getInt("id");
+		int refId = jo.getInt("refId");
 		String title = jo.getString("title");
 		String firstName = jo.getString("firstName");
 		String surName = jo.getString("surName");
@@ -78,17 +88,32 @@ public interface CustomerInterface extends IsObjectInstance<Customer> , HasAddre
 		CampStates states = CampStatesInterface._fromJSONObject(jo.getJSONObject("states"));
 		Status status = Status.valueOf(jo.getString("status"));
 		Status previousStatus = Status.valueOf(jo.getString("previousStatus"));
-		Address address = Address._fromJSONObject(jo.getJSONObject("address"));
-		ContactDetails contact = ContactDetails._fromJSONObject(jo.getJSONObject("contact"));
+		int addressId = jo.getInt("addressId");
+		Address address = null;
+		try { 
+			address = AddressInterface._fromJSONObject(jo.getJSONObject("address"));
+		} catch (Exception e) {
+			if(!Util._IN_PRODUCTION){String msg = "----[ JSON Error! Address is missing.]----";LOG.info(String.format(fmt,"_fromJSONObject",msg));}
+			e.printStackTrace();
+		}
+		ContactDetails contact = null;
+		try { 
+			contact = ContactDetailsInterface._fromJSONObject(jo.getJSONObject("contact"));
+		} catch (Exception e) {
+			if(!Util._IN_PRODUCTION){String msg = "----[ JSON Error! Address is missing.]----";LOG.info(String.format(fmt,"_fromJSONObject",msg));}
+			e.printStackTrace();
+		}
 		Customer c = new Customer(id,title,firstName,surName,businessKey);
 		c.setGroup(group);
 		c.setVersion(version);
 		c.setHistory(history);
+		c.setRefId(refId);
 		c.states().update(states);
 		c.setStatus(status);
 		c.setPreviousStatus(previousStatus);
 		c.setContact(contact);
-		c.setAddress(address);
+		c.setAddressId(addressId);
+		if(address != null) c.setAddress(address);
 		return c;
 	}
 		

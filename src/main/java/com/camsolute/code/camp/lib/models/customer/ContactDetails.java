@@ -6,7 +6,7 @@ import com.camsolute.code.camp.lib.models.CampStates;
 import com.camsolute.code.camp.lib.models.CampStatesInterface;
 import com.camsolute.code.camp.lib.utilities.Util;
 
-public class ContactDetails {
+public class ContactDetails implements ContactDetailsInterface{
 	
 	private int id = Util.NEW_ID;
 	private String email;
@@ -116,42 +116,9 @@ public class ContactDetails {
 	}
 
 	public String toJson() {
-		return _toJson(this);
+		return ContactDetailsInterface._toJson(this);
 	}
-	public static String _toJson(ContactDetails d) {
-		return "{"+_toInnerJson(d)+"}";
-	}
-	public static String _toInnerJson(ContactDetails d) {
-		String json = "";
-		json += "\"id\":\""+d.id()+"\",";
-		json += "\"email\":\""+d.email()+"\",";
-		json += "\"mobile\":\""+d.mobile()+"\",";
-		json += "\"telephone\":\""+d.telephone()+"\",";
-		json += "\"skype\":\""+d.skype()+"\",";
-		json += "\"misc\":\""+d.misc()+"\",";
-		json += "\"contactHistory\":"+d.contactHistory().toJson();
-		json += "\"states\":"+d.states().toJson();
-		return json;
-	}
-	
 	public ContactDetails fromJson(String json) {
-		return _fromJson(json);
-	}
-	public static ContactDetails _fromJson(String json) {
-		return _fromJSONObject(new JSONObject(json));
-	}
-	public static ContactDetails _fromJSONObject(JSONObject jo) {
-		int id = jo.getInt("id");
-		String email = jo.getString("email");
-		String mobile = jo.getString("mobile");
-		String telephone = jo.getString("telephone");
-		String skype = jo.getString("skype");
-		String misc = jo.getString("misc");
-		CampStates states = CampStatesInterface._fromJSONObject(jo.getJSONObject("states"));
-		TouchPoint contactHistory = TouchPointInterface._fromJSONObject(jo.getJSONObject("contactHistory"));
-		ContactDetails d = new ContactDetails(id,email,mobile,telephone,skype,misc);
-		d.setContactHistory(contactHistory);
-		d.states().update(states);
-		return d;
+		return ContactDetailsInterface._fromJson(json);
 	}
 }

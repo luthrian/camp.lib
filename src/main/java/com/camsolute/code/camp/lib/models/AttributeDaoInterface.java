@@ -37,16 +37,13 @@
  */
 package com.camsolute.code.camp.lib.models;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-
-import com.camsolute.code.camp.lib.contract.IsObjectInstance;
 import com.camsolute.code.camp.lib.dao.DaoInterface;
+import com.camsolute.code.camp.lib.dao.HasProcessReference;
 import com.camsolute.code.camp.lib.dao.InstanceDaoInterface;
 import com.camsolute.code.camp.lib.models.Attribute;
 import com.camsolute.code.camp.lib.models.Attribute.AttributeType;
 
-public interface AttributeDaoInterface extends DaoInterface<Attribute<?>>, InstanceDaoInterface<Attribute<?>>{
+public interface AttributeDaoInterface extends HasProcessReference<Attribute<?>>, DaoInterface<Attribute<?>>, InstanceDaoInterface<Attribute<?>>{
 	//DEFINITION ASPECTS
 
   /**

@@ -17,25 +17,12 @@
  * Contributors:
  * 	Christopher Campbell - all code prior and post initial release
  ******************************************************************************/
-package com.camsolute.code.camp.lib.dao;
+package com.camsolute.code.camp.lib.models.process;
 
-import java.util.ArrayList;
+import com.camsolute.code.camp.lib.contract.IsObserver;
+import com.camsolute.code.camp.lib.models.Attribute;
+import com.camsolute.code.camp.lib.models.Value;
 
-import com.camsolute.code.camp.lib.contract.HasProcess;
-import com.camsolute.code.camp.lib.models.process.Process;
-import com.camsolute.code.camp.lib.models.process.ProcessList;
+public interface ProductAttributeProcessInterface<U extends Value<?>> extends IsObserver<Attribute<U>>{
 
-public interface HasProcessReference<T extends HasProcess<T,?>> {
-
-	public int addProcessReference(String businessId, String instanceId, String processKey, boolean log);
-
-	public int addProcessReferences(String businessId, ProcessList pl, boolean log);
-
-	public int delProcessReference(String businessId, String instanceId, String processKey, boolean log);
-
-	public int delAllProcessReferences(String businessId, boolean log);
-
-	public int delProcessReferences(String businessId, ProcessList pl, boolean log);
-
-	public <E extends ArrayList<Process<?,?>>> E loadProcessReferences(String businessId, boolean log);
 }

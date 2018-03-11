@@ -538,6 +538,29 @@ public class ProductRest implements ProductRestInterface {
 	}
 
 	@Override
+	public int delAllModelReferences(String businessId, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[delAllModelReferences]";
+			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		String prefix = CampRest.Product.Prefix;		
+		String serviceUri = CampRest.ModelReferenceDaoService.callRequest(prefix,CampRest.ReferenceDaoService.Request.DEL_ALL_REFERENCES);
+		String uri = serverUrl+domainUri+String.format(serviceUri,businessId);
+		String result = RestInterface.resultGET(uri, log);
+		int retVal = Integer.valueOf(result);
+		if (log && !Util._IN_PRODUCTION) { msg = "----[ '" + retVal + "' entr"+((retVal>1)?"ies":"y")+" loaded ]----"; LOG.info(String.format(fmt, _f, msg)); }
+		
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[delAllModelReferences completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return retVal;
+	}
+
+	@Override
 	public int delModelReferences(String businessId, ModelList ml, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
@@ -653,7 +676,7 @@ public class ProductRest implements ProductRestInterface {
 	}
 
 	@Override
-	public int delProcessReferences(String businessId, boolean log) {
+	public int delAllProcessReferences(String businessId, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -662,9 +685,31 @@ public class ProductRest implements ProductRestInterface {
 			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		String prefix = CampRest.Product.Prefix;		
-		String serviceUri = CampRest.ProcessReferenceDaoService.callRequest(prefix,CampRest.ProcessReferenceDaoService.Request.DEL_REFERENCES);
+		String serviceUri = CampRest.ProcessReferenceDaoService.callRequest(prefix,CampRest.ProcessReferenceDaoService.Request.DEL_ALL_REFERENCES);
 		String uri = serverUrl+domainUri+String.format(serviceUri,businessId);
 		String result = RestInterface.resultGET(uri, log);
+		int retVal = Integer.valueOf(result);
+		if (log && !Util._IN_PRODUCTION) { msg = "----[ '" + retVal + "' entr"+((retVal>1)?"ies":"y")+" loaded ]----"; LOG.info(String.format(fmt, _f, msg)); }
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[delProcessReferences completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return retVal;
+	}
+
+	public int delProcessReferences(String businessId,ProcessList pl, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[delProcessReferences]";
+			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		String json = pl.toJson();
+		String prefix = CampRest.Product.Prefix;		
+		String serviceUri = CampRest.ProcessReferenceDaoService.callRequest(prefix,CampRest.ProcessReferenceDaoService.Request.DEL_REFERENCES);
+		String uri = serverUrl+domainUri+String.format(serviceUri,businessId);
+		String result = RestInterface.resultPost(uri,json, log);
 		int retVal = Integer.valueOf(result);
 		if (log && !Util._IN_PRODUCTION) { msg = "----[ '" + retVal + "' entr"+((retVal>1)?"ies":"y")+" loaded ]----"; LOG.info(String.format(fmt, _f, msg)); }
 		if(log && !Util._IN_PRODUCTION) {

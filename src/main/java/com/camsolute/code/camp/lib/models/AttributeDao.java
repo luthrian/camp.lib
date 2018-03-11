@@ -36,6 +36,13 @@ import com.camsolute.code.camp.lib.contract.IsObjectInstance;
 import com.camsolute.code.camp.lib.data.CampSQL;
 import com.camsolute.code.camp.lib.models.Attribute.AttributeType;
 import com.camsolute.code.camp.lib.models.CampStatesInterface.IOAction;
+import com.camsolute.code.camp.lib.models.process.OrderProcess;
+import com.camsolute.code.camp.lib.models.process.OrderProcessList;
+import com.camsolute.code.camp.lib.models.process.Process;
+import com.camsolute.code.camp.lib.models.process.ProcessDao;
+import com.camsolute.code.camp.lib.models.process.ProcessList;
+import com.camsolute.code.camp.lib.models.process.ProductAttributeProcess;
+import com.camsolute.code.camp.lib.models.process.ProductAttributeProcessList;
 import com.camsolute.code.camp.lib.types.*;
 import com.camsolute.code.camp.lib.utilities.Util;
 import com.camsolute.code.camp.lib.utilities.Util.DB;
@@ -61,6 +68,10 @@ public class  AttributeDao implements AttributeDaoInterface{
     public static String valuetable = CampSQL.sysTable(CampSQL._ORDER_TABLES_DB_INDEX, CampSQL.System._ATTRIBUTE_VALUE_INDEX);
 
     public static String[][] valuetabledef = CampSQL.System._attribute_value_table_definition;
+
+    public static String ahptable = CampSQL.sysTable(CampSQL._ORDER_TABLES_DB_INDEX, CampSQL.System._ATTRIBUTE_HAS_PROCESS_INDEX);
+
+    public static String[][] ahptabledef = CampSQL.System._attribute_has_process_table_definition;
 
     // SQL table select queries
     public static String loadVByIdSQL = "SELECT * FROM " + valuetable + " AS t, "+CampInstanceDao.table+" AS i WHERE t.`attribute_type_id`=%s AND i.`_instance_id`=i.`_current_instance_id` AND t.`"+valuetabledef[0][0]+"`=i.`_object_id` AND i.`_object_business_id`=t.`attribute_businesskey`";//`"+valuetabledef[0][0]+"`=%s";
@@ -3542,6 +3553,11 @@ public class  AttributeDao implements AttributeDaoInterface{
 				    + " ( "+  colDef3 + ") ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
 		if(log && !Util._IN_PRODUCTION){ msg = "----[SQL : "+SQL3+"]----";LOG.info(String.format(fmt,_f,msg));}
 		
+		String colDef4 = Util.DB._columns(ahptabledef, action, log);
+		String SQL4 = "CREATE TABLE IF NOT EXISTS "+ahptable+" "
+				    + " ( "+  colDef4 + ") ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
+		if(log && !Util._IN_PRODUCTION){ msg = "----[SQL : "+SQL4+"]----";LOG.info(String.format(fmt,_f,msg));}
+		
 		Connection conn = null;
 		Statement dbs = null;
 		int retVal = 0;
@@ -3552,6 +3568,7 @@ public class  AttributeDao implements AttributeDaoInterface{
 			dbs.addBatch(SQL1);
 			dbs.addBatch(SQL2);
 			dbs.addBatch(SQL3);
+			dbs.addBatch(SQL4);
 			
 			retVal = Util.Math.addArray(dbs.executeBatch());
 		} catch (Exception e) {
@@ -3597,6 +3614,9 @@ public class  AttributeDao implements AttributeDaoInterface{
 		String SQL3 = "DELETE FROM "+updatestable;
 		if(log && !Util._IN_PRODUCTION){ msg = "----[SQL : "+SQL3+"]----";LOG.info(String.format(fmt,_f,msg));}
 		
+		String SQL4 = "DELETE FROM "+ahptable;
+		if(log && !Util._IN_PRODUCTION){ msg = "----[SQL : "+SQL4+"]----";LOG.info(String.format(fmt,_f,msg));}
+		
 		Connection conn = null;
 		Statement dbs = null;
 		int retVal = 0;
@@ -3607,6 +3627,7 @@ public class  AttributeDao implements AttributeDaoInterface{
 			dbs.addBatch(SQL1);
 			dbs.addBatch(SQL2);
 			dbs.addBatch(SQL3);
+			dbs.addBatch(SQL4);
 			
 			retVal = Util.Math.addArray(dbs.executeBatch());
 		} catch (Exception e) {
@@ -4480,5 +4501,341 @@ public class  AttributeDao implements AttributeDaoInterface{
 		}
 		return al;
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <E extends ArrayList<Process<?,?>>> E loadProcessReferences(String objectBusinessId ,boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[loadProcesses]";
+			msg = "====[ load all processes associated with the current order object instance ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		ProductAttributeProcessList pl = new ProductAttributeProcessList();
+		String[] ids = objectBusinessId.split(Util.DB._VS);
+		if(ids.length <2) {
+			return (E) pl;
+		}
+		String businessId = ids[0];
+		String attributeBusinessId = ids[1];
+		Connection conn = null;
+		ResultSet rs = null;
+		Statement dbs = null;
+		int retVal = 0;
+		try{
+			conn = Util.DB.__conn(log);
+			
+			dbs = conn.createStatement();
+			
+			String SQL = "SELECT * FROM "+ahptable+" AS a, "+ ProcessDao.table+" AS p WHERE "
+					+ " a.`_ahp_attribute_business_id`='"+attributeBusinessId+"' "
+					+ " AND a.`_ahp_business_id`='"+businessId+"' "
+					+ " AND a.`_ohp_process_key`=p.`process_instance_id` "
+					+ " AND a.`_ohp_process_key`=p.`businesskey` "
+					+ " ORDER BY p.`process_type`";
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
+			
+			rs = dbs.executeQuery(SQL);		
+			
+			if (rs.next()) {		
+				ProductAttributeProcess<?> ap = ProcessDao.instance().rsToI(rs, log);
+				ap.states().ioAction(IOAction.LOAD);
+				ap.states().setModified(false); // ensure that we don't get re-registered
+				pl.add(ap);
+			}
+			retVal = pl.size();
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" loaded ]----";LOG.info(String.format(fmt,_f,msg));}
+			
+		} catch(SQLException e) {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
+			e.printStackTrace();
+		} finally {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ releasing connection]----";LOG.info(String.format(fmt, _f,msg));}
+			Util.DB.__release(conn,log);
+			Util.DB._releaseRS(rs, log);
+			Util.DB._releaseStatement(dbs, log);
+		}
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[loadProcesses completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return (E) pl;
+	}
+
+	@Override
+	public int addProcessReference(String objectBusinessId, String instanceId, String processKey, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[addProcessReference]";
+			msg = "====[ register an associated process instance in the reference table ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		String[] ids = objectBusinessId.split(Util.DB._VS);
+		if(ids.length <2) {
+			return 0;
+		}
+		String businessId = ids[0];
+		String attributeBusinessId = ids[1];
+		Connection conn = null;
+		ResultSet rs = null;
+		Statement dbs = null;
+		int retVal = 0;
+		try{
+			conn = Util.DB.__conn(log);
+			
+			dbs = conn.createStatement();
+			
+			String SQL = "INSERT INTO " + ahptable + "( " + Util.DB._columns(ahptabledef, Util.DB.dbActionType.INSERT, log)
+			+ " ) VALUES ( '"+attributeBusinessId+"','"+businessId+"','"+instanceId+"','"+processKey+"' )";
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
+			
+			retVal = dbs.executeUpdate(SQL);
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" registered ]----";LOG.info(String.format(fmt,_f,msg));}
+			
+		} catch(SQLException e) {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
+			e.printStackTrace();
+		} finally {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ releasing connection]----";LOG.info(String.format(fmt, _f,msg));}
+			Util.DB.__release(conn,log);
+			Util.DB._releaseRS(rs, log);
+			Util.DB._releaseStatement(dbs, log);
+		}
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[addProcessReference completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return retVal;
+	}
+	@Override
+	public int addProcessReferences(String objectBusinessId, ProcessList pl, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[addProcessReferences]";
+			msg = "====[ register all associated process instances in the reference table ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		String[] ids = objectBusinessId.split(Util.DB._VS);
+		if(ids.length <2) {
+			return 0;
+		}
+		String businessId = ids[0];
+		String attributeBusinessId = ids[1];
+		Connection conn = null;
+		ResultSet rs = null;
+		Statement dbs = null;
+		int retVal = 0;
+		try{
+			conn = Util.DB.__conn(log);
+			
+			dbs = conn.createStatement();
+			
+			String SQL = "INSERT INTO " + ahptable + "( " + Util.DB._columns(ahptabledef, Util.DB.dbActionType.INSERT, log)
+			+ " ) VALUES "+insertProcessReferenceValues(pl,attributeBusinessId,businessId,log);
+				
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
+
+			retVal = dbs.executeUpdate(SQL);
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" registered ]----";LOG.info(String.format(fmt,_f,msg));}
+			
+		} catch(SQLException e) {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
+			e.printStackTrace();
+		} finally {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ releasing connection]----";LOG.info(String.format(fmt, _f,msg));}
+			Util.DB.__release(conn,log);
+			Util.DB._releaseRS(rs, log);
+			Util.DB._releaseStatement(dbs, log);
+		}
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[addProcessReferences completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return retVal;
+	}
+
+	@Override
+	public int delProcessReference(String objectBusinessId, String instanceId, String processKey, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[delProcessReference]";
+			msg = "====[ deregister an associated process instance from the reference table ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		String[] ids = objectBusinessId.split(Util.DB._VS);
+		if(ids.length <2) {
+			return 0;
+		}
+		String businessId = ids[0];
+		String attributeBusinessId = ids[1];
+		Connection conn = null;
+		ResultSet rs = null;
+		Statement dbs = null;
+		int retVal = 0;
+		try{
+			conn = Util.DB.__conn(log);
+			
+			dbs = conn.createStatement();
+			
+			String SQL = "DELETE FROM "+ahptable+ " WHERE "
+					+ "`_ahp_business_id`='"+attributeBusinessId+"' "
+					+ " AND `_ahp_business_id`='"+businessId+"' "
+					+ " AND `_ahp_process_instance_id`='"+instanceId+"' "
+							+ " AND `_ahp_process_key`='"+processKey+"'";
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
+			
+			retVal = dbs.executeUpdate(SQL);
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" deleted ]----";LOG.info(String.format(fmt,_f,msg));}
+			
+		} catch(SQLException e) {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
+			e.printStackTrace();
+		} finally {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ releasing connection]----";LOG.info(String.format(fmt, _f,msg));}
+			Util.DB.__release(conn,log);
+			Util.DB._releaseRS(rs, log);
+			Util.DB._releaseStatement(dbs, log);
+		}
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[delProcessReference completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return retVal;
+	}
+
+	@Override
+	public int delAllProcessReferences(String objectBusinessId, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[delProcessReferences]";
+			msg = "====[ deregister all associated process instances from the reference table ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		String[] ids = objectBusinessId.split(Util.DB._VS);
+		if(ids.length <2) {
+			return 0;
+		}
+		String businessId = ids[0];
+		String attributeBusinessId = ids[1];
+		Connection conn = null;
+		ResultSet rs = null;
+		Statement dbs = null;
+		int retVal = 0;
+		try{
+			conn = Util.DB.__conn(log);
+			
+			dbs = conn.createStatement();
+			String SQL = "DELETE FROM "+ahptable+ " WHERE "
+						+ "`_ahp_attribute_business_id`='"+attributeBusinessId+"'"
+						+ " AND `_ahp_business_id`='"+businessId+"'";
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
+
+			retVal = dbs.executeUpdate(SQL);
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" deleted ]----";LOG.info(String.format(fmt,_f,msg));}
+			
+		} catch(SQLException e) {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
+			e.printStackTrace();
+		} finally {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ releasing connection]----";LOG.info(String.format(fmt, _f,msg));}
+			Util.DB.__release(conn,log);
+			Util.DB._releaseRS(rs, log);
+			Util.DB._releaseStatement(dbs, log);
+		}
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[delProcessReferences completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return retVal;
+	}
+
+	@Override
+	public int delProcessReferences(String objectBusinessId, ProcessList pl, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[delProcessReferences]";
+			msg = "====[ deregister all associated process instances from the reference table ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		String[] ids = objectBusinessId.split(Util.DB._VS);
+		if(ids.length <2) {
+			return 0;
+		}
+		String businessId = ids[0];
+		String attributeBusinessId = ids[1];
+		Connection conn = null;
+		ResultSet rs = null;
+		Statement dbs = null;
+		int retVal = 0;
+		try{
+			conn = Util.DB.__conn(log);
+			
+			dbs = conn.createStatement();
+			String SQL = "DELETE FROM "+ahptable+ " WHERE "
+						+ "`_ahp_attribute_business_id`='"+attributeBusinessId+"'"
+						+ " AND `_ahp_business_id`='"+businessId+"'";
+
+			boolean start = true;
+			for(Process<?,?>p:pl) {
+				if(!start) {
+					SQL += " OR";
+				} else {
+					SQL += " AND";
+					start = false;
+				}
+				SQL += " (`_ahp_process_instance_id`='"+p.instanceId()+"' AND `_ahp_process_key`='"+p.businessKey()+"')";
+			}
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
+
+			retVal = dbs.executeUpdate(SQL);
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" deleted ]----";LOG.info(String.format(fmt,_f,msg));}
+			
+		} catch(SQLException e) {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
+			e.printStackTrace();
+		} finally {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ releasing connection]----";LOG.info(String.format(fmt, _f,msg));}
+			Util.DB.__release(conn,log);
+			Util.DB._releaseRS(rs, log);
+			Util.DB._releaseStatement(dbs, log);
+		}
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[delProcessReferences completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return retVal;
+	}
+
+	public String insertProcessReferenceValues(ProcessList pl, String attributeBusinessId, String businessId, boolean log) {
+		String values = "";
+		boolean start = true;
+		for(Process<?,?> pr:pl){
+			if(!pr.states().isModified()) continue;
+			if(!start) {
+				values += ",";
+			} else {
+				start = false;
+			}
+			values += "('"+attributeBusinessId+"','"+businessId+"','"+pr.instanceId()+"','"+pr.businessKey()+"')";
+			pr.states().setModified(false);
+		}
+		return values;
+	}
+
 
 }

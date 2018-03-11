@@ -20,9 +20,10 @@
 package com.camsolute.code.camp.lib.models;
 
 import com.camsolute.code.camp.lib.dao.DaoInterface;
+import com.camsolute.code.camp.lib.dao.HasProcessReference;
 import com.camsolute.code.camp.lib.models.Attribute.AttributeType;
 
-public interface AttributeRestInterface extends DaoInterface<Attribute<?>> {
+public interface AttributeRestInterface extends HasProcessReference<Attribute<?>>,DaoInterface<Attribute<?>> {
 	
     public int delete(int id, boolean log);
 
