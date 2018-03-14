@@ -19,13 +19,10 @@
  ******************************************************************************/
 package com.camsolute.code.camp.lib.dao;
 
-import java.util.ArrayList;
 
-import com.camsolute.code.camp.lib.contract.HasProcess;
-import com.camsolute.code.camp.lib.models.process.Process;
 import com.camsolute.code.camp.lib.models.process.ProcessList;
 
-public interface HasProcessReference<T extends HasProcess<T,?>> {
+public interface HasProcessReference {
 
 	public int addProcessReference(String businessId, String instanceId, String processKey, boolean log);
 
@@ -37,5 +34,5 @@ public interface HasProcessReference<T extends HasProcess<T,?>> {
 
 	public int delProcessReferences(String businessId, ProcessList pl, boolean log);
 
-	public <E extends ArrayList<Process<?,?>>> E loadProcessReferences(String businessId, boolean log);
+	public ProcessList loadProcessReferences(String businessId, boolean log);
 }

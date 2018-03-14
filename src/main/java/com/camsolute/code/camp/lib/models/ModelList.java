@@ -20,6 +20,7 @@
 package com.camsolute.code.camp.lib.models;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -47,7 +48,7 @@ public class ModelList extends ArrayList<Model> implements Serialization<ModelLi
 			} else {
 				start = false;
 			}
-			json += ModelInterface._toJson(m);
+			json += m.toJson();
 			
 		}
 		json += "]";
@@ -60,8 +61,10 @@ public class ModelList extends ArrayList<Model> implements Serialization<ModelLi
 	
 	public static ModelList _fromJSONArray(JSONArray ja) {
 		ModelList ml = new ModelList();
-		for(Object jo:ja.toList()) {
-			ml.add(ModelInterface._fromJSONObject((JSONObject) jo));
+		Iterator<Object> i = ja.iterator();
+		while(i.hasNext()) {
+			JSONObject jo = (JSONObject) i.next();
+			ml.add(ModelInterface._fromJSONObject(jo));
 		}
 		return ml;
 	}

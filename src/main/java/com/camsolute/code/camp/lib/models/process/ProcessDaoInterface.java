@@ -63,21 +63,21 @@ public interface ProcessDaoInterface {
 
 	public String[][] updatestabledef(ProcessType type) ;
 
-	public <T extends Process<?,?>> T rsToI(ResultSet rs, boolean log) throws SQLException;
+	public <T extends Process<?>> T rsToI(ResultSet rs, boolean log) throws SQLException;
 	
-  public <T extends Process<?,?>> T loadById(int id, boolean log);
+  public <T extends Process<?>> T loadById(int id, boolean log);
 
-  public  <T extends Process<?,?>> T loadByInstanceId(String instanceId, boolean log);
+  public  <T extends Process<?>> T loadByInstanceId(String instanceId, boolean log);
 
   public  <E extends ProcessList> E loadListByKey(String businessKey, boolean log);
 
   public  <E extends ProcessList> E loadListByBusinessId(String businessId, boolean log);
 
-  public Process<?,?> save(Process<?,?> instance, boolean log);
+  public Process<?> save(Process<?> instance, boolean log);
 
   public <E extends ProcessList> E saveList(E instanceList, boolean log);
 
-  public <T extends Process<?,?>> int update(T instance, boolean log);
+  public <T extends Process<?>> int update(T instance, boolean log);
 
   public <E extends ProcessList> int updateList(E instanceList, boolean log);
 
@@ -87,13 +87,13 @@ public interface ProcessDaoInterface {
 
   public <E extends ProcessList> E loadUpdatesByTarget(String target, boolean log);
 
-  public  <T extends Process<?,?>> T loadUpdate(String instanceId, String businessId, String businessKey, String target, boolean log);
+  public  <T extends Process<?>> T loadUpdate(String instanceId, String businessId, String businessKey, String target, boolean log);
 
-  public  <T extends Process<?,?>> T loadUpdate(T instance, String businessKey, String target, boolean log);
+  public  <T extends Process<?>> T loadUpdate(T instance, String businessKey, String target, boolean log);
 
-  public <T extends Process<?,?>> int addToUpdates(String instanceId, String businessId, String businessKey, String target, boolean log);
+  public <T extends Process<?>> int addToUpdates(String instanceId, String businessId, String businessKey, String target, boolean log);
   
-  public  <T extends Process<?,?>> int addToUpdates(T instance, String businessKey, String target, boolean log);
+  public  <T extends Process<?>> int addToUpdates(T instance, String businessKey, String target, boolean log);
 
   public <E extends ProcessList> int addToUpdates(E instanceList, String businessKey, String target, boolean log);
 
@@ -109,15 +109,15 @@ public interface ProcessDaoInterface {
 
 //TODO: just an idea    public int/T _dbExecute(Util.DB.dbActionType action,String SQL, String table, String[][] tabledef, boolean log);
 
-	public String insertValues(Process<?,?> p, boolean log);
+	public String insertValues(Process<?> p, boolean log);
 
   public <E extends ProcessList> String insertListValues(E pl, boolean log);
 
   public <E extends ProcessList> String insertUpdateListValues(E pl,String target);
 
-	public String insertUpdateValues(Process<?,?> p, String target);
+	public String insertUpdateValues(Process<?> p, String target);
 
-	public String formatUpdateSQL(String SQL, Process<?,?> p, boolean log);
+	public String formatUpdateSQL(String SQL, Process<?> p, boolean log);
 	
   public int createTable(boolean log);
   

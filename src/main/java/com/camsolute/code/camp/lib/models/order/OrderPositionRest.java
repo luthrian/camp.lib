@@ -719,11 +719,10 @@ public class OrderPositionRest implements OrderPositionRestInterface {
 				
 	}
 
-	public <E extends ArrayList<Process<?, ?>>> E loadProcessReferences(String businessId, boolean log) {
+	public ProcessList loadProcessReferences(String businessId, boolean log) {
 		return loadProcessReferences(serverUrl, businessId, log);
 	}
-	@SuppressWarnings("unchecked")
-	public <E extends ArrayList<Process<?, ?>>> E loadProcessReferences(String serverUrl, String businessId, boolean log) {
+	public ProcessList loadProcessReferences(String serverUrl, String businessId, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -731,12 +730,12 @@ public class OrderPositionRest implements OrderPositionRestInterface {
 			_f = "[loadProcessReferences]";
 			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
-		E op = null;
+		ProcessList op = null;
 		String prefix = CampRest.OrderPosition.Prefix;		
 		String serviceUri = CampRest.ProcessReferenceDaoService.callRequest(prefix,CampRest.ProcessReferenceDaoService.Request.LOAD);
 		String uri = serverUrl+domainUri+String.format(serviceUri,businessId);
 		String result = RestInterface.resultGET(uri, log);
-		op = (E) ProcessList._fromJson(result);
+		op = ProcessList._fromJson(result);
 		int retVal = op.size();
 		if (log && !Util._IN_PRODUCTION) { msg = "----[ '" + retVal + "' entr"+((retVal>1)?"ies":"y")+" loaded ]----"; LOG.info(String.format(fmt, _f, msg)); }
 		

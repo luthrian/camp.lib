@@ -36,7 +36,7 @@ import com.camsolute.code.camp.lib.models.CampStates;
 import com.camsolute.code.camp.lib.models.CampStatesInterface;
 import com.camsolute.code.camp.lib.models.customer.Customer.Status;
 //TODO
-public interface CustomerInterface extends IsObjectInstance<Customer> , HasAddress, HasContactDetails, HasProcess<Customer,CustomerProcess>{
+public interface CustomerInterface extends IsObjectInstance<Customer> , HasAddress, HasContactDetails, HasProcess<Customer>{
 	public static final Logger LOG = LogManager.getLogger(CustomerInterface.class);
 	public static String fmt = "[%15s] [%s]";
 

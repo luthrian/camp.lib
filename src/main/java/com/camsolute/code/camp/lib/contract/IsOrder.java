@@ -30,5 +30,5 @@ import com.camsolute.code.camp.lib.models.product.Product;
  * @author Christopher Campbell
  *
  */
-public interface  IsOrder extends HasOrderPositionList ,HasTimestamp, HasDate ,HasProcess<Order,OrderProcess>, HasStatus ,IsObjectInstance<Order> {
+public interface  IsOrder extends HasOrderPositionList ,HasTimestamp, HasDate ,HasProcess<Order>, HasStatus ,IsObjectInstance<Order> {
 }

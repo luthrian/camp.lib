@@ -73,7 +73,7 @@ public class ProcessEngineRest implements ProcessEngineRestInterface {
 	}
 
 	@Override
-	public Process<?, ?> startProcess(String processKey, Variables variables, boolean log) {
+	public Process<?> startProcess(String processKey, Variables variables, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -86,7 +86,7 @@ public class ProcessEngineRest implements ProcessEngineRestInterface {
 		String serviceUri = CampRest.ProcessEngineDaoService.callRequest(prefix,CampRest.ProcessEngineDaoService.Request.START_PROCESS);
 		String uri = serverUrl+domainUri+String.format(serviceUri,processKey, variables);
 		String result = RestInterface.resultPost(uri, json, log);
-		Process<?,?> p = ProcessInterface._fromJson(result);
+		Process<?> p = ProcessInterface._fromJson(result);
 		
 		if(log && !Util._IN_PRODUCTION) {
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";

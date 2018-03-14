@@ -418,6 +418,7 @@ public class OrderRest implements OrderRestInterface {
 		return ol;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public <E extends ArrayList<Order>> E loadUpdatesByKey(String businessKey, boolean log) {
 		return (E) loadUpdatesByKey(serverUrl,businessKey, log);
@@ -814,9 +815,8 @@ public class OrderRest implements OrderRestInterface {
 	return retVal;
 	}
 
-	@SuppressWarnings("unchecked")
-	public <E extends ArrayList<Process<?,?>>> E loadProcessReferences(String businessId, boolean log) {
-		return (E) loadProcessReferences(serverUrl, businessId, log);
+	public ProcessList loadProcessReferences(String businessId, boolean log) {
+		return loadProcessReferences(serverUrl, businessId, log);
 	}
 	public ProcessList loadProcessReferences(String serverUrl, String businessId, boolean log) {
 		long startTime = System.currentTimeMillis();

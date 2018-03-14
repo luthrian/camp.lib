@@ -30,8 +30,12 @@ import com.camsolute.code.camp.lib.models.Model;
 import com.camsolute.code.camp.lib.models.ModelList;
 import com.camsolute.code.camp.lib.models.process.ProcessList;
 
-public interface ProductDaoInterface extends HasProcessReference<Product>, HasModelReference, InstanceDaoInterface<Product>, DaoInterface<Product>, DBDaoInterface<Product> {
+public interface ProductDaoInterface extends HasProcessReference, HasModelReference, InstanceDaoInterface<Product>, DaoInterface<Product>, DBDaoInterface<Product> {
 
+	public int addToUpdates(String businessId, int modelId, String businessKey, String target, boolean log);
+	
+	public Product loadUpdate(String businessId, int modelId, String businessKey, String target, boolean log);
+	
 //	public int addModelReferences(Product p, boolean log);
 //
 //	public Product loadModels(Product p, boolean log);

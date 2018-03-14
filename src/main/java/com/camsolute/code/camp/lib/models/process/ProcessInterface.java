@@ -27,15 +27,27 @@ import com.camsolute.code.camp.lib.contract.HasStates;
 import com.camsolute.code.camp.lib.contract.IsObserver;
 import com.camsolute.code.camp.lib.contract.IsProcess;
 import com.camsolute.code.camp.lib.contract.Serialization;
+import com.camsolute.code.camp.lib.models.CampStates;
+import com.camsolute.code.camp.lib.models.CampStatesInterface;
+import com.camsolute.code.camp.lib.models.Value;
 import com.camsolute.code.camp.lib.models.process.Process.ProcessType;
 
-public interface ProcessInterface<T, U extends Process<T,U>>  extends IsProcess<T>, IsObserver<T>, HasId, HasStates, HasBusinessId, Serialization<U>{
+//public interface ProcessInterface<T, U extends Process<T,U>>  extends IsProcess<T>, IsObserver<T>, HasId, HasStates, HasBusinessId, Serialization<U>{
+public interface ProcessInterface<T>  extends IsProcess<T>, IsObserver<T>, HasId, HasStates, HasBusinessId, Serialization<Process<T>>{
 
-	public static <U extends Process<?,U>> String _toJson(Process<?,U> p) {
+//	public static <U extends Process<?,U>> String _toJson(Process<?,U> p) {
+	public static String _toJson(Process<?> p) {
 		String json = "{";
+		json += _toInnerJson(p);
+		json += "}";
+		return json;
+	}
+
+	public static String _toInnerJson(Process<?> p) {
+		String json = "";
 		json += "\"id\":"+p.id()+",";
-		json += "\"executionId\":\""+p.executionId+",";
-		json += "\"instanceId\":\""+p.instanceId+",";
+		json += "\"executionId\":\""+p.executionId()+"\",";
+		json += "\"instanceId\":\""+p.instanceId()+"\",";
 		json += "\"businessKey\":\""+p.businessKey()+"\","; 
 		json += "\"businessId\":\""+p.onlyBusinessId()+"\","; 
 		json += "\"processName\":\""+p.processName()+"\",";
@@ -44,20 +56,19 @@ public interface ProcessInterface<T, U extends Process<T,U>>  extends IsProcess<
 		json += "\"caseInstanceId\":\""+p.caseInstanceId()+"\",";
 		json += "\"ended\":"+p.ended()+",";
 		json += "\"suspended\":"+p.suspended()+",";
-		json += "\"type\":"+p.type().name()+",";
-		json += "}";
+		json += "\"type\":\""+p.type().name()+"\",";
+		json += "\"states\":"+p.states().toJson();
 		return json;
 	}
-
-	public static <T extends Process<?,T>> T _fromJson(String json) {
+	public static Process<?> _fromJson(String json) {
 		return _fromJSONObject(new JSONObject(json));
 	}
 	
-	@SuppressWarnings("unchecked")
-	public static <U extends Process<?,U>> U _fromJSONObject(JSONObject jo) {
+	public static <U extends Value<?>> Process<?> _fromJSONObject(JSONObject jo) {
 		int id = 0;
 		if(jo.has("id")) id = jo.getInt("id");
-		String executionId = jo.getString("executionId");
+		String executionId = null;
+		if(jo.has("executionId") ) executionId = jo.getString("executionId");
 		String instanceId = jo.getString("instanceId");
 		String businessKey = jo.getString("businessKey"); 
 		String businessId = jo.getString("businessId"); 
@@ -67,13 +78,15 @@ public interface ProcessInterface<T, U extends Process<T,U>>  extends IsProcess<
 		String caseInstanceId = jo.getString("caseInstanceId");
 		boolean ended = jo.getBoolean("ended");
 		boolean suspended = jo.getBoolean("suspended");
+		CampStates states = CampStatesInterface._fromJSONObject(jo.getJSONObject("states"));
 		ProcessType type = ProcessType.valueOf(ProcessType.class,jo.getString("type"));
 		switch(type){//TODO add the other process types
 		case customer_process:
 		case customer_management_process:
 			CustomerProcess cp = new CustomerProcess(id, executionId, instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, type);
 			cp.setBusinessId(businessId);
-			return (U) cp;
+			cp.states().update(states);
+			return cp;
 		case customer_order_process:
 		case customer_order_management_process:
 		case product_order_process:
@@ -81,17 +94,28 @@ public interface ProcessInterface<T, U extends Process<T,U>>  extends IsProcess<
 		case order_support_process:			
 			OrderProcess op = new OrderProcess(id, executionId, instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, type);
 			op.setBusinessId(businessId);
-			return (U) op;
+			op.states().update(states);
+			return op;
 		case product_process:
 		case product_management_process:
 			ProductProcess pdp = new ProductProcess(id, executionId, instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, type);
 			pdp.setBusinessId(businessId);
-			return (U) pdp;
+			pdp.states().update(states);
+			return pdp;
 		case production_process:
 		case production_management_process:
 			ProductionProcess pp = new ProductionProcess(id, executionId, instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, type);
 			pp.setBusinessId(businessId);
-			return (U) pp;
+			pp.states().update(states);
+			return pp;
+		case product_attribute_order_process:
+		case product_attribute_process:
+		case product_attribute_order_management_process:
+		case product_attribute_support_process:
+			ProductAttributeProcess<U> pap = new ProductAttributeProcess<U>(id, executionId, instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, type);
+			pap.setBusinessId(businessId);
+			pap.states().update(states);
+			return pap;
 		default:
 			break;
 		}
@@ -99,7 +123,7 @@ public interface ProcessInterface<T, U extends Process<T,U>>  extends IsProcess<
 	
 	}
 	
-	public static Process<?,?> _process(String businessId, String executionId, String instanceId, String businessKey, String processName, String definitionId, String tenantId, String caseInstanceId, boolean ended, boolean suspended, ProcessType type){
+	public static <U extends Value<?>> Process<?> _process(String businessId, String executionId, String instanceId, String businessKey, String processName, String definitionId, String tenantId, String caseInstanceId, boolean ended, boolean suspended, ProcessType type){
 		switch(type){//TODO add the other process types
 		case customer_process:
 		case customer_management_process:
@@ -128,7 +152,7 @@ public interface ProcessInterface<T, U extends Process<T,U>>  extends IsProcess<
 		case product_attribute_process:
 		case product_attribute_order_management_process:
 		case product_attribute_support_process:
-			ProductAttributeProcess pap = new ProductAttributeProcess(executionId,instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, type);
+			ProductAttributeProcess<U> pap = new ProductAttributeProcess<U>(executionId,instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, type);
 			pap.setBusinessId(businessId);
 			return pap;
 		default:
@@ -136,7 +160,7 @@ public interface ProcessInterface<T, U extends Process<T,U>>  extends IsProcess<
 		}
 		return null;
 	}
-	public static Process<?,?> _process(String businessId, String instanceId, String businessKey, String processName, String definitionId, String tenantId, String caseInstanceId, boolean ended, boolean suspended, ProcessType type){
+	public static <U extends Value<?>> Process<?> _process(String businessId, String instanceId, String businessKey, String processName, String definitionId, String tenantId, String caseInstanceId, boolean ended, boolean suspended, ProcessType type){
 		switch(type){//TODO add the other process types
 		case customer_process:
 		case customer_management_process:
@@ -165,7 +189,7 @@ public interface ProcessInterface<T, U extends Process<T,U>>  extends IsProcess<
 		case product_attribute_process:
 		case product_attribute_order_management_process:
 		case product_attribute_support_process:
-			ProductAttributeProcess pap = new ProductAttributeProcess(instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, type);
+			ProductAttributeProcess<U> pap = new ProductAttributeProcess<U>(instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, type);
 			pap.setBusinessId(businessId);
 			return pap;
 		default:

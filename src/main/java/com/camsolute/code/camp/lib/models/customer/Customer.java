@@ -90,7 +90,7 @@ public class Customer implements CustomerInterface {
 	private int addressId = Util.NEW_ID;
 	private Address address = null;//
 	private ContactDetails contact = null;
-	private CustomerProcessList processes = new CustomerProcessList();
+	private ProcessList processes = new ProcessList();
 	
 	public Customer(int id, String title, String firstName, String surName, String businessKey){
 		this.id = id;
@@ -369,27 +369,27 @@ public class Customer implements CustomerInterface {
 		return this.processes;
 	}
 	@Override
-	public void addProcess(CustomerProcess process) {
+	public void addProcess(Process<Customer> process) {
 		process.states().modify();
 		this.processes.add(process);
 		this.states.modify();
 	}
 
 	@Override
-	public <E extends ProcessList> void addProcesses(E processes) {
-		for(Process<?,?> p: processes) {
+	public void addProcesses(ProcessList processes) {
+		for(Process<?> p: processes) {
 			p.states().modify();
 		}
 		processes.addAll(processes);
 		this.states.modify();
 	}
 	@Override
-	public CustomerProcess deleteProcess(String instanceId) {
+	public Process<Customer> deleteProcess(String instanceId) {
 		int count = 0;
-		for(Process<?,?> p: processes) {
+		for(Process<?> p: processes) {
 			if(p.instanceId().equals(instanceId)){
 				this.states.modify();
-				return (CustomerProcess) processes.remove(count);
+				return (Process<Customer>) processes.remove(count);
 			}
 			count++;
 		}
@@ -397,55 +397,55 @@ public class Customer implements CustomerInterface {
 	}
 
 	@Override
-	public <E extends ProcessList> void setProcesses(E pl) {
-		this.processes = (CustomerProcessList) pl;
+	public void setProcesses(ProcessList pl) {
+		this.processes = (ProcessList) pl;
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public <E extends ProcessList> E processes() {
-		return (E) processes;
+	public ProcessList processes() {
+		return processes;
 	}
 	@SuppressWarnings("unchecked")
 	@Override
-	public <E extends ProcessList> E processes(ProcessType type) {
-		CustomerProcessList opl = new CustomerProcessList();
-		for(Process<?,?> op: processes){
+	public ProcessList processes(ProcessType type) {
+		ProcessList opl = new ProcessList();
+		for(Process<?> op: processes){
 			if(op.type().name().equals(type.name())){
-				opl.add((CustomerProcess)op);
+				opl.add((Process<Customer>)op);
 			}
 		}
-		return (E) opl;
+		return opl;
 	}
 	@SuppressWarnings("unchecked")
 	@Override
 	public void notifyProcesses() {
-		for(Process<?,?> op:processes) {
-			((Process<Customer,?>)op).notify(this);
+		for(Process<?> op:processes) {
+			((Process<Customer>)op).notify(this);
 		}
 	}
 	@SuppressWarnings("unchecked")
 	@Override
 	public void notifyProcesses(ProcessType type) {
-		for(Process<?,?> op:processes) {
+		for(Process<?> op:processes) {
 			if(op.type().name().equals(type.name())){
-				((Process<Customer,?>)op).notify(this);
+				((Process<Customer>)op).notify(this);
 			}
 		}
 	}
 	@SuppressWarnings("unchecked")
 	@Override
 	public void notifyProcesses(Enum<?> event) {
-		for(Process<?,?> op: processes){
-			((Process<Customer,?>)op).notify(this, event);
+		for(Process<?> op: processes){
+			((Process<Customer>)op).notify(this, event);
 		}
 	}
 	@SuppressWarnings("unchecked")
 	@Override
 	public void notifyProcesses(ProcessType type, Enum<?> event) {
-		for(Process<?,?> op: processes){
+		for(Process<?> op: processes){
 			if(op.type().name().equals(type.name())){
-				((Process<Customer,?>)op).notify(this, event);
+				((Process<Customer>)op).notify(this, event);
 			}
 		}
 	}
@@ -454,7 +454,7 @@ public class Customer implements CustomerInterface {
 	public Message prepareMessage(String insanceId, Enum<?> message) {
 		CustomerMessage msg = CustomerMessage.valueOf(message.name());
 		CustomerProcessMessage m = new CustomerProcessMessage(msg, this);
-		for(Process<?,?> p: processes){
+		for(Process<?> p: processes){
 			m.setProcessInstanceId(p.instanceId());
 			m.setTenantId(p.tenantId());
 		}
@@ -466,7 +466,7 @@ public class Customer implements CustomerInterface {
 		
 		MessageList ml = new MessageList();
 		
-		for(Process<?,?> p: processes){
+		for(Process<?> p: processes){
 			CustomerProcessMessage m = new CustomerProcessMessage(msg, this);
 			m.setProcessInstanceId(p.instanceId());
 			m.setTenantId(p.tenantId());

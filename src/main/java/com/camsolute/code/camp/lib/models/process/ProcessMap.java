@@ -27,7 +27,7 @@ import org.json.JSONObject;
 import com.camsolute.code.camp.lib.contract.Serialization;
 import com.camsolute.code.camp.lib.models.process.Process.ProcessType;
 
-public class ProcessMap<U,T extends Process<U,T>> extends HashMap<ProcessType,ProcessList> {
+public class ProcessMap<U,T extends Process<U>> extends HashMap<ProcessType,ProcessList> {
 
 	/**
 	 * 

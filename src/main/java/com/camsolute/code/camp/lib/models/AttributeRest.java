@@ -1229,7 +1229,7 @@ public class AttributeRest implements AttributeRestInterface {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <E extends ArrayList<Process<?, ?>>> E loadProcessReferences(String businessId, boolean log) {
+	public ProcessList loadProcessReferences(String businessId, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -1249,7 +1249,7 @@ public class AttributeRest implements AttributeRestInterface {
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[loadProcessReferences completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
-		return (E)o;
+		return o;
 	}
 
 

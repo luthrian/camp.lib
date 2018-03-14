@@ -105,7 +105,7 @@ public abstract  class Attribute<U extends Value<?>> implements AttributeInterfa
   private Enum<?> status = AttributeStatus.CREATED;
   private Enum<?> previousStatus = AttributeStatus.CLEAN;
   
-  private ProductAttributeProcessList processes = new ProductAttributeProcessList();
+  private ProcessList processes = new ProcessList();
   
   public Attribute(String name, AttributeType type, String defaultValue) {
     this.name = name;
@@ -819,18 +819,18 @@ public abstract  class Attribute<U extends Value<?>> implements AttributeInterfa
 		return (Attribute<U>) AttributeInterface._fromJson(json);
 	}
 	@Override
-	public ProductAttributeProcessList processInstances() {
+	public ProcessList processInstances() {
 		return processes;
 	}
 	@Override
-	public void addProcess(ProductAttributeProcess<U> process) {
+	public void addProcess(Process<Attribute<U>> process) {
 		process.states().modify();
 		processes.add(process);
 		states.modify();
 	}
 	@Override
-	public <E extends ProcessList> void addProcesses(E processes) {
-		for(Process<?,?> p: processes) {
+	public void addProcesses(ProcessList processes) {
+		for(Process<?> p: processes) {
 			p.states().modify();
 		}
 		processes.addAll(processes);
@@ -838,12 +838,12 @@ public abstract  class Attribute<U extends Value<?>> implements AttributeInterfa
 	}
 	@SuppressWarnings("unchecked")
 	@Override
-	public ProductAttributeProcess<U> deleteProcess(String instanceId) {
+	public Process<Attribute<U>> deleteProcess(String instanceId) {
 		int count = 0;
-		for(Process<?,?> op: processes) {
+		for(Process<?> op: processes) {
 			if(op.instanceId().equals(instanceId)){
 				this.states.modify();
-				return (ProductAttributeProcess<U>) processes.remove(count);
+				return (Process<Attribute<U>>) processes.remove(count);
 			}
 			count++;
 		}
@@ -851,55 +851,53 @@ public abstract  class Attribute<U extends Value<?>> implements AttributeInterfa
 	}
 
 	@Override
-	public <E extends ProcessList> void setProcesses(E pl) {
-		this.processes = (ProductAttributeProcessList) pl;
+	public void setProcesses(ProcessList pl) {
+		this.processes = pl;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
-	public <E extends ProcessList> E processes() {
-		return (E) processes;
+	public ProcessList processes() {
+		return processes;
 	}
-	@SuppressWarnings("unchecked")
 	@Override
-	public <E extends ProcessList> E processes(ProcessType type) {
-		ProductAttributeProcessList opl = new ProductAttributeProcessList();
-		for(Process<?,?> op: processes){
+	public ProcessList processes(ProcessType type) {
+		ProcessList opl = new ProcessList();
+		for(Process<?> op: processes){
 			if(op.type().name().equals(type.name())){
 				opl.add((ProductAttributeProcess<?>)op);
 			}
 		}
-		return (E) opl;
+		return opl;
 	}
 	@SuppressWarnings("unchecked")
 	@Override
 	public void notifyProcesses() {
-		for(Process<?,?> op:processes) {
-			((Process<Attribute<U>,?>)op).notify(this);
+		for(Process<?> op:processes) {
+			((Process<Attribute<U>>)op).notify(this);
 		}
 	}
 	@SuppressWarnings("unchecked")
 	@Override
 	public void notifyProcesses(ProcessType type) {
-		for(Process<?,?> op:processes) {
+		for(Process<?> op:processes) {
 			if(op.type().name().equals(type.name())){
-				((Process<Attribute<U>,?>)op).notify(this);
+				((Process<Attribute<U>>)op).notify(this);
 			}
 		}
 	}
 	@SuppressWarnings("unchecked")
 	@Override
 	public void notifyProcesses(Enum<?> event) {
-		for(Process<?,?> op: processes){
-			((Process<Attribute<U>,?>)op).notify(this, event);
+		for(Process<?> op: processes){
+			((Process<Attribute<U>>)op).notify(this, event);
 		}
 	}
 	@SuppressWarnings("unchecked")
 	@Override
 	public void notifyProcesses(ProcessType type, Enum<?> event) {
-		for(Process<?,?> op: processes){
+		for(Process<?> op: processes){
 			if(op.type().name().equals(type.name())){
-				((Process<Attribute<U>,?>)op).notify(this, event);
+				((Process<Attribute<U>>)op).notify(this, event);
 			}
 		}
 	}
@@ -908,7 +906,7 @@ public abstract  class Attribute<U extends Value<?>> implements AttributeInterfa
 	public Message prepareMessage(String insanceId, Enum<?> message) {
 		ProductAttributeMessage msg = ProductAttributeMessage.valueOf(message.name());
 		ProductAttributeProcessMessage m = new ProductAttributeProcessMessage(msg, this);
-		for(Process<?,?> p: processes){
+		for(Process<?> p: processes){
 			m.setProcessInstanceId(p.instanceId());
 			m.setTenantId(p.tenantId());
 		}
@@ -920,7 +918,7 @@ public abstract  class Attribute<U extends Value<?>> implements AttributeInterfa
 		
 		MessageList ml = new MessageList();
 		
-		for(Process<?,?> p: processes){
+		for(Process<?> p: processes){
 			ProductAttributeProcessMessage m = new ProductAttributeProcessMessage(msg, this);
 			m.setProcessInstanceId(p.instanceId());
 			m.setTenantId(p.tenantId());

@@ -31,7 +31,7 @@ public interface ProcessEngineRestInterface {
 
 	public UserToken authenticate(String username,String password, boolean log);
 	
-	public Process<?,?> startProcess(String processKey, Variables variables, boolean log);
+	public Process<?> startProcess(String processKey, Variables variables, boolean log);
 	
 	public void messageProcess(Message message, boolean log);
 	

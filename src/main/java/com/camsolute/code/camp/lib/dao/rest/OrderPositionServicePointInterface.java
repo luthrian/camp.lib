@@ -52,33 +52,33 @@ public interface OrderPositionServicePointInterface {
 
 	public String loadUpdate(String orderPosition, String businessKey, String target); 
 
-	public int addToUpdates(String orderPosition, String businessKey, String target);
+	public String addToUpdates(String orderPosition, String businessKey, String target);
 
-	public int addListToUpdates(String orderPositionList, String businessKey, String target);
+	public String addListToUpdates(String orderPositionList, String businessKey, String target);
 
-	public int deleteAllFromUpdates(String businessKey, String target);
+	public String deleteAllFromUpdates(String businessKey, String target);
 
-	public int deleteFromUpdatesByKey(String businessKey);
+	public String deleteFromUpdatesByKey(String businessKey);
 
-	public int deleteFromUpdatesByTarget(String target);
+	public String deleteFromUpdatesByTarget(String target);
 
-	public int deleteFromUpdates(String businessId, String businessKey, String target);
+	public String deleteFromUpdates(String businessId, String businessKey, String target);
 
-	public int deleteListFromUpdates(String orderPositionList, String businessKey, String target); 
+	public String deleteListFromUpdates(String orderPositionList, String businessKey, String target); 
 
-	public int addProcessReference(String businessId, String instanceId, String processKey);
+	public String addProcessReference(String businessId, String instanceId, String processKey);
 
-	public int addProcessReferences(String businessId, String processList);
+	public String addProcessReferences(String businessId, String processList);
 
-	public int delProcessReference(String businessId, String instanceId, String processKey);
+	public String delProcessReference(String businessId, String instanceId, String processKey);
 
-	public int delProcessReferences(String businessIdi, String processList);
+	public String delProcessReferences(String businessIdi, String processList);
 
-	public int delAllProcessReferences(String businessId);
+	public String delAllProcessReferences(String businessId);
 
 	public String loadProcessReferences(String businessId);	
 
-	public int addInstance(String orderPosition, boolean useObjectId);
+	public String addInstance(String orderPosition, boolean useObjectId);
 	
 	public String loadFirst(String businessId, boolean primary);
 	

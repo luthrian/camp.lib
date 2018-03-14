@@ -23,7 +23,7 @@ import com.camsolute.code.camp.lib.models.process.Process;
 import com.camsolute.code.camp.lib.models.process.ProcessList;
 // This is Observer Pattern 
 //TODO: will make this more generic (ie. change to HasObservers)
-public interface HasObserverProcess<U,T extends Process<U,T>> {
+public interface HasObserverProcess<U,T extends Process<U>> {
 	public void addObserverProcess(T observer);
 	public void notifyObserverProcesess();
 	public <E extends ProcessList> E observerProcesses();

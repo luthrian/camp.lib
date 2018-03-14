@@ -54,9 +54,9 @@ public class Product implements ProductInterface {
 	private int						id							= Util.NEW_ID;
 	private String				name;
 	private String				businessKey;
-	private int 					modelId = 0;
+	private int 					modelId = Util.NEW_ID;
 	private Model					model = null;
-	private ModelList			models;
+	private ModelList			models = new ModelList();
 	private Group					group;
 	private Version				version;
 	private Timestamp			date = Util.Time.timestamp();
@@ -254,12 +254,12 @@ public class Product implements ProductInterface {
 
 	@Override
 	public String initialBusinessId() {
-		return this.name + Util.DB._NS + this.id;
+		return this.name + Util.DB._VS + Util.NEW_ID;
 	}
 
 	@Override
 	public String businessId() {
-		return this.name;
+		return this.name+Util.DB._VS+this.modelId;
 	}
 
 	@Override
@@ -383,7 +383,7 @@ public class Product implements ProductInterface {
 	}
 
 	@Override
-	public void addProcess(ProductProcess process) {
+	public void addProcess(Process<Product> process) {
 		process.states().modify();
 		this.processes.add(process);
 		this.states.modify();
@@ -391,7 +391,7 @@ public class Product implements ProductInterface {
 
 	@Override
 	public void addProcesses(ProcessList processes) {
-		for(Process<?,?> p: processes) {
+		for(Process<?> p: processes) {
 			p.states().modify();
 		}
 		this.processes.addAll(processes);
@@ -401,7 +401,7 @@ public class Product implements ProductInterface {
 	@Override
 	public ProductProcess deleteProcess(String instanceId) {
 		int count = 0;
-		for (Process<?, ?> p : this.processes) {
+		for (Process<?> p : this.processes) {
 			if (p.instanceId().equals(instanceId)) {
 				this.states.modify();
 				return (ProductProcess) processes.remove(count);
@@ -421,7 +421,7 @@ public class Product implements ProductInterface {
 	@Override
 	public ProcessList processes(ProcessType type) {
 		ProcessList pl = new ProcessList();
-		for (Process<?, ?> p : this.processes) {
+		for (Process<?> p : this.processes) {
 			if (p.type().name().equals(type.name())) {
 				pl.add(p);
 			}
@@ -436,7 +436,7 @@ public class Product implements ProductInterface {
 
 	@Override
 	public void notifyProcesses() {
-		for (Process<?, ?> p : this.processes) {
+		for (Process<?> p : this.processes) {
 			p.notify();
 		}
 	}
@@ -444,9 +444,9 @@ public class Product implements ProductInterface {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void notifyProcesses(ProcessType type) {
-		for (Process<?, ?> p : this.processes) {
+		for (Process<?> p : this.processes) {
 			if (p.type().name().equals(type.name())) {
-				((Process<Product, ?>) p).notify(this);
+				((Process<Product>) p).notify(this);
 			}
 		}
 	}
@@ -454,17 +454,17 @@ public class Product implements ProductInterface {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void notifyProcesses(Enum<?> event) {
-		for (Process<?, ?> p : this.processes) {
-			((Process<Product, ?>) p).notify(this, event);
+		for (Process<?> p : this.processes) {
+			((Process<Product>) p).notify(this, event);
 		}
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public void notifyProcesses(ProcessType type, Enum<?> event) {
-		for (Process<?, ?> p : this.processes) {
+		for (Process<?> p : this.processes) {
 			if (p.type().name().equals(type.name())) {
-				((Process<Product, ?>) p).notify(this, event);
+				((Process<Product>) p).notify(this, event);
 			}
 		}
 	}
@@ -568,7 +568,7 @@ public int getRefId() {
 	public Message prepareMessage(String insanceId, Enum<?> message) {
 		ProductMessage msg = ProductMessage.valueOf(message.name());
 		ProductProcessMessage m = new ProductProcessMessage(msg, this);
-		for(Process<?,?> p: processes){
+		for(Process<?> p: processes){
 			m.setProcessInstanceId(p.instanceId());
 			m.setTenantId(p.tenantId());
 		}
@@ -580,7 +580,7 @@ public int getRefId() {
 		
 		MessageList ml = new MessageList();
 		
-		for(Process<?,?> p: processes){
+		for(Process<?> p: processes){
 			ProductProcessMessage m = new ProductProcessMessage(msg, this);
 			m.setProcessInstanceId(p.instanceId());
 			m.setTenantId(p.tenantId());

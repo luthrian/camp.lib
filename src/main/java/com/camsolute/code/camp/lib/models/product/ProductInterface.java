@@ -42,7 +42,7 @@ import com.camsolute.code.camp.lib.models.process.ProcessList;
 import com.camsolute.code.camp.lib.models.process.ProductProcess;
 import com.camsolute.code.camp.lib.utilities.Util;
 
-public interface ProductInterface extends HasProcess<Product,ProductProcess>, HasAttributes, HasModel ,HasDate, IsObjectInstance<Product>{
+public interface ProductInterface extends HasProcess<Product>, HasAttributes, HasModel ,HasDate, IsObjectInstance<Product>{
 	public static final Logger LOG = LogManager.getLogger(ProductInterface.class);
 	public static String fmt = "[%15s] [%s]";
 	
@@ -79,12 +79,20 @@ public interface ProductInterface extends HasProcess<Product,ProductProcess>, Ha
 	public static Product _fromJSONObject(JSONObject jo) {
 		int id = 0;
 		if(jo.has("id")) id = jo.getInt("id");
-		String name = jo.getString("name");
+		String name = null;
+		if(jo.has("name")){
+			name = jo.getString("name");
+		} else {
+			return null; // the product businessId/name aspect must be present
+		}
 		int modelId = jo.getInt("modelId");
 		String businesskey = jo.getString("businesskey");
 		ModelList models = new ModelList();
 		try {
-			models = ModelList._fromJSONArray(jo.getJSONArray("models"));
+			if(jo.has("models")){
+				models = ModelList._fromJSONArray(jo.getJSONArray("models"));
+			}
+			
 		} catch (Exception e) {
 			if(!Util._IN_PRODUCTION){String msg = "----[JSON Error! Model list is empty.]----";LOG.info(String.format(fmt, "_fromJSONObject",msg));}
 			e.printStackTrace();

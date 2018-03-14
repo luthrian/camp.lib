@@ -23,6 +23,6 @@ import com.camsolute.code.camp.lib.dao.DaoInterface;
 import com.camsolute.code.camp.lib.dao.HasProcessReference;
 import com.camsolute.code.camp.lib.dao.rest.CampInstanceRestDaoInterface;
 
-public interface OrderPositionRestInterface extends DaoInterface<OrderPosition>, HasProcessReference<OrderPosition>, CampInstanceRestDaoInterface {
+public interface OrderPositionRestInterface extends DaoInterface<OrderPosition>, HasProcessReference, CampInstanceRestDaoInterface {
 
 }

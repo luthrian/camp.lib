@@ -24,10 +24,14 @@ import com.camsolute.code.camp.lib.dao.HasModelReference;
 import com.camsolute.code.camp.lib.dao.HasProcessReference;
 import com.camsolute.code.camp.lib.models.AttributeMap;
 
-public interface ProductRestInterface extends DaoInterface<Product>, HasModelReference, HasProcessReference<Product> {
+public interface ProductRestInterface extends DaoInterface<Product>, HasModelReference, HasProcessReference {
 
 	public Product create(String businessId, String businessKey, String date, String endOfLife, String group, String version, boolean log);
+
+	public Product loadUpdate(String businessId, int modelId, String businessKey, String target, boolean log);
 	
+  public  int addToUpdates(String businessId, int modelId, String businessKey, String target, boolean log);
+
 	public AttributeMap saveAttributes(int objectId, AttributeMap am, boolean log);
 
 	public AttributeMap updateAttributes(int objectId, AttributeMap am, boolean log);

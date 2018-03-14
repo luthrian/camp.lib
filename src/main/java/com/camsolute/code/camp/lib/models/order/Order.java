@@ -79,7 +79,7 @@ public class Order implements OrderInterface {
   	
   	private Status previousStatus = Status.CLEAN;
 
-  	private OrderProcessList processInstances = new OrderProcessList();
+  	private ProcessList processInstances = new ProcessList();
   		
   	private OrderPositionList  orderPositions = new OrderPositionList();
 
@@ -110,27 +110,27 @@ public class Order implements OrderInterface {
 		}
 
 		@Override
-		public OrderProcessList processInstances() {
+		public ProcessList processInstances() {
 			return processInstances;
 		}
 		@Override
-		public void addProcess(OrderProcess process) {
+		public void addProcess(Process<Order> process) {
 			process.states().modify();
 			processInstances.add(process);
 			states.modify();
 		}
 		@Override
-		public <E extends ProcessList> void addProcesses(E processes) {
-			for(Process<?,?> p: processes) {
+		public void addProcesses(ProcessList processes) {
+			for(Process<?> p: processes) {
 				p.states().modify();
 			}
 			processInstances.addAll(processes);
 			this.states.modify();
 		}
 		@Override
-		public OrderProcess deleteProcess(String instanceId) {
+		public Process<Order> deleteProcess(String instanceId) {
 			int count = 0;
-			for(Process<?,?> op: processInstances) {
+			for(Process<?> op: processInstances) {
 				if(op.instanceId().equals(instanceId)){
 					this.states.modify();
 					return (OrderProcess) processInstances.remove(count);
@@ -141,55 +141,53 @@ public class Order implements OrderInterface {
 		}
 
 		@Override
-		public <E extends ProcessList> void setProcesses(E pl) {
+		public void setProcesses(ProcessList pl) {
 			this.processInstances = (OrderProcessList) pl;
 		}
 		
-		@SuppressWarnings("unchecked")
 		@Override
-		public <E extends ProcessList> E processes() {
-			return (E) processInstances;
+		public ProcessList processes() {
+			return processInstances;
 		}
-		@SuppressWarnings("unchecked")
 		@Override
-		public <E extends ProcessList> E processes(ProcessType type) {
-			OrderProcessList opl = new OrderProcessList();
-			for(Process<?,?> op: processInstances){
+		public ProcessList processes(ProcessType type) {
+			ProcessList opl = new OrderProcessList();
+			for(Process<?> op: processInstances){
 				if(op.type().name().equals(type.name())){
 					opl.add((OrderProcess)op);
 				}
 			}
-			return (E) opl;
+			return opl;
 		}
 		@SuppressWarnings("unchecked")
 		@Override
 		public void notifyProcesses() {
-			for(Process<?,?> op:processInstances) {
-				((Process<Order,?>)op).notify(this);
+			for(Process<?> op:processInstances) {
+				((Process<Order>)op).notify(this);
 			}
 		}
 		@SuppressWarnings("unchecked")
 		@Override
 		public void notifyProcesses(ProcessType type) {
-			for(Process<?,?> op:processInstances) {
+			for(Process<?> op:processInstances) {
 				if(op.type().name().equals(type.name())){
-					((Process<Order,?>)op).notify(this);
+					((Process<Order>)op).notify(this);
 				}
 			}
 		}
 		@SuppressWarnings("unchecked")
 		@Override
 		public void notifyProcesses(Enum<?> event) {
-			for(Process<?,?> op: processInstances){
-				((Process<Order,?>)op).notify(this, event);
+			for(Process<?> op: processInstances){
+				((Process<Order>)op).notify(this, event);
 			}
 		}
 		@SuppressWarnings("unchecked")
 		@Override
 		public void notifyProcesses(ProcessType type, Enum<?> event) {
-			for(Process<?,?> op: processInstances){
+			for(Process<?> op: processInstances){
 				if(op.type().name().equals(type.name())){
-					((Process<Order,?>)op).notify(this, event);
+					((Process<Order>)op).notify(this, event);
 				}
 			}
 		}
@@ -415,7 +413,7 @@ public class Order implements OrderInterface {
 		public Message prepareMessage(String insanceId, Enum<?> message) {
 			CustomerOrderMessage msg = CustomerOrderMessage.valueOf(message.name());
 			OrderProcessMessage m = new OrderProcessMessage(msg, this);
-			for(Process<?,?> p: processInstances){
+			for(Process<?> p: processInstances){
 				m.setProcessInstanceId(p.instanceId());
 				m.setTenantId(p.tenantId());
 			}
@@ -427,7 +425,7 @@ public class Order implements OrderInterface {
 			
 			MessageList ml = new MessageList();
 			
-			for(Process<?,?> p: processInstances){
+			for(Process<?> p: processInstances){
 				OrderProcessMessage m = new OrderProcessMessage(msg, this);
 				m.setProcessInstanceId(p.instanceId());
 				m.setTenantId(p.tenantId());

@@ -20,21 +20,29 @@
 package com.camsolute.code.camp.lib.models.process;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.camsolute.code.camp.lib.contract.HasStates;
 import com.camsolute.code.camp.lib.contract.Serialization;
-import com.camsolute.code.camp.lib.models.CampStates;
 
 //public class ProcessList<U,T extends Process<U,T>> extends ArrayList<Process<U,T>>{
-public class  ProcessList extends ArrayList<Process<?,?>> implements Serialization<ProcessList>{
+public class  ProcessList extends ArrayList<Process<?>> implements Serialization<ProcessList>{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -8624653726555787594L;
+	
+	public ProcessList subList(int startIndex, int endIndex) {
+		ProcessList pl = new ProcessList();
+		for(Process<?> p: super.subList(startIndex,endIndex)){
+			pl.add(p);
+		}
+		return pl;
+	}
+	
 	@Override
 	public String toJson() {
 		return _toJson(this);
@@ -48,7 +56,7 @@ public class  ProcessList extends ArrayList<Process<?,?>> implements Serializati
 	public static String _toJson(ProcessList pl) {
 		String json = "[";
 		boolean start = true;
-		for(Process<?,?> p:pl) {
+		for(Process<?> p:pl) {
 			if(!start) {
 				json += ",";
 			} else {
@@ -67,8 +75,9 @@ public class  ProcessList extends ArrayList<Process<?,?>> implements Serializati
 	
 	public static ProcessList _fromJSONArray(JSONArray ja) {
 		ProcessList pl = new ProcessList();
-		for(Object jo:ja.toList()) {
-			pl.add(ProcessInterface._fromJSONObject((JSONObject) jo));
+//		Iterator<Object> i = ja.iterator();
+		for(int i = 0; i < ja.length();i++) {
+			pl.add(ProcessInterface._fromJSONObject(ja.getJSONObject(i)));
 		}
 		return pl;
 	}

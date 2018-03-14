@@ -43,7 +43,7 @@ import com.camsolute.code.camp.lib.utilities.Util;
 
 
 
-public interface AttributeInterface<U extends Value<?>> extends HasValue<U>, HasValueId, HasValueHistory, HasValueStates, HasDefaultValue, HasPosition, HasProcess<Attribute<U>,ProductAttributeProcess<U>>, IsObjectInstance<Attribute<U>>, AttributeSerialization<Attribute<U>> {
+public interface AttributeInterface<U extends Value<?>> extends HasValue<U>, HasValueId, HasValueHistory, HasValueStates, HasDefaultValue, HasPosition, HasProcess<Attribute<U>>, IsObjectInstance<Attribute<U>>, AttributeSerialization<Attribute<U>> {
 	public static final Logger LOG = LogManager.getLogger(AttributeInterface.class);
 	public static String fmt = "[%15s] [%s]";
 	
@@ -243,9 +243,9 @@ public interface AttributeInterface<U extends Value<?>> extends HasValue<U>, Has
         int attributeParentId = jo.getInt("attributeParentId");
         CampInstance history = CampInstanceInterface._fromJSONObject(jo.getJSONObject("history")); 
         CampInstance valueHistory = CampInstanceInterface._fromJSONObject(jo.getJSONObject("valueHistory")); 
-        ProductAttributeProcessList processes = new ProductAttributeProcessList();
+        ProcessList processes = new ProcessList();
         try {
-        	processes = (ProductAttributeProcessList) ProcessList._fromJSONArray(jo.getJSONArray("processes"));
+        	processes = ProcessList._fromJSONArray(jo.getJSONArray("processes"));
         } catch (Exception e) {
         	if(!Util._IN_PRODUCTION){String msg = "----[ JSON ERROR! product attribute process list is empty.]----";LOG.info(String.format(fmt, "_fromJSONObject",msg));}
         	e.printStackTrace();

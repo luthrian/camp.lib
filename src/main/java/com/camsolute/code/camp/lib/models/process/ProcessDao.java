@@ -216,7 +216,7 @@ public class ProcessDao implements ProcessDaoInterface {
 
 
 	@Override
-	public <T extends Process<?, ?>> T loadById(int id, boolean log) {
+	public <T extends Process<?>> T loadById(int id, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -271,7 +271,7 @@ public class ProcessDao implements ProcessDaoInterface {
 	}
 
 	@Override
-	public <T extends Process<?, ?>> T loadByInstanceId(String instanceId, boolean log) {
+	public <T extends Process<?>> T loadByInstanceId(String instanceId, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -351,7 +351,7 @@ public class ProcessDao implements ProcessDaoInterface {
 			
 			rs = dbs.executeQuery(SQL);		
 			while (rs.next()) {		
-				Process<?,?> p = rsToI(rs,log);
+				Process<?> p = rsToI(rs,log);
 				p.states().ioAction(IOAction.LOAD);
 				pl.add(p);
 			}
@@ -401,7 +401,7 @@ public class ProcessDao implements ProcessDaoInterface {
 			
 			rs = dbs.executeQuery(SQL);		
 			while (rs.next()) {		
-				Process<?,?> p = rsToI(rs,log);
+				Process<?> p = rsToI(rs,log);
 				p.states().ioAction(IOAction.LOAD);
 				pl.add(p);
 			}
@@ -425,7 +425,7 @@ public class ProcessDao implements ProcessDaoInterface {
 	}
 	
 	@Override
-	public Process<?, ?> save(Process<?,?> p, boolean log) {
+	public Process<?> save(Process<?> p, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -526,7 +526,7 @@ public class ProcessDao implements ProcessDaoInterface {
 	}
 
 	@Override
-	public <T extends Process<?, ?>> int update(T p, boolean log) {
+	public <T extends Process<?>> int update(T p, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -588,7 +588,7 @@ public class ProcessDao implements ProcessDaoInterface {
 			
 			dbs = conn.createStatement();
 			
-			for(Process<?, ?> p:pl) {
+			for(Process<?> p:pl) {
 			
 				String fSQL = "UPDATE " + table + " SET " + Util.DB._columns(tabledef, Util.DB.dbActionType.UPDATE, log)
 				+ " WHERE `"+tabledef[0][0]+"`=%s";
@@ -651,7 +651,7 @@ public class ProcessDao implements ProcessDaoInterface {
 			
 			rs = dbs.executeQuery(SQL);		
 			while (rs.next()) {
-				Process<?,?> p = rsToI(rs,log);
+				Process<?> p = rsToI(rs,log);
 				p.states().ioAction(IOAction.LOAD);
 				pl.add(p);
 			}
@@ -705,7 +705,7 @@ public class ProcessDao implements ProcessDaoInterface {
 			
 			rs = dbs.executeQuery(SQL);		
 			while(rs.next()) {
-				Process<?,?> p = rsToI(rs,log);
+				Process<?> p = rsToI(rs,log);
 				p.states().ioAction(IOAction.LOAD);
 				pl.add(p);
 			}
@@ -759,7 +759,7 @@ public class ProcessDao implements ProcessDaoInterface {
 			
 			rs = dbs.executeQuery(SQL);
 			while(rs.next()) {
-				Process<?,?> p = rsToI(rs,log);
+				Process<?> p = rsToI(rs,log);
 				p.states().ioAction(IOAction.LOAD);
 				pl.add(p);
 			}
@@ -783,7 +783,7 @@ public class ProcessDao implements ProcessDaoInterface {
 	}
 
 	@Override
-	public <T extends Process<?, ?>> T loadUpdate(String instanceId, String businessId, String businessKey, String target, boolean log) {
+	public <T extends Process<?>> T loadUpdate(String instanceId, String businessId, String businessKey, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -838,7 +838,7 @@ public class ProcessDao implements ProcessDaoInterface {
 	}
 
 	@Override
-	public <T extends Process<?, ?>> T loadUpdate(T p, String businessKey, String target, boolean log) {
+	public <T extends Process<?>> T loadUpdate(T p, String businessKey, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -893,7 +893,7 @@ public class ProcessDao implements ProcessDaoInterface {
 	}
 
 	@Override
-	public <T extends Process<?, ?>> int addToUpdates(String instanceId, String businessId, String businessKey, String target, boolean log) {
+	public <T extends Process<?>> int addToUpdates(String instanceId, String businessId, String businessKey, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -936,7 +936,7 @@ public class ProcessDao implements ProcessDaoInterface {
 	}
 
 	@Override
-	public <T extends Process<?, ?>> int addToUpdates(T p, String businessKey, String target, boolean log) {
+	public <T extends Process<?>> int addToUpdates(T p, String businessKey, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -1212,7 +1212,7 @@ public class ProcessDao implements ProcessDaoInterface {
 				
 				dbs = conn.createStatement();
 				
-				for(Process<?, ?> p: pl){
+				for(Process<?> p: pl){
 					String SQL = "DELETE FROM "+updatestable()+" WHERE "
 							+ "`_businesskey`='"+businessKey+"' "
 							+ " AND `_target`='"+target+"'"
@@ -1245,7 +1245,7 @@ public class ProcessDao implements ProcessDaoInterface {
 	}
 
 	@Override
-	public String insertValues(Process<?,?> p, boolean log) {
+	public String insertValues(Process<?> p, boolean log) {
 		String values = "";
 		values += "'"+p.executionId()+"',";
 		values += "'"+p.instanceId()+"',";
@@ -1267,7 +1267,7 @@ public class ProcessDao implements ProcessDaoInterface {
 	public <E extends ProcessList> String insertListValues(E pl, boolean log) {
 		String values = "";
 		boolean start = true;
-		for(Process<?,?> p:pl){
+		for(Process<?> p:pl){
 			if(!start) {
 				values += ",";
 			}else{
@@ -1286,7 +1286,7 @@ public class ProcessDao implements ProcessDaoInterface {
 	public <E extends ProcessList> String insertUpdateListValues(E pl, String target) {
 		String values = "";
 		boolean start = true;
-		for(Process<?,?> p:pl){
+		for(Process<?> p:pl){
 			if(!start) {
 				values += ",";
 			}else{
@@ -1301,7 +1301,7 @@ public class ProcessDao implements ProcessDaoInterface {
 	}
 
 	@Override
-	public String insertUpdateValues(Process<?,?> p, String target) {
+	public String insertUpdateValues(Process<?> p, String target) {
 		String values = "";
 		values += "'"+p.instanceId()+"',";
 		values += "'"+p.onlyBusinessId()+"',";
@@ -1311,7 +1311,7 @@ public class ProcessDao implements ProcessDaoInterface {
 	}
 
 	@Override
-	public String formatUpdateSQL(String SQL, Process<?,?> p, boolean log) {
+	public String formatUpdateSQL(String SQL, Process<?> p, boolean log) {
 		String fSQL = String.format(SQL, 
 				"'"+p.executionId()+"'",
 				"'"+p.instanceId()+"'",
@@ -1545,7 +1545,7 @@ public class ProcessDao implements ProcessDaoInterface {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends Process<?, ?>> T rsToI(ResultSet rs, boolean log) throws SQLException {
+	public <T extends Process<?>> T rsToI(ResultSet rs, boolean log) throws SQLException {
 		int id = rs.getInt(tabledef[0][0]);
 		String instanceId = rs.getString("instance_id");
 		String businessKey = rs.getString("businesskey");

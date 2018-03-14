@@ -395,6 +395,38 @@ public class ProductRest implements ProductRestInterface {
 	}
 
 	@Override
+	public Product loadUpdate(String businessId, int modelId, String businessKey, String target, boolean log) {
+	return loadUpdate(serverUrl,businessId, modelId, businessKey, target, log);
+	}
+	public Product loadUpdate(String serverUrl,String businessId, int modelId,String businessKey, String target, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[loadUpdate]";
+			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		Product o = null;
+		String prefix = CampRest.Product.Prefix;		
+		String serviceUri = CampRest.DaoService.callRequest(prefix,CampRest.DaoService.Request.LOAD_UPDATE_BY_BUSINESSID);
+		String uri = serverUrl+domainUri+String.format(serviceUri,businessId+Util.DB._VS+modelId, businessKey, target);
+		if(log && !Util._IN_PRODUCTION){msg = "----[product service call: serviceURI("+uri+")]----";LOG.info(String.format(fmt, _f,msg));}
+		String result = RestInterface.resultGET(uri, log);
+		try{
+			o = ProductInterface._fromJson(result);
+		} catch(Exception e){
+			if(log && !Util._IN_PRODUCTION){msg = "----[ JSON EXCEPTION! transform product to json FAILED.]----";LOG.info(String.format(fmt,_f,msg));}
+			e.printStackTrace();
+		}
+		
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[loadUpdate completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return o;
+	}
+
+	@Override
 	public Product loadUpdate(Product p, String businessKey, String target, boolean log) {
 	return loadUpdate(serverUrl,p, businessKey, target, log);
 	}
@@ -432,9 +464,37 @@ public class ProductRest implements ProductRestInterface {
 			_f = "[addToUpdates]";
 			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
+		String json = p.toJson();
+		String prefix = CampRest.Product.Prefix;		
+		String serviceUri = CampRest.DaoService.callRequest(prefix,CampRest.DaoService.Request.ADD_UPDATE_POST);
+		String uri = serverUrl+domainUri+String.format(serviceUri, businessKey, target);
+		String result = RestInterface.resultPost(uri,json, log);
+		int retVal = Integer.valueOf(result);
+		if (log && !Util._IN_PRODUCTION) { msg = "----[ '" + retVal + "' entr"+((retVal>1)?"ies":"y")+" loaded ]----"; LOG.info(String.format(fmt, _f, msg)); }
+		
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[addToUpdates completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return retVal;
+	}
+
+	@Override
+	public int addToUpdates(String businessId, int modelId, String businessKey, String target, boolean log) {
+	return addToUpdates(serverUrl,businessId, modelId, businessKey, target, log);
+	}
+	public int addToUpdates(String serverUrl,String businessId, int modelId, String businessKey, String target, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[addToUpdates]";
+			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
 		String prefix = CampRest.Product.Prefix;		
 		String serviceUri = CampRest.DaoService.callRequest(prefix,CampRest.DaoService.Request.ADD_UPDATE);
-		String uri = serverUrl+domainUri+String.format(serviceUri,p.onlyBusinessId(), businessKey, target);
+		String uri = serverUrl+domainUri+String.format(serviceUri,businessId+Util.DB._VS+modelId, businessKey, target);
+		
 		String result = RestInterface.resultGET(uri, log);
 		int retVal = Integer.valueOf(result);
 		if (log && !Util._IN_PRODUCTION) { msg = "----[ '" + retVal + "' entr"+((retVal>1)?"ies":"y")+" loaded ]----"; LOG.info(String.format(fmt, _f, msg)); }
@@ -448,7 +508,7 @@ public class ProductRest implements ProductRestInterface {
 
 	@Override
 	public <E extends ArrayList<Product>> int addToUpdates(E pl, String businessKey, String target, boolean log) {
-	return addToUpdates(serverUrl,pl, businessKey, target, log);
+		return addToUpdates(serverUrl,pl, businessKey, target, log);
 	}
 	public <E extends ArrayList<Product>> int addToUpdates(String serverUrl,E pl, String businessKey, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
@@ -801,6 +861,7 @@ public class ProductRest implements ProductRestInterface {
 			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		String json = pl.toJson();
+		if(log && !Util._IN_PRODUCTION){msg = "----[ProcessList to json: JSON("+json+")]----";LOG.info(String.format(fmt, _f,msg));}
 		String prefix = CampRest.Product.Prefix;		
 		String serviceUri = CampRest.ProcessReferenceDaoService.callRequest(prefix,CampRest.ProcessReferenceDaoService.Request.ADD_REFERENCES);
 		String uri = serverUrl+domainUri+String.format(serviceUri,businessId);
@@ -890,11 +951,11 @@ public class ProductRest implements ProductRestInterface {
 	}
 
 	@Override
-	public <E extends ArrayList<Process<?, ?>>> E loadProcessReferences(String businessId, boolean log) {
+	public ProcessList loadProcessReferences(String businessId, boolean log) {
 	return loadProcessReferences(serverUrl,businessId, log);
 	}
 	@SuppressWarnings("unchecked")
-	public <E extends ArrayList<Process<?, ?>>> E loadProcessReferences(String serverUrl,String businessId, boolean log) {
+	public ProcessList loadProcessReferences(String serverUrl,String businessId, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -914,7 +975,7 @@ public class ProductRest implements ProductRestInterface {
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[loadProcessReferences completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
-		return (E)o;
+		return o;
 	}
 
 	@Override

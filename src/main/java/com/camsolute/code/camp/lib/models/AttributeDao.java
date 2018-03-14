@@ -4554,7 +4554,7 @@ public class  AttributeDao implements AttributeDaoInterface{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <E extends ArrayList<Process<?,?>>> E loadProcessReferences(String objectBusinessId ,boolean log) {
+	public ProcessList loadProcessReferences(String objectBusinessId ,boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -4562,10 +4562,10 @@ public class  AttributeDao implements AttributeDaoInterface{
 			_f = "[loadProcesses]";
 			msg = "====[ load all processes associated with the current order object instance ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
-		ProductAttributeProcessList pl = new ProductAttributeProcessList();
+		ProcessList pl = new ProcessList();
 		String[] ids = objectBusinessId.split(Util.DB._VS);
 		if(ids.length <2) {
-			return (E) pl;
+			return pl;
 		}
 		String businessId = ids[0];
 		String attributeBusinessId = ids[1];
@@ -4611,7 +4611,7 @@ public class  AttributeDao implements AttributeDaoInterface{
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[loadProcesses completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
-		return (E) pl;
+		return pl;
 	}
 
 	@Override
@@ -4840,7 +4840,7 @@ public class  AttributeDao implements AttributeDaoInterface{
 						+ " AND `_ahp_business_id`='"+businessId+"'";
 
 			boolean start = true;
-			for(Process<?,?>p:pl) {
+			for(Process<?>p:pl) {
 				if(!start) {
 					SQL += " OR";
 				} else {
@@ -4874,7 +4874,7 @@ public class  AttributeDao implements AttributeDaoInterface{
 	public String insertProcessReferenceValues(ProcessList pl, String attributeBusinessId, String businessId, boolean log) {
 		String values = "";
 		boolean start = true;
-		for(Process<?,?> pr:pl){
+		for(Process<?> pr:pl){
 			if(!pr.states().isModified()) continue;
 			if(!start) {
 				values += ",";

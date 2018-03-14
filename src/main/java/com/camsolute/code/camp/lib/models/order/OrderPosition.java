@@ -36,9 +36,7 @@ import com.camsolute.code.camp.lib.models.rest.Message;
 import com.camsolute.code.camp.lib.models.rest.MessageList;
 import com.camsolute.code.camp.lib.models.rest.OrderPositionProcessMessage;
 import com.camsolute.code.camp.lib.models.rest.OrderPositionProcessMessage.OrderPositionMessage;
-import com.camsolute.code.camp.lib.models.rest.OrderProcessMessage;
 import com.camsolute.code.camp.lib.models.rest.Request;
-import com.camsolute.code.camp.lib.models.rest.OrderProcessMessage.CustomerOrderMessage;
 import com.camsolute.code.camp.lib.utilities.Util;
 
 public class OrderPosition implements OrderPositionInterface {
@@ -468,19 +466,19 @@ public class OrderPosition implements OrderPositionInterface {
 		}
 
 		@Override
-		public void addProcess(OrderPositionProcess process) {
+		public void addProcess(Process<OrderPosition> process) {
 			this.processes.add(process);
 		}
 
 		@Override
-		public <E extends ProcessList> void addProcesses(E processes) {
+		public void addProcesses(ProcessList processes) {
 			this.processes.addAll(processes);
 		}
 
 		@Override
-		public OrderPositionProcess deleteProcess(String instanceId) {
-			Process<?,?> process = null;
-			for(Process<?,?> p: this.processes) {
+		public Process<OrderPosition> deleteProcess(String instanceId) {
+			Process<?> process = null;
+			for(Process<?> p: this.processes) {
 				if(p.instanceId().equals(instanceId)) {
 					process = p;
 				}
@@ -488,39 +486,37 @@ public class OrderPosition implements OrderPositionInterface {
 			return (OrderPositionProcess) process;
 		}
 
-		@SuppressWarnings("unchecked")
 		@Override
-		public <E extends ProcessList> E processes() {
-			return (E) this.processes;
+		public ProcessList processes() {
+			return this.processes;
 		}
 
-		@SuppressWarnings("unchecked")
 		@Override
-		public <E extends ProcessList> E processes(ProcessType group) {
+		public ProcessList processes(ProcessType group) {
 			ProcessList pl = new ProcessList();
-			for(Process<?,?> p: this.processes) {
+			for(Process<?> p: this.processes) {
 				if(p.type().name().equals(group.name())){
 					pl.add(p);
 				}
 			}
-			return (E) pl;
+			return pl;
 		}
 
 		@Override
-		public <E extends ProcessList> void setProcesses(E pl) {
+		public void setProcesses(ProcessList pl) {
 			this.processes = pl;
 		}
 
 		@Override
 		public void notifyProcesses() {
-			for(Process<?,?> p: this.processes) {
+			for(Process<?> p: this.processes) {
 				((OrderPositionProcess)p).notify(this);
 			}
 		}
 
 		@Override
 		public void notifyProcesses(ProcessType type) {
-			for(Process<?,?> p: this.processes) {
+			for(Process<?> p: this.processes) {
 				if(p.type().name().equals(type.name())) {
 					((OrderPositionProcess)p).notify(this);
 				}
@@ -529,14 +525,14 @@ public class OrderPosition implements OrderPositionInterface {
 
 		@Override
 		public void notifyProcesses(Enum<?> event) {
-			for(Process<?,?> p: this.processes) {
+			for(Process<?> p: this.processes) {
 				((OrderPositionProcess)p).notify(this,(OrderPositionEvent)event);
 			}
 		}
 
 		@Override
 		public void notifyProcesses(ProcessType type, Enum<?> event) {
-			for(Process<?,?> p: this.processes) {
+			for(Process<?> p: this.processes) {
 				if(p.type().name().equals(type.name())) {
 					((OrderPositionProcess)p).notify(this,event);
 				}
@@ -595,7 +591,7 @@ public class OrderPosition implements OrderPositionInterface {
 		public Message prepareMessage(String insanceId, Enum<?> message) {
 			OrderPositionMessage msg = OrderPositionMessage.valueOf(message.name());
 			OrderPositionProcessMessage m = new OrderPositionProcessMessage(msg, this);
-			for(Process<?,?> p: processes){
+			for(Process<?> p: processes){
 				m.setProcessInstanceId(p.instanceId());
 				m.setTenantId(p.tenantId());
 			}
@@ -607,7 +603,7 @@ public class OrderPosition implements OrderPositionInterface {
 			
 			MessageList ml = new MessageList();
 			
-			for(Process<?,?> p: processes){
+			for(Process<?> p: processes){
 				OrderPositionProcessMessage m = new OrderPositionProcessMessage(msg, this);
 				m.setProcessInstanceId(p.instanceId());
 				m.setTenantId(p.tenantId());

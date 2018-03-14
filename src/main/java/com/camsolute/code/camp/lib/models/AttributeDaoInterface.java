@@ -43,7 +43,7 @@ import com.camsolute.code.camp.lib.dao.InstanceDaoInterface;
 import com.camsolute.code.camp.lib.models.Attribute;
 import com.camsolute.code.camp.lib.models.Attribute.AttributeType;
 
-public interface AttributeDaoInterface extends HasProcessReference<Attribute<?>>, DaoInterface<Attribute<?>>, InstanceDaoInterface<Attribute<?>>{
+public interface AttributeDaoInterface extends HasProcessReference, DaoInterface<Attribute<?>>, InstanceDaoInterface<Attribute<?>>{
 	//DEFINITION ASPECTS
 	
   /**

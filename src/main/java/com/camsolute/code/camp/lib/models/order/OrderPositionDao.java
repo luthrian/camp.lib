@@ -1458,7 +1458,7 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			+ " `_ophp_business_id`='"+businessId+"'";
 			
 			boolean start = true;
-			for(Process<?,?>p:pl) {
+			for(Process<?>p:pl) {
 				if(!start) {
 					SQL += " OR";
 				} else {
@@ -1490,7 +1490,7 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 		return retVal;
 	}
 
-	public <E extends ArrayList<Process<?,?>>> E loadProcessReferences(String businessId, boolean log) {
+	public ProcessList loadProcessReferences(String businessId, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -1516,7 +1516,7 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			
 			rs = dbs.executeQuery(SQL);		
 			while (rs.next()) {		
-				Process<Product,ProductProcess> pr = ProcessDao.instance().rsToI(rs, log);
+				Process<Product> pr = ProcessDao.instance().rsToI(rs, log);
 				pr.states().ioAction(IOAction.LOAD);
 				pl.add(pr);
 			}
@@ -1537,7 +1537,7 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[loadProcesses completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
-		return (E)pl;
+		return pl;
 	}
 
 	@Override
@@ -1630,7 +1630,7 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 	public String insertProcessReferenceValues(String businessId, ProcessList pl, boolean log) {
 		String values = "";
 		boolean start = true;
-		for(Process<?,?> pr:pl) {
+		for(Process<?> pr:pl) {
 			if(!start) {
 				values += ",";
 			} else {

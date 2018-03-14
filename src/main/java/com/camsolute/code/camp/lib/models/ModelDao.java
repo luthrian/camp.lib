@@ -336,6 +336,25 @@ public class ModelDao implements ModelDaoInterface {
 	}
 
 	@Override
+	public Model create(String businessId, Timestamp releaseDate, Timestamp endOfLife, String businessKey, Version version, Group group, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[create]";
+			msg = "====[ persist a model object instance '"+businessId+"' to the database ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		Model m = new Model(Util.NEW_ID, businessId, releaseDate, endOfLife, version, group);
+		m.setBusinessKey(businessKey);
+		m = ModelDao.instance().save(m,log);
+		
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[create completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return m;
+	}
+
 	public Model save(Model m, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;

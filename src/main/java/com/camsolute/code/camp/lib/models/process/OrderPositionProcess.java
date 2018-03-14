@@ -22,7 +22,7 @@ package com.camsolute.code.camp.lib.models.process;
 import com.camsolute.code.camp.lib.models.order.OrderPosition;
 import com.camsolute.code.camp.lib.models.process.Process.ProcessType;
 
-public class OrderPositionProcess extends Process<OrderPosition,OrderPositionProcess> implements OrderPositionProcessInterface  {
+public class OrderPositionProcess extends Process<OrderPosition> implements OrderPositionProcessInterface  {
 	public OrderPositionProcess(String instanceId, String businessKey, String processName, String definitionId, String tenantId, String caseInstanceId, boolean ended, boolean suspended, ProcessType type) {
 		super(instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, type);
 	}
@@ -31,15 +31,4 @@ public class OrderPositionProcess extends Process<OrderPosition,OrderPositionPro
 		super(id, instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, type);
 	}
 
-	@Override
-	public void notify(OrderPosition observed) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void notify(OrderPosition observed, Enum<?> event) {
-		// TODO Auto-generated method stub
-		
-	}
 }

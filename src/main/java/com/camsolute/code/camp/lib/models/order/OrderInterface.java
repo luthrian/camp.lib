@@ -41,7 +41,7 @@ import com.camsolute.code.camp.lib.models.process.OrderProcessList;
 import com.camsolute.code.camp.lib.models.process.ProcessList;
 import com.camsolute.code.camp.lib.utilities.Util;
 
-public interface OrderInterface extends HasOrderPositionList , HasDate, HasByDate,HasProcess<Order,OrderProcess>, HasStatus ,IsObjectInstance<Order> {
+public interface OrderInterface extends HasOrderPositionList , HasDate, HasByDate,HasProcess<Order>, HasStatus ,IsObjectInstance<Order> {
    public static final Logger LOG = LogManager.getLogger(OrderInterface.class);
    public static String fmt = "[%15s] [%s]";
 	 

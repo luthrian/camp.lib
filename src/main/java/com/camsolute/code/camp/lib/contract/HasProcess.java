@@ -7,7 +7,7 @@
  * (at your option) any later version.
  * 
  * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * but WITHOUProcess<U> ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  * 
@@ -26,7 +26,7 @@
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
  *
- * <p>This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * <p>This program is distributed in the hope that it will be useful, but WITHOUProcess<U> ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
@@ -46,21 +46,21 @@ import com.camsolute.code.camp.lib.models.rest.MessageList;
 import com.camsolute.code.camp.lib.models.rest.Request;
 import com.camsolute.code.camp.lib.models.process.Process.ProcessType;
 
-public interface HasProcess<U extends IsObjectInstance<U>,T extends Process<U,T>> extends IsObjectInstance<U> {
+public interface HasProcess<U extends IsObjectInstance<U>> extends IsObjectInstance<U> {
 
   public ProcessList processInstances();
 
-  public void addProcess(T process);
+  public void addProcess(Process<U> process);
 
-  public <E extends ProcessList> void addProcesses(E processes);
+  public void addProcesses(ProcessList processes);
 
-  public T deleteProcess(String instanceId);
+  public Process<U> deleteProcess(String instanceId);
 
-  public <E extends ProcessList> E processes();
+  public ProcessList processes();
 
-  public <E extends ProcessList> E processes(ProcessType group);
+  public ProcessList processes(ProcessType group);
 
-  public <E extends ProcessList> void setProcesses(E pl);
+  public void setProcesses(ProcessList pl);
   
   public void notifyProcesses();
 

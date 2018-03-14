@@ -61,7 +61,7 @@ public interface OrderServicePointInterface {
 	
 	public String loadDateRange(String startDate, String endDate, boolean primary);
 	
-	public int addInstance(String orderPosition, boolean useObjectId);
+	public String addInstance(String orderPosition, boolean useObjectId);
 
 	public String loadDate(String businessId, String date, boolean primary);
 	
@@ -73,39 +73,39 @@ public interface OrderServicePointInterface {
 
 	public String loadUpdate(String order, String businessKey, String target);
 
-	public int addToUpdates(String order, String businessKey, String target);
+	public String addToUpdates(String order, String businessKey, String target);
 	
-	public int addListToUpdates(String orderList, String businessKey, String target);
+	public String addListToUpdates(String orderList, String businessKey, String target);
 	
-	public int deleteAllFromUpdates(String businessKey, String target);
+	public String deleteAllFromUpdates(String businessKey, String target);
 	
-	public int deleteFromUpdatesByKey(String businessKey);
+	public String deleteFromUpdatesByKey(String businessKey);
 
-	public int deleteFromUpdatesByTarget(String target);
+	public String deleteFromUpdatesByTarget(String target);
 
-	public int deleteFromUpdates(String businessId, String businessKey, String target);
+	public String deleteFromUpdates(String businessId, String businessKey, String target);
 	
-	public int deleteListFromUpdates(String orderList, String businessKey, String target);
+	public String deleteListFromUpdates(String orderList, String businessKey, String target);
 	
-	public int addProcessReference(String businessId, String instanceId, String processKey);
+	public String addProcessReference(String businessId, String instanceId, String processKey);
 	
-	public int addProcessReferences(String businessId, String processList);
+	public String addProcessReferences(String businessId, String processList);
 	
-	public int delProcessReference(String businessId, String instanceId, String processKey);
+	public String delProcessReference(String businessId, String instanceId, String processKey);
 	
-	public int delProcessReferences(String businessId, String processList);
+	public String delProcessReferences(String businessId, String processList);
 
-	public int delAllProcessReferences(String businessId);
+	public String delAllProcessReferences(String businessId);
 
 	public String loadProcessReferences(String businessId);
 
-	public int addOrderPositionReference(String orderBusinessId, String businessId);
+	public String addOrderPositionReference(String orderBusinessId, String businessId);
 
-	public int addOrderPositionReferences(String orderBusinessId, String opl);
+	public String addOrderPositionReferences(String orderBusinessId, String opl);
 
-	public int delOrderPositionReference(String orderBusinessId, String buisinessId);
+	public String delOrderPositionReference(String orderBusinessId, String buisinessId);
 
-	public int delOrderPositionReferences(String orderBusinessId, String opl);
+	public String delOrderPositionReferences(String orderBusinessId, String opl);
 
 	public String loadOrderPositions(String orderBusinessId);
 

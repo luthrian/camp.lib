@@ -22,7 +22,8 @@ package com.camsolute.code.camp.lib.models.process;
 import com.camsolute.code.camp.lib.models.CampStates;
 import com.camsolute.code.camp.lib.utilities.Util;
 
-public class Process<T,U extends Process<T,U>> implements ProcessInterface<T,U>{
+//public class Process<T,U extends Process<T,U>> implements ProcessInterface<T,U>{
+public class Process<T> implements ProcessInterface<T>{
 
 	public static final String DEFAULT_CUSTOMER_PROCESS_KEY = "com.camsolute.code.camp.lib.models.OrderProcess";
 	public static final String DEFAULT_PRODUCTION_PROCESS_KEY = "com.camsolute.code.camp.lib.models.ProductionProcess";
@@ -235,13 +236,14 @@ public class Process<T,U extends Process<T,U>> implements ProcessInterface<T,U>{
 
 	@Override
 	public String toJson() {
-		return ProcessInterface._toJson( (Process<?, U>) this);
+//		return ProcessInterface._toJson( (Process<?, U>) this);
+		return ProcessInterface._toJson( (Process<T>) this);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public U fromJson(String json) {
-		return (U) ProcessInterface._fromJson(json);
+	public Process<T> fromJson(String json) {
+		return (Process<T>) ProcessInterface._fromJson(json);
 	}
 	
   @Override

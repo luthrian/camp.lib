@@ -54,27 +54,27 @@ public interface AttributeServicePointInterface {
 
 	public String loadUpdate(String attribute, String businessKey, String target);
 
-	public int addToUpdates(String attribute, String businessKey, String target);
+	public String addToUpdates(String attribute, String businessKey, String target);
 
-	public int addListToUpdates(String attributeList, String businessKey, String target);
+	public String addListToUpdates(String attributeList, String businessKey, String target);
 
-	public int deleteAllFromUpdates(String businessKey, String target);
+	public String deleteAllFromUpdates(String businessKey, String target);
 
-	public int deleteFromUpdatesByKey(String businessKey);
+	public String deleteFromUpdatesByKey(String businessKey);
 
-	public int deleteFromUpdatesByTarget(String target);
+	public String deleteFromUpdatesByTarget(String target);
 
-	public int deleteFromUpdates(String instanceId, String businessKey, String target);
+	public String deleteFromUpdates(String instanceId, String businessKey, String target);
 
-	public int deleteListFromUpdates(String attributeList, String businessKey, String target);
+	public String deleteListFromUpdates(String attributeList, String businessKey, String target);
 
-	public int deleteById(int id);
+	public String deleteById(int id);
 
-	public int deleteByBusinessId(String attributeName);
+	public String deleteByBusinessId(String attributeName);
 
-	public int deleteList(String attributeList);
+	public String deleteList(String attributeList);
 
-	public int deleteList(int rootId);
+	public String deleteList(int rootId);
 
 	public String loadList(String attributeType);
 
@@ -86,7 +86,7 @@ public interface AttributeServicePointInterface {
 
 	public String saveAttributesByObjectId(int objectId, String attributeList);
 
-	public int updateAttributesByObjectId(int objectId, String attributeList);
+	public String updateAttributesByObjectId(int objectId, String attributeList);
 
 	public String loadGroup(int parentId, String groupName);
 
@@ -102,15 +102,15 @@ public interface AttributeServicePointInterface {
 
 	public String saveList(int objectId, String attributeList);
 
-	public int update(int objectId, String attribute);
+	public String update(int objectId, String attribute);
 
-	public int updateList(int objectId, String attributeList);
+	public String updateList(int objectId, String attributeList);
 
-	public int delete(int objectId, int attributeId, int valueId, String attributeType);
+	public String delete(int objectId, int attributeId, int valueId, String attributeType);
 
-	public int delete(int objectId, String attribute);
+	public String delete(int objectId, String attribute);
 
-	public int deleteList(int objectId, String attributeList);
+	public String deleteList(int objectId, String attributeList);
 
 	public String load(int objectId, String attribute);
 
@@ -138,15 +138,15 @@ public interface AttributeServicePointInterface {
   
   public String  loadDateRange(String startDate, String endDate);
   
-	public int addProcessReference(String objectBusinessId, String instanceId, String processKey);
+	public String addProcessReference(String objectBusinessId, String instanceId, String processKey);
 
-	public int addProcessReferences(String businessId, String processList);
+	public String addProcessReferences(String businessId, String processList);
 
-	public int delProcessReference(String businessId, String instanceId, String processKey);
+	public String delProcessReference(String businessId, String instanceId, String processKey);
 
-	public int delAllProcessReferences(String businessId);
+	public String delAllProcessReferences(String businessId);
 
-	public int delProcessReferences(String businessId,String processList);
+	public String delProcessReferences(String businessId,String processList);
 
 	public String loadProcessReferences(String businessId);
 }

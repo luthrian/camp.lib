@@ -1245,7 +1245,7 @@ public class OrderDao implements OrderDaoInterface {
 	public String insertProcessReferenceValues(ProcessList pl, String orderBusinessId, boolean log) {
 		String values = "";
 		boolean start = true;
-		for(Process<?,?> pr:pl){
+		for(Process<?> pr:pl){
 			if(!pr.states().isModified()) continue;
 			if(!start) {
 				values += ",";
@@ -1429,7 +1429,7 @@ public class OrderDao implements OrderDaoInterface {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <E extends ArrayList<Process<?,?>>> E loadProcessReferences(String orderBusinessId ,boolean log) {
+	public ProcessList loadProcessReferences(String orderBusinessId ,boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -1479,7 +1479,7 @@ public class OrderDao implements OrderDaoInterface {
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[loadProcesses completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
-		return (E) opl;
+		return opl;
 	}
 
 	@Override
@@ -1675,7 +1675,7 @@ public class OrderDao implements OrderDaoInterface {
 						+ "`_ohp_business_id`='"+orderBusinessId+"'";
 
 			boolean start = true;
-			for(Process<?,?>p:pl) {
+			for(Process<?>p:pl) {
 				if(!start) {
 					SQL += " OR";
 				} else {

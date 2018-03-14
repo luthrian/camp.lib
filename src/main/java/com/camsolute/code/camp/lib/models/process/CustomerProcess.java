@@ -22,7 +22,8 @@ package com.camsolute.code.camp.lib.models.process;
 import com.camsolute.code.camp.lib.models.customer.Customer;
 import com.camsolute.code.camp.lib.models.process.Process.ProcessType;
 
-public class CustomerProcess extends Process<Customer,CustomerProcess> implements CustomerProcessInterface  {
+//public class CustomerProcess extends Process<Customer,CustomerProcess> implements CustomerProcessInterface  {
+public class CustomerProcess extends Process<Customer> implements CustomerProcessInterface  {
 	public CustomerProcess(String instanceId, String businessKey, String processName, String definitionId, String tenantId, String caseInstanceId, boolean ended, boolean suspended, ProcessType type) {
 		super(instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, type);
 	}
@@ -39,14 +40,4 @@ public class CustomerProcess extends Process<Customer,CustomerProcess> implement
 		super(id, executionId, instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, type);
 	}
 
-	public void notify(Customer observed) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void notify(Customer observed, Enum<?> event) {
-		// TODO Auto-generated method stub
-		
-	}
 }

@@ -28,7 +28,7 @@ import com.camsolute.code.camp.lib.contract.Serialization;
 import com.camsolute.code.camp.lib.models.rest.VariableValue.VariableValueType;
 import com.camsolute.code.camp.lib.utilities.Util;
 
-public class Request<T extends HasProcess<T,?>> implements Serialization<Request<?>> {
+public class Request<T extends HasProcess<T>> implements Serialization<Request<?>> {
 	private String id;
 	private String key;
 	
@@ -121,10 +121,10 @@ public class Request<T extends HasProcess<T,?>> implements Serialization<Request
 		return _fromJson(json);
 	}
 	
-	public static <T extends HasProcess<T,?>> Request<T> _fromJson(String json) {
+	public static <T extends HasProcess<T>> Request<T> _fromJson(String json) {
 		return _fromJSONObject(new JSONObject(json));
 	}
-	public static <T extends HasProcess<T,?>> Request<T> _fromJSONObject(JSONObject jo) {
+	public static <T extends HasProcess<T>> Request<T> _fromJSONObject(JSONObject jo) {
 		Request<T> o = new Request<T>();
 		String id = jo.getString("id");
 		String key = jo.getString("key");

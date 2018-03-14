@@ -99,6 +99,10 @@ public class Model implements ModelInterface {
 
   private Product product;
 
+  public Model(String name) {
+    this.name = name;
+  }
+
   public Model(int id, String name, String version, String group) {
     this.id = id;
     this.name = name;

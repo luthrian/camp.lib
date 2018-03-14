@@ -19,9 +19,7 @@
  ******************************************************************************/
 package com.camsolute.code.camp.lib.contract;
 
-import com.camsolute.code.camp.lib.models.Attribute;
 import com.camsolute.code.camp.lib.models.AttributeInterface;
-import com.camsolute.code.camp.lib.models.Group;
 import com.camsolute.code.camp.lib.models.Value;
 
 

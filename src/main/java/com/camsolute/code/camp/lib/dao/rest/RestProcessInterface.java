@@ -42,7 +42,7 @@ package com.camsolute.code.camp.lib.dao.rest;
 import com.camsolute.code.camp.lib.contract.HasProcess;
 import com.camsolute.code.camp.lib.models.process.Process.ProcessType;
 
-public interface RestProcessInterface<T extends HasProcess<T,?>> {
+public interface RestProcessInterface<T extends HasProcess<T>> {
 
   public void notifyProcess(T o, String instanceId);
 

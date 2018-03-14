@@ -30,6 +30,8 @@ public interface ModelServicePointInterface {
 	public String loadListByGroup(String group);
 
 	public String loadListByGroupVersion(String group, String version);
+	
+	public String create(String businessId, String releaseDate, String endOfLife, String businessKey, String group, String version);
 
   public String save(String model);
 
@@ -47,19 +49,19 @@ public interface ModelServicePointInterface {
 
   public String loadUpdate(String model, String businessKey, String target);
 
-  public  int addToUpdates(String model, String businessKey, String target);
+  public String addToUpdates(String model, String businessKey, String target);
 
-  public int addListToUpdates(String modelList, String businessKey, String target);
+  public String addListToUpdates(String modelList, String businessKey, String target);
 
-  public int deleteAllFromUpdates(String businessKey, String target);
+  public String deleteAllFromUpdates(String businessKey, String target);
 
-	public int deleteFromUpdatesByKey(String businessKey);
+	public String deleteFromUpdatesByKey(String businessKey);
 
-	public int deleteFromUpdatesByTarget(String target);
+	public String deleteFromUpdatesByTarget(String target);
 
-  public int deleteFromUpdates(String instanceId, String businessKey, String target);
+  public String deleteFromUpdates(String instanceId, String businessKey, String target);
 
-  public int deleteListFromUpdates(String modelList, String businessKey, String target);
+  public String deleteListFromUpdates(String modelList, String businessKey, String target);
 
 	public String loadFirst(String businessId);
 

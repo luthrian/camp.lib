@@ -24,23 +24,23 @@ import com.camsolute.code.camp.lib.models.process.Process.ProcessType;
 import com.camsolute.code.camp.lib.models.process.ProcessList;
 
 public interface ProcessRestDaoInterface {
-  public Process<?,?> loadById(int id, boolean log);
+  public Process<?> loadById(int id, boolean log);
 
-  public  Process<?,?> loadByInstanceId(String instanceId, boolean log);
+  public  Process<?> loadByInstanceId(String instanceId, boolean log);
 
   public  ProcessList loadListByKey(String businessKey, boolean log);
 
   public  ProcessList loadListByBusinessId(String businessId, boolean log);
   
-	public Process<?,?> create(String businessId, String executionId, String instanceId, String businessKey, String processName, String definitionId, String tenantId, String caseInstanceId, boolean ended, boolean suspended, ProcessType processType, boolean log);
+	public Process<?> create(String businessId, String executionId, String instanceId, String businessKey, String processName, String definitionId, String tenantId, String caseInstanceId, boolean ended, boolean suspended, ProcessType processType, boolean log);
 
-	public Process<?,?> create(String businessId, String instanceId, String businessKey, String processName, String definitionId, String tenantId, String caseInstanceId, boolean ended, boolean suspended, ProcessType processType, boolean log);
+	public Process<?> create(String businessId, String instanceId, String businessKey, String processName, String definitionId, String tenantId, String caseInstanceId, boolean ended, boolean suspended, ProcessType processType, boolean log);
 
-  public Process<?,?> save(Process<?,?> p, boolean log);
+  public Process<?> save(Process<?> p, boolean log);
 
   public ProcessList saveList(ProcessList pl, boolean log);
 
-  public  int update(Process<?,?> p, boolean log);
+  public  int update(Process<?> p, boolean log);
 
   public int updateList(ProcessList pl, boolean log);
 
@@ -50,9 +50,9 @@ public interface ProcessRestDaoInterface {
 
   public ProcessList loadUpdatesByTarget(String target, boolean log);
 
-  public  Process<?,?> loadUpdate(String instanceId, String businessId, String businessKey, String target, boolean log);
+  public  Process<?> loadUpdate(String instanceId, String businessId, String businessKey, String target, boolean log);
 
-  public  Process<?,?> loadUpdate(Process<?,?> p, String businessKey, String target, boolean log);
+  public  Process<?> loadUpdate(Process<?> p, String businessKey, String target, boolean log);
 
   public  int addToUpdates(String instanceId, String businessId, String businessKey, String target, boolean log);
 

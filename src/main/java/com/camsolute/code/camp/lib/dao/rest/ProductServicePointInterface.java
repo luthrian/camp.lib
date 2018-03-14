@@ -21,6 +21,8 @@ package com.camsolute.code.camp.lib.dao.rest;
 
 import java.util.ArrayList;
 
+import javax.ws.rs.QueryParam;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -57,7 +59,7 @@ public interface ProductServicePointInterface {
 	
 	public String updateList(String productList);
 
-	public int addInstance(String product, boolean useObjectId);
+	public String addInstance(String product, boolean useObjectId);
 
 	public String loadFirst(String businessId, boolean primary);
 	
@@ -81,39 +83,44 @@ public interface ProductServicePointInterface {
 	
 	public String loadUpdate(String product, String businessKey, String target);
 	
-	public int addToUpdates(String product, String businessKey, String target);
+	public String loadUpdateByBusinessId(String businessId, String businessKey, String target);
 	
-	public int addListToUpdates(String productList, String businessKey, String target);
 	
-	public int deleteAllFromUpdates(String businessKey, String target);
+	public String addToUpdates(String businessId, String businessKey, String target);
 	
-	public int deleteFromUpdatesByKey(String businessKey);
+	public String addToUpdatesPost(String product, String businessKey, String target);
 	
-	public int deleteFromUpdatesByTarget(String target);
+	public String addListToUpdates(String productList, String businessKey, String target);
 	
-	public int deleteFromUpdates(String businessId, String businessKey, String target);
+	public String deleteAllFromUpdates(String businessKey, String target);
 	
-	public int addModelReference(String businessId, int modelId);
+	public String deleteFromUpdatesByKey(String businessKey);
 	
-	public int addModelReferences(String businessId, String modelList);
+	public String deleteFromUpdatesByTarget(String target);
 	
-	public int delModelReference(String businessId, int modelId);
+	public String deleteFromUpdates(String businessId, String businessKey, String target);
 	
-	public int delModelReferences(String businessId, String modelList);
+	public String addModelReference(String businessId, int modelId);
 	
-	public int delAllModelReferences(String businessId);
+	public String addModelReferences(String businessId, String modelList);
+	
+	public String delModelReference(String businessId, int modelId);
+	
+	public String delModelReferences(String businessId, String modelList);
+	
+	public String delAllModelReferences(String businessId);
 	
 	public String loadModels(String businessId);
 	
-	public int addProcessReference(String businessId, String instanceId, String processKey);
+	public String addProcessReference(String businessId, String instanceId, String processKey);
 	
-	public int addProcessReferences(String businessId, String processList);
+	public String addProcessReferences(String businessId, String processList);
 	
-	public int delProcessReference(String businessId, String instanceId, String processKey);
+	public String delProcessReference(String businessId, String instanceId, String processKey);
 	
-	public int delProcessReferences(String businessId, String processList);
+	public String delProcessReferences(String businessId, String processList);
 	
-	public int delAllProcessReferences(String businessId);
+	public String delAllProcessReferences(String businessId);
 	
 	public String loadProcessReferences(String businessId);
 	

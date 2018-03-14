@@ -75,11 +75,13 @@ public class CampRest {
 			SAVE_LIST,
 			UPDATE,
 			UPDATE_LIST,
-			UPDATE_ATTRIBUTE, // TODO: consider this - selective update to reduce traffic load - is this required
+			UPDATE_ATTRIBUTE, // TODO: consider this - selective update 
+			LOAD_UPDATE_BY_BUSINESSID,
 			LOAD_UPDATE,
 			LOAD_UPDATES,
 			LOAD_UPDATES_KEY,
 			LOAD_UPDATES_TARGET,
+			ADD_UPDATE_POST,
 			ADD_UPDATE,
 			ADD_UPDATES,
 			DELETE_ALL_UPDATES,
@@ -103,10 +105,12 @@ public class CampRest {
 		public static final String UPDATE = "/update";
 		public static final String UPDATE_LIST = "/s/update";
 		public static final String UPDATE_ATTRIBUTE = "/update/attribute";
+		public static final String LOAD_UPDATE_BY_BUSINESSID = "/updates/load/businessId";
 		public static final String LOAD_UPDATE = "/updates/load";
 		public static final String LOAD_UPDATES = "/s/updates/load";
 		public static final String LOAD_UPDATES_KEY = "/s/updates/key/load";
 		public static final String LOAD_UPDATES_TARGET = "/s/updates/target/load";
+		public static final String ADD_UPDATE_POST = "/updates/add/post";
 		public static final String ADD_UPDATE = "/updates/add";
 		public static final String ADD_UPDATES = "/s/updates/add";
 		public static final String DELETE_ALL_UPDATES = "/s/updates/del/all";
@@ -127,16 +131,17 @@ public class CampRest {
 			Call.put(Request.CREATE_ORDER, new String[] {"/create","/create?businessId=%s&businessKey=%s&date=%s&byDate=%s","GET"});
 			Call.put(Request.CREATE_PRODUCT, new String[] {"/create","/create?businessId=%s&businessKey=%s&date=%s&endOfLife=%s&group=%s&version=%s","GET"});
 			Call.put(Request.CREATE_ATTRIBUTE, new String[] {"/create","/create?businessId=%s&businessKey=%s&date=%s&byDate=%s","GET"});
-			Call.put(Request.CREATE_MODEL, new String[] {"/create","/create?businessId=%s&businessKey=%s&date=%s&byDate=%s","GET"});
+			Call.put(Request.CREATE_MODEL, new String[] {"/create","/create?businessId=%s&releaseDate=%s&endOfLife=%s&businessKey=%s&group=%s&version=%s","GET"});
 			Call.put(Request.SAVE, new String[] {"/save","/save","POST"});
 			Call.put(Request.SAVE_LIST, new String[] {"/s/save","/s/save","POST"});
 			Call.put(Request.UPDATE, new String[] {"/update","/update","POST"});
 			Call.put(Request.UPDATE_LIST, new String[] {"/s/update","/s/update","POST"});
 			Call.put(Request.UPDATE_ATTRIBUTE, new String[] {"/update/attribute","/update/attribute?attributeType=%s&businessId=%s&attributeValue=%s"});
-			Call.put(Request.LOAD_UPDATE, new String[] {"/updates/load","/updates/load?businessId=%s&businessKey=%s&target=%s","GET"});
+			Call.put(Request.LOAD_UPDATE_BY_BUSINESSID, new String[] {"/updates/load/businessId","/updates/load/businessId?businessId=%s&businessKey=%s&target=%s","GET"});
 			Call.put(Request.LOAD_UPDATES, new String[] {"/s/updates/load","/s/updates/load?businessKey=%s&target=%s","GET"});
 			Call.put(Request.LOAD_UPDATES_KEY, new String[] {"/s/updates/key/load","/s/updates/key/load?businessKey=%s","GET"});
 			Call.put(Request.LOAD_UPDATES_TARGET, new String[] {"/s/updates/target/load","/s/updates/target/load?target=%s","GET"});
+			Call.put(Request.ADD_UPDATE_POST, new String[] {"/updates/add/post","/updates/add/post?businessKey=%s&target=%s","POST"});
 			Call.put(Request.ADD_UPDATE, new String[] {"/updates/add","/updates/add?businessId=%s&businessKey=%s&target=%s","GET"});
 			Call.put(Request.ADD_UPDATES, new String[] {"/s/updates/add","/s/updates/add?businessKey=%s&target=%s","POST"});
 			Call.put(Request.DELETE_ALL_UPDATES, new String[] {"/s/updates/del/all","/s/updates/del/all?businessKey=%s&target=%s","GET"});

@@ -19,6 +19,7 @@
  ******************************************************************************/
 package com.camsolute.code.camp.lib.models;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
@@ -33,6 +34,19 @@ public class ModelRest implements ModelRestInterface {
 	private static String fmt = "[%15s] [%s]";
 	public static String serverUrl = CampRest.PRODUCT_API_SERVER_URL;
 	public static String domainUri = CampRest.PRODUCT_API_DOMAIN;
+
+	private static ModelRest instance = null;
+	
+	private ModelRest(){
+	}
+	
+	public static ModelRest instance(){
+		if(instance == null) {
+			instance = new ModelRest();
+		}
+		return instance;
+	}
+	
 	
 	@Override
 	public Model loadById(int id, boolean log) {
@@ -162,6 +176,29 @@ public class ModelRest implements ModelRestInterface {
 		return ml;
 	}
 
+	@Override
+	public Model create(String businessId, Timestamp releaseDate, Timestamp endOfLife, String businessKey, Version version, Group group, boolean log){
+		return create(serverUrl, businessId, releaseDate,endOfLife, businessKey, version, group, log);
+	}
+	public Model create(String serverUrl, String businessId, Timestamp releaseDate, Timestamp endOfLife, String businessKey, Version version, Group group, boolean log){
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[create]";
+			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		String prefix = CampRest.Model.Prefix;
+		String serviceUri = CampRest.DaoService.callRequest(prefix,CampRest.DaoService.Request.CREATE_MODEL);
+		String uri = serverUrl+domainUri+String.format(serviceUri,businessId,releaseDate.toString(),endOfLife.toString(),businessKey,group.name(),version.value());
+		String result = RestInterface.resultGET(uri,log);
+		Model m = ModelInterface._fromJson(result);
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[create completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return m;
+	}
 	@Override
 	public Model save(Model m, boolean log) {
 		return save(serverUrl, m, log);

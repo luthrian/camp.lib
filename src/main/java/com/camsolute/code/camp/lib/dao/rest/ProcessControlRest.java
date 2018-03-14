@@ -43,10 +43,10 @@ public class ProcessControlRest implements ProcessControlRestInterface {
 	public static String domainUri = CampRest.PROCESS_CONTROL_API_DOMAIN;
 	
 	@Override
-	public <T extends HasProcess<T, ?>> Process<?, ?> startProcess(String processKey, T object, boolean log) {
+	public <T extends HasProcess<T>> Process<?> startProcess(String processKey, T object, boolean log) {
 		return startProcess(serverUrl, processKey, object, log);
 	}
-	public <T extends HasProcess<T, ?>> Process<?, ?> startProcess(String serverUrl, String processKey, T object, boolean log) {
+	public <T extends HasProcess<T>> Process<?> startProcess(String serverUrl, String processKey, T object, boolean log) {
 long startTime = System.currentTimeMillis();
 String _f = null;
 String msg = null;
@@ -60,7 +60,7 @@ String prefix = CampRest.ProcessControl.Prefix;
 String serviceUri = CampRest.ProcessControlDaoService.callRequest(prefix,CampRest.ProcessControlDaoService.Request.START_PROCESS);
 String uri = serverUrl+domainUri+String.format(serviceUri,processKey);
 String result = RestInterface.resultPost(uri, json, log);
-Process<?,?> p = ProcessInterface._fromJson(result);
+Process<?> p = ProcessInterface._fromJson(result);
 
 if(log && !Util._IN_PRODUCTION) {
 	String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
@@ -70,10 +70,10 @@ return p;
 	}
 
 	@Override
-	public <T extends HasProcess<T, ?>> void messageProcess(Enum<?> messageType, Enum<?> messageName, T object, boolean log) {
+	public <T extends HasProcess<T>> void messageProcess(Enum<?> messageType, Enum<?> messageName, T object, boolean log) {
 		_messageProcess(serverUrl, messageType, messageName, object, log);
 	}
-	public <T extends HasProcess<T, ?>> void _messageProcess(String serverUrl, Enum<?> messageType, Enum<?> messageName, T object, boolean log) {
+	public <T extends HasProcess<T>> void _messageProcess(String serverUrl, Enum<?> messageType, Enum<?> messageName, T object, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -95,10 +95,10 @@ return p;
 	}
 
 	@Override
-	public <T extends HasProcess<T, ?>> void messageProcess(String processInstanceId, Enum<?> messageType, Enum<?> messageName, T object, boolean log) {
+	public <T extends HasProcess<T>> void messageProcess(String processInstanceId, Enum<?> messageType, Enum<?> messageName, T object, boolean log) {
 		_messageProcess(serverUrl, processInstanceId, messageType, messageName, object, log);
 	}
-	public <T extends HasProcess<T, ?>> void _messageProcess(String serverUrl, String processInstanceId, Enum<?> messageType, Enum<?> messageName, T object, boolean log) {
+	public <T extends HasProcess<T>> void _messageProcess(String serverUrl, String processInstanceId, Enum<?> messageType, Enum<?> messageName, T object, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -120,10 +120,10 @@ return p;
 	}
 
 	@Override
-	public <T extends HasProcess<T, ?>> void messageProcess(String processInstanceId, Enum<?> messageName, String businessKey, String objectStatus, String objectBusinessId, int objectId, boolean log) {
+	public <T extends HasProcess<T>> void messageProcess(String processInstanceId, Enum<?> messageName, String businessKey, String objectStatus, String objectBusinessId, int objectId, boolean log) {
 		_messageProcess(serverUrl, processInstanceId, messageName, businessKey, objectStatus, objectBusinessId, objectId, log);
 	}
-	public <T extends HasProcess<T, ?>> void _messageProcess(String serverUrl, String processInstanceId, Enum<?> messageName, String businessKey, String objectStatus, String objectBusinessId, int objectId, boolean log) {
+	public <T extends HasProcess<T>> void _messageProcess(String serverUrl, String processInstanceId, Enum<?> messageName, String businessKey, String objectStatus, String objectBusinessId, int objectId, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;

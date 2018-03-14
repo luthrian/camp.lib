@@ -29,7 +29,7 @@ import com.camsolute.code.camp.lib.models.rest.VariableValue.VariableValueType;
 import com.camsolute.code.camp.lib.utilities.Util;
 
 
-public class ProcessStartRequest<T extends HasProcess<T,?>> extends Request<T> {
+public class ProcessStartRequest<T extends HasProcess<T>> extends Request<T> {
 
 	private boolean skipCustomListeners = false;
 	private boolean skipIoMappings = false;

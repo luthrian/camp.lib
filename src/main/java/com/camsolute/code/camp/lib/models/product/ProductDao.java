@@ -42,7 +42,6 @@ import com.camsolute.code.camp.lib.models.CampStatesInterface.IOAction;
 import com.camsolute.code.camp.lib.models.process.Process;
 import com.camsolute.code.camp.lib.models.process.ProcessDao;
 import com.camsolute.code.camp.lib.models.process.ProcessList;
-import com.camsolute.code.camp.lib.models.process.ProductProcess;
 import com.camsolute.code.camp.lib.models.product.Product.Status;
 import com.camsolute.code.camp.lib.utilities.Util;
 
@@ -216,6 +215,7 @@ public class ProductDao implements ProductDaoInterface {
 			
 			String SQL = "SELECT * FROM "+table+" AS t, "+CampInstanceDao.table+" AS ci WHERE "
 					+ "t.`product_businesskey`='"+businessKey+"'"
+					+ " AND t.`product_group`=ci.`_group_name`"
 					+ " AND ci.`_instance_id`=ci.`_current_instance_id`"
 					+ " AND t.`"+tabledef[0][0]+"`=ci.`_object_id`"
 					+ " ORDER BY t.`"+tabledef[0][0]+"` ASC ";
@@ -274,6 +274,7 @@ public class ProductDao implements ProductDaoInterface {
 			
 			String SQL = "SELECT * FROM "+table+" AS t, "+CampInstanceDao.table+" AS ci WHERE "
 					+ "ci.`_group_name`='"+group+"'"
+					+ " AND t.`product_group`=ci.`_group_name`"
 					+ " AND ci.`_instance_id`=ci.`_current_instance_id`"
 					+ " AND t.`"+tabledef[0][0]+"`=ci.`_object_id`"
 					+ " ORDER BY t.`"+tabledef[0][0]+"` ASC ";
@@ -332,6 +333,7 @@ public class ProductDao implements ProductDaoInterface {
 			
 			String SQL = "SELECT * FROM "+table+" AS t, "+CampInstanceDao.table+" AS ci WHERE "
 					+ "ci.`_group_name`='"+group+"'"
+					+ " AND t.`product_group`=ci.`_group_name`"
 					+ " AND ci.`_version_value`='"+version+"'"
 					+ " AND ci.`_instance_id`=ci.`_current_instance_id`"
 					+ " AND t.`"+tabledef[0][0]+"`=ci.`_object_id`"
@@ -422,7 +424,6 @@ public class ProductDao implements ProductDaoInterface {
 		return p;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public <E extends ArrayList<Product>> E saveList(E pl, boolean log) {
 		long startTime = System.currentTimeMillis();
@@ -622,6 +623,7 @@ public class ProductDao implements ProductDaoInterface {
 			
 			String SQL = "SELECT * FROM "+table+" AS t, "+CampInstanceDao.table+" AS ci WHERE "
 					+ "t.`"+tabledef[0][0]+"`=ci.`_object_id`"
+					+ " AND t.`product_group`=ci.`_group_name`"
 					+ " AND ci.`_instance_id`=ci.`_current_instance_id`"
 					+ " AND EXISTS "
 					+ "(SELECT * FROM "+updatestable+" AS u WHERE "
@@ -680,6 +682,7 @@ public class ProductDao implements ProductDaoInterface {
 			
 			String SQL = "SELECT * FROM "+table+" AS t, "+CampInstanceDao.table+" AS ci WHERE "
 					+ "t.`"+tabledef[0][0]+"`=ci.`_object_id`"
+					+ " AND t.`product_group`=ci.`_group_name`"
 					+ " AND ci.`_instance_id`=ci.`_current_instance_id`"
 					+ " AND EXISTS "
 					+ "(SELECT * FROM "+updatestable+" AS u WHERE "
@@ -738,6 +741,7 @@ public class ProductDao implements ProductDaoInterface {
 			
 			String SQL = "SELECT * FROM "+table+" AS t, "+CampInstanceDao.table+" AS ci WHERE "
 					+ "t.`"+tabledef[0][0]+"`=ci.`_object_id`"
+					+ " AND t.`product_group`=ci.`_group_name`"
 					+ " AND ci.`_instance_id`=ci.`_current_instance_id`"
 					+ " AND EXISTS "
 					+ "(SELECT * FROM "+updatestable+" AS u WHERE "
@@ -775,6 +779,71 @@ public class ProductDao implements ProductDaoInterface {
 	}
 
 	@Override
+	public Product loadUpdate(String businessId, int modelId, String businessKey, String target, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[loadUpdate]";
+			msg = "====[ load a product object instance registered in the udpates table ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		Product lp = null;
+		Connection conn = null;
+		ResultSet rs = null;
+		Statement dbs = null;
+		int retVal = 0;
+		try{
+			conn = Util.DB.__conn(log);
+			
+			dbs = conn.createStatement();
+			
+			String SQL = "SELECT * FROM "+table+" AS t, "+CampInstanceDao.table+" AS ci WHERE "
+					+ "t.`product_name`='"+businessId+"' "
+					+ " AND t.`product_businesskey`='"+businessKey+"' "
+					+ " AND t.`"+tabledef[0][0]+"`=ci.`_object_id`"
+					+ " AND t.`product_group`=ci.`_group_name`"
+					+ " AND EXISTS "
+					+ "(SELECT * FROM "+updatestable+" AS u WHERE "
+					+ "u.`_product_name`='"+businessId+"'"
+					+ " AND u.`_model_id`='"+modelId+"'"
+					+ " AND u.`_product_businesskey`='"+businessKey+"'"
+					+ " AND u.`_product_target`='"+target+"'"
+					+ " AND u.`_product_name`=t.`product_name`"
+					+ " AND u.`_product_businesskey`=t.`product_businesskey`)";
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
+			
+			rs = dbs.executeQuery(SQL);
+			if (rs.next()) {		
+				lp = rsToI(rs,log);
+				lp.setHistory(CampInstanceDao.instance().rsToI(rs, log));
+				retVal = 1;
+			} else {
+				if(log && !Util._IN_PRODUCTION){msg = "----[SQL ERROR! loadUpdate FAILED]----";LOG.info(String.format(fmt, _f,msg));}
+			}
+			
+//			loadProcesses(lp,log);
+//			loadAttributes(lp,log);
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
+			
+		} catch(SQLException e) {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
+			e.printStackTrace();
+		} finally {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ releasing connection]----";LOG.info(String.format(fmt, _f,msg));}
+			Util.DB.__release(conn,log);
+			Util.DB._releaseRS(rs, log);
+			Util.DB._releaseStatement(dbs, log);
+		}
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[loadUpdate completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return lp;
+	}
+	
+	@Override
 	public Product loadUpdate(Product p, String businessKey, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
@@ -800,6 +869,7 @@ public class ProductDao implements ProductDaoInterface {
 					+ " AND EXISTS "
 					+ "(SELECT * FROM "+updatestable+" AS u WHERE "
 					+ "u.`_product_name`='"+p.onlyBusinessId()+"'"
+					+ " AND u.`_model_id`='"+p.modelId()+"'"
 					+ " AND u.`_product_businesskey`='"+p.businessKey()+"'"
 					+ " AND u.`_product_target`='"+target+"'"
 					+ " AND u.`_product_name`=t.`product_name`"
@@ -834,7 +904,54 @@ public class ProductDao implements ProductDaoInterface {
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[loadUpdate completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
-		return p;
+		return lp;
+	}
+	
+	@Override
+	public int addToUpdates(String businessId, int modelId, String businessKey, String target, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[addToUpdates]";
+			msg = "====[ register a product object instance in the udpates tables ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		Connection conn = null;
+		ResultSet rs = null;
+		Statement dbs = null;
+		int retVal = 0;
+		try{
+			conn = Util.DB.__conn(log);
+			
+			dbs = conn.createStatement();
+			
+			String SQL = "INSERT INTO " + updatestable + "( " + Util.DB._columns(updatestabledef, Util.DB.dbActionType.INSERT, log)
+			+ " ) VALUES ( " +"'"+businessId+"',"
+			+ modelId+","
+			+ "'"+businessKey+"',"
+			+ "'"+target+"',"
+			+ "'"+Util.Time.timeStampString()+"'" + " )";
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
+			
+			retVal = dbs.executeUpdate(SQL);
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
+			
+		} catch(SQLException e) {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
+			e.printStackTrace();
+		} finally {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ releasing connection]----";LOG.info(String.format(fmt, _f,msg));}
+			Util.DB.__release(conn,log);
+			Util.DB._releaseRS(rs, log);
+			Util.DB._releaseStatement(dbs, log);
+		}
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[addToUpdates completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return retVal;
 	}
 
 	@Override
@@ -1063,6 +1180,12 @@ public class ProductDao implements ProductDaoInterface {
 			_f = "[deleteFromUpdates]";
 			msg = "====[ deregister a product object instance from the updates table ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
+		String[] ids = businessId.split(Util.DB._VS);
+		if(ids.length < 2) {
+			if(!Util._IN_PRODUCTION){msg = "----[PARAMETER FORMAT ERROR! business id must have the format <product.onlyBusinessId>"+Util.DB._VS+"<product.modelId>]----";LOG.info(String.format(fmt, _f,msg));}
+			return 0;
+		}
+
 		Connection conn = null;
 		ResultSet rs = null;
 		Statement dbs = null;
@@ -1073,7 +1196,8 @@ public class ProductDao implements ProductDaoInterface {
 			dbs = conn.createStatement();
 			
 			String SQL = "DELETE FROM "+updatestable+" WHERE "
-					+ "`_product_name`='"+businessId+"'"
+					+ "`_product_name`='"+ids[0]+"'"
+					+ " AND `_model_id`='"+ids[1]+"'"
 					+ " AND `_product_businesskey`='"+businessKey+"'"
 					+ " AND `_product_target`='"+target+"'";
 			
@@ -1194,7 +1318,7 @@ public class ProductDao implements ProductDaoInterface {
 	@Override
 	public String insertUpdateValues(Product p, String target) {
 		String values = 
-				  "'"+p.onlyBusinessId()+"',"
+"'"+p.onlyBusinessId()+"',"
 				+ p.modelId()+","
 				+ "'"+p.businessKey()+"',"
 				+ "'"+target+"',"
@@ -1445,7 +1569,7 @@ public class ProductDao implements ProductDaoInterface {
 			
 			dbs = conn.createStatement();
 			
-			String SQL = "INSERT INTO " + table + "( " + Util.DB._columns(tabledef, Util.DB.dbActionType.INSERT, log)
+			String SQL = "INSERT INTO " + phptable + "( " + Util.DB._columns(phptabledef, Util.DB.dbActionType.INSERT, log)
 			+ " ) VALUES ( '"+businessId+"','"+instanceId+"','"+processKey+"')";;
 			
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
@@ -1476,7 +1600,7 @@ public class ProductDao implements ProductDaoInterface {
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[addProcessReferences]";
-			msg = "====[ register all associated processes in the reference database table ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ register all "+pl.size()+" associated processes in the reference database table ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		if(pl.size() <1) return 0;
 		Connection conn = null;
@@ -1513,7 +1637,6 @@ public class ProductDao implements ProductDaoInterface {
 		return retVal;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public ProcessList loadProcessReferences(String businessId, boolean log) {
 		long startTime = System.currentTimeMillis();
@@ -1541,7 +1664,7 @@ public class ProductDao implements ProductDaoInterface {
 			
 			rs = dbs.executeQuery(SQL);		
 			while (rs.next()) {		
-				Process<Product,ProductProcess> pr = ProcessDao.instance().rsToI(rs, log);
+				Process<Product> pr = ProcessDao.instance().rsToI(rs, log);
 				pr.states().ioAction(IOAction.LOAD);
 				pl.add(pr);
 			}
@@ -1672,14 +1795,14 @@ public class ProductDao implements ProductDaoInterface {
 			+ " `_php_product_business_id`='"+businessId+"'";
 			
 			boolean start = true;
-			for(Process<?,?>p:pl) {
+			for(Process<?>p:pl) {
 				if(!start) {
 					SQL += " OR";
 				} else {
 					SQL += " AND";
 					start = false;
 				}
-				SQL += " (`_php_process_instance_id`='"+p.instanceId()+"' AND `_php_process_key`='"+p.businessKey()+"')";
+				SQL += " (`_php_process_instance_id`='"+p.instanceId()+"' AND `_php_processkey`='"+p.businessKey()+"')";
 			}
 
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
@@ -1721,7 +1844,7 @@ public class ProductDao implements ProductDaoInterface {
 			
 			dbs = conn.createStatement();
 			
-			String SQL = "INSERT INTO " + table + "( " + Util.DB._columns(tabledef, Util.DB.dbActionType.INSERT, log)
+			String SQL = "INSERT INTO " + phmtable + "( " + Util.DB._columns(phmtabledef, Util.DB.dbActionType.INSERT, log)
 			+ " ) VALUES ( '"+businessId+"',"+modelId+" )";;
 			
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
@@ -2063,7 +2186,7 @@ public class ProductDao implements ProductDaoInterface {
 	public String insertProcessReferenceValues(String businessId, ProcessList pl, boolean log) {
 		String values = "";
 		boolean start = true;
-		for(Process<?,?> pr:pl){
+		for(Process<?> pr:pl){
 			if(!pr.states().isModified()) continue;
 			if(!start) {
 				values += ",";

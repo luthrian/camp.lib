@@ -62,8 +62,15 @@ public interface ModelInterface extends HasModelLifeCycle, HasProduct, IsObjectI
 
   public static String _toJson(Model m) {
     String json = "{";
-    json += "\"id\":" + m.id() + "\",";
-    json += "\"productId\":" + m.productId() + "\",";
+    json += _toInnerJson(m);
+    json += "}";
+    return json;
+  }
+  
+  public static String _toInnerJson(Model m) {
+  	String json = "";
+    json += "\"id\":" + m.id() + ",";
+    json += "\"productId\":" + m.productId() + ",";
     json += "\"name\":\""+m.name()+"\",";
     json += "\"businessKey\":\""+m.businessKey()+"\",";
     json += "\"version\":\"" + m.version().value() + "\",";
@@ -71,10 +78,9 @@ public interface ModelInterface extends HasModelLifeCycle, HasProduct, IsObjectI
     json += "\"end of life\":\"" + m.endOfLife() + "\",";
     json += "\"status\":\""+m.status().name()+"\",";
     json += "\"previousStatus\":\""+m.previousStatus().name()+"\",";
-    json += "\"history\":\"" + m.history().toJson()+ ",";
+    json += "\"history\":" + m.history().toJson()+ ",";
     json += "\"states\":" + m.states().toJson();
-    json += "}";
-    return json;
+  	return json;
   }
   
   public static Model _fromJson(String json) {
@@ -84,22 +90,18 @@ public interface ModelInterface extends HasModelLifeCycle, HasProduct, IsObjectI
   public static Model _fromJSONObject(JSONObject jo) {
 		int id = 0;
 		if(jo.has("id")) id = jo.getInt("id");
-  	int productId = jo.getInt("productId");
-  	String name = jo.getString("name");
-  	String businessKey = jo.getString("businessKey");
-  	Version version = new Version(jo.getString("version"));
-  	Group group = new Group(jo.getString("group"));
-  	Timestamp releaseDate = Util.Time.timestamp(jo.getString("releaseDate"));
-  	Timestamp endOfLife = Util.Time.timestamp(jo.getString("endOfLife"));
-  	CampInstance history = CampInstanceInterface._fromJSONObject(jo.getJSONObject("history"));
-  	CampStates states = CampStatesInterface._fromJSONObject(jo.getJSONObject("states"));
-  	Model m = new Model(id, name, releaseDate, endOfLife, version, group);
-  	m.states().update(states);
-    m.setStatus(Enum.valueOf(Model.Status.class, jo.getString("status")));
-    m.setPreviousStatus(Enum.valueOf(Model.Status.class, jo.getString("previousStatus")));
-  	m.setHistory(history);
-  	m.setBusinessKey(businessKey);
-  	m.setProductId(productId);
+  	Model m = new Model(jo.getString("name"));
+  	m.updateId(id);
+  	if(jo.has("version")) m.setVersion(new Version(jo.getString("version")));
+  	if(jo.has("group")) m.setGroup(new Group(jo.getString("group")));
+  	if(jo.has("releaseDate")) m.setReleaseDate(Util.Time.timestamp(jo.getString("releaseDate")));
+  	if(jo.has("endOfLife")) m.setEndOfLife(Util.Time.timestamp(jo.getString("endOfLife")));
+  	if(jo.has("history")) m.setHistory(CampInstanceInterface._fromJSONObject(jo.getJSONObject("history")));
+  	if(jo.has("states")) m.states().update(CampStatesInterface._fromJSONObject(jo.getJSONObject("states")));
+  	if(jo.has("status"))  m.setStatus(Enum.valueOf(Model.Status.class, jo.getString("status")));
+  	if(jo.has("previousStatus")) m.setPreviousStatus(Enum.valueOf(Model.Status.class, jo.getString("previousStatus")));
+  	if(jo.has("businessKey")) m.setBusinessKey(jo.getString("businessKey"));
+  	if(jo.has("productId")) m.setProductId(jo.getInt("productId"));
   	return m;
   }
 }

@@ -21,7 +21,8 @@ package com.camsolute.code.camp.lib.models.process;
 
 import com.camsolute.code.camp.lib.models.product.Product;
 
-public class ProductProcess extends Process<Product,ProductProcess> implements ProductProcessInterface{
+//public class ProductProcess extends Process<Product,ProductProcess> {
+public class ProductProcess extends Process<Product> {
 	public ProductProcess(String instanceId, String businessKey, String processName, String definitionId, String tenantId, String caseInstanceId, boolean ended, boolean suspended, ProcessType type) {
 		super(instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, type);
 	}
@@ -38,15 +39,4 @@ public class ProductProcess extends Process<Product,ProductProcess> implements P
 		super(id, executionId, instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, type);
 	}
 
-	@Override
-	public void notify(Product observed) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void notify(Product observed, Enum<?> event) {
-		// TODO Auto-generated method stub
-		
-	}
 }

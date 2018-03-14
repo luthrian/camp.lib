@@ -19,12 +19,16 @@
  ******************************************************************************/
 package com.camsolute.code.camp.lib.models;
 
+import java.sql.Timestamp;
+
 import com.camsolute.code.camp.lib.dao.DaoInterface;
 import com.camsolute.code.camp.lib.dao.InstanceDaoInterface;
 import com.camsolute.code.camp.lib.dao.database.DBDaoInterface;
 
 public interface ModelDaoInterface extends InstanceDaoInterface<Model>, DaoInterface<Model>, DBDaoInterface<Model> {
 
+	public Model create(String businessId, Timestamp releaseDate, Timestamp endOfLife, String businessKey, Version version, Group group, boolean log);
+	
 	public Model loadFirst(String businessId);
 
 	public Model loadPrevious(Model model);

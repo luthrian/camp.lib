@@ -49,10 +49,10 @@ public interface ProcessServicePointInterface {
 	public String saveList(String processList);
 
 
-	public int update(String process);
+	public String update(String process);
 
 
-	public int updateList(String processList);
+	public String updateList(String processList);
 
 
 	public String loadUpdates(String businessKey, String target);
@@ -67,23 +67,23 @@ public interface ProcessServicePointInterface {
 	public String loadUpdate(String instanceId, String businessId, String businessKey, String target);
 
 
-	public int addToUpdates(String instanceId, String businessId, String businessKey, String target);
+	public String addToUpdates(String instanceId, String businessId, String businessKey, String target);
 
 
-	public int addToUpdates(String processList, String businessKey, String target);
+	public String addToUpdates(String processList, String businessKey, String target);
 
 
-	public int deleteAllFromUpdates(String businessKey, String target);
+	public String deleteAllFromUpdates(String businessKey, String target);
 
 
-	public int deleteFromUpdatesByKey(String businessKey);
+	public String deleteFromUpdatesByKey(String businessKey);
 
-	public int deleteFromUpdatesByTarget(String target);
+	public String deleteFromUpdatesByTarget(String target);
 
-	public int deleteFromUpdates(String instanceId, String businessId, String businessKey, String target);
+	public String deleteFromUpdates(String instanceId, String businessId, String businessKey, String target);
 
 
-	public int deleteFromUpdates(String processList, String businessKey, String target);
+	public String deleteFromUpdates(String processList, String businessKey, String target);
 
 
 }

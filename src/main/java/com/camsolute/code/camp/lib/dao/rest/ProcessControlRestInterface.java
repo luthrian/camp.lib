@@ -28,13 +28,13 @@ import com.camsolute.code.camp.lib.models.process.ProcessList;
 
 public interface ProcessControlRestInterface {
 
-	public <T extends HasProcess<T,?>> Process<?,?> startProcess(String processKey, T object, boolean log);
+	public <T extends HasProcess<T>> Process<?> startProcess(String processKey, T object, boolean log);
 	
-	public <T extends HasProcess<T,?>> void messageProcess(Enum<?> messageType, Enum<?> messageName, T object, boolean log);
+	public <T extends HasProcess<T>> void messageProcess(Enum<?> messageType, Enum<?> messageName, T object, boolean log);
 	
-	public <T extends HasProcess<T,?>> void messageProcess(String processInstanceId, Enum<?> messageType, Enum<?> messageName, T object, boolean log);
+	public <T extends HasProcess<T>> void messageProcess(String processInstanceId, Enum<?> messageType, Enum<?> messageName, T object, boolean log);
 	
-	public <T extends HasProcess<T,?>> void messageProcess(String processInstanceId, Enum<?> messageName, String businessKey, String objectStatus, String objectBusinessId, int objectId, boolean log);
+	public <T extends HasProcess<T>> void messageProcess(String processInstanceId, Enum<?> messageName, String businessKey, String objectStatus, String objectBusinessId, int objectId, boolean log);
 	
 	public void triggerMessageEvent(String processInstanceId, String businessKey, Enum<?> messageName, Variables variables, boolean log);
 	

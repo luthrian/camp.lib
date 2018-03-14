@@ -25,7 +25,7 @@ import com.camsolute.code.camp.lib.dao.InstanceDaoInterface;
 import com.camsolute.code.camp.lib.dao.database.DBDaoInterface;
 import com.camsolute.code.camp.lib.models.process.ProcessList;
 
-public interface OrderPositionDaoInterface extends HasProcessReference<OrderPosition>,InstanceDaoInterface<OrderPosition>, DaoInterface<OrderPosition> , DBDaoInterface<OrderPosition>{
+public interface OrderPositionDaoInterface extends HasProcessReference,InstanceDaoInterface<OrderPosition>, DaoInterface<OrderPosition> , DBDaoInterface<OrderPosition>{
 	
 //	public int addProcessReferences(OrderPosition op, boolean log);
 //
