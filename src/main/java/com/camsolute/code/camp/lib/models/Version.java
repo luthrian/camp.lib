@@ -19,7 +19,7 @@
  ******************************************************************************/
 package com.camsolute.code.camp.lib.models;
 
-import org.apache.commons.lang.StringUtils;
+//import org.apache.commons.lang.StringUtils;
 import com.camsolute.code.camp.lib.data.CampFormats;
 
 public class Version {
@@ -39,9 +39,11 @@ public class Version {
 		if(version == null || version.isEmpty()) {
 			version = CampFormats.defaultVersion;
 		}
-		String[] digits = StringUtils.split(version,CampFormats.defaultDecimalPoint);
+//		String[] digits = StringUtils.split(version,CampFormats.defaultDecimalPoint);
+		String[] digits = version.split(CampFormats.defaultDecimalPoint);
 		if(digits.length < 2){
-			digits = StringUtils.split(version,CampFormats.defaultDecimalPoint2);
+//			digits = StringUtils.split(version,CampFormats.defaultDecimalPoint2);
+			digits = version.split(CampFormats.defaultDecimalPoint2);
 		}
 		int maj = Integer.parseInt(digits[0]);
 		int min = Integer.parseInt(digits[1]);

@@ -43,17 +43,17 @@ public class ProductAttributeProcessMessage extends Message{
 		ProductAttributeProcess<?> p = (ProductAttributeProcess<?>) a.processInstances().get(0);
 		this.tenantId = p.tenantId();
 		this.processInstanceId = p.instanceId();
-		this.correlationKeys.variables().put("objectId", new VariableValue(String.valueOf(a.attributeId()), VariableValueType.valueOf("Integer"),false));
-		this.processVariables.variables().put("objectStatus",new VariableValue(a.status().name(), VariableValueType.valueOf("String"),false));
+		this.correlationKeys.variables().put("objectId", new VariableValue(String.valueOf(a.attributeId()), VariableValueType.Integer,false));
+		this.processVariables.variables().put("objectStatus",new VariableValue(a.status().name(), VariableValueType.String,false));
 	}
 	
 	public ProductAttributeProcessMessage(ProductAttributeMessage messageName, String status, String attributeBusinessId, int attributeId, String businessKey) {
 		super(messageName.name(),businessKey);
-		this.correlationKeys.variables().put("objectBusinessId", new VariableValue(attributeBusinessId,VariableValueType.valueOf("String")));
-		this.correlationKeys.variables().put("objectId", new VariableValue(String.valueOf(attributeId),VariableValueType.valueOf("Integer")));
-		this.processVariables.variables().put("objectBusinessId", new VariableValue(attributeBusinessId,VariableValueType.valueOf("String")));
-		this.processVariables.variables().put("objectId", new VariableValue(String.valueOf(attributeId),VariableValueType.valueOf("Integer")));
-		this.processVariables.variables().put("objectStatus",new VariableValue(status, VariableValueType.valueOf("String")));
+		this.correlationKeys.variables().put("objectBusinessId", new VariableValue(attributeBusinessId,VariableValueType.String));
+		this.correlationKeys.variables().put("objectId", new VariableValue(String.valueOf(attributeId),VariableValueType.Integer));
+		this.processVariables.variables().put("objectBusinessId", new VariableValue(attributeBusinessId,VariableValueType.String));
+		this.processVariables.variables().put("objectId", new VariableValue(String.valueOf(attributeId),VariableValueType.Integer));
+		this.processVariables.variables().put("objectStatus",new VariableValue(status, VariableValueType.String));
 	}
 
 	public ProductAttributeMessage message() {

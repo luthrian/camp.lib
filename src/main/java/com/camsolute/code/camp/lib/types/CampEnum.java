@@ -19,7 +19,7 @@
  ******************************************************************************/
 package com.camsolute.code.camp.lib.types;
 
-import org.apache.commons.lang3.StringUtils;
+//import org.apache.commons.lang3.StringUtils;
 
 import com.camsolute.code.camp.lib.models.Attribute;
 import com.camsolute.code.camp.lib.models.AttributeInterface;
@@ -118,7 +118,8 @@ public class CampEnum extends Attribute<EnumValue>{
 	}
 	
 	public static CampEnum fromString(String e) {
-		String[] vs = StringUtils.split(e, "|");
+//		String[] vs = StringUtils.split(e, "|");
+		String[] vs = e.split("|");
 		if(vs.length<3) {
 			try {
 				throw new Exception("String CampEnum must declare a selected value: '<<attribute name>|value 1, value 2,...,value n>|<selected value>' !");

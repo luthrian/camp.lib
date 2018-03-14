@@ -43,11 +43,11 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import org.apache.commons.lang.StringUtils;
+/*import org.apache.commons.lang.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.annotation.JsonCreator;
-
+*/
 import com.camsolute.code.camp.lib.types.*;
 import com.camsolute.code.camp.lib.contract.IsObjectInstance;
 import com.camsolute.code.camp.lib.models.Attribute;
@@ -604,7 +604,7 @@ public abstract  class Attribute<U extends Value<?>> implements AttributeInterfa
     _palist,
     _token,
     _process;
-    private static Map<String, AttributeType> namesMap = new HashMap<String, AttributeType>(17);
+/*    private static Map<String, AttributeType> namesMap = new HashMap<String, AttributeType>(17);
 
     static {
         namesMap.put("integer",_integer);
@@ -638,7 +638,7 @@ public abstract  class Attribute<U extends Value<?>> implements AttributeInterfa
         }
         return null;
     }
-  }
+ */ }
 
   public static EnumMap<AttributeType, String[]> attributeMatrix = null;
 
@@ -668,7 +668,7 @@ public abstract  class Attribute<U extends Value<?>> implements AttributeInterfa
     _complex,
     _table,
     _list;
-    private static Map<String, AttributeContainerType> namesMap = new HashMap<String, AttributeContainerType>(4);
+/*    private static Map<String, AttributeContainerType> namesMap = new HashMap<String, AttributeContainerType>(4);
 
     static {
         namesMap.put("product",_product);
@@ -689,12 +689,12 @@ public abstract  class Attribute<U extends Value<?>> implements AttributeInterfa
         }
         return null;
     }
-  }
+*/  }
 
   public static enum DaoEndpoint {
     _database,
     _rest_service;
-    private static Map<String, DaoEndpoint> namesMap = new HashMap<String, DaoEndpoint>(2);
+/*    private static Map<String, DaoEndpoint> namesMap = new HashMap<String, DaoEndpoint>(2);
 
     static {
         namesMap.put("database",_database);
@@ -713,7 +713,7 @@ public abstract  class Attribute<U extends Value<?>> implements AttributeInterfa
         }
         return null;
     }
-  }
+*/  }
 
 
   public static enum AttributeStatus {

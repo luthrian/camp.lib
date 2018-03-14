@@ -22,12 +22,9 @@ package com.camsolute.code.camp.lib.models.rest;
 import org.json.JSONObject;
 
 import com.camsolute.code.camp.lib.contract.Serialization;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class VariableValue implements Serialization<VariableValue>{
-	@JsonIgnore
 	public static final String _F = "["+VariableValue.class.getSimpleName()+"]";
-	@JsonIgnore
 	public static final boolean _DEBUG = false;
 	
 	public static enum VariableValueType {
