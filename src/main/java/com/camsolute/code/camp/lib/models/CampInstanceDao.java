@@ -596,7 +596,7 @@ public class CampInstanceDao implements CampInstanceDaoInterface,HasResultSetToI
 			}
 			String select = " AND ci.`_timestamp` LIKE '"+date+"%'"
 						+ " AND ci.`_instance_id`=ci.`_initial_instance_id`"
-						+ " AND ci.`"+dao.tabledef(primary)[0][0]+"`=h.`_object_id`";
+						+ " AND t.`"+dao.tabledef(primary)[0][0]+"`=ci.`_object_id`";
 			E o = (E)dao.instanceListLoad(select,primary,log);
 
 			if(log && !Util._IN_PRODUCTION) {
