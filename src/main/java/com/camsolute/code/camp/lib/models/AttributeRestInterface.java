@@ -19,11 +19,13 @@
  ******************************************************************************/
 package com.camsolute.code.camp.lib.models;
 
+import com.camsolute.code.camp.lib.models.Value;
 import com.camsolute.code.camp.lib.dao.DaoInterface;
 import com.camsolute.code.camp.lib.dao.HasProcessReference;
 import com.camsolute.code.camp.lib.models.Attribute.AttributeType;
 
-public interface AttributeRestInterface extends HasProcessReference,DaoInterface<Attribute<?>> {
+//public interface AttributeRestInterface extends HasProcessReference, DaoInterface<Attribute<? extends Value<?>>> {
+public interface AttributeRestInterface extends HasProcessReference, DaoInterface<Attribute<? extends Value<?>>> {
 	
     public int delete(int id, boolean log);
 
@@ -45,21 +47,21 @@ public interface AttributeRestInterface extends HasProcessReference,DaoInterface
     
     // VALUE ASPECTS
 
-    public Attribute<?> save(int objectId, Attribute<?> attribute, boolean log);
+    public Attribute<? extends Value<?>> save(int objectId, Attribute<? extends Value<?>> attribute, boolean log);
 
     public AttributeList saveList(int objectId, AttributeList attributeList, boolean log);
 
-    public int update(int objctId, Attribute<?> attribute, boolean log);
+    public int update(int objctId, Attribute<? extends Value<?>> attribute, boolean log);
 
     public int updateList(int objctId, AttributeList attributeList, boolean log);
 
     public int delete(int objectId, int attributeId, int valueId, AttributeType type, boolean log);
 
-    public int delete(int objectId, Attribute<?> attribute, boolean log);
+    public int delete(int objectId, Attribute<? extends Value<?>> attribute, boolean log);
 
     public int deleteList(int objectId, AttributeList attributeList, boolean log);
 
-    public Attribute<?> load(int objectId, Attribute<?> attribute, boolean log);
+    public Attribute<? extends Value<?>> load(int objectId, Attribute<? extends Value<?>> attribute, boolean log);
 
     public AttributeList loadByObjectId(AttributeList attributeList, int objectId, boolean log);
 

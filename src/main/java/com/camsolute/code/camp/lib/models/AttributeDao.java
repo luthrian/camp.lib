@@ -119,12 +119,12 @@ public class  AttributeDao implements AttributeDaoInterface{
      * @return <code>Attribute</code>
      */
     @Override
-    public Attribute<?> loadById(int id,boolean log) {
+    public Attribute<? extends Value<?>> loadById(int id,boolean log) {
       return _loadById(id, log);
     }
 
-    public static Attribute<?> _loadById(int id, boolean log) {
-      Attribute<?> at = _loadAttribute(String.format(loadByIdSQL, id), log);
+    public static Attribute<? extends Value<?>> _loadById(int id, boolean log) {
+      Attribute<? extends Value<?>> at = _loadAttribute(String.format(loadByIdSQL, id), log);
       at.states().ioAction(IOAction.LOAD);
       return at;
     }
@@ -137,12 +137,12 @@ public class  AttributeDao implements AttributeDaoInterface{
      * @return <code>Attribute</code> loaded
      */
     @Override
-    public Attribute<?> loadByBusinessId(String businessId,boolean log) {
+    public Attribute<? extends Value<?>> loadByBusinessId(String businessId,boolean log) {
       return _loadByBusinessId(businessId, !Util._IN_PRODUCTION);
     }
 
-    public static Attribute<?> _loadByBusinessId(String businessId, boolean log) {
-      Attribute<?> at = _loadAttribute(String.format(loadByNameSQL, businessId), log);
+    public static Attribute<? extends Value<?>> _loadByBusinessId(String businessId, boolean log) {
+      Attribute<? extends Value<?>> at = _loadAttribute(String.format(loadByNameSQL, businessId), log);
       at.states().ioAction(IOAction.LOAD);
       return at;
     }
@@ -162,7 +162,7 @@ public class  AttributeDao implements AttributeDaoInterface{
 
       public static AttributeList _loadListByBusinessKey(String businessKey, boolean log) {
         AttributeList al = _loadAttributeList(String.format(loadByKeySQL, businessKey), log);
-        for(Attribute<?> at:al) {
+        for(Attribute<? extends Value<?>> at:al) {
         	at.states().ioAction(IOAction.LOAD);
         }
         return al;
@@ -183,7 +183,7 @@ public class  AttributeDao implements AttributeDaoInterface{
 
       public static AttributeList _loadListByGroup(String group, boolean log) {
         AttributeList al = _loadAttributeList(String.format(loadListByGroupSQL, group), log);
-        for(Attribute<?> at:al) {
+        for(Attribute<? extends Value<?>> at:al) {
         	at.states().ioAction(IOAction.LOAD);
         }
         return al;
@@ -205,7 +205,7 @@ public class  AttributeDao implements AttributeDaoInterface{
 
       public static AttributeList _loadListByGroupVersion(String group, String version, boolean log) {
         AttributeList al = _loadAttributeList(String.format(loadListByGroupVersionSQL, group, version), log);
-        for(Attribute<?> at:al) {
+        for(Attribute<? extends Value<?>> at:al) {
         	at.states().ioAction(IOAction.LOAD);
         }
         return al;
@@ -221,7 +221,7 @@ public class  AttributeDao implements AttributeDaoInterface{
     public static AttributeList _loadList(boolean log) {
     	//TODO: should list result be assembled to the root attribute aspect here and a campMap returned instead of AttributeList
       AttributeList al = _loadAttributeList(loadAllSQL, log);
-      for(Attribute<?> at:al) {
+      for(Attribute<? extends Value<?>> at:al) {
       	at.states().ioAction(IOAction.LOAD);
       }
       return al;
@@ -236,7 +236,7 @@ public class  AttributeDao implements AttributeDaoInterface{
     public static AttributeList _loadList(AttributeType type, boolean log) {
     	//TODO: should list result be assembled to the root attribute aspect here and a campMap returned instead of AttributeList
       AttributeList al = _loadAttributeList(String.format(loadByTypeSQL, type.name()), log);
-      for(Attribute<?> at:al) {
+      for(Attribute<? extends Value<?>> at:al) {
       	at.states().ioAction(IOAction.LOAD);
       }
       return al;
@@ -244,11 +244,11 @@ public class  AttributeDao implements AttributeDaoInterface{
 
    
     @Override
-    public Attribute<?> create(int parentId, String name, AttributeType type, String businessId, String businessKey, String group, String version, String defaultValue) {
+    public Attribute<? extends Value<?>> create(int parentId, String name, AttributeType type, String businessId, String businessKey, String group, String version, String defaultValue) {
       return _create(parentId, name, type, businessId, businessKey, group, version, defaultValue, false);
     }
 
-    public static <X extends Value<?>> Attribute<?> _create(int pid, String name, AttributeType type, String businessId, String businessKey, String group, String version, String defaultValue, boolean log) {
+    public static <X extends Value<?>> Attribute<? extends Value<?>> _create(int pid, String name, AttributeType type, String businessId, String businessKey, String group, String version, String defaultValue, boolean log) {
       long startTime = System.currentTimeMillis();
       String _f = null;
       String msg = null;
@@ -343,11 +343,11 @@ public class  AttributeDao implements AttributeDaoInterface{
      * @return persisted <code>Attribute</code>  
      */
     @Override
-    public Attribute<?> save(Attribute<?> a, boolean log) {
+    public Attribute<? extends Value<?>> save(Attribute<? extends Value<?>> a, boolean log) {
       return _save(a, log);
     }
 
-    public static Attribute<?> _save(Attribute<?> a, boolean log) {
+    public static Attribute<? extends Value<?>> _save(Attribute<? extends Value<?>> a, boolean log) {
       long startTime = System.currentTimeMillis();
       String _f = null;
       String msg = null;
@@ -461,7 +461,7 @@ public class  AttributeDao implements AttributeDaoInterface{
      */
     @SuppressWarnings("unchecked")
 		@Override
-    public <E extends ArrayList<Attribute<?>>> E saveList(E attributeList, boolean log) {
+    public <E extends ArrayList<Attribute<? extends Value<?>>>> E saveList(E attributeList, boolean log) {
       return (E) _saveList((AttributeList)attributeList, log);
     }
 
@@ -510,14 +510,14 @@ public class  AttributeDao implements AttributeDaoInterface{
 
         while (rs.next()) {
 
-          Attribute<?> ct = attributeList.get(counter);
+          Attribute<? extends Value<?>> ct = attributeList.get(counter);
           ct.updateId( rs.getInt(tabledef[0][0])); // TODO: FIXME: is this safe (ie is saveList.get(counter) and rs.next() always in sync)
           counter++;
         }
 
         if (log && !Util._IN_PRODUCTION) { msg = "----[ '" + retVal + "' entr"+((retVal>1)?"ies":"y")+" saved ]----"; LOG.info(String.format(fmt, _f, msg)); }
 				
-        for(Attribute<?> a: attributeList) {
+        for(Attribute<? extends Value<?>> a: attributeList) {
         	boolean hasValue = (a.value() != null && a.value().value() != null);
           switch(a.attributeType()) {
           case _complex:
@@ -541,12 +541,12 @@ public class  AttributeDao implements AttributeDaoInterface{
           }
         }
 
-        for(Attribute<?> a: attributeList) {
+        for(Attribute<? extends Value<?>> a: attributeList) {
         	a.history().stamptime();
         }
         CampInstanceDao.instance()._addInstances(attributeList, false, log);
         
-        for(Attribute<?> a: attributeList) {
+        for(Attribute<? extends Value<?>> a: attributeList) {
         	a.states().ioAction(IOAction.SAVE);
         }
       } catch (Exception e) {
@@ -583,11 +583,11 @@ public class  AttributeDao implements AttributeDaoInterface{
      * @return the updated attribute
      */
     @Override
-    public Attribute<?> update(Attribute<?> attribute, boolean log) {
+    public Attribute<? extends Value<?>> update(Attribute<? extends Value<?>> attribute, boolean log) {
       return _update(attribute, log);
     }
 
-    public static Attribute<?> _update(Attribute<?> attribute, boolean log) {
+    public static Attribute<? extends Value<?>> _update(Attribute<? extends Value<?>> attribute, boolean log) {
       long startTime = System.currentTimeMillis();
       String _f = null;
       String msg = null;
@@ -683,7 +683,7 @@ public class  AttributeDao implements AttributeDaoInterface{
      */
     @SuppressWarnings("unchecked")
 		@Override
-    public <E extends ArrayList<Attribute<?>>> E updateList(E attributeList, boolean log) {
+    public <E extends ArrayList<Attribute<? extends Value<?>>>> E updateList(E attributeList, boolean log) {
       return (E) _updateList((AttributeList) attributeList, log);
     }
 
@@ -719,7 +719,7 @@ public class  AttributeDao implements AttributeDaoInterface{
 
         dbs = conn.createStatement();
 
-        for (Attribute<?> a : attributeList) {
+        for (Attribute<? extends Value<?>> a : attributeList) {
 
           String SQL = insertDefinitionUpdates(fSQL,a);
 
@@ -733,7 +733,7 @@ public class  AttributeDao implements AttributeDaoInterface{
 
         if (log && !Util._IN_PRODUCTION) { msg = "----[ '" + retVal + "' entr"+((retVal>1)?"ies":"y")+" updated ]----"; LOG.info(String.format(fmt, _f, msg)); }
 
-        for(Attribute<?> a: attributeList) {
+        for(Attribute<? extends Value<?>> a: attributeList) {
         	boolean hasValue = (a.value() != null && a.value().value() != null);
           int cretVal = 0;
           switch(a.attributeType()) {
@@ -759,12 +759,12 @@ public class  AttributeDao implements AttributeDaoInterface{
           if (log && !Util._IN_PRODUCTION) { msg = "----[ '" + cretVal + "' child attribute entr"+((cretVal>1)?"ies":"y")+" updated  ]----"; LOG.info(String.format(fmt, _f, msg)); }
         }
         
-        for(Attribute<?> a: attributeList) {
+        for(Attribute<? extends Value<?>> a: attributeList) {
         	a.history().stamptime();
         	a.history().updateInstance();
         }
         CampInstanceDao.instance()._addInstances(attributeList, false, log);
-        for(Attribute<?> a: attributeList) {
+        for(Attribute<? extends Value<?>> a: attributeList) {
         	a.states().ioAction(IOAction.UPDATE);//TODO: see notes why we put this in
         }
       } catch (Exception e) {
@@ -897,11 +897,11 @@ public class  AttributeDao implements AttributeDaoInterface{
     
     
     @Override
-    public int delete(Attribute<?> attribute) {
+    public int delete(Attribute<? extends Value<?>> attribute) {
       return _delete(attribute, !Util._IN_PRODUCTION);
     }
 
-    public static int _delete(Attribute<?> attribute, boolean log) {
+    public static int _delete(Attribute<? extends Value<?>> attribute, boolean log) {
       long startTime = System.currentTimeMillis();
       String _f = null;
       String msg = null;
@@ -1001,7 +1001,7 @@ public class  AttributeDao implements AttributeDaoInterface{
 
         dbs = conn.createStatement();
 
-        for (Attribute<?> a : atl) {
+        for (Attribute<? extends Value<?>> a : atl) {
           String SQL = "DELETE FROM " + table + " WHERE `"+tabledef[0][0]+"`=" + a.id();
 
           if (log && !Util._IN_PRODUCTION) { msg = "----[ SQL:" + SQL + "]----"; LOG.info(String.format(fmt, _f, msg)); }
@@ -1011,12 +1011,12 @@ public class  AttributeDao implements AttributeDaoInterface{
 
         retVal = Util.Math.addArray(dbs.executeBatch());
         
-        for(Attribute<?> a: atl) {// TODO: see notes
+        for(Attribute<? extends Value<?>> a: atl) {// TODO: see notes
         	a.states().ioAction(IOAction.DELETE);
         }
         if (log && !Util._IN_PRODUCTION) { msg = "----[ '" + retVal + "' entr"+((retVal>1)?"ies":"y")+" deleted ]----"; LOG.info(String.format(fmt, _f, msg)); }
 			
-        for(Attribute<?> attribute: atl) {
+        for(Attribute<? extends Value<?>> attribute: atl) {
         	boolean hasValue = (attribute.value() != null && attribute.value().value() != null);
           int cretVal = 0;
           switch(attribute.attributeType()) {
@@ -1134,9 +1134,9 @@ public class  AttributeDao implements AttributeDaoInterface{
     	//TODO: should list result be assembled to the root attribute aspect here and a campMap returned instead of AttributeList
     	AttributeMap r = new AttributeMap();
       AttributeList al = _loadAllAttributes(oid,log);
-      HashMap<Integer,Attribute<?>> t = new HashMap<Integer,Attribute<?>>();
+      HashMap<Integer,Attribute<? extends Value<?>>> t = new HashMap<Integer,Attribute<? extends Value<?>>>();
       // first pass add root attributes
-      for(Attribute<?> a:al) {
+      for(Attribute<? extends Value<?>> a:al) {
       	a.states().ioAction(IOAction.LOAD);
       	if(a.parentId() == 0 && a.attributeParentId() == 0) {
       		t.put(a.id(), a);
@@ -1144,36 +1144,36 @@ public class  AttributeDao implements AttributeDaoInterface{
       }
       // second pass sort in children
       for(int id: t.keySet()) {
-      	for(Attribute<?> a: al) {
+      	for(Attribute<? extends Value<?>> a: al) {
       		if(a.parentId()== id) {
       			switch(t.get(id).attributeType()) {
       			case _complex:
       				if(((CampComplex)t.get(id)).value().value() == null) {
-      					((CampComplex)t.get(id)).value().setValue(new HashMap<String,ArrayList<Attribute<?>>>());
+      					((CampComplex)t.get(id)).value().setValue(new HashMap<String,ArrayList<Attribute<? extends Value<?>>>>());
       				}
       				if(!((CampComplex)t.get(id)).value().value().containsKey(a.group().name())) {
-      					((CampComplex)t.get(id)).value().value().put(a.group().name(), new ArrayList<Attribute<?>>());
+      					((CampComplex)t.get(id)).value().value().put(a.group().name(), new ArrayList<Attribute<? extends Value<?>>>());
       				}
       				((CampComplex)t.get(id)).value().value().get(a.group().name()).add(a);//TODO think about sorting if need be else let display etc handle this 
       				break;
       			case _table://TODO: fix this make value ArrayList<CampList> CampList is a column and not a row see notes
       				if(((CampTable)t.get(id)).value().value()==null) {
-      					((CampTable)t.get(id)).value().setValue(new ArrayList<ArrayList<Attribute<?>>>());
+      					((CampTable)t.get(id)).value().setValue(new ArrayList<ArrayList<Attribute<? extends Value<?>>>>());
       				}
       				if(((CampTable)t.get(id)).value().value().get(a.value().position().posY()) == null) {
-      					((CampTable)t.get(id)).value().value().add(a.value().position().posY(),new ArrayList<Attribute<?>>());
+      					((CampTable)t.get(id)).value().value().add(a.value().position().posY(),new ArrayList<Attribute<? extends Value<?>>>());
       				}
       				((CampTable)t.get(id)).value().value().get(a.value().position().posY()).add(a);
       				break;      				
       			case _map:
       				if(((CampMap)t.get(id)).value().value() == null) {
-      					((CampMap)t.get(id)).value().setValue(new HashMap<String,Attribute<?>>());
+      					((CampMap)t.get(id)).value().setValue(new HashMap<String,Attribute<? extends Value<?>>>());
       				}
       				((CampMap)t.get(id)).value().value().put(a.group().name(),a); 
       				break;
       			case _list:
       				if(((CampList)t.get(id)).value().value()==null) {
-      					((CampList)t.get(id)).value().setValue(new ArrayList<Attribute<?>>());
+      					((CampList)t.get(id)).value().setValue(new ArrayList<Attribute<? extends Value<?>>>());
       				}
       				((CampList)t.get(id)).value().value().add(a);
       				break;
@@ -1204,7 +1204,7 @@ public class  AttributeDao implements AttributeDaoInterface{
     	String SQL = String.format(loadByGroupSQL, parentId, groupName);
     	if(log && !Util._IN_PRODUCTION){String msg = "----[SQL : "+SQL+"]----";LOG.info(String.format(fmt,"_loadGroup",msg));}
       AttributeList al = _loadAttributeList(SQL, log);
-      for(Attribute<?> at:al) {
+      for(Attribute<? extends Value<?>> at:al) {
       	at.states().ioAction(IOAction.LOAD);
       }
       return al;
@@ -1218,7 +1218,7 @@ public class  AttributeDao implements AttributeDaoInterface{
 
     public static AttributeList _loadAfterPosition(int id, int pos, boolean log) {
       AttributeList al = _loadAttributeList(String.format(loadByPosGTSQL, id, pos), log);
-      for(Attribute<?> at:al) {
+      for(Attribute<? extends Value<?>> at:al) {
       	at.states().ioAction(IOAction.LOAD);
       }
       return al;
@@ -1232,7 +1232,7 @@ public class  AttributeDao implements AttributeDaoInterface{
 
     public static AttributeList _loadRange(int id, int spos, int epos, boolean log) {
       AttributeList al = _loadAttributeList(String.format(loadByPosRangeSQL, id, spos, epos), log);
-      for(Attribute<?> at:al) {
+      for(Attribute<? extends Value<?>> at:al) {
       	at.states().ioAction(IOAction.LOAD);
       }
       return al;
@@ -1246,13 +1246,13 @@ public class  AttributeDao implements AttributeDaoInterface{
 
     public static AttributeList _loadBeforePosition(int id, int pos, boolean log) {
       AttributeList al = _loadAttributeList(String.format(loadByPosLTSQL, id, pos), log);
-      for(Attribute<?> at:al) {
+      for(Attribute<? extends Value<?>> at:al) {
       	at.states().ioAction(IOAction.LOAD);
       }
       return al;
     }
 
-    public static Attribute<?> _loadAttribute(String SQL, boolean log) {
+    public static Attribute<? extends Value<?>> _loadAttribute(String SQL, boolean log) {
       long startTime = System.currentTimeMillis();
       String _f = null;
       String msg = null;
@@ -1266,7 +1266,7 @@ public class  AttributeDao implements AttributeDaoInterface{
       ResultSet rs = null;
       Statement dbs = null;
 
-      Attribute<?> a = null;
+      Attribute<? extends Value<?>> a = null;
       try {
 
         conn = Util.DB.__conn(log);
@@ -1350,7 +1350,7 @@ public class  AttributeDao implements AttributeDaoInterface{
 
     //VALUE ASPECTS
     @Override
-    public Attribute<?> create(int objectId, int parentId, String name, AttributeType type, String businessId, String businessKey, String attributeBusinessId, String group, String attributeGroup, String version, String defaultValue, Value<?> value) {
+    public Attribute<? extends Value<?>> create(int objectId, int parentId, String name, AttributeType type, String businessId, String businessKey, String attributeBusinessId, String group, String attributeGroup, String version, String defaultValue, Value<?> value) {
       return _create(objectId, parentId, name, type, businessId, businessKey, attributeBusinessId, group, attributeGroup, version, defaultValue, value, !Util._IN_PRODUCTION);
     }
 
@@ -1440,11 +1440,11 @@ public class  AttributeDao implements AttributeDaoInterface{
     }
 
     @Override
-    public Attribute<?> save(int objectId, Attribute<?> a) {
+    public Attribute<? extends Value<?>> save(int objectId, Attribute<? extends Value<?>> a) {
       return _save(objectId, a, false);
     }
 
-    public static Attribute<?> _save(int oid, Attribute<?> a, boolean log) {
+    public static Attribute<? extends Value<?>> _save(int oid, Attribute<? extends Value<?>> a, boolean log) {
       long startTime = System.currentTimeMillis();
       String _f = null;
       String msg = null;
@@ -1616,14 +1616,14 @@ public class  AttributeDao implements AttributeDaoInterface{
 
         while (rs.next()) {
 
-          //				Attribute<?> ct = saveList.get(counter);//TODO: see savelist note: would destroy
+          //				Attribute<? extends Value<?>> ct = saveList.get(counter);//TODO: see savelist note: would destroy
           // order
           attributeList.get(counter).attributeId( rs.getInt(valuetabledef[0][0])); // TODO: FIXME: is this safe (ie is saveList.get(counter) and rs.next()
           // always in sync)
           counter++;
         }
         
-        for(Attribute<?> a: attributeList) {
+        for(Attribute<? extends Value<?>> a: attributeList) {
         	boolean hasValue = (a.value() != null && a.value().value() != null);
           switch(a.attributeType()) {
           case _complex:
@@ -1647,12 +1647,12 @@ public class  AttributeDao implements AttributeDaoInterface{
           }
         }
         
-        for(Attribute<?> a: attributeList) {
+        for(Attribute<? extends Value<?>> a: attributeList) {
           a.valueHistory().stamptime();
           a.valueHistory().updateInstance();
         }
           CampInstanceDao.instance()._addInstances(attributeList, true, log);
-        for(Attribute<?> a: attributeList) {
+        for(Attribute<? extends Value<?>> a: attributeList) {
           a.valueStates().ioAction(IOAction.SAVE);
         }
       } catch (Exception e) {
@@ -1684,11 +1684,11 @@ public class  AttributeDao implements AttributeDaoInterface{
 
     
     @Override
-    public int update(int objectId, Attribute<?> attribute) {
+    public int update(int objectId, Attribute<? extends Value<?>> attribute) {
       return _update(objectId, attribute, false);
     }
 
-    public static int _update(int oid, Attribute<?> attribute, boolean log) {
+    public static int _update(int oid, Attribute<? extends Value<?>> attribute, boolean log) {
       long startTime = System.currentTimeMillis();
       String _f = null;
       String msg = null;
@@ -1836,7 +1836,7 @@ public class  AttributeDao implements AttributeDaoInterface{
 
         dbs = conn.createStatement();
 
-        for (Attribute<?> a : attributeList) {
+        for (Attribute<? extends Value<?>> a : attributeList) {
 
           String SQL = insertAttributeVUpdates(fSQL,oid,a);
 
@@ -1850,7 +1850,7 @@ public class  AttributeDao implements AttributeDaoInterface{
 
         if (log && !Util._IN_PRODUCTION) { msg = "----[ '" + retVal + "' entr"+((retVal>1)?"ies":"y")+" updated ]----"; LOG.info(String.format(fmt, _f, msg)); }
        
-        for(Attribute<?> a: attributeList) {
+        for(Attribute<? extends Value<?>> a: attributeList) {
         	boolean hasValue = (a.value() != null && a.value().value() != null);
           int cretVal = 0;
           switch(a.attributeType()) {
@@ -1876,12 +1876,12 @@ public class  AttributeDao implements AttributeDaoInterface{
           if (log && !Util._IN_PRODUCTION) { msg = "----[ '" + cretVal + "' child attribute entr"+((cretVal>1)?"ies":"y")+" updated  ]----"; LOG.info(String.format(fmt, _f, msg)); }
         	
         }
-        for(Attribute<?> a: attributeList) {
+        for(Attribute<? extends Value<?>> a: attributeList) {
           a.valueHistory().stamptime();
           a.valueHistory().updateInstance();
         }
         CampInstanceDao.instance()._addInstances(attributeList, true, log);        
-        for(Attribute<?> a: attributeList) {
+        for(Attribute<? extends Value<?>> a: attributeList) {
           a.valueStates().ioAction(IOAction.UPDATE);
         }
 
@@ -1976,11 +1976,11 @@ public class  AttributeDao implements AttributeDaoInterface{
 
     
     @Override
-    public int delete(int objectId, Attribute<?> attribute) {
+    public int delete(int objectId, Attribute<? extends Value<?>> attribute) {
       return _delete(objectId, attribute, !Util._IN_PRODUCTION);
     }
 
-    public static int _delete(int objectId, Attribute<?> a, boolean log) {
+    public static int _delete(int objectId, Attribute<? extends Value<?>> a, boolean log) {
       long startTime = System.currentTimeMillis();
       String _f = null;
       String msg = null;
@@ -2099,7 +2099,7 @@ public class  AttributeDao implements AttributeDaoInterface{
 
         dbs = conn.createStatement();
 
-        for (Attribute<?> a : atl) {
+        for (Attribute<? extends Value<?>> a : atl) {
           String SQL = "DELETE FROM " + valuetable + " WHERE `"+valuetabledef[0][0]+"`=" + a.attributeId();
 
           if (log && !Util._IN_PRODUCTION) { msg = "----[ SQL:" + SQL + "]----"; LOG.info(String.format(fmt, _f, msg)); }
@@ -2111,7 +2111,7 @@ public class  AttributeDao implements AttributeDaoInterface{
         
         if (log && !Util._IN_PRODUCTION) { msg = "----[ '" + retVal + "' value apsect attributes entr"+((retVal>1)?"ies":"y")+" deleted ]----"; LOG.info(String.format(fmt, _f, msg)); }
 				
-        for(Attribute<?> attribute: atl) {
+        for(Attribute<? extends Value<?>> attribute: atl) {
         	boolean hasValue = (attribute.value() != null && attribute.value().value() != null);
           int cretVal = 0;
           switch(attribute.attributeType()) {
@@ -2160,11 +2160,11 @@ public class  AttributeDao implements AttributeDaoInterface{
     }
 
     @Override
-    public Attribute<?> load(int objectId, Attribute<?> attribute) {
+    public Attribute<? extends Value<?>> load(int objectId, Attribute<? extends Value<?>> attribute) {
       return _load(objectId, attribute, !Util._IN_PRODUCTION);
     }
 
-    public static Attribute<?> _load(int oid, Attribute<?> a, boolean log) {
+    public static Attribute<? extends Value<?>> _load(int oid, Attribute<? extends Value<?>> a, boolean log) {
     	long startTime = System.currentTimeMillis();
 			String _f = null;
 			String msg = null;
@@ -2174,7 +2174,7 @@ public class  AttributeDao implements AttributeDaoInterface{
 			}
 			//TODO: use this SQL for loading instead of loading in two steps
 //    	String SQL = "SELECT * FROM "+valuetable+" AS tv" + ", "+Value.Dao.integertable+" AS i " + ", "+Value.Dao.stringtable+" AS s " + ", "+Value.Dao.texttable+" AS t " + ", "+Value.Dao.timestamptable+" AS ti " + ", "+Value.Dao.booleantable+" AS b " + ", "+Value.Dao.complextable+" AS c " + ", "+Value.Dao.blobtable+" AS bl " + " WHERE " + " tv.object_id="+objectId + " AND (i.object_id=tv.object_id " + " OR s.object_id=tv.object_id " + " OR t.object_id=tv.object_id " + " OR ti.object_id=tv.object_id " + " OR b.object_id=tv.object_id " + " OR c.object_id=tv.object_id " + " OR bl.object_id=tv.object_id )" + " AND td._attribute_type_id_=tv.attribute_type_id";
-    	Attribute<?> at = _loadVAttribute(a,String.format(loadVByIOidSQL, oid, a.id()), log);
+    	Attribute<? extends Value<?>> at = _loadVAttribute(a,String.format(loadVByIOidSQL, oid, a.id()), log);
     	Value<?> v = Value.ValueDao.loadById(a.attributeId(),oid,a.valueId(), a.attributeType(), log);
     	at = setValue(at, v);
     	if(log && !Util._IN_PRODUCTION) {
@@ -2282,7 +2282,7 @@ public class  AttributeDao implements AttributeDaoInterface{
       return al;
     }
 
-    public static Attribute<?> _loadVAttribute(Attribute<?> a,String SQL, boolean log) {
+    public static Attribute<? extends Value<?>> _loadVAttribute(Attribute<? extends Value<?>> a,String SQL, boolean log) {
       long startTime = System.currentTimeMillis();
       String _f = null;
       String msg = null;
@@ -2401,10 +2401,10 @@ public class  AttributeDao implements AttributeDaoInterface{
     	}
     	if(al.isEmpty()) return am;
       al = _saveAllAttributes(oid,al,log);
-      HashMap<Integer,Attribute<?>> t = new HashMap<Integer,Attribute<?>>();
+      HashMap<Integer,Attribute<? extends Value<?>>> t = new HashMap<Integer,Attribute<? extends Value<?>>>();
       
       // first pass add root attributes
-      for(Attribute<?> a:al) {
+      for(Attribute<? extends Value<?>> a:al) {
       	if(a.parentId() == 0 && a.attributeParentId() == 0) {
       		t.put(a.id(), a);
       		if(log && !Util._IN_PRODUCTION){msg = "----[ASSEMBLING PASS 1 Parent Attribute("+a.name()+") after save all call]----";LOG.info(String.format(fmt, _f,msg));}
@@ -2413,41 +2413,41 @@ public class  AttributeDao implements AttributeDaoInterface{
       // second pass sort in children
       for(int id: t.keySet()) {
      		if(log && !Util._IN_PRODUCTION){msg = "----[ASSEMBLING PASS 2 Parent Attribute("+t.get(id).name()+") after save all call]----";LOG.info(String.format(fmt, _f,msg));}
-      	for(Attribute<?> a: al) {
+      	for(Attribute<? extends Value<?>> a: al) {
       		if(log && !Util._IN_PRODUCTION){msg = "----[ASSEMBLING PASS 2 Child Attribute("+a.name()+") to Parent assignment ]----";LOG.info(String.format(fmt, _f,msg));}
       		if(a.parentId()== id) {
       			switch(t.get(id).attributeType()) {
       			case _complex:
       				if(log && !Util._IN_PRODUCTION){msg = "----[ADDING Child Attribute("+a.name()+") to Complex Parent Attribute("+t.get(id).name()+")]----";LOG.info(String.format(fmt, _f,msg));}
       				if(((CampComplex)t.get(id)).value().value() == null) {
-      					((CampComplex)t.get(id)).value().setValue(new HashMap<String,ArrayList<Attribute<?>>>());
+      					((CampComplex)t.get(id)).value().setValue(new HashMap<String,ArrayList<Attribute<? extends Value<?>>>>());
       				}
       				if(!((CampComplex)t.get(id)).value().value().containsKey(a.group().name())) {
-      					((CampComplex)t.get(id)).value().value().put(a.group().name(), new ArrayList<Attribute<?>>());
+      					((CampComplex)t.get(id)).value().value().put(a.group().name(), new ArrayList<Attribute<? extends Value<?>>>());
       				}
       				((CampComplex)t.get(id)).value().value().get(a.group().name()).add(a);//TODO think about sorting if need be else let display etc handle this 
       				break;
       			case _table://TODO: fix this make value ArrayList<CampList> CampList is a column and not a row see notes
       				if(log && !Util._IN_PRODUCTION){msg = "----[ADDING Child Attribute("+a.name()+") to Table Parent Attribute("+t.get(id).name()+")]----";LOG.info(String.format(fmt, _f,msg));}
       				if(((CampTable)t.get(id)).value().value()==null) {
-      					((CampTable)t.get(id)).value().setValue(new ArrayList<ArrayList<Attribute<?>>>());
+      					((CampTable)t.get(id)).value().setValue(new ArrayList<ArrayList<Attribute<? extends Value<?>>>>());
       				}
       				if(((CampTable)t.get(id)).value().value().get(a.value().position().posY()) == null) {
-      					((CampTable)t.get(id)).value().value().add(a.value().position().posY(),new ArrayList<Attribute<?>>());
+      					((CampTable)t.get(id)).value().value().add(a.value().position().posY(),new ArrayList<Attribute<? extends Value<?>>>());
       				}
       				((CampTable)t.get(id)).value().value().get(a.value().position().posY()).add(a);
       				break;      				
       			case _map:
       				if(log && !Util._IN_PRODUCTION){msg = "----[ADDING Child Attribute("+a.name()+") to Map Parent Attribute("+t.get(id).name()+")]----";LOG.info(String.format(fmt, _f,msg));}
       				if(((CampMap)t.get(id)).value().value() == null) {
-      					((CampMap)t.get(id)).value().setValue(new HashMap<String,Attribute<?>>());
+      					((CampMap)t.get(id)).value().setValue(new HashMap<String,Attribute<? extends Value<?>>>());
       				}
       				((CampMap)t.get(id)).value().value().put(a.group().name(),a); 
       				break;
       			case _list:
       				if(log && !Util._IN_PRODUCTION){msg = "----[ADDING Child Attribute("+a.name()+") to List Parent Attribute("+t.get(id).name()+")]----";LOG.info(String.format(fmt, _f,msg));}
       				if(((CampList)t.get(id)).value().value()==null) {
-      					((CampList)t.get(id)).value().setValue(new ArrayList<Attribute<?>>());
+      					((CampList)t.get(id)).value().setValue(new ArrayList<Attribute<? extends Value<?>>>());
       				}
       				((CampList)t.get(id)).value().value().add(a);
       				break;
@@ -2578,7 +2578,7 @@ public class  AttributeDao implements AttributeDaoInterface{
 					if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+fSQL+"]----";LOG.info(String.format(fmt,_f,msg));}
 					rs = dbs.executeQuery(fSQL);		
 					while(rs.next()) {
-						Attribute<?> a = _rsToA(rs);
+						Attribute<? extends Value<?>> a = _rsToA(rs);
 						a = _rsToAV(a, rs);
 						a.setHistory(CampInstanceDao.instance().rsToI(rs, log));
 						Value<?> v = Value.ValueDao.rsToV(rs, log);
@@ -2606,11 +2606,11 @@ public class  AttributeDao implements AttributeDaoInterface{
     }
 
     public static CampComplex _saveComplexChildren(CampComplex attribute, boolean log){
-    	HashMap<String,ArrayList<Attribute<?>>> v = new HashMap<String,ArrayList<Attribute<?>>>();//HashMap<String,ArrayList<Attribute<?>>>();
+    	HashMap<String,ArrayList<Attribute<? extends Value<?>>>> v = new HashMap<String,ArrayList<Attribute<? extends Value<?>>>>();//HashMap<String,ArrayList<Attribute<? extends Value<?>>>>();
     	AttributeList al = new AttributeList();
     	AttributeList alv = new AttributeList();
     	for(String group: attribute.value().value().keySet()) {
-    		for(Attribute<?> a:attribute.value().value().get(group)) {
+    		for(Attribute<? extends Value<?>> a:attribute.value().value().get(group)) {
 //    			if(a.group()==null || a.group().name().isEmpty())a.setGroup(group);
     			a.setGroup(group);
     			a.parent(attribute);
@@ -2619,21 +2619,21 @@ public class  AttributeDao implements AttributeDaoInterface{
 //    			if(a.attributeBusinessKey()==null || a.attributeBusinessKey().isEmpty())a.setAttributeBusinessKey(attribute.attributeBusinessKey());
     			// place new attributes (id==0) in al list to persist the definition aspects
     			if(a.id() == 0) {
-    				al.add((Attribute<?>) a);
+    				al.add((Attribute<? extends Value<?>>) a);
     			}
     			alv.add(a);
     		}
     	}
     	al =_saveList(al,log);
     	// update the definition aspect attribute id of attributes in alv list 
-    	for(Attribute<?> a:al) {
-    		for(Attribute<?> av: alv) {
+    	for(Attribute<? extends Value<?>> a:al) {
+    		for(Attribute<? extends Value<?>> av: alv) {
     			if(a.name().equals(av.name())) {
     				av.updateId(a.id());
     			}
     		}
     	}
-    	for(Attribute<?>a : alv) {
+    	for(Attribute<? extends Value<?>>a : alv) {
     		if(!v.containsKey(a.attributeGroup().name())) {
     			v.put(a.attributeGroup().name(), new AttributeList());
     		}
@@ -2648,9 +2648,9 @@ public class  AttributeDao implements AttributeDaoInterface{
     	int x = 0;
     	int y = 0;
     	int count = 0;
-    	for(ArrayList<Attribute<?>> arl: attribute.value().value()) {
+    	for(ArrayList<Attribute<? extends Value<?>>> arl: attribute.value().value()) {
     		y++;
-    		for(Attribute<?> a: arl) {
+    		for(Attribute<? extends Value<?>> a: arl) {
     			x++;
 //    			if(a.group()==null || a.group().name().isEmpty())a.setGroup(attribute.group().name());
     			if(a.position()==0)a.setPosition(count);
@@ -2672,8 +2672,8 @@ public class  AttributeDao implements AttributeDaoInterface{
     	//persist definition aspects of attributes which have not yet been persisted. 
     	al =_saveList(al,log);
     	// update the definition aspect attribute id of attributes in alv list 
-    	for(Attribute<?> a:al) {
-    		for(Attribute<?> av: alv) {
+    	for(Attribute<? extends Value<?>> a:al) {
+    		for(Attribute<? extends Value<?>> av: alv) {
     			if(a.name().equals(av.name())) {
     				av.updateId(a.id());
     			}
@@ -2682,9 +2682,9 @@ public class  AttributeDao implements AttributeDaoInterface{
     	int row = 0;
     	int col = 0;
 //    	recreate attribute value item to ensure that everything is up to date TODO: check if this is necessary
-    	for(ArrayList<Attribute<?>> arl: attribute.value().value()) {
-    		for(@SuppressWarnings("unused") Attribute<?> at: arl) {
-    			for(Attribute<?>a:alv) {
+    	for(ArrayList<Attribute<? extends Value<?>>> arl: attribute.value().value()) {
+    		for(@SuppressWarnings("unused") Attribute<? extends Value<?>> at: arl) {
+    			for(Attribute<? extends Value<?>>a:alv) {
     				if(a.value().position().posX()==(col+1) && a.value().position().posY()==(row+1)){
     					attribute.value().value().get(row).set(col, a);
     				}
@@ -2697,11 +2697,11 @@ public class  AttributeDao implements AttributeDaoInterface{
     }
 
     public static CampMap _saveMapChildren(CampMap attribute, boolean log){
-    	HashMap<String,Attribute<?>> v = new HashMap<String,Attribute<?>>();
+    	HashMap<String,Attribute<? extends Value<?>>> v = new HashMap<String,Attribute<? extends Value<?>>>();
     	AttributeList alv = new AttributeList();
     	AttributeList al = new AttributeList();
     	for(String group: attribute.value().value().keySet()) {
-    		Attribute<?> a = attribute.value().value().get(group);
+    		Attribute<? extends Value<?>> a = attribute.value().value().get(group);
 //    		if(a.group()==null || a.group().name().isEmpty())a.setGroup(group);
   			a.parent(attribute);
   			a.parentId(attribute.id());
@@ -2718,15 +2718,15 @@ public class  AttributeDao implements AttributeDaoInterface{
     	//persist definition aspects of attributes which have not yet been persisted. 
     	al =_saveList(al,log);
     	// update the definition aspect attribute id of attributes in alv list 
-    	for(Attribute<?> a:al) {
-    		for(Attribute<?> av: alv) {
+    	for(Attribute<? extends Value<?>> a:al) {
+    		for(Attribute<? extends Value<?>> av: alv) {
     			if(a.name().equals(av.name())) {
     				av.updateId(a.id());
     			}
     		}
     	}
     	// recreate attribute value element and add it to attribute
-    	for(Attribute<?>a : alv) {
+    	for(Attribute<? extends Value<?>>a : alv) {
     		v.put(a.attributeGroup().name(),a);
     	}
     	attribute.value().setValue(v);
@@ -2737,7 +2737,7 @@ public class  AttributeDao implements AttributeDaoInterface{
     	AttributeList alv = (AttributeList) attribute.value().value();
      	AttributeList al = new AttributeList();
     	int x = 0;
-  		for(Attribute<?> a: alv) {
+  		for(Attribute<? extends Value<?>> a: alv) {
   			x++;
 //  			if(a.group()==null || a.group().name().isEmpty())a.setGroup(attribute.group().name());
   			a.parent(attribute);
@@ -2754,8 +2754,8 @@ public class  AttributeDao implements AttributeDaoInterface{
     	//persist definition aspects of attributes which have not yet been persisted. 
     	al =_saveList(al,log);
     	// update the definition aspect attribute id of attributes in alv list 
-    	for(Attribute<?> a:al) {
-    		for(Attribute<?> av: alv) {
+    	for(Attribute<? extends Value<?>> a:al) {
+    		for(Attribute<? extends Value<?>> av: alv) {
     			if(a.name().equals(av.name())) {
     				av.updateId(a.id());
     			}
@@ -2776,7 +2776,7 @@ public class  AttributeDao implements AttributeDaoInterface{
 			int retVal = 0;
     	AttributeList alv = new AttributeList();
     	for(String group: attribute.value().value().keySet()) {
-    		for(Attribute<?> a:attribute.value().value().get(group)) {
+    		for(Attribute<? extends Value<?>> a:attribute.value().value().get(group)) {
     			if(a.states().isModified()){
     				alv.add(a);
     			} 
@@ -2804,8 +2804,8 @@ public class  AttributeDao implements AttributeDaoInterface{
     }
     public static int _updateTableChildren(CampTable attribute, boolean log){
     	AttributeList alv = new AttributeList();
-    	for(ArrayList<Attribute<?>> arl: attribute.value().value()) {
-    		for(Attribute<?> a: arl) {
+    	for(ArrayList<Attribute<? extends Value<?>>> arl: attribute.value().value()) {
+    		for(Attribute<? extends Value<?>> a: arl) {
     			if(a.states().isModified()){
     				alv.add(a);
     			} 
@@ -2845,7 +2845,7 @@ public class  AttributeDao implements AttributeDaoInterface{
     public static int _updateListChildren(CampList attribute, boolean log){
     	//update definition aspects of the complex child attributes
     	AttributeList alv = new AttributeList();
-    	for(Attribute<?> a: attribute.value().value()) {
+    	for(Attribute<? extends Value<?>> a: attribute.value().value()) {
     		if(a.states().isModified()) {
     			alv.add(a);
     		}
@@ -2862,11 +2862,11 @@ public class  AttributeDao implements AttributeDaoInterface{
     }
     
     public static CampComplex _saveComplexChildrenValue(int objectId, CampComplex attribute, boolean log){
-    	HashMap<String,ArrayList<Attribute<?>>> v = new HashMap<String,ArrayList<Attribute<?>>>();
+    	HashMap<String,ArrayList<Attribute<? extends Value<?>>>> v = new HashMap<String,ArrayList<Attribute<? extends Value<?>>>>();
     	AttributeList al = new AttributeList();
     	AttributeList alv = new AttributeList();
     	for(String group: attribute.value().value().keySet()) {
-    		for(Attribute<?> a:attribute.value().value().get(group)) {
+    		for(Attribute<? extends Value<?>> a:attribute.value().value().get(group)) {
 //    			if(a.group()==null || a.group().name().isEmpty())a.setGroup(group);
     			a.parent(attribute);
     			a.parentId(attribute.id());
@@ -2878,9 +2878,9 @@ public class  AttributeDao implements AttributeDaoInterface{
     	}
      	//persist the value aspects of the complex child attributes
     	alv = _saveList(objectId,alv,log);
-    	for(Attribute<?>a : alv) {
+    	for(Attribute<? extends Value<?>>a : alv) {
     		if(!v.containsKey(a.attributeGroup().name())) {
-    			v.put(a.attributeGroup().name(), new ArrayList<Attribute<?>>());
+    			v.put(a.attributeGroup().name(), new ArrayList<Attribute<? extends Value<?>>>());
     		}
     		v.get(a.attributeGroup().name()).add(a);
     	}
@@ -2893,9 +2893,9 @@ public class  AttributeDao implements AttributeDaoInterface{
     	int x = 0;
     	int y = 0;
     	int count = 0;
-    	for(ArrayList<Attribute<?>> arl: attribute.value().value()) {
+    	for(ArrayList<Attribute<? extends Value<?>>> arl: attribute.value().value()) {
     		y++;
-    		for(Attribute<?> a: arl) {
+    		for(Attribute<? extends Value<?>> a: arl) {
     			x++;
 //    			if(a.group()==null || a.group().name().isEmpty())a.setGroup(attribute.group().name());
     			if(a.position()==0)a.setPosition(count);
@@ -2915,9 +2915,9 @@ public class  AttributeDao implements AttributeDaoInterface{
     	int row = 0;
     	int col = 0;
 //    	recreate attribute value item to ensure that everything is up to date TODO: check if this is necessary
-    	for(ArrayList<Attribute<?>> arl: attribute.value().value()) {
-    		for(@SuppressWarnings("unused") Attribute<?> at: arl) {
-    			for(Attribute<?>a:alv) {
+    	for(ArrayList<Attribute<? extends Value<?>>> arl: attribute.value().value()) {
+    		for(@SuppressWarnings("unused") Attribute<? extends Value<?>> at: arl) {
+    			for(Attribute<? extends Value<?>>a:alv) {
     				if(a.value().position().posX()==(col+1) && a.value().position().posY()==(row+1)){
     					attribute.value().value().get(row).set(col, a);
     				}
@@ -2930,10 +2930,10 @@ public class  AttributeDao implements AttributeDaoInterface{
     }
 
     public static CampMap _saveMapChildrenValue(int objectId, CampMap attribute, boolean log){
-    	HashMap<String,Attribute<?>> v = new HashMap<String,Attribute<?>>();
+    	HashMap<String,Attribute<? extends Value<?>>> v = new HashMap<String,Attribute<? extends Value<?>>>();
     	AttributeList alv = new AttributeList();
     	for(String group: attribute.value().value().keySet()) {
-    		Attribute<?> a = attribute.value().value().get(group);
+    		Attribute<? extends Value<?>> a = attribute.value().value().get(group);
 //    		if(a.group()==null || a.group().name().isEmpty())a.setGroup(group);
   			a.parent(attribute);
   			a.parentId(attribute.id());
@@ -2946,7 +2946,7 @@ public class  AttributeDao implements AttributeDaoInterface{
     	//persist the value aspects of the complex child attributes
     	alv = _saveList(objectId,alv,log);
     	// recreate attribute value element and add it to attribute
-    	for(Attribute<?>a : alv) {
+    	for(Attribute<? extends Value<?>>a : alv) {
     		v.put(a.attributeGroup().name(),a);
     	}
     	attribute.value().setValue(v);
@@ -2957,7 +2957,7 @@ public class  AttributeDao implements AttributeDaoInterface{
     	AttributeList alv = (AttributeList) attribute.value().value();
      	AttributeList al = new AttributeList();
     	int x = 0;
-  		for(Attribute<?> a: alv) {
+  		for(Attribute<? extends Value<?>> a: alv) {
   			x++;
 //  			if(a.group()==null || a.group().name().isEmpty())a.setGroup(attribute.group().name());
 //  			if(a.onlyBusinessId()==null || a.onlyBusinessId().isEmpty())a.setBusinessId(attribute.onlyBusinessId());
@@ -2975,8 +2975,8 @@ public class  AttributeDao implements AttributeDaoInterface{
     	//persist definition aspects of attributes which have not yet been persisted. 
     	al =_saveList(al,log);
     	// update the definition aspect attribute id of attributes in alv list 
-    	for(Attribute<?> a:al) {
-    		for(Attribute<?> av: alv) {
+    	for(Attribute<? extends Value<?>> a:al) {
+    		for(Attribute<? extends Value<?>> av: alv) {
     			if(a.name().equals(av.name())) {
     				av.updateId(a.id());
     			}
@@ -3006,7 +3006,7 @@ public class  AttributeDao implements AttributeDaoInterface{
 			}
     	AttributeList alv = new AttributeList();
     	for(String group: attribute.value().value().keySet()) {
-    		for(Attribute<?> a:attribute.value().value().get(group)) {
+    		for(Attribute<? extends Value<?>> a:attribute.value().value().get(group)) {
 //    			if(a.id()==attribute.id() && a.name().equals(attribute.name())) continue;//TODO: WHY OH WHY IS attribute in the list!
     			if(a.states().isModified()){
     				alv.add(a);
@@ -3029,8 +3029,8 @@ public class  AttributeDao implements AttributeDaoInterface{
 
     public static int _updateTableChildrenValue(int objectId, CampTable attribute, boolean log){
     	AttributeList alv = new AttributeList();
-    	for(ArrayList<Attribute<?>> arl: attribute.value().value()) {
-    		for(Attribute<?> a: arl) {
+    	for(ArrayList<Attribute<? extends Value<?>>> arl: attribute.value().value()) {
+    		for(Attribute<? extends Value<?>> a: arl) {
     			if(a.states().isModified()){
     				alv.add(a);
     			} 
@@ -3056,7 +3056,7 @@ public class  AttributeDao implements AttributeDaoInterface{
     public static int _updateListChildrenValue(int objectId, CampList attribute, boolean log){
     	//update definition aspects of the complex child attributes
     	AttributeList alv = new AttributeList();
-    	for(Attribute<?> a: attribute.value().value()) {
+    	for(Attribute<? extends Value<?>> a: attribute.value().value()) {
     		if(a.states().isModified()) {
     			alv.add(a);
     		}
@@ -3076,7 +3076,7 @@ public class  AttributeDao implements AttributeDaoInterface{
 			}
     	AttributeList alv = new AttributeList();
     	for(String group: attribute.value().value().keySet()) {
-    		for(Attribute<?> a:attribute.value().value().get(group)) {
+    		for(Attribute<? extends Value<?>> a:attribute.value().value().get(group)) {
     			alv.add(a);
     		}
     	}
@@ -3107,8 +3107,8 @@ public class  AttributeDao implements AttributeDaoInterface{
 				msg = "====[ deleting "+((def)?"def aspects":"")+((val && def)?" and ":" ")+((val)?"value aspects":"")+" child elements of complex attribute ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 			}
     	AttributeList alv = new AttributeList();
-    	for(ArrayList<Attribute<?>> arl: attribute.value().value()) {
-    		for(Attribute<?> a: arl) {
+    	for(ArrayList<Attribute<? extends Value<?>>> arl: attribute.value().value()) {
+    		for(Attribute<? extends Value<?>> a: arl) {
     			alv.add(a);
     		}
     	}
@@ -3186,10 +3186,10 @@ public class  AttributeDao implements AttributeDaoInterface{
     }
 
     @Override
-    public Attribute<?> instanceLoad(String select, boolean primary, boolean log) {
+    public Attribute<? extends Value<?>> instanceLoad(String select, boolean primary, boolean log) {
     	return _instanceLoad(select,primary,log);
     }
-    public static Attribute<?> _instanceLoad(String select, boolean primary, boolean log) {
+    public static Attribute<? extends Value<?>> _instanceLoad(String select, boolean primary, boolean log) {
     	long startTime = System.currentTimeMillis();
 			String _f = null;
 			String msg = null;
@@ -3197,7 +3197,7 @@ public class  AttributeDao implements AttributeDaoInterface{
 				_f = "[_instanceLoad]";
 				msg = "====[ load attribute (definition and value aspects) object instance ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 			}
-			Attribute<?> a = null;
+			Attribute<? extends Value<?>> a = null;
 			Connection conn = null;
 			ResultSet rs = null;
 			Statement dbs = null;
@@ -3297,7 +3297,7 @@ public class  AttributeDao implements AttributeDaoInterface{
 					if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+fSQL+"]----";LOG.info(String.format(fmt,_f,msg));}
 					rs = dbs.executeQuery(fSQL);		
 					while(rs.next()) {
-						Attribute<?> a = _rsToA(rs);
+						Attribute<? extends Value<?>> a = _rsToA(rs);
 						a = _rsToAV(a, rs);
 						a.setHistory(CampInstanceDao.instance().rsToI(rs, log));
 						Value<?> v = Value.ValueDao.rsToV(rs, log);
@@ -3328,15 +3328,15 @@ public class  AttributeDao implements AttributeDaoInterface{
     public static AttributeList  _rsToAttributeList(ResultSet rs) throws SQLException {
     	AttributeList al = new AttributeList();
     	while(rs.next()) {
-    		Attribute<?> a = _rsToA(rs);
+    		Attribute<? extends Value<?>> a = _rsToA(rs);
     		a.setHistory(CampInstanceDao.instance().rsToI(rs, !Util._IN_PRODUCTION));
     		al.add(a);
     	}
     	return al;
     }
 
-    public static Attribute<?> _rsToAttribute(ResultSet rs) throws SQLException {
-    	Attribute<?> a = null;
+    public static Attribute<? extends Value<?>> _rsToAttribute(ResultSet rs) throws SQLException {
+    	Attribute<? extends Value<?>> a = null;
       if(rs.next()) {
       	a =  _rsToA(rs);
       	if(!Util._IN_PRODUCTION){String msg = "----[Loaded "+a.attributeType().name()+" attribute("+a.id()+") :"+a.name()+" ]----";LOG.info(String.format(fmt,"[_rsToAttribute]",msg));}
@@ -3345,7 +3345,7 @@ public class  AttributeDao implements AttributeDaoInterface{
       return a;
     }
    
-    public static Attribute<?> _rsToA(ResultSet rs) throws SQLException {
+    public static Attribute<? extends Value<?>> _rsToA(ResultSet rs) throws SQLException {
     	int id = rs.getInt(tabledef[0][0]);
     	String name = rs.getString("name");
     	AttributeType type = AttributeType.valueOf(rs.getString("type"));
@@ -3356,7 +3356,7 @@ public class  AttributeDao implements AttributeDaoInterface{
     	String group = rs.getString("group");
     	String version = rs.getString("version");
     	int position = rs.getInt("position");
-    	Attribute<?> a = Attribute.createAttribute(name, type, defaultValue);
+    	Attribute<? extends Value<?>> a = Attribute.createAttribute(name, type, defaultValue);
     	a.updateId(id);
     	a.parentId(parentId);
     	a.setBusinessId(businessId);
@@ -3371,7 +3371,7 @@ public class  AttributeDao implements AttributeDaoInterface{
     	AttributeList ral = new AttributeList();
     	while(rs.next()) {
     		int id = rs.getInt("attribute_type_id");
-    		for(Attribute<?>a:al) {
+    		for(Attribute<? extends Value<?>>a:al) {
     			if(id==a.id()) {
     				a = _rsToAV(a,rs);
         		a.setHistory(CampInstanceDao.instance().rsToI(rs, !Util._IN_PRODUCTION));
@@ -3382,14 +3382,14 @@ public class  AttributeDao implements AttributeDaoInterface{
     	return ral;
     }
 
-    public static Attribute<?> _rsToVAttribute(Attribute<?> a, ResultSet rs) throws SQLException {
+    public static Attribute<? extends Value<?>> _rsToVAttribute(Attribute<? extends Value<?>> a, ResultSet rs) throws SQLException {
       if(rs.next()) {
       	return _rsToAV(a,rs);
       }
       throw new SQLException("SQLException! ResultSet has no next() entry!");
     }
    
-    public static Attribute<?> _rsToAV(Attribute<?> a, ResultSet rs) throws SQLException{
+    public static Attribute<? extends Value<?>> _rsToAV(Attribute<? extends Value<?>> a, ResultSet rs) throws SQLException{
     	int id = rs.getInt("attribute_type_id");
     	if(a.id() != id) {
     		throw new SQLException("Exception! Attribute definition to value aspect mismatch!" );
@@ -3406,7 +3406,7 @@ public class  AttributeDao implements AttributeDaoInterface{
 
     public static ValueList getValueList(AttributeList attributeList) {
     	ValueList vl = new ValueList();
-      for(Attribute<?>a : attributeList) {
+      for(Attribute<? extends Value<?>>a : attributeList) {
       	vl.add(a.value()); 
       	if(!Util._IN_PRODUCTION){String msg = "----[added Value("+a.value().type().name()+") to ValueList]----";LOG.info(String.format(fmt, "[_getValueList]",msg));}
       }
@@ -3414,14 +3414,14 @@ public class  AttributeDao implements AttributeDaoInterface{
     }
     public static HashMap<Integer,String> getValueIds(AttributeList attributeList) {
     	HashMap<Integer,String> vl = new HashMap<Integer,String>();
-      for(Attribute<?>a : attributeList) {
+      for(Attribute<? extends Value<?>>a : attributeList) {
       	vl.put(a.valueId(),CampSQL.System.attribute_value_tables.get(a.attributeType())); 
       }
       return vl;
     }
     public static AttributeList setValues(AttributeList al,ValueList vl) {
     	for(Value<?>v : vl) {
-    		for(Attribute<?> a: al) {
+    		for(Attribute<? extends Value<?>> a: al) {
     			if(a.valueId() == v.id()) {
     				setValue(a,v);
     			}
@@ -3437,7 +3437,7 @@ public class  AttributeDao implements AttributeDaoInterface{
     	}
     	return al;
     }
-    public static Attribute<?> setValue(Attribute<?> a,Value<?> v){
+    public static Attribute<? extends Value<?>> setValue(Attribute<? extends Value<?>> a,Value<?> v){
   		switch(v.type()) {
 			case _integer:
 				((CampInteger)a).setValue((IntegerValue)v);
@@ -3486,7 +3486,7 @@ public class  AttributeDao implements AttributeDaoInterface{
     public static String insertDefinitionValues(AttributeList attributeList) {
     	String SQL = "";
       boolean start = true;
-      for(Attribute<?> a:attributeList) {
+      for(Attribute<? extends Value<?>> a:attributeList) {
       	if(!start) {
       		SQL += ",";
       	} else {
@@ -3497,7 +3497,7 @@ public class  AttributeDao implements AttributeDaoInterface{
     	return SQL;
     }
     
-    public static String insertDefinitionValues(Attribute<?> a) {
+    public static String insertDefinitionValues(Attribute<? extends Value<?>> a) {
     	String values = "";
     	values += "'"+a.name()+"'"
     			+ ",'"+a.attributeType().name()+"'"
@@ -3511,7 +3511,7 @@ public class  AttributeDao implements AttributeDaoInterface{
     	return values;
     }
     
-    public static String insertDefinitionUpdates(String fSQL, Attribute<?> attribute) {
+    public static String insertDefinitionUpdates(String fSQL, Attribute<? extends Value<?>> attribute) {
       String SQL =
           String.format(
              fSQL,
@@ -3531,7 +3531,7 @@ public class  AttributeDao implements AttributeDaoInterface{
     public static String insertAttributeValues(int objectId,AttributeList attributeList) {
     	String SQL = "";
       boolean start = true;
-      for(Attribute<?> a: attributeList) {
+      for(Attribute<? extends Value<?>> a: attributeList) {
       	if(!start) {
       		SQL += ",";
       	} else {
@@ -3542,7 +3542,7 @@ public class  AttributeDao implements AttributeDaoInterface{
       return SQL;
     }
 
-    public static String insertAttributeValues(int objectId,Attribute<?> a) {
+    public static String insertAttributeValues(int objectId,Attribute<? extends Value<?>> a) {
     	String values = "";
     	values += objectId 
     			+","+a.id()
@@ -3555,7 +3555,7 @@ public class  AttributeDao implements AttributeDaoInterface{
     	return values;
     }
     
-    public static String insertAttributeVUpdates(String fSQL, int oid, Attribute<?> attribute) {
+    public static String insertAttributeVUpdates(String fSQL, int oid, Attribute<? extends Value<?>> attribute) {
       String SQL =
           String.format(
              fSQL,
@@ -3699,7 +3699,7 @@ public class  AttributeDao implements AttributeDaoInterface{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <E extends ArrayList<Attribute<?>>> E loadUpdates(String businessKey, String target, boolean log) {
+	public <E extends ArrayList<Attribute<? extends Value<?>>>> E loadUpdates(String businessKey, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -3708,7 +3708,7 @@ public class  AttributeDao implements AttributeDaoInterface{
 			msg = "====[ load attributes registered in the updates table ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 //		AttributeList al = new AttributeList();
-		ArrayList<Attribute<?>> al = new ArrayList<Attribute<?>>();
+		ArrayList<Attribute<? extends Value<?>>> al = new ArrayList<Attribute<? extends Value<?>>>();
 		Connection conn = null;
 		ResultSet rs = null;
 		Statement dbs = null;
@@ -3747,7 +3747,7 @@ public class  AttributeDao implements AttributeDaoInterface{
 				if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+fSQL+"]----";LOG.info(String.format(fmt,_f,msg));}
 				rs = dbs.executeQuery(fSQL);		
 				while(rs.next()) {
-					Attribute<?> a = _rsToA(rs);
+					Attribute<? extends Value<?>> a = _rsToA(rs);
 					a = _rsToAV(a, rs);
 					a.setHistory(CampInstanceDao.instance().rsToI(rs, log));
 					Value<?> v = Value.ValueDao.rsToV(rs, log);
@@ -3776,7 +3776,7 @@ public class  AttributeDao implements AttributeDaoInterface{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <E extends ArrayList<Attribute<?>>> E loadUpdatesByKey(String businessKey, boolean log) {
+	public <E extends ArrayList<Attribute<? extends Value<?>>>> E loadUpdatesByKey(String businessKey, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -3785,7 +3785,7 @@ public class  AttributeDao implements AttributeDaoInterface{
 			msg = "====[ load all attribute object instances (definition and value aspect) registered in the updates table ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		AttributeList al = new AttributeList();
-//		ArrayList<Attribute<?>> al - new ArrayList<Attribute<?>>();
+//		ArrayList<Attribute<? extends Value<?>>> al - new ArrayList<Attribute<? extends Value<?>>>();
 		Connection conn = null;
 		ResultSet rs = null;
 		Statement dbs = null;
@@ -3824,7 +3824,7 @@ public class  AttributeDao implements AttributeDaoInterface{
 				if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+fSQL+"]----";LOG.info(String.format(fmt,_f,msg));}
 				rs = dbs.executeQuery(fSQL);		
 				while(rs.next()) {
-					Attribute<?> a = _rsToA(rs);
+					Attribute<? extends Value<?>> a = _rsToA(rs);
 					a = _rsToAV(a, rs);
 					a.setHistory(CampInstanceDao.instance().rsToI(rs, log));
 					Value<?> v = Value.ValueDao.rsToV(rs, log);
@@ -3852,7 +3852,7 @@ public class  AttributeDao implements AttributeDaoInterface{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <E extends ArrayList<Attribute<?>>> E loadUpdatesByTarget(String target, boolean log) {
+	public <E extends ArrayList<Attribute<? extends Value<?>>>> E loadUpdatesByTarget(String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -3900,7 +3900,7 @@ public class  AttributeDao implements AttributeDaoInterface{
 				if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+fSQL+"]----";LOG.info(String.format(fmt,_f,msg));}
 				rs = dbs.executeQuery(fSQL);		
 				while(rs.next()) {
-					Attribute<?> a = _rsToA(rs);
+					Attribute<? extends Value<?>> a = _rsToA(rs);
 					a = _rsToAV(a, rs);
 					a.setHistory(CampInstanceDao.instance().rsToI(rs, log));
 					Value<?> v = Value.ValueDao.rsToV(rs, log);
@@ -3928,7 +3928,7 @@ public class  AttributeDao implements AttributeDaoInterface{
 	}
 
 	@Override
-	public Attribute<?> loadUpdate(Attribute<?> a, String businessKey, String target, boolean log) {
+	public Attribute<? extends Value<?>> loadUpdate(Attribute<? extends Value<?>> a, String businessKey, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -4005,7 +4005,7 @@ public class  AttributeDao implements AttributeDaoInterface{
 	}
 
 	@Override
-	public int addToUpdates(Attribute<?> a, String businessKey, String target, boolean log) {
+	public int addToUpdates(Attribute<? extends Value<?>> a, String businessKey, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -4048,7 +4048,7 @@ public class  AttributeDao implements AttributeDaoInterface{
 	}
 
 	@Override
-	public <E extends ArrayList<Attribute<?>>> int addToUpdates(E al, String businessKey, String target,
+	public <E extends ArrayList<Attribute<? extends Value<?>>>> int addToUpdates(E al, String businessKey, String target,
 			boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
@@ -4274,7 +4274,7 @@ public class  AttributeDao implements AttributeDaoInterface{
 	}
 
 	@Override
-	public <E extends ArrayList<Attribute<?>>> int deleteFromUpdates(E al, String businessKey, String target,
+	public <E extends ArrayList<Attribute<? extends Value<?>>>> int deleteFromUpdates(E al, String businessKey, String target,
 			boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
@@ -4292,7 +4292,7 @@ public class  AttributeDao implements AttributeDaoInterface{
 			
 			dbs = conn.createStatement();
 			
-			for(Attribute<?> a:al) {
+			for(Attribute<? extends Value<?>> a:al) {
 				String SQL = "DELETE FROM "+updatestable+" WHERE "
 						+ "`_au_attribute_value_id`="+a.attributeId()+" AND `_au_object_id`="+a.getObjectId()+" "
 						+ " AND `_au_businesskey`='"+businessKey+"' AND `_au_target`='"+target+"'";
@@ -4323,14 +4323,14 @@ public class  AttributeDao implements AttributeDaoInterface{
 		return retVal;
 	}
 
-	public String insertUpdateValues(Attribute<?> a, String businessKey, String target) {
+	public String insertUpdateValues(Attribute<? extends Value<?>> a, String businessKey, String target) {
 		return a.attributeId()+","+a.getObjectId()+",'"+businessKey+"','"+target+"'";
 	}
 	
 	public String insertUpdateListValues(AttributeList al, String businessKey, String target) {
 		String values = "";
 		boolean start = true;
-		for(Attribute<?> a: al) {
+		for(Attribute<? extends Value<?>> a: al) {
 			if(!start) {
 				values += ",";
 			} else {
@@ -4371,10 +4371,10 @@ public class  AttributeDao implements AttributeDaoInterface{
 	}
 
 	@Override
-	public Attribute<?> loadFirst(String businessId) {
+	public Attribute<? extends Value<?>> loadFirst(String businessId) {
 		return _loadFirst(businessId, !Util._IN_PRODUCTION);
 	}
-	public static Attribute<?> _loadFirst(String businessId, boolean log) {
+	public static Attribute<? extends Value<?>> _loadFirst(String businessId, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -4382,7 +4382,7 @@ public class  AttributeDao implements AttributeDaoInterface{
 			_f = "[_loadFirst]";
 			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
-		Attribute<?> a = null;
+		Attribute<? extends Value<?>> a = null;
 		try {
 			a = CampInstanceDao.instance()._loadFirst(businessId, AttributeDao.instance(), false,log);
 		} catch (SQLException e) {
@@ -4397,10 +4397,10 @@ public class  AttributeDao implements AttributeDaoInterface{
 	}
 
 	@Override
-	public Attribute<?> loadPrevious(Attribute<?> attribute) {
+	public Attribute<? extends Value<?>> loadPrevious(Attribute<? extends Value<?>> attribute) {
 		return _loadPrevious(attribute, !Util._IN_PRODUCTION);
 	}
-	public static Attribute<?> _loadPrevious(Attribute<?> attribute,boolean log) {
+	public static Attribute<? extends Value<?>> _loadPrevious(Attribute<? extends Value<?>> attribute,boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -4408,7 +4408,7 @@ public class  AttributeDao implements AttributeDaoInterface{
 			_f = "[_loadPrevious]";
 			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
-		Attribute<?> a = null;
+		Attribute<? extends Value<?>> a = null;
 		try {
 			a = CampInstanceDao.instance()._loadPrevious(attribute, AttributeDao.instance(), false, log);
 		} catch(SQLException e) {
@@ -4423,10 +4423,10 @@ public class  AttributeDao implements AttributeDaoInterface{
 	}
 
 	@Override
-	public Attribute<?> loadNext(Attribute<?> attribute) {
+	public Attribute<? extends Value<?>> loadNext(Attribute<? extends Value<?>> attribute) {
 		return _loadNext(attribute, !Util._IN_PRODUCTION);
 	}
-	public Attribute<?> _loadNext(Attribute<?> attribute, boolean log) {
+	public Attribute<? extends Value<?>> _loadNext(Attribute<? extends Value<?>> attribute, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -4434,7 +4434,7 @@ public class  AttributeDao implements AttributeDaoInterface{
 			_f = "[_loadNext]";
 			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
-		Attribute<?> a = null;
+		Attribute<? extends Value<?>> a = null;
 		try {
 			a = CampInstanceDao.instance()._loadNext(attribute, AttributeDao.instance(), false, log);
 		} catch(SQLException e) {

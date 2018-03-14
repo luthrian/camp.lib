@@ -128,7 +128,7 @@ public interface ValueInterface<T> extends HasId, HasStates, HasGroup, HasCoordi
 
     public static String _mapValueToJson(MapValue v){
         String json = "{";
-        HashMap<String,Attribute<?>> h = v.value();
+        HashMap<String,Attribute<? extends Value<?>>> h = v.value();
         boolean start = true;
         for(String group:h.keySet()){
           if(!start){
@@ -142,10 +142,10 @@ public interface ValueInterface<T> extends HasId, HasStates, HasGroup, HasCoordi
         return json;
     }
 
-    public static String _arrayToJson(ArrayList<Attribute<?>> v){
+    public static String _arrayToJson(ArrayList<Attribute<? extends Value<?>>> v){
         String json = "[";
         boolean start = true;
-        for(Attribute<?> a: v){
+        for(Attribute<? extends Value<?>> a: v){
             if(!start){
                 json += ",";
             } else {
@@ -159,9 +159,9 @@ public interface ValueInterface<T> extends HasId, HasStates, HasGroup, HasCoordi
 
     public static String _listValueToJson(ListValue v){
         String json = "[";
-        ArrayList<Attribute<?>> h = v.value();
+        ArrayList<Attribute<? extends Value<?>>> h = v.value();
         boolean start = true;
-        for(Attribute<?> a: h){
+        for(Attribute<? extends Value<?>> a: h){
             if(!start){
                 json += ",";
             } else {
@@ -175,7 +175,7 @@ public interface ValueInterface<T> extends HasId, HasStates, HasGroup, HasCoordi
 
     public static String _complexValueToJson(ComplexValue v){
         String json = "{";
-        HashMap<String,ArrayList<Attribute<?>>> h = v.value();
+        HashMap<String,ArrayList<Attribute<? extends Value<?>>>> h = v.value();
         boolean start = true;
         for(String group: h.keySet()){
         	if(!start) {
@@ -191,9 +191,9 @@ public interface ValueInterface<T> extends HasId, HasStates, HasGroup, HasCoordi
 
     public static String _tableValueToJson(TableValue v){
         String json = "[";
-        ArrayList<ArrayList<Attribute<?>>> h = v.value();
+        ArrayList<ArrayList<Attribute<? extends Value<?>>>> h = v.value();
         boolean start = true;
-        for(ArrayList<Attribute<?>> l: h){
+        for(ArrayList<Attribute<? extends Value<?>>> l: h){
             if(!start){
                 json += ",";
             } else {
@@ -270,22 +270,22 @@ public interface ValueInterface<T> extends HasId, HasStates, HasGroup, HasCoordi
     		 ev.states().update(states);
     		 return ev;
     	case _complex:
-    		HashMap<String,ArrayList<Attribute<?>>> cvalue = _fromComplexJSONObject(jo.getJSONObject("value"));
+    		HashMap<String,ArrayList<Attribute<? extends Value<?>>>> cvalue = _fromComplexJSONObject(jo.getJSONObject("value"));
     		 ComplexValue cv = new ComplexValue(id,cvalue,group,position,selected); //Value<String>(id,type, (String)value,group,position);
     		 cv.states().update(states);
     		 return cv;
     	case _table:
-    		ArrayList<ArrayList<Attribute<?>>> tblvalue = _fromTableJSONArray(jo.getJSONArray("value"));
+    		ArrayList<ArrayList<Attribute<? extends Value<?>>>> tblvalue = _fromTableJSONArray(jo.getJSONArray("value"));
     		 TableValue tbv = new TableValue(id,tblvalue,group,position,selected); //Value<String>(id,type, (String)value,group,position);
     		 tbv.states().update(states);
     		 return tbv;
     	case _map:
-    		HashMap<String,Attribute<?>> mvalue = _fromMapJSONObject(jo.getJSONObject("value"));
+    		HashMap<String,Attribute<? extends Value<?>>> mvalue = _fromMapJSONObject(jo.getJSONObject("value"));
     		 MapValue mv = new MapValue(id,mvalue,group,position,selected); //Value<String>(id,type, (String)value,group,position);
     		 mv.states().update(states);
     		 return mv;
     	case _list:
-    		ArrayList<Attribute<?>> lvalue = _fromListJSONArray(jo.getJSONArray("value"));
+    		ArrayList<Attribute<? extends Value<?>>> lvalue = _fromListJSONArray(jo.getJSONArray("value"));
     		 ListValue lv = new ListValue(id,lvalue,group,position,selected); //Value<String>(id,type, (String)value,group,position);
     		 lv.states().update(states);
     		 return lv;
@@ -294,12 +294,12 @@ public interface ValueInterface<T> extends HasId, HasStates, HasGroup, HasCoordi
     	}
     }
 
-    public static HashMap<String,ArrayList<Attribute<?>>> _fromComplexJson(String jsonValue){
+    public static HashMap<String,ArrayList<Attribute<? extends Value<?>>>> _fromComplexJson(String jsonValue){
     	JSONObject jo = new JSONObject(jsonValue);
     	return _fromComplexJSONObject(jo);
     }
-    public static HashMap<String,ArrayList<Attribute<?>>> _fromComplexJSONObject(JSONObject jo){
-      HashMap<String,ArrayList<Attribute<?>>> value = new HashMap<String,ArrayList<Attribute<?>>>();
+    public static HashMap<String,ArrayList<Attribute<? extends Value<?>>>> _fromComplexJSONObject(JSONObject jo){
+      HashMap<String,ArrayList<Attribute<? extends Value<?>>>> value = new HashMap<String,ArrayList<Attribute<? extends Value<?>>>>();
       for(String group:jo.keySet()) {
       	
       	value.put(group, _fromListJSONArray(jo.getJSONArray(group)));
@@ -307,36 +307,36 @@ public interface ValueInterface<T> extends HasId, HasStates, HasGroup, HasCoordi
       return value;
     }
 
-    public static ArrayList<ArrayList<Attribute<?>>> _fromTableJson(String jsonValue){
+    public static ArrayList<ArrayList<Attribute<? extends Value<?>>>> _fromTableJson(String jsonValue){
     	JSONArray ja = new JSONArray(jsonValue);
     	return _fromTableJSONArray(ja);
     }
-    public static ArrayList<ArrayList<Attribute<?>>> _fromTableJSONArray(JSONArray ja){
-      ArrayList<ArrayList<Attribute<?>>> value = new ArrayList<ArrayList<Attribute<?>>>();
+    public static ArrayList<ArrayList<Attribute<? extends Value<?>>>> _fromTableJSONArray(JSONArray ja){
+      ArrayList<ArrayList<Attribute<? extends Value<?>>>> value = new ArrayList<ArrayList<Attribute<? extends Value<?>>>>();
       for(int i = 0;i<ja.length();i++) {
       	value.add(_fromListJSONArray(ja.getJSONArray(i)));
       }
       return value;
     }
 
-    public static HashMap<String,Attribute<?>> _fromMapJson(String jsonValue){
+    public static HashMap<String,Attribute<? extends Value<?>>> _fromMapJson(String jsonValue){
     	JSONObject jo = new JSONObject(jsonValue);
     	return _fromMapJSONObject(jo);
     }
-    public static HashMap<String,Attribute<?>> _fromMapJSONObject(JSONObject jo){
-      HashMap<String,Attribute<?>> value = new HashMap<String,Attribute<?>>();
+    public static HashMap<String,Attribute<? extends Value<?>>> _fromMapJSONObject(JSONObject jo){
+      HashMap<String,Attribute<? extends Value<?>>> value = new HashMap<String,Attribute<? extends Value<?>>>();
       for(String group:jo.keySet()) {
       	value.put(group, AttributeInterface._fromJSONObject(jo.getJSONObject(group)));
       }
       return value;
     }
 
-    public static ArrayList<Attribute<?>> _fromListJson(String jsonValue){
+    public static ArrayList<Attribute<? extends Value<?>>> _fromListJson(String jsonValue){
     	JSONArray ja = new JSONArray(jsonValue);
     	return _fromListJSONArray(ja);
     }
-    public static ArrayList<Attribute<?>> _fromListJSONArray(JSONArray ja){
-      ArrayList<Attribute<?>> value = new ArrayList<Attribute<?>>();
+    public static ArrayList<Attribute<? extends Value<?>>> _fromListJSONArray(JSONArray ja){
+      ArrayList<Attribute<? extends Value<?>>> value = new ArrayList<Attribute<? extends Value<?>>>();
       for(int i = 0;i<ja.length();i++) {
       	value.add(AttributeInterface._fromJSONObject(ja.getJSONObject(i)));
       }
@@ -373,7 +373,7 @@ public interface ValueInterface<T> extends HasId, HasStates, HasGroup, HasCoordi
     	return json;
     }
 
-    public static String _toMapJson(HashMap<String,Attribute<?>> v){
+    public static String _toMapJson(HashMap<String,Attribute<? extends Value<?>>> v){
     	String json = "{";
     	boolean start = true;
     	for(String group : v.keySet()) {
@@ -388,10 +388,10 @@ public interface ValueInterface<T> extends HasId, HasStates, HasGroup, HasCoordi
     	return json;
     }
 
-    public static String _toListJson(ArrayList<Attribute<?>> v){
+    public static String _toListJson(ArrayList<Attribute<? extends Value<?>>> v){
     	String json = "[";
     	boolean start = true;
-    	for(Attribute<?> a : v) {
+    	for(Attribute<? extends Value<?>> a : v) {
     		if(!start) {
     			json += ",";
     		} else {

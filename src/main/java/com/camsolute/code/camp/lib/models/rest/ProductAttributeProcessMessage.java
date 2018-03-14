@@ -21,6 +21,7 @@ package com.camsolute.code.camp.lib.models.rest;
 
 
 import com.camsolute.code.camp.lib.models.Attribute;
+import com.camsolute.code.camp.lib.models.Value;
 import com.camsolute.code.camp.lib.models.process.ProductAttributeProcess;
 import com.camsolute.code.camp.lib.models.rest.VariableValue.VariableValueType;
 
@@ -38,7 +39,7 @@ public class ProductAttributeProcessMessage extends Message{
 		papm_order_fulfilled;
 	}
 	
-	public ProductAttributeProcessMessage(ProductAttributeMessage message, Attribute<?> a) {
+	public ProductAttributeProcessMessage(ProductAttributeMessage message, Attribute<? extends Value<?>> a) {
 		super(message.name(),a.processInstances().get(0).businessKey());
 		ProductAttributeProcess<?> p = (ProductAttributeProcess<?>) a.processInstances().get(0);
 		this.tenantId = p.tenantId();

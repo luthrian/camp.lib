@@ -95,7 +95,7 @@ public abstract  class Attribute<U extends Value<?>> implements AttributeInterfa
   private boolean hasParent = false;
   private int parentId = 0;
   private int attributeParentId = 0;
-  private Attribute<?> parent = null;
+  private Attribute<? extends Value<?>> parent = null;
 
   private CampStates states = new CampStates();
   private CampStates valueStates = new CampStates();

@@ -25,32 +25,32 @@ import com.camsolute.code.camp.lib.models.Attribute;
 import com.camsolute.code.camp.lib.models.Value;
 import com.camsolute.code.camp.lib.models.Attribute.AttributeType;
 
-public class ListValue extends Value<ArrayList<Attribute<?>>> {
-    public ListValue(ArrayList<Attribute<?>> value){
+public class ListValue extends Value<ArrayList<Attribute<? extends Value<?>>>> {
+    public ListValue(ArrayList<Attribute<? extends Value<?>>> value){
         super(AttributeType._list,value);
     }
 
-    public ListValue(ArrayList<Attribute<?>> value, int x, int y, int z){
+    public ListValue(ArrayList<Attribute<? extends Value<?>>> value, int x, int y, int z){
         super(AttributeType._list,value, x, y, z);
     }
 
-    public ListValue(ArrayList<Attribute<?>> value, String group, int x, int y, int z){
+    public ListValue(ArrayList<Attribute<? extends Value<?>>> value, String group, int x, int y, int z){
         super(AttributeType._list,value, group, x, y, z);
     }
 
-    public ListValue(ArrayList<Attribute<?>> value, String group, int x, int y, int z, boolean selected){
+    public ListValue(ArrayList<Attribute<? extends Value<?>>> value, String group, int x, int y, int z, boolean selected){
         super(AttributeType._list,value, group, x, y, z, selected);
     }
 
-    public ListValue(int id, ArrayList<Attribute<?>> value, String group, int x, int y, int z, boolean selected){
+    public ListValue(int id, ArrayList<Attribute<? extends Value<?>>> value, String group, int x, int y, int z, boolean selected){
         super(id, AttributeType._list,value, group, x, y, z, selected);
     }
 
-    public ListValue(int id, ArrayList<Attribute<?>> value, String group, Coordinate position){
+    public ListValue(int id, ArrayList<Attribute<? extends Value<?>>> value, String group, Coordinate position){
         super(id, AttributeType._list,value, group, position);
     }
 
-    public ListValue(int id, ArrayList<Attribute<?>> value, String group, Coordinate position, boolean selected){
+    public ListValue(int id, ArrayList<Attribute<? extends Value<?>>> value, String group, Coordinate position, boolean selected){
         super(id, AttributeType._list,value, group, position, selected);
     }
 
