@@ -19,6 +19,8 @@
  ******************************************************************************/
 package com.camsolute.code.camp.lib.models.product;
 
+import java.sql.Timestamp;
+
 import com.camsolute.code.camp.lib.dao.DaoInterface;
 import com.camsolute.code.camp.lib.dao.HasModelReference;
 import com.camsolute.code.camp.lib.dao.HasProcessReference;
@@ -29,6 +31,20 @@ public interface ProductRestInterface extends DaoInterface<Product>, HasModelRef
 	public Product create(String businessId, String businessKey, String date, String endOfLife, String group, String version, boolean log);
 
 	public Product loadUpdate(String businessId, int modelId, String businessKey, String target, boolean log);
+	
+	public Product loadFirst(String businessId, boolean primary, boolean log);
+	
+	public Product loadNext(Product product, boolean primary, boolean log);
+	
+	public Product loadPrevious(Product product, boolean primary, boolean log);
+
+	public ProductList loadDate(Timestamp date, boolean primary, boolean log);
+	
+	public ProductList loadDateRange(Timestamp startDate, Timestamp endDate, boolean primary, boolean log);
+	
+	public ProductList loadDate(String businessId, Timestamp date, boolean primary, boolean log);
+	
+	public ProductList loadDateRange(String businessId, Timestamp startDate, Timestamp endDate, boolean primary, boolean log);
 	
   public  int addToUpdates(String businessId, int modelId, String businessKey, String target, boolean log);
 

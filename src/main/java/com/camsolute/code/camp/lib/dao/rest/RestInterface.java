@@ -34,7 +34,7 @@ import com.camsolute.code.camp.lib.contract.IsObjectInstance;
 import com.camsolute.code.camp.lib.contract.Serialization;
 import com.camsolute.code.camp.lib.utilities.Util;
 
-public interface RestInterface<T extends IsObjectInstance> {
+public interface RestInterface<T extends IsObjectInstance<T>> {
 	public static Logger LOG = LogManager.getLogger(RestInterface.class);
 	public static String fmt = "[%15s] [%s]";
 	

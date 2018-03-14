@@ -19,6 +19,7 @@
  ******************************************************************************/
 package com.camsolute.code.camp.lib.models.product;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
@@ -312,6 +313,182 @@ public class ProductRest implements ProductRestInterface {
 		}
 		return (E)o;
 	}
+
+	@Override
+	public Product loadFirst(String businessId, boolean primary, boolean log) {
+		return _loadFirst(serverUrl, businessId, primary, log);
+	}
+	public Product _loadFirst(String serverUrl, String businessId, boolean primary, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[loadFirst]";
+			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		String prefix = CampRest.Product.Prefix;		
+		String serviceUri = CampRest.InstanceDaoService.callRequest(prefix,CampRest.InstanceDaoService.Request.LOAD_FIRST);
+		String uri = serverUrl+domainUri+String.format(serviceUri,businessId, primary);
+		String result = RestInterface.resultGET(uri, log);
+		Product o = ProductInterface._fromJson(result);
+		
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[loadFirst completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return o;
+	}
+
+	@Override
+	public Product loadNext(Product product, boolean primary, boolean log) {
+		return _loadNext(serverUrl, product, primary, log);
+	}
+	public Product _loadNext(String serverUrl, Product product, boolean primary, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[loadNext]";
+			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		String prefix = CampRest.Product.Prefix;		
+		String serviceUri = CampRest.InstanceDaoService.callRequest(prefix,CampRest.InstanceDaoService.Request.LOAD_NEXT);
+		String uri = serverUrl+domainUri+String.format(serviceUri, primary);
+		String result = RestInterface.resultPost(uri,product.toJson(), log);
+		Product o = ProductInterface._fromJson(result);
+		
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[loadNext completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return o;
+	}
+
+	@Override
+	public Product loadPrevious(Product product, boolean primary, boolean log) {
+		return _loadPrevious(serverUrl, product, primary, log);
+	}
+	public Product _loadPrevious(String serverUrl, Product product, boolean primary, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[loadPrevious]";
+			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		String prefix = CampRest.Product.Prefix;		
+		String serviceUri = CampRest.InstanceDaoService.callRequest(prefix,CampRest.InstanceDaoService.Request.LOAD_PREVIOUS);
+		String uri = serverUrl+domainUri+String.format(serviceUri,primary);
+		String result = RestInterface.resultPost(uri,product.toJson(), log);
+		Product o = ProductInterface._fromJson(result);
+		
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[loadPrevious completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return o;
+	}
+
+	@Override
+	public ProductList loadDate(Timestamp date, boolean primary, boolean log) {
+		return _loadDate(serverUrl, date, primary, log);
+	}
+	public ProductList _loadDate(String serverUrl, Timestamp date, boolean primary, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[loadDate]";
+			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		String prefix = CampRest.Product.Prefix;		
+		String serviceUri = CampRest.InstanceDaoService.callRequest(prefix,CampRest.InstanceDaoService.Request.LOAD_DATE);
+		String uri = serverUrl+domainUri+String.format(serviceUri,date.toString(), primary);
+		String result = RestInterface.resultGET(uri, log);
+		ProductList pl = ProductList._fromJson(result);
+		
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[loadDate completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return pl;
+	}
+
+	@Override
+	public ProductList loadDateRange(Timestamp startDate, Timestamp endDate, boolean primary, boolean log) {
+		return _loadDateRange(serverUrl, startDate, endDate, primary, log);
+	}
+	public ProductList _loadDateRange(String serverUrl, Timestamp startDate, Timestamp endDate, boolean primary, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[loadDateRange]";
+			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		String prefix = CampRest.Product.Prefix;		
+		String serviceUri = CampRest.InstanceDaoService.callRequest(prefix,CampRest.InstanceDaoService.Request.LOAD_DATE_RANGE);
+		String uri = serverUrl+domainUri+String.format(serviceUri,startDate.toString(), endDate.toString(), primary);
+		String result = RestInterface.resultGET(uri, log);
+		ProductList pl  = ProductList._fromJson(result);
+		
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[loadDateRange completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return pl;
+	}
+
+	@Override
+	public ProductList loadDate(String businessId, Timestamp date, boolean primary, boolean log) {
+		return _loadDate(serverUrl, businessId, date, primary, log);
+	}
+	public ProductList _loadDate(String serverUrl, String businessId, Timestamp date, boolean primary, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[loadDate]";
+			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		String prefix = CampRest.Product.Prefix;		
+		String serviceUri = CampRest.InstanceDaoService.callRequest(prefix,CampRest.InstanceDaoService.Request.LOAD_DATE_BY_BID);
+		String uri = serverUrl+domainUri+String.format(serviceUri,businessId, date.toString(), primary);
+		String result = RestInterface.resultGET(uri, log);
+		ProductList pl = ProductList._fromJson(result);
+		
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[loadDate completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return pl;
+	}
+
+	@Override
+	public ProductList loadDateRange(String businessId, Timestamp startDate, Timestamp endDate, boolean primary, boolean log) {
+		return _loadDateRange(serverUrl, businessId, startDate, endDate, primary, log);
+	}
+	public ProductList _loadDateRange(String serverUrl, String businessId, Timestamp startDate, Timestamp endDate, boolean primary, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[loadDateRange]";
+			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		String prefix = CampRest.Product.Prefix;		
+		String serviceUri = CampRest.InstanceDaoService.callRequest(prefix,CampRest.InstanceDaoService.Request.LOAD_DATE_RANGE_BY_BID);
+		String uri = serverUrl+domainUri+String.format(serviceUri,businessId, startDate.toString(), endDate.toString(), primary);
+		String result = RestInterface.resultGET(uri, log);
+		ProductList pl = ProductList._fromJson(result);
+		
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[loadDateRange completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return pl;
+	}
+
 
 	@Override
 	public <E extends ArrayList<Product>> E loadUpdates(String businessKey, String target, boolean log) {

@@ -695,7 +695,7 @@ public class CampRest {
 		public static final String Prefix = "/process";
 	}
 	public static class ProcessControl {
-		public static final String Prefix = "/process";
+		public static final String Prefix = "/process/control";
 	}
  	public static class Product {
 		public static final String Prefix = "/product";
