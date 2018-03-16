@@ -69,11 +69,13 @@ public class Product implements ProductInterface {
 
 	public Product(String name) {
 		this.name = name;
+		this.history.date(this.date);
 	}
 
 	public Product(String name, String businessKey) {
 		this.name = name;
 		this.businessKey = businessKey;
+		this.history.date(this.date);
 	}
 
 	public Product(String name, String businessKey, Group group, Version version, Timestamp date) {
@@ -82,6 +84,7 @@ public class Product implements ProductInterface {
 		this.group = group;
 		this.version = version;
 		this.date = date;
+		this.history.date(date);
 	}
 
 	public Product(int id, String name, String businessKey, Group group, Version version, Timestamp date) {
@@ -91,6 +94,7 @@ public class Product implements ProductInterface {
 		this.group = group;
 		this.version = version;
 		this.date = date;
+		this.history.date(date);
 	}
 
 	public Product(String name, String businessKey, Group group, Version version, Timestamp date, Timestamp endOfLife) {
@@ -99,6 +103,7 @@ public class Product implements ProductInterface {
 		this.group = group;
 		this.version = version;
 		this.date = date;
+		this.history.date(date);
 		this.history.endOfLife(endOfLife);
 	}
 
@@ -109,6 +114,7 @@ public class Product implements ProductInterface {
 		this.group = group;
 		this.version = version;
 		this.date = date;
+		this.history.date(date);
 		this.history.endOfLife(endOfLife);
 	}
 
@@ -169,6 +175,7 @@ public class Product implements ProductInterface {
 	public Timestamp updateDate(Timestamp date) {
 		Timestamp prev = this.date;
 		this.date = date;
+		this.history.date(date);
 		this.states.modify();
 		return prev;
 	}
@@ -176,6 +183,7 @@ public class Product implements ProductInterface {
 	@Override
 	public void setDate(Timestamp date) {
 		this.date = date;
+		this.history.date(date);
 	}
 
 	@Override

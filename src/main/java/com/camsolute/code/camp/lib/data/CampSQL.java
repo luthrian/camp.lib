@@ -346,9 +346,10 @@ public class CampSQL {
 				{"_initial_instance_id", "varchar(45) NOT NULL"},
 				{"_status", "varchar(45) NOT NULL"},
 				{"_timestamp", "timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP"},
+				{"_date", "timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP"},
+				{"_end_of_life", "timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP"},//DATE_ADD(CURRENT_TIMESTAMP,INTERVAL 10 YEAR)"},
 				{"_version_value", "VARCHAR(45) NOT NULL"},
 				{"_group_name", "VARCHAR(100) NOT NULL"},
-				{"_end_of_life", "timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP"},//DATE_ADD(CURRENT_TIMESTAMP,INTERVAL 10 YEAR)"},
 				{"extra", "UNIQUE INDEX `_i_instance_id_UNIQUE` (`_instance_id` ASC)"
 					+ ",INDEX `_i_object_business_id_idx` (`_object_business_id` ASC)"
 					+ ",INDEX `_i_instance_id_idx` (`_instance_id` ASC)"

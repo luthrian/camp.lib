@@ -40,22 +40,32 @@ public interface CampInstanceInterface extends Serialization<CampInstance>  {
 
     public void timestamp(Timestamp ts);
         
+    public Timestamp date();
+
+    public void date(Timestamp d);
+        
     public Timestamp endOfLife();
     
     public void endOfLife(Timestamp eol);
 
     public static String _toJson(CampInstance i){
       String json = "{";
+      json += _toInnerJson(i);
+      json += "}";
+      return json;
+  }
+
+    public static String _toInnerJson(CampInstance i) {
+    	String json = "";
       json += "\"objectRefId\":"+i.objectRefId()+",";
       json += "\"id\":\""+i.id().id()+"\",";
       json += "\"initialId\":\""+i.initialId().id()+"\",";
       json += "\"currentId\":\""+i.currentId().id()+"\",";
       json += "\"timestamp\":\""+i.timestamp().toString()+"\",";
+      json += "\"date\":\""+i.date().toString()+"\",";
       json += "\"endOfLife\":\""+i.endOfLife().toString()+"\"";
-      json += "}";
-      return json;
-  }
-
+    	return json;
+    }
     public static CampInstance _fromJson(String json){
     	return _fromJSONObject(new JSONObject(json));
     }
@@ -65,9 +75,11 @@ public interface CampInstanceInterface extends Serialization<CampInstance>  {
         String initialId = jo.getString("initialId");
         String currentId = jo.getString("currentId");
         String timestamp = jo.getString("timestamp");
+        String date = jo.getString("date");
         String endOfLife = jo.getString("endOfLife");
         CampInstance i = new CampInstance(id,initialId,currentId);
         i.timestamp(Util.Time.timestamp(timestamp));
+        i.date(Util.Time.timestamp(date));
         i.endOfLife(Util.Time.timestamp(endOfLife));
         i.setObjectRefId(objectRefId);
         return i;

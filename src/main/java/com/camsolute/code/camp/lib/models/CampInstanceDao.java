@@ -594,7 +594,9 @@ public class CampInstanceDao implements CampInstanceDaoInterface,HasResultSetToI
 				msg = "====[ load a list of persisted current object instance by the time is was persisted to the database ]====";
 				LOG.traceEntry(String.format(fmt, (_f + ">>>>>>>>>").toUpperCase(), msg));
 			}
-			String select = " AND ci.`_timestamp` LIKE '"+date+"%'"
+//			String dt = Util.Time.datetime(Util.Time.timestamp(date)); //TODO: this may be better but slower check
+			String dt = date.substring(0,19);
+			String select = " AND ci.`_date` LIKE '"+dt+"%'"
 						+ " AND ci.`_instance_id`=ci.`_initial_instance_id`"
 						+ " AND t.`"+dao.tabledef(primary)[0][0]+"`=ci.`_object_id`";
 			E o = (E)dao.instanceListLoad(select,primary,log);
@@ -620,8 +622,10 @@ public class CampInstanceDao implements CampInstanceDaoInterface,HasResultSetToI
 				msg = "====[ load persisted object instance by timestamp '" + businessId + "' from database ]====";
 				LOG.traceEntry(String.format(fmt, (_f + ">>>>>>>>>").toUpperCase(), msg));
 			}
+//			String dt = Util.Time.datetime(Util.Time.timestamp(date)); //TODO: this may be better but slower check
+			String dt = date.substring(0,19);
 			String select = " AND ci.`_object_business_id` LIKE '"+businessId+"%'" 
-						+ " AND ci.`_timestamp` LIKE '"+date+"%'"
+						+ " AND ci.`_date` LIKE '"+dt+"%'"
 						+ " AND ci.`_instance_id`=ci.`_initial_instance_id`"
 						+ " AND t.`"+dao.tabledef(primary)[0][0]+"`=ci.`_object_id`";
 			E o = (E)dao.instanceListLoad(select,primary,log);
@@ -688,13 +692,17 @@ public class CampInstanceDao implements CampInstanceDaoInterface,HasResultSetToI
 				msg = "====[ load a list of persisted object instances that were persistied to the database within a range of 2 dates ]====";
 				LOG.traceEntry(String.format(fmt, (_f + ">>>>>>>>>").toUpperCase(), msg));
 			}
+//			String sdt = Util.Time.datetime(Util.Time.timestamp(endDate)); //TODO: this may be better but slower check
+			String sdt = startDate.substring(0,19);
+//			String edt = Util.Time.datetime(Util.Time.timestamp(endDate)); //TODO: this may be better but slower check
+			String edt = endDate.substring(0,19);
 			String fSQL = "";
-			if( (startDate == null || startDate.isEmpty())){
-				fSQL = " AND DATE_SUB('"+endDate+"',INTERVAL "+CampFormats._DAYS_IN_PAST_SEARCH_RANGE+" DAY) <= ci.`_timestamp` AND '"+endDate+"' >= ci.`_timestamp` ";
-			} else if( (endDate == null || endDate.isEmpty())) {
-				fSQL = " AND '"+startDate+"' <= ci.`_timestamp` AND DATE_ADD('"+startDate+"',INTERVAL "+CampFormats._DAYS_IN_FUTURE_SEARCH_RANGE+" DAY) >= ci.`_timestamp` ";
+			if( (sdt == null || sdt.isEmpty())){
+				fSQL = " AND DATE_SUB('"+edt+"',INTERVAL "+CampFormats._DAYS_IN_PAST_SEARCH_RANGE+" DAY) <= ci.`_date` AND '"+edt+"' >= ci.`_date` ";
+			} else if( (edt == null || edt.isEmpty())) {
+				fSQL = " AND '"+sdt+"' <= ci.`_date` AND DATE_ADD('"+sdt+"',INTERVAL "+CampFormats._DAYS_IN_FUTURE_SEARCH_RANGE+" DAY) >= ci.`_date` ";
 			} else {
-				fSQL = " AND '"+startDate+"' <= ci.`_timestamp` AND '"+endDate+"' >= ci.`_timestamp` ";
+				fSQL = " AND '"+sdt+"' <= ci.`_date` AND '"+edt+"' >= ci.`_date` ";
 			}
 			String select = " AND ci.`_object_business_id`=t.`"+dao.businessIdColumn(primary)+"`" 
 						+ fSQL
@@ -721,13 +729,17 @@ public class CampInstanceDao implements CampInstanceDaoInterface,HasResultSetToI
 				msg = "====[ load persisted object instance by timestamp '" + businessId + "' from database ]====";
 				LOG.traceEntry(String.format(fmt, (_f + ">>>>>>>>>").toUpperCase(), msg));
 			}
+//			String sdt = Util.Time.datetime(Util.Time.timestamp(endDate)); //TODO: this may be better but slower check
+			String sdt = startDate.substring(0,19);
+//			String edt = Util.Time.datetime(Util.Time.timestamp(endDate)); //TODO: this may be better but slower check
+			String edt = endDate.substring(0,19);
 			String fSQL = "";
-			if( (startDate == null || startDate.isEmpty())){
-				fSQL = " AND DATE_SUB('"+endDate+"',INTERVAL "+CampFormats._DAYS_IN_PAST_SEARCH_RANGE+" DAY) <= ci.`_timestamp` AND '"+endDate+"' >= ci.`_timestamp` ";
-			} else if( (endDate == null || endDate.isEmpty())) {
-				fSQL = " AND '"+startDate+"' <= ci.`_timestamp` AND DATE_ADD('"+startDate+"',INTERVAL "+CampFormats._DAYS_IN_FUTURE_SEARCH_RANGE+" DAY) >= ci.`_timestamp` ";
+			if( (sdt == null || sdt.isEmpty())){
+				fSQL = " AND DATE_SUB('"+edt+"',INTERVAL "+CampFormats._DAYS_IN_PAST_SEARCH_RANGE+" DAY) <= ci.`_date` AND '"+edt+"' >= ci.`_date` ";
+			} else if( (edt == null || edt.isEmpty())) {
+				fSQL = " AND '"+sdt+"' <= ci.`_date` AND DATE_ADD('"+sdt+"',INTERVAL "+CampFormats._DAYS_IN_FUTURE_SEARCH_RANGE+" DAY) >= ci.`_date` ";
 			} else {
-				fSQL = " AND '"+startDate+"' <= ci.`_timestamp` AND '"+endDate+"' >= ci.`_timestamp` ";
+				fSQL = " AND '"+sdt+"' <= ci.`_date` AND '"+edt+"' >= ci.`_date` ";
 			}
 			String select = " AND ci.`_object_business_id` LIKE '"+businessId+"%'" 
 						+ fSQL
@@ -801,9 +813,10 @@ public class CampInstanceDao implements CampInstanceDaoInterface,HasResultSetToI
 			+ "'" + ((useObjectId)?o.getObjectHistory().initialId().id():o.history().initialId().id()) + "', " 
 			+ "'" + o.status().name() + "', " 
 			+ "'" + ((useObjectId)?o.getObjectHistory().timestamp():o.history().timestamp()) + "', "
+			+ "'" + ((useObjectId)?o.getObjectHistory().date():o.history().date()) + "', "
+			+ "'" + ((useObjectId)?o.getObjectHistory().endOfLife():o.history().endOfLife()).toString() + "', "
 			+ "'" + o.version().value() + "', "
-			+ "'" + o.group().name() + "', "
-			+ "'" + ((useObjectId)?o.getObjectHistory().endOfLife():o.history().endOfLife()).toString() + "' ";
+			+ "'" + o.group().name() + "'";
 			return values;
 		}
 

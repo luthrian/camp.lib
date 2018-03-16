@@ -106,6 +106,8 @@ public class CampInstance implements CampInstanceInterface {
   
   private Timestamp endOfLife = Util.Time.timestamp();
   
+  private Timestamp date = Util.Time.timestamp();
+  
   public CampInstance() {
 
       this.timestamp = Util.Time.timestamp();
@@ -198,6 +200,17 @@ public class CampInstance implements CampInstanceInterface {
     return this.timestamp;
   }
 
+  @Override
+  public Timestamp date() {
+    return this.date;
+  }
+
+  @Override
+  public void date(Timestamp d) {
+    this.date = d;
+  }
+
+  
   @Override
   public Timestamp endOfLife() {
     return this.endOfLife;
