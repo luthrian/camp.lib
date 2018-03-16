@@ -28,6 +28,7 @@ import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.omg.PortableServer._ServantActivatorStub;
 
 import com.camsolute.code.camp.lib.data.CampSQL;
 import com.camsolute.code.camp.lib.models.AttributeDao;
@@ -509,30 +510,16 @@ public class ProductDao implements ProductDaoInterface {
 				String SQL = formatUpdateSQL(fSQL, p, log);
 				if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
 				retVal = dbs.executeUpdate(SQL);
-			} else {
-				String SQL = "INSERT INTO " + table + "( " + Util.DB._columns(tabledef, Util.DB.dbActionType.INSERT, log)
-				+ " ) VALUES ( " + insertValues(p,log) + " )";
-				
-				if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
-				
-				retVal = dbs.executeUpdate(SQL, Statement.RETURN_GENERATED_KEYS);		
-				rs = dbs.getGeneratedKeys();						
-				if (rs.next()) {		
-					p.updateId(rs.getInt(tabledef[0][0]));
-				}
-		}
-			
-			
-//			p.history().stamptime();
-//			p.history().updateInstance();
-			CampInstanceDao.instance()._addInstance(p, false, log);
-			retVal = 1;
+				CampInstanceDao.instance()._addInstance(p, false, log);
+				retVal = 1;
 			
 //			addProcessReferences(p,log);
 //			p = updateAttributes(p,log);
 			
-			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" updated ]----";LOG.info(String.format(fmt,_f,msg));}
-			
+				if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" updated ]----";LOG.info(String.format(fmt,_f,msg));}
+			} else {
+				p = save(p,log);
+			}
 			p.states().ioAction(IOAction.UPDATE);
 			p.states().setModified(false);
 		} catch(SQLException e) {
@@ -551,6 +538,7 @@ public class ProductDao implements ProductDaoInterface {
 		return p;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public <E extends ArrayList<Product>> E updateList(E pl, boolean log) {
 		long startTime = System.currentTimeMillis();
@@ -563,79 +551,48 @@ public class ProductDao implements ProductDaoInterface {
 		Connection conn = null;
 		ResultSet rs = null;
 		Statement dbs = null;
-		Statement dbu = null;
 		int retVal = 0;
+		ProductList ul = new ProductList();
+		ProductList sl = new ProductList();
+		ProductList rl = new ProductList();
+		for(Product p: pl) {
+			if(p.states().updateRequired()){
+				ul.add(p);
+			} else {
+				sl.add(p);
+			}
+		}
 		int uretVal = 0;
-		int updates = 0;
-		int saves = 0;
 		try{
-			conn = Util.DB.__conn(log);
-			
-			dbs = conn.createStatement();
-			dbu = conn.createStatement();
-			for(Product p: pl){
-				if(p.states().updateRequired()){
-					String fSQL = "UPDATE " + table + " SET " + Util.DB._columns(tabledef, Util.DB.dbActionType.UPDATE, log)
-					+ " WHERE `"+tabledef[0][0]+"`=" + p.id();
-					String SQL = formatUpdateSQL(fSQL,p,log);
-					
-					if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
-				
-					dbu.addBatch(SQL);
-					updates++;
-				}
-					
-			}
-			if(updates>0){
-				uretVal = Util.Math.addArray(dbu.executeBatch());
-				if (log && !Util._IN_PRODUCTION) { msg = "----[ '" + uretVal + "' entr"+((retVal>1)?"ies":"y")+" updated ]----"; LOG.info(String.format(fmt, _f, msg)); }
-			}
-			String SQL = "INSERT INTO " + table + "( " + Util.DB._columns(tabledef, Util.DB.dbActionType.INSERT, log)
-			+ " ) VALUES ";
-			boolean start = true;
-			for(Product p: pl) {
-				if(p.states().saveRequired()){
-					if(!start) {
-						SQL += ",";
-					} else {
-						start = false;
-					}
-					
-					SQL += "( " + insertValues(p,log) + " )";
-					saves++;
-				}
-			}
-			if(saves > 0) {
-				retVal = dbs.executeUpdate(SQL, Statement.RETURN_GENERATED_KEYS);		
-				rs = dbs.getGeneratedKeys();						
-				int count = 0;
-				while (rs.next()) {
-					for(Product p: pl){
-						String businessId = rs.getString("product_name");
-						if(p.onlyBusinessId().equals(businessId)){
-//							pl.get(count).updateId(rs.getInt(tabledef[0][0]));
-							p.updateId(rs.getInt(tabledef[0][0]));
+			if(ul.size()>0){
+					conn = Util.DB.__conn(log);
+					dbs = conn.createStatement();
+					for(Product p: ul){
+						if(p.states().updateRequired()){
+							String fSQL = "UPDATE " + table + " SET " + Util.DB._columns(tabledef, Util.DB.dbActionType.UPDATE, log)
+							+ " WHERE `"+tabledef[0][0]+"`=" + p.id();
+							String SQL = formatUpdateSQL(fSQL,p,log);
+							
+							if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
+						
+							dbs.addBatch(SQL);
 						}
+							
 					}
-					count++;
-				}
-
-				if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" saved ]----";LOG.info(String.format(fmt,_f,msg));}
+					retVal = Util.Math.addArray(dbs.executeBatch());
+					if (log && !Util._IN_PRODUCTION) { msg = "----[ '" + retVal + "' entr"+((retVal>1)?"ies":"y")+" updated ]----"; LOG.info(String.format(fmt, _f, msg)); }
+					
+					retVal = CampInstanceDao.instance()._addInstances(ul, false, log);
+					if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' history instance entr"+((retVal!=1)?"ies":"y")+" added ]----";LOG.info(String.format(fmt,_f,msg));}
+					
+					rl.addAll(ul);
 			}
-//			for(Product p: pl){
-//				p.history().stamptime();
-//				p.history().updateInstance();
-//				retVal += 1;
-//			}
-			retVal = CampInstanceDao.instance()._addInstances(pl, false, log);
+			if(sl.size()>0) {
+				sl = saveList(sl,log);
+				rl.addAll(sl);
+			}
 			
-//			addProcessReferences((ProductList)pl,log);
-//			
-//			updateAttributes((ProductList)pl,log);
-			
-			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" added ]----";LOG.info(String.format(fmt,_f,msg));}
-			
-			for(Product p: pl){
+			for(Product p: rl){
 				p.states().ioAction(IOAction.UPDATE);
 				p.states().setModified(false);
 			}
@@ -652,7 +609,7 @@ public class ProductDao implements ProductDaoInterface {
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[updateList completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
-		return pl;
+		return (E)rl;
 	}
 
 	@SuppressWarnings("unchecked")

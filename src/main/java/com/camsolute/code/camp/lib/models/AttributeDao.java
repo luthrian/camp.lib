@@ -606,56 +606,63 @@ public class  AttributeDao implements AttributeDaoInterface{
 
         conn = Util.DB.__conn(log);
 
-        String fSQL =
-            "UPDATE "
-                + table
-                + " SET "
-                + Util.DB._columns(tabledef, Util.DB.dbActionType.UPDATE, log)
-                + " WHERE `"
-                + tabledef[0][0]
-                + "`=%s";
-
-        if (log && !Util._IN_PRODUCTION) { msg = "----[ pre-format SQL:" + fSQL + "]----"; LOG.info(String.format(fmt, _f, msg)); }
-
-        String SQL = insertDefinitionUpdates(fSQL,attribute);
-        
-        if (log && !Util._IN_PRODUCTION) { msg = "----[ Formatted SQL: " + SQL + "]----"; LOG.info(String.format(fmt, _f, msg)); }
-
-        dbs = conn.createStatement();
-        retVal = dbs.executeUpdate(SQL);
-
-        if (log && !Util._IN_PRODUCTION) { msg = "----[ '" + retVal + "' entr"+((retVal>1)?"ies":"y")+" updated ]----"; LOG.info(String.format(fmt, _f, msg)); }
-
-        boolean hasValue = (attribute.value() != null && attribute.value().value() != null);
-        int cretVal = 0;
-        switch(attribute.attributeType()) {
-        case _complex:
-        	if(hasValue) 
-        		cretVal = _updateComplexChildren((CampComplex)attribute, log);
-        	break;
-        case _table:
-          	if(hasValue)
-        	cretVal = _updateTableChildren((CampTable)attribute, log);
-        	break;
-        case _map:
-          	if(hasValue)
-        	cretVal = _updateMapChildren((CampMap)attribute, log);
-        	break;
-        case _list:
-          	if(hasValue)
-        	cretVal = _updateListChildren((CampList)attribute, log);
-        	break;
-        	default:
-        		break;
+        if(attribute.states().updateRequired()){
+	        String fSQL =
+	            "UPDATE "
+	                + table
+	                + " SET "
+	                + Util.DB._columns(tabledef, Util.DB.dbActionType.UPDATE, log)
+	                + " WHERE `"
+	                + tabledef[0][0]
+	                + "`=%s";
+	
+	        if (log && !Util._IN_PRODUCTION) { msg = "----[ pre-format SQL:" + fSQL + "]----"; LOG.info(String.format(fmt, _f, msg)); }
+	
+	        String SQL = insertDefinitionUpdates(fSQL,attribute);
+	        
+	        if (log && !Util._IN_PRODUCTION) { msg = "----[ Formatted SQL: " + SQL + "]----"; LOG.info(String.format(fmt, _f, msg)); }
+	
+	        dbs = conn.createStatement();
+	        retVal = dbs.executeUpdate(SQL);
+	
+	        if (log && !Util._IN_PRODUCTION) { msg = "----[ '" + retVal + "' entr"+((retVal>1)?"ies":"y")+" updated ]----"; LOG.info(String.format(fmt, _f, msg)); }
+	
+	        boolean hasValue = (attribute.value() != null && attribute.value().value() != null);
+	        int cretVal = 0;
+	        switch(attribute.attributeType()) {
+	        case _complex:
+	        	if(hasValue) 
+	        		cretVal = _updateComplexChildren((CampComplex)attribute, log);
+	        	break;
+	        case _table:
+	          	if(hasValue)
+	        	cretVal = _updateTableChildren((CampTable)attribute, log);
+	        	break;
+	        case _map:
+	          	if(hasValue)
+	        	cretVal = _updateMapChildren((CampMap)attribute, log);
+	        	break;
+	        case _list:
+	          	if(hasValue)
+	        	cretVal = _updateListChildren((CampList)attribute, log);
+	        	break;
+	        	default:
+	        		break;
+	        }
+	        if (log && !Util._IN_PRODUCTION) { msg = "----[ '" + cretVal + "' child attribute entr"+((cretVal>1)?"ies":"y")+" updated  ]----"; LOG.info(String.format(fmt, _f, msg)); }
+	
+	//        attribute.history().stamptime();
+	//        attribute.history().updateInstance();
+	//        attribute.cleanStatus(attribute);
+	        CampInstanceDao.instance()._addInstance(attribute, false, log);
+	        
+	        attribute.states().ioAction(IOAction.UPDATE);
+	        attribute.states().setModified(false);
+        }else{
+        	attribute = _save(attribute, log);
+	        attribute.states().ioAction(IOAction.UPDATE);
+	        attribute.states().setModified(false);
         }
-        if (log && !Util._IN_PRODUCTION) { msg = "----[ '" + cretVal + "' child attribute entr"+((cretVal>1)?"ies":"y")+" updated  ]----"; LOG.info(String.format(fmt, _f, msg)); }
-
-//        attribute.history().stamptime();
-//        attribute.history().updateInstance();
-//        attribute.cleanStatus(attribute);
-        CampInstanceDao.instance()._addInstance(attribute, false, log);
-        
-        attribute.states().ioAction(IOAction.UPDATE);
       } catch (Exception e) {
         if (log && !Util._IN_PRODUCTION) { msg = "----[ EXCEPTION! Update failed.]-- --"; LOG.info(String.format(fmt, _f, msg)); }
         e.printStackTrace();

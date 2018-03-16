@@ -552,8 +552,7 @@ public class CampInstanceDao implements CampInstanceDaoInterface,HasResultSetToI
 				msg = "====[ loading next instance of '" + o.onlyBusinessId() + "' ]====";
 				LOG.traceEntry(String.format(fmt, _f.toUpperCase() + ">>>>>>>>>", msg));
 			}
-			String select = " AND t.`"+dao.tabledef(primary)[0][0]+"`="+o.id()
-						+ " AND ci.`_object_id`=t.`"+dao.tabledef(primary)[0][0]+"`"
+			String select = " AND ci.`_object_id`=t.`"+dao.tabledef(primary)[0][0]+"`"
 						+ " AND ci.`_object_business_id` LIKE '"+o.onlyBusinessId()+"%'" 
 						+ " AND ci.`_initial_instance_id`='"+o.history().id().id()+"'"
 						+ " AND ci.`_initial_instance_id`<>ci.`_instance_id`";
