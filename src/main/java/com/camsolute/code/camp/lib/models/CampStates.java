@@ -21,6 +21,7 @@ package com.camsolute.code.camp.lib.models;
 
 import com.camsolute.code.camp.lib.contract.HasStates;
 import com.camsolute.code.camp.lib.contract.IsObjectInstance;
+import com.camsolute.code.camp.lib.models.CampStatesInterface.PersistType;
 
 /**
  * This object encapsulates the transient i/o status related aspects of a business object.
@@ -39,6 +40,8 @@ public class CampStates implements CampStatesInterface {
 
 	private IOAction lastIO = IOAction.NONE;
 
+	private PersistType todo = PersistType.SAVE;
+	
 	protected boolean dirty = false;
 
 	private boolean modified = false;
@@ -60,6 +63,11 @@ public class CampStates implements CampStatesInterface {
 	@Override
 	public void dirty() {
 		dirty = true;
+	}
+
+	@Override
+	public void persistType(PersistType todo) {
+		this.todo = todo;
 	}
 
 	@Override
@@ -98,13 +106,33 @@ public class CampStates implements CampStatesInterface {
 	}
 
 	@Override
+	public boolean saveRequired() {
+		return todo.name().equals(PersistType.SAVE.name());
+	}
+
+	@Override
+	public boolean updateRequired() {
+		return todo.name().equals(PersistType.UPDATE.name());
+	}
+	
+	@Override
 	public void modify() {
 		modified = true;
 	}
 
 	@Override
+	public void modify(PersistType todo) {
+		modified = true;
+		this.todo = todo;
+	}
+
+
+	@Override
 	public void setModified(boolean modified) {
 		this.modified = modified;
+		if(!modified){
+			this.todo = PersistType.UPDATE;
+		}
 	}
 
 	/**

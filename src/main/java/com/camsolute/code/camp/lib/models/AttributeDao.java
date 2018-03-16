@@ -307,8 +307,8 @@ public class  AttributeDao implements AttributeDaoInterface{
         } else {
           // TODO: throw an exception from here
         }
-        a.history().stamptime();
-        a.cleanStatus(a);
+//        a.history().stamptime();
+//        a.cleanStatus(a);
 //        a.history().updateInstance();
         CampInstanceDao.instance()._addInstance(a, false, log);
         a.states().ioAction(IOAction.SAVE);
@@ -650,9 +650,9 @@ public class  AttributeDao implements AttributeDaoInterface{
         }
         if (log && !Util._IN_PRODUCTION) { msg = "----[ '" + cretVal + "' child attribute entr"+((cretVal>1)?"ies":"y")+" updated  ]----"; LOG.info(String.format(fmt, _f, msg)); }
 
-        attribute.history().stamptime();
-        attribute.history().updateInstance();
-        attribute.cleanStatus(attribute);
+//        attribute.history().stamptime();
+//        attribute.history().updateInstance();
+//        attribute.cleanStatus(attribute);
         CampInstanceDao.instance()._addInstance(attribute, false, log);
         
         attribute.states().ioAction(IOAction.UPDATE);
@@ -759,10 +759,10 @@ public class  AttributeDao implements AttributeDaoInterface{
           if (log && !Util._IN_PRODUCTION) { msg = "----[ '" + cretVal + "' child attribute entr"+((cretVal>1)?"ies":"y")+" updated  ]----"; LOG.info(String.format(fmt, _f, msg)); }
         }
         
-        for(Attribute<? extends Value<?>> a: attributeList) {
-        	a.history().stamptime();
-        	a.history().updateInstance();
-        }
+//        for(Attribute<? extends Value<?>> a: attributeList) {
+//        	a.history().stamptime();
+//        	a.history().updateInstance();
+//        }
         CampInstanceDao.instance()._addInstances(attributeList, false, log);
         for(Attribute<? extends Value<?>> a: attributeList) {
         	a.states().ioAction(IOAction.UPDATE);//TODO: see notes why we put this in

@@ -499,9 +499,9 @@ public class OrderDao implements OrderDaoInterface {
 			
 			retVal = dbs.executeUpdate(SQL);
 			
-			o.history().stamptime();
+//			o.history().stamptime();
 //			o.cleanStatus(o);
-			o.history().updateInstance();
+//			o.history().updateInstance();
 			CampInstanceDao.instance()._addInstance(o, false, log);
 			
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" updated ]----";LOG.info(String.format(fmt,_f,msg));}
@@ -554,8 +554,8 @@ public class OrderDao implements OrderDaoInterface {
 		// we save this purposely
 		o = save(o,log);
 		
-		o.history().stamptime();
-		o.history().updateInstance();
+//		o.history().stamptime();
+//		o.history().updateInstance();
 			try{
 			
 			CampInstanceDao.instance()._addInstance(o, false, log);
@@ -603,11 +603,11 @@ public class OrderDao implements OrderDaoInterface {
 			
 			retVal = Util.Math.addArray(dbs.executeBatch());
 			
-			for(Order o: ol){
-				o.history().stamptime();
+//			for(Order o: ol){
+//				o.history().stamptime();
 //				o.cleanStatus(o);
-				o.history().updateInstance();
-			}
+//				o.history().updateInstance();
+//			}
 			CampInstanceDao.instance()._addInstances(ol, false, log);
 			
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}

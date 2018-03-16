@@ -596,9 +596,9 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			}
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
 			
-			op.history().stamptime();
-			op.cleanStatus(op);
-			op.history().updateInstance();// no check required since is update
+//			op.history().stamptime();
+//			op.cleanStatus(op);
+//			op.history().updateInstance();// no check required since is update
 			CampInstanceDao.instance()._addInstance(op, false, log);
 			op.states().ioAction(IOAction.UPDATE);
 		} catch(SQLException e) {
@@ -661,11 +661,11 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			}
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
 
-			for(OrderPosition op: rpl) {
-				op.history().stamptime();
-				op.cleanStatus(op);
-				op.history().updateInstance();// no check required 
-			}
+//			for(OrderPosition op: rpl) {
+//				op.history().stamptime();
+//				op.cleanStatus(op);
+//				op.history().updateInstance();// no check required 
+//			}
 			CampInstanceDao.instance()._addInstances(rpl, false, log);
 			
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}

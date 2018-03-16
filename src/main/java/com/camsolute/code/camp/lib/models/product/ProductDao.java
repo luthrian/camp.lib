@@ -39,6 +39,7 @@ import com.camsolute.code.camp.lib.models.ModelDao;
 import com.camsolute.code.camp.lib.models.ModelList;
 import com.camsolute.code.camp.lib.models.Version;
 import com.camsolute.code.camp.lib.models.CampStatesInterface.IOAction;
+import com.camsolute.code.camp.lib.models.CampStatesInterface.PersistType;
 import com.camsolute.code.camp.lib.models.process.Process;
 import com.camsolute.code.camp.lib.models.process.ProcessDao;
 import com.camsolute.code.camp.lib.models.process.ProcessList;
@@ -401,7 +402,7 @@ public class ProductDao implements ProductDaoInterface {
 			}
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
 
-			p.history().timestamp();
+//			p.history().timestamp();
 			
 			CampInstanceDao.instance()._addInstance(p, false, log);
 			
@@ -457,9 +458,9 @@ public class ProductDao implements ProductDaoInterface {
 
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
 			
-			for(Product p: pl){
-				p.history().stamptime();
-			}
+//			for(Product p: pl){
+//				p.history().stamptime();
+//			}
 			retVal = CampInstanceDao.instance()._addInstances(pl, false, log);
 			
 			if (log && !Util._IN_PRODUCTION) { msg = "----[ '" + retVal + "' history entr"+((retVal>1)?"ies":"y")+" added ]----"; LOG.info(String.format(fmt, _f, msg)); }
@@ -502,17 +503,28 @@ public class ProductDao implements ProductDaoInterface {
 			conn = Util.DB.__conn(log);
 			
 			dbs = conn.createStatement();
+			if(p.states().updateRequired()){
+				String fSQL = "UPDATE " + table + " SET " + Util.DB._columns(tabledef, Util.DB.dbActionType.UPDATE, log)
+				+ " WHERE `"+tabledef[0][0]+"`=%s";
+				String SQL = formatUpdateSQL(fSQL, p, log);
+				if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
+				retVal = dbs.executeUpdate(SQL);
+			} else {
+				String SQL = "INSERT INTO " + table + "( " + Util.DB._columns(tabledef, Util.DB.dbActionType.INSERT, log)
+				+ " ) VALUES ( " + insertValues(p,log) + " )";
+				
+				if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
+				
+				retVal = dbs.executeUpdate(SQL, Statement.RETURN_GENERATED_KEYS);		
+				rs = dbs.getGeneratedKeys();						
+				if (rs.next()) {		
+					p.updateId(rs.getInt(tabledef[0][0]));
+				}
+		}
 			
-			String fSQL = "UPDATE " + table + " SET " + Util.DB._columns(tabledef, Util.DB.dbActionType.UPDATE, log)
-			+ " WHERE `"+tabledef[0][0]+"`=%s";
-			String SQL = formatUpdateSQL(fSQL, p, log);
 			
-			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
-			
-			retVal = dbs.executeUpdate(SQL);
-			
-			p.history().stamptime();
-			p.history().updateInstance();
+//			p.history().stamptime();
+//			p.history().updateInstance();
 			CampInstanceDao.instance()._addInstance(p, false, log);
 			retVal = 1;
 			
@@ -522,7 +534,7 @@ public class ProductDao implements ProductDaoInterface {
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" updated ]----";LOG.info(String.format(fmt,_f,msg));}
 			
 			p.states().ioAction(IOAction.UPDATE);
-			p.states().setModified(false); 
+			p.states().setModified(false);
 		} catch(SQLException e) {
 			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
 			e.printStackTrace();
@@ -551,35 +563,77 @@ public class ProductDao implements ProductDaoInterface {
 		Connection conn = null;
 		ResultSet rs = null;
 		Statement dbs = null;
+		Statement dbu = null;
 		int retVal = 0;
+		int uretVal = 0;
+		int updates = 0;
+		int saves = 0;
 		try{
 			conn = Util.DB.__conn(log);
 			
 			dbs = conn.createStatement();
+			dbu = conn.createStatement();
 			for(Product p: pl){
-				String fSQL = "UPDATE " + table + " SET " + Util.DB._columns(tabledef, Util.DB.dbActionType.UPDATE, log)
-				+ " WHERE `"+tabledef[0][0]+"`=" + p.id();
-				String SQL = formatUpdateSQL(fSQL,p,log);
+				if(p.states().updateRequired()){
+					String fSQL = "UPDATE " + table + " SET " + Util.DB._columns(tabledef, Util.DB.dbActionType.UPDATE, log)
+					+ " WHERE `"+tabledef[0][0]+"`=" + p.id();
+					String SQL = formatUpdateSQL(fSQL,p,log);
+					
+					if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
 				
-				if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
-			
-				dbs.addBatch(SQL);
+					dbu.addBatch(SQL);
+					updates++;
+				}
+					
 			}
-			
-			retVal = Util.Math.addArray(dbs.executeBatch());
-			
-			for(Product p: pl){
-				p.history().stamptime();
-				p.history().updateInstance();
-				retVal += 1;
+			if(updates>0){
+				uretVal = Util.Math.addArray(dbu.executeBatch());
+				if (log && !Util._IN_PRODUCTION) { msg = "----[ '" + uretVal + "' entr"+((retVal>1)?"ies":"y")+" updated ]----"; LOG.info(String.format(fmt, _f, msg)); }
 			}
-			CampInstanceDao.instance()._addInstances(pl, false, log);
+			String SQL = "INSERT INTO " + table + "( " + Util.DB._columns(tabledef, Util.DB.dbActionType.INSERT, log)
+			+ " ) VALUES ";
+			boolean start = true;
+			for(Product p: pl) {
+				if(p.states().saveRequired()){
+					if(!start) {
+						SQL += ",";
+					} else {
+						start = false;
+					}
+					
+					SQL += "( " + insertValues(p,log) + " )";
+					saves++;
+				}
+			}
+			if(saves > 0) {
+				retVal = dbs.executeUpdate(SQL, Statement.RETURN_GENERATED_KEYS);		
+				rs = dbs.getGeneratedKeys();						
+				int count = 0;
+				while (rs.next()) {
+					for(Product p: pl){
+						String businessId = rs.getString("product_name");
+						if(p.onlyBusinessId().equals(businessId)){
+//							pl.get(count).updateId(rs.getInt(tabledef[0][0]));
+							p.updateId(rs.getInt(tabledef[0][0]));
+						}
+					}
+					count++;
+				}
+
+				if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" saved ]----";LOG.info(String.format(fmt,_f,msg));}
+			}
+//			for(Product p: pl){
+//				p.history().stamptime();
+//				p.history().updateInstance();
+//				retVal += 1;
+//			}
+			retVal = CampInstanceDao.instance()._addInstances(pl, false, log);
 			
 //			addProcessReferences((ProductList)pl,log);
 //			
 //			updateAttributes((ProductList)pl,log);
 			
-			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" added ]----";LOG.info(String.format(fmt,_f,msg));}
 			
 			for(Product p: pl){
 				p.states().ioAction(IOAction.UPDATE);

@@ -387,8 +387,8 @@ public class ModelDao implements ModelDaoInterface {
 				if(log && !Util._IN_PRODUCTION){msg = "----[SQL ERROR! save FAILED]----";LOG.info(String.format(fmt, _f,msg));}
 			}
 			
-			m.history().stamptime();
-			m.cleanStatus(m);
+//			m.history().stamptime();
+//			m.cleanStatus(m);
 			//the following is no longer required due to redesign. object instances are only saved once ... needs checking 
 //			if(m.states().updateBeforeSave(m)) {
 //				m.history().updateInstance();
@@ -531,9 +531,9 @@ public class ModelDao implements ModelDaoInterface {
 			
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
 			
-			m.history().stamptime();
-			m.cleanStatus(m);
-			m.history().updateInstance();// no check required since is update
+//			m.history().stamptime();
+//			m.cleanStatus(m);
+//			m.history().updateInstance();// no check required since is update
 			CampInstanceDao.instance()._addInstance(m, false, log);
 			m.states().ioAction(IOAction.UPDATE);
 		} catch(SQLException e) {
@@ -591,11 +591,11 @@ public class ModelDao implements ModelDaoInterface {
 			}
 			retVal = Util.Math.addArray(dbs.executeBatch());
 
-			for(Model m: rml) {
-				m.history().stamptime();
-				m.cleanStatus(m);
-				m.history().updateInstance();// no check required 
-			}
+//			for(Model m: rml) {
+//				m.history().stamptime();
+//				m.cleanStatus(m);
+//				m.history().updateInstance();// no check required 
+//			}
 			CampInstanceDao.instance()._addInstances(rml, false, log);
 			
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}

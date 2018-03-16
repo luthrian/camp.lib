@@ -163,12 +163,27 @@ public class CampInstanceDao implements CampInstanceDaoInterface,HasResultSetToI
 			Connection conn = null;
 			ResultSet rs = null;
 			Statement dbs = null;
+			Statement dbu = null;
 
 			try {
 
 				conn = Util.DB.__conn(log);
 
 				dbs = conn.createStatement();
+				dbu = conn.createStatement();
+				
+				String currentId = object.history().currentId().id();
+				
+				object.cleanStatus(object);
+				if (!object.states().isNew()) {
+					if(useObjectId) {
+						object.getObjectHistory().updateInstance();
+					}else{
+						object.history().updateInstance();
+					}
+					if(log && !Util._IN_PRODUCTION){msg = "----[UPDATED object instance id ]----";LOG.info(String.format(fmt, _f,msg));}
+				}
+				object.history().stamptime();
 
 				String SQL = "INSERT INTO " + table + "( " + Util.DB._columns(tabledef, Util.DB.dbActionType.INSERT, log)
 				+ " ) VALUES ( " + insertValues(object, useObjectId) + " )";
@@ -180,15 +195,16 @@ public class CampInstanceDao implements CampInstanceDaoInterface,HasResultSetToI
 				if (!object.history().isFirst()) {
 
 					SQL = "UPDATE " + table + " SET `_current_instance_id`='" + object.history().id().id()
-							+ "' WHERE `_object_business_id`='" + object.onlyBusinessId() + "'";
+							+ "' WHERE `_current_instance_id`='" + currentId + "'";
 
 					if(log && !Util._IN_PRODUCTION){ msg = "----[SQL : "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
 					
-					dbs.addBatch(SQL);
+					dbu.addBatch(SQL);
 
 				}
 
 				retVal = dbs.executeBatch()[0];
+				dbu.executeBatch();
 
 			} catch (SQLException e) {
 				if (log && !Util._IN_PRODUCTION) {
@@ -250,6 +266,17 @@ public class CampInstanceDao implements CampInstanceDaoInterface,HasResultSetToI
 					o.cleanStatus(o);
 
 					o.history().stamptime();
+					
+					String currentId = o.history().currentId().id();
+					
+					if (!o.states().isNew()) {
+						if(useObjectId) {
+							o.getObjectHistory().updateInstance();
+						}else{
+							o.history().updateInstance();
+						}
+						if(log && !Util._IN_PRODUCTION){msg = "----[UPDATED object instance id]----";LOG.info(String.format(fmt, _f,msg));}
+					}
 
 					String SQL = "INSERT INTO " + table + "( " + Util.DB._columns(tabledef, Util.DB.dbActionType.INSERT, log)
 							+ " ) VALUES ( " + insertValues(o, useObjectId) + " )";
@@ -261,7 +288,7 @@ public class CampInstanceDao implements CampInstanceDaoInterface,HasResultSetToI
 					if (!o.history().isFirst()) {
 
 						SQL = "UPDATE " + table + " SET `_current_instance_id`='" + o.history().id().id()
-								+ "' WHERE `_object_business_id`='" + o.onlyBusinessId() + "'";
+								+ "' WHERE `_current_instance_id`='" + currentId + "'";
 
 						if(log && !Util._IN_PRODUCTION){ msg = "----[SQL : "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
 						
@@ -624,10 +651,11 @@ public class CampInstanceDao implements CampInstanceDaoInterface,HasResultSetToI
 			}
 //			String dt = Util.Time.datetime(Util.Time.timestamp(date)); //TODO: this may be better but slower check
 			String dt = date.substring(0,19);
-			String select = " AND ci.`_object_business_id` LIKE '"+businessId+"%'" 
+			String select = " AND ci.`_object_business_id`='"+businessId+"'" 
 						+ " AND ci.`_date` LIKE '"+dt+"%'"
-						+ " AND ci.`_instance_id`=ci.`_initial_instance_id`"
-						+ " AND t.`"+dao.tabledef(primary)[0][0]+"`=ci.`_object_id`";
+//						+ " AND ci.`_instance_id`=ci.`_initial_instance_id`"
+						+ " AND t.`"+dao.tabledef(primary)[0][0]+"`=ci.`_object_id` "
+						+ " ORDER BY t.`"+dao.tabledef(primary)[0][0]+"` ASC";
 			E o = (E)dao.instanceListLoad(select,primary,log);
 
 //			Connection conn = null;
@@ -741,9 +769,9 @@ public class CampInstanceDao implements CampInstanceDaoInterface,HasResultSetToI
 			} else {
 				fSQL = " AND '"+sdt+"' <= ci.`_date` AND '"+edt+"' >= ci.`_date` ";
 			}
-			String select = " AND ci.`_object_business_id` LIKE '"+businessId+"%'" 
+			String select = " AND ci.`_object_business_id`='"+businessId+"'" 
 						+ fSQL
-						+ " AND ci.`_instance_id`=ci.`_initial_instance_id`"
+//						+ " AND ci.`_instance_id`=ci.`_initial_instance_id`"
 						+ " AND t.`"+dao.tabledef(primary)[0][0]+"`=ci.`_object_id`";
 			E o = (E) dao.instanceListLoad(select,primary,log);
 

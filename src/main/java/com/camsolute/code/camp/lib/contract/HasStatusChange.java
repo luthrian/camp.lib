@@ -19,8 +19,10 @@
  ******************************************************************************/
 package com.camsolute.code.camp.lib.contract;
 
+import com.camsolute.code.camp.lib.models.CampStatesInterface.PersistType;
+
 /**
- * Objects that honar this contract encapsulate status change aspects of a business object.<br>
+ * Objects that honor this contract encapsulate status change aspects of a business object.<br>
  * The status change aspect indicates if a relevant process status aspect of the business object
  * has changed and if the system has taken the appropriate action required by such change.<br>
  * The status change aspect is expressed as true/false value.
@@ -41,5 +43,6 @@ package com.camsolute.code.camp.lib.contract;
 public interface HasStatusChange {
 	public boolean isModified();
 	public void modify();
-	public void setModified(boolean t);
+	public void modify(PersistType todo);
+	void setModified(boolean t);
 }

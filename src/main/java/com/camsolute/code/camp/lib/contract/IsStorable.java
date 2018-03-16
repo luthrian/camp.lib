@@ -21,6 +21,8 @@ package com.camsolute.code.camp.lib.contract;
 
 import static com.camsolute.code.camp.lib.models.CampStatesInterface.IOAction;
 
+import com.camsolute.code.camp.lib.models.CampStatesInterface.PersistType;
+
 /**
  * Objects that honar this contract encapsulate i/o status related to object persistence. Upon request these objects
  * must provide the following information:<br>
@@ -33,6 +35,12 @@ public interface IsStorable {
 
     public void ioAction(IOAction action);
 
+    public void persistType(PersistType todo);
+    
+    public boolean saveRequired();
+    
+    public boolean updateRequired();
+    
     public boolean isLoaded();
 
     public boolean isSaved();

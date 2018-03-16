@@ -40,6 +40,10 @@ public interface CampStatesInterface
 		NONE, LOAD, SAVE, UPDATE, DELETE;
 	}
 
+	public static enum PersistType {
+		UPDATE, SAVE;
+	}
+	
 	public void ioAction(IOAction action);
 
 	public void update(CampStates states);
@@ -166,5 +170,7 @@ public interface CampStatesInterface
 		}
 		return cs;
 	}
+
+	void modify(PersistType todo);
 
 }

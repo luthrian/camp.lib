@@ -26,6 +26,7 @@ import com.camsolute.code.camp.lib.data.CampRest.Order;
 import com.camsolute.code.camp.lib.models.AttributeMap;
 import com.camsolute.code.camp.lib.models.CampInstance;
 import com.camsolute.code.camp.lib.models.CampStates;
+import com.camsolute.code.camp.lib.models.CampStatesInterface.PersistType;
 import com.camsolute.code.camp.lib.models.Group;
 import com.camsolute.code.camp.lib.models.Model;
 import com.camsolute.code.camp.lib.models.ModelList;
@@ -130,7 +131,7 @@ public class Product implements ProductInterface {
 			if(m.id() == id){
 				this.modelId = id;
 				this.model = m;
-				this.states.modify();
+				this.states.modify(PersistType.UPDATE);
 			}
 		}
 	}
@@ -163,7 +164,7 @@ public class Product implements ProductInterface {
 	@Override
 	public void addModel(Model m) {
 		this.models.add(m);
-		this.states.modify();
+		this.states.modify(PersistType.UPDATE);
 	}
 
 	@Override
@@ -176,7 +177,7 @@ public class Product implements ProductInterface {
 		Timestamp prev = this.date;
 		this.date = date;
 		this.history.date(date);
-		this.states.modify();
+		this.states.modify(PersistType.SAVE);
 		return prev;
 	}
 
@@ -212,7 +213,7 @@ public class Product implements ProductInterface {
 	public String updateName(String name) {
 		String prev = this.name;
 		this.name = name;
-		this.states.modify();
+		this.states.modify(PersistType.SAVE);
 		return prev;
 	}
 
@@ -224,13 +225,13 @@ public class Product implements ProductInterface {
 	@Override
 	public void updateVersion(String version) {
 		this.version = new Version(version);
-		this.states.modify();
+		this.states.modify(PersistType.SAVE);
 	}
 
 	@Override
 	public void updateVersion(Version version) {
 		this.version = version;
-		this.states.modify();
+		this.states.modify(PersistType.SAVE);
 	}
 
 	@Override
@@ -246,13 +247,13 @@ public class Product implements ProductInterface {
 	@Override
 	public void updateGroup(Group group) {
 		this.group = group;
-		this.states.modify();
+		this.states.modify(PersistType.SAVE);
 	}
 
 	@Override
 	public void updateGroup(String group) {
 		this.group = new Group(group);
-		this.states.modify();
+		this.states.modify(PersistType.SAVE);
 	}
 
 	@Override
@@ -274,7 +275,7 @@ public class Product implements ProductInterface {
 	public String updateBusinessId(String newId) {
 		String prev = this.name;
 		this.name = newId;
-		this.states.modify();
+		this.states.modify(PersistType.SAVE);
 		return prev;
 	}
 
@@ -296,7 +297,7 @@ public class Product implements ProductInterface {
 	@Override
 	public void updateBusinessKey(String businessKey) {
 		this.businessKey = businessKey;
-		this.states.modify();
+		this.states.modify(PersistType.SAVE);
 	}
 
 	@Override
@@ -329,7 +330,7 @@ public class Product implements ProductInterface {
 		Status prev = this.status;
 		this.previousStatus = this.status;
 		this.status = (Status) status;
-		this.states.modify();
+		this.states.modify(PersistType.UPDATE);
 		return prev;
 	}
 
@@ -338,7 +339,7 @@ public class Product implements ProductInterface {
 		Status prev = this.status;
 		this.previousStatus = this.status;
 		this.status = Status.valueOf(status);
-		this.states.modify();
+		this.states.modify(PersistType.UPDATE);
 		return prev;
 	}
 
