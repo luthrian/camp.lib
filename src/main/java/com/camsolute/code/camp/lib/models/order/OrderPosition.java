@@ -37,6 +37,8 @@ import com.camsolute.code.camp.lib.models.rest.MessageList;
 import com.camsolute.code.camp.lib.models.rest.OrderPositionProcessMessage;
 import com.camsolute.code.camp.lib.models.rest.OrderPositionProcessMessage.OrderPositionMessage;
 import com.camsolute.code.camp.lib.models.rest.Request;
+import com.camsolute.code.camp.lib.models.rest.Request.Principal;
+import com.camsolute.code.camp.lib.models.rest.Request.RequestType;
 import com.camsolute.code.camp.lib.utilities.Util;
 
 public class OrderPosition implements OrderPositionInterface {
@@ -613,8 +615,8 @@ public class OrderPosition implements OrderPositionInterface {
 			return ml;
 		}
 		@Override
-		public Request<?> prepareRequest() {
-			return new Request<OrderPosition>(this);
+		public Request<?> prepareRequest(Principal principal, RequestType type) {
+			return new Request<OrderPosition>(this,principal, type);
 		}
 
 }

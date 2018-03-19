@@ -22,28 +22,28 @@ package com.camsolute.code.camp.lib.contract;
 import com.camsolute.code.camp.lib.models.process.Process.ProcessType;
 
 public interface IsProcess<T> {
-	public static final String DEFAULT_CUSTOMER_ORDER_PROCESS_KEY = "com.camsolute.code.camp.lib.models.OrderProcess";
+	public static final String DEFAULT_CUSTOMER_ORDER_PROCESS_KEY = "process.name.Order.Customer";
 	public static final String DEFAULT_CUSTOMER_ORDER_PROCESS_NAME = ProcessType.customer_order_process.name();
 	
-	public static final String DEFAULT_PRODUCTION_ORDER_PROCESS_KEY = "com.camsolute.code.camp.lib.models.OrderProcess";
+	public static final String DEFAULT_PRODUCTION_ORDER_PROCESS_KEY = "process.name.Order.Production";
 	public static final String DEFAULT_PRODUCTION_ORDER_PROCESS_NAME = ProcessType.production_order_process.name();
 	
-	public static final String DEFAULT_PRODUCT_ORDER_PROCESS_KEY = "com.camsolute.code.camp.lib.models.OrderProcess";
+	public static final String DEFAULT_PRODUCT_ORDER_PROCESS_KEY = "process.name.Order.Product";
 	public static final String DEFAULT_PRODUCT_ORDER_PROCESS_NAME = ProcessType.production_order_process.name();
 	
-	public static final String DEFAULT_ORDER_MANAGEMENT_PROCESS_KEY = "com.camsolute.code.camp.lib.models.OrderProcess";
+	public static final String DEFAULT_ORDER_MANAGEMENT_PROCESS_KEY = "process.name.Order.ManagementProcess";
 	public static final String DEFAULT_ORDER_MANAGEMENT_PROCESS_NAME = ProcessType.customer_order_management_process.name();
 
-	public static final String DEFAULT_PRODUCTION_PROCESS_KEY = "com.camsolute.code.camp.lib.models.ProductionProcess";
+	public static final String DEFAULT_PRODUCTION_PROCESS_KEY = "process.name.Production";
 	public static final String DEFAULT_PRODUCTION_PROCESS_NAME = ProcessType.production_process.name();
 	
-	public static final String DEFAULT_PRODUCT_PROCESS_KEY = "com.camsolute.code.camp.lib.models.ProductProcess";
+	public static final String DEFAULT_PRODUCT_PROCESS_KEY = "process.name.Product";
 	public static final String DEFAULT_PRODUCT_PROCESS_NAME = ProcessType.product_process.name();
 	
-	public static final String DEFAULT_CUSTOMER_MANAGEMENT_PROCESS_KEY = "com.camsolute.code.camp.lib.models.CustomerProcess";
+	public static final String DEFAULT_CUSTOMER_MANAGEMENT_PROCESS_KEY = "process.name.Customer.ManagementProcess";
 	public static final String DEFAULT_CUSTOMER_MANAGEMENT_PROCESS_NAME = ProcessType.customer_management_process.name();
 
-	public static final String DEFAULT_MANAGEMENT_PROCESS_KEY = "com.camsolute.code.camp.lib.models.ManagementProcess";
+	public static final String DEFAULT_MANAGEMENT_PROCESS_KEY = "process.name.Order.ManagementProcess";
 	public static final String DEFAULT_MANAGEMENT_PROCESS_NAME = ProcessType.order_support_process.name();
 
 	public static String _defaultProcessName(ProcessType type) {

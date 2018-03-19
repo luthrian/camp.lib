@@ -28,6 +28,9 @@ import com.camsolute.code.camp.lib.models.process.Process;
 import com.camsolute.code.camp.lib.models.process.ProcessInterface;
 import com.camsolute.code.camp.lib.models.process.ProcessList;
 import com.camsolute.code.camp.lib.models.rest.ProcessStartRequest;
+import com.camsolute.code.camp.lib.models.rest.Request;
+import com.camsolute.code.camp.lib.models.rest.Request.Principal;
+import com.camsolute.code.camp.lib.models.rest.Request.RequestType;
 import com.camsolute.code.camp.lib.models.rest.SignalPacket;
 import com.camsolute.code.camp.lib.models.rest.Task;
 import com.camsolute.code.camp.lib.models.rest.TaskList;
@@ -42,11 +45,23 @@ public class ProcessControlRest implements ProcessControlRestInterface {
 	public static String serverUrl = CampRest.PROCESS_CONTROL_API_SERVER_URL;
 	public static String domainUri = CampRest.PROCESS_CONTROL_API_DOMAIN;
 	
-	@Override
-	public <T extends HasProcess<T>> Process<?> startProcess(String processKey, T object, boolean log) {
-		return startProcess(serverUrl, processKey, object, log);
+	private static ProcessControlRest instance = null;
+	
+	private ProcessControlRest(){
 	}
-	public <T extends HasProcess<T>> Process<?> startProcess(String serverUrl, String processKey, T object, boolean log) {
+	
+	public static ProcessControlRest instance(){
+		if(instance == null) {
+			instance = new ProcessControlRest();
+		}
+		return instance;
+	}
+	
+	@Override
+	public <T extends HasProcess<T>> Process<?> startProcess(String processKey, T object, Principal principal, boolean log) {
+		return startProcess(serverUrl, processKey, object, principal, log);
+	}
+	public <T extends HasProcess<T>> Process<?> startProcess(String serverUrl, String processKey, T object, Principal principal, boolean log) {
 long startTime = System.currentTimeMillis();
 String _f = null;
 String msg = null;
@@ -54,11 +69,13 @@ if(log && !Util._IN_PRODUCTION) {
 	_f = "[startProcess]";
 	msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 }
-ProcessStartRequest<T> request = new ProcessStartRequest<T>(object); 
+Request<T> request = new Request<T>(object, principal, RequestType.START_PRINCIPAL_PROCESS); 
 String json = request.toJson();
 String prefix = CampRest.ProcessControl.Prefix;		
 String serviceUri = CampRest.ProcessControlDaoService.callRequest(prefix,CampRest.ProcessControlDaoService.Request.START_PROCESS);
 String uri = serverUrl+domainUri+String.format(serviceUri,processKey);
+if(log && !Util._IN_PRODUCTION){msg = "----[process control service call: uri("+uri+")]----";LOG.info(String.format(fmt, _f,msg));}
+if(log && !Util._IN_PRODUCTION){msg = "----[process control service call: uri("+uri+")]----";LOG.info(String.format(fmt, _f,msg));}
 String result = RestInterface.resultPost(uri, json, log);
 Process<?> p = ProcessInterface._fromJson(result);
 

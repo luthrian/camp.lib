@@ -41,6 +41,8 @@ import com.camsolute.code.camp.lib.models.rest.Message;
 import com.camsolute.code.camp.lib.models.rest.MessageList;
 import com.camsolute.code.camp.lib.models.rest.OrderPositionProcessMessage;
 import com.camsolute.code.camp.lib.models.rest.Request;
+import com.camsolute.code.camp.lib.models.rest.Request.Principal;
+import com.camsolute.code.camp.lib.models.rest.Request.RequestType;
 import com.camsolute.code.camp.lib.models.rest.OrderPositionProcessMessage.OrderPositionMessage;
 import com.camsolute.code.camp.lib.models.rest.ProductProcessMessage;
 import com.camsolute.code.camp.lib.models.rest.ProductProcessMessage.ProductMessage;
@@ -599,8 +601,8 @@ public int getRefId() {
 		return ml;
 	}
 	@Override
-	public Request<?> prepareRequest() {
-		return new Request<Product>(this);
+	public Request<?> prepareRequest(Principal principal, RequestType type) {
+		return new Request<Product>(this,principal,type);
 	}
 
 

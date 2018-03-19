@@ -52,10 +52,10 @@ public class OrderRest implements OrderRestInterface {
 	}
 	
 	@Override
-	public Order create(String businessId, String businessKey, String date, String byDate, boolean log) {
-		return create(serverUrl,businessId,businessKey,date,byDate,log);
+	public Order create(String businessId, String businessKey, String date, String byDate, String group, String version, boolean log) {
+		return create(serverUrl,businessId,businessKey,date,byDate, group, version,log);
 	}
-	public Order create(String serverUrl, String businessId, String businessKey, String date, String byDate, boolean log) {
+	public Order create(String serverUrl, String businessId, String businessKey, String date, String byDate, String group, String version, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -67,7 +67,7 @@ public class OrderRest implements OrderRestInterface {
 		
 		String serviceUri =  CampRest.DaoService.callRequest(CampRest.Order.Prefix, CampRest.DaoService.Request.CREATE_ORDER); 
 		
-		String uri = serverUrl+domainUri+String.format(serviceUri, businessId,businessKey,date,byDate);
+		String uri = serverUrl+domainUri+String.format(serviceUri, businessId,businessKey,date,byDate,group,version);
 		
 		String result = RestInterface.resultGET(uri,log);
 		

@@ -35,6 +35,8 @@ import com.camsolute.code.camp.lib.models.rest.MessageList;
 import com.camsolute.code.camp.lib.models.rest.OrderProcessMessage;
 import com.camsolute.code.camp.lib.models.rest.OrderProcessMessage.CustomerOrderMessage;
 import com.camsolute.code.camp.lib.models.rest.Request;
+import com.camsolute.code.camp.lib.models.rest.Request.Principal;
+import com.camsolute.code.camp.lib.models.rest.Request.RequestType;
 import com.camsolute.code.camp.lib.models.process.Process.ProcessType;
 import com.camsolute.code.camp.lib.utilities.Util;
 
@@ -142,7 +144,7 @@ public class Order implements OrderInterface {
 
 		@Override
 		public void setProcesses(ProcessList pl) {
-			this.processInstances = (OrderProcessList) pl;
+			this.processInstances = pl;
 		}
 		
 		@Override
@@ -435,8 +437,8 @@ public class Order implements OrderInterface {
 			return ml;
 		}
 		@Override
-		public Request<?> prepareRequest() {
-			return new Request<Order>(this);
+		public Request<?> prepareRequest(Principal principal, RequestType type) {
+			return new Request<Order>(this,principal,type);
 		}
 		
 }

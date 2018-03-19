@@ -19,6 +19,7 @@
  ******************************************************************************/
 package com.camsolute.code.camp.lib.dao.rest;
 
+import com.camsolute.code.camp.lib.models.rest.Request.Principal;
 import com.camsolute.code.camp.lib.models.rest.Task;
 import com.camsolute.code.camp.lib.models.rest.TaskList;
 import com.camsolute.code.camp.lib.models.rest.Variables;
@@ -28,7 +29,7 @@ import com.camsolute.code.camp.lib.models.process.ProcessList;
 
 public interface ProcessControlRestInterface {
 
-	public <T extends HasProcess<T>> Process<?> startProcess(String processKey, T object, boolean log);
+	public <T extends HasProcess<T>> Process<?> startProcess(String processKey, T object, Principal principal, boolean log);
 	
 	public <T extends HasProcess<T>> void messageProcess(Enum<?> messageType, Enum<?> messageName, T object, boolean log);
 	

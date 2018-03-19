@@ -27,7 +27,7 @@ public interface OrderServicePointInterface {
 
 	public static final String domainUri = CampRest.ORDER_API_DOMAIN;
 	
-	public String create(String businessId, String businessKey, String date, String byDate);
+	public String create(String businessId, String businessKey, String date, String byDate, String group, String version);
 	
 	public String save(String order);
 

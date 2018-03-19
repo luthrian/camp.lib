@@ -41,9 +41,12 @@ public class ProcessStartRequest<T extends HasProcess<T>> extends Request<T> {
 	public ProcessStartRequest() {
 		super();
 	}
-	public ProcessStartRequest(T o) {
-		super(o);
+	public ProcessStartRequest(T o,Principal principal, RequestType requestType) {
+		super(o, principal, requestType);
 	}
+//	public ProcessStartRequest(T o) {
+//		super(o);
+//	}
 	
 	@SuppressWarnings("null")
 	public void initStartInstructions(StartInstructionType type,String idValue,HashMap<String,VariableValue> variables) {
@@ -80,20 +83,21 @@ public class ProcessStartRequest<T extends HasProcess<T>> extends Request<T> {
 	@Override
 	public String toJson() {
 		String json = "{";
+		json += Request._toInnerJson(this)+",";		
 		json += "\"skipCustomListeners\":"+skipCustomListeners+",";
 		json += "\"skipIoMappings\":"+skipIoMappings+",";
 		json += "\"startInstructions\":{";
-			json += "\"type\":\""+(String)startInstructions.get("type")+"\",";
+			json += "\"type\":\""+(String)startInstructions.get("type")+"\"";
 		if(startInstructions.containsKey("activityId") && !((String)startInstructions.get("activityId")).isEmpty()) {	
-			json += "\"ativityId\":\""+(String)startInstructions.get("activityId")+"\",";
+			json += ",\"ativityId\":\""+(String)startInstructions.get("activityId")+"\"";
 		}
 		if(startInstructions.containsKey("transitionId") && !((String)startInstructions.get("transitionId")).isEmpty()) {	
-			json += "\"transitionId\":\""+(String)startInstructions.get("transitionId")+"\",";
+			json += ",\"transitionId\":\""+(String)startInstructions.get("transitionId")+"\",";
 		}			
 		if(startInstructions.containsKey("variables") && startInstructions.get("activityId") != null) {	
-			json += "\"variables\":"+Variables._toJson((Variables)startInstructions.get("transitionId"))+",";
+			json += ",\"variables\":"+Variables._toJson((Variables)startInstructions.get("transitionId"))+"";
 		}
-		json += Request._toInnerJson(this);
+		json += "}";
 		json += "}";
 		return json;
 	}

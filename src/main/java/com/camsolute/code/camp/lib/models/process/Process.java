@@ -25,9 +25,9 @@ import com.camsolute.code.camp.lib.utilities.Util;
 //public class Process<T,U extends Process<T,U>> implements ProcessInterface<T,U>{
 public class Process<T> implements ProcessInterface<T>{
 
-	public static final String DEFAULT_CUSTOMER_PROCESS_KEY = "com.camsolute.code.camp.lib.models.OrderProcess";
-	public static final String DEFAULT_PRODUCTION_PROCESS_KEY = "com.camsolute.code.camp.lib.models.ProductionProcess";
-	public static final String DEFAULT_MANAGEMENT_PROCESS_KEY = "com.camsolute.code.camp.lib.models.ManagementProcess";
+	public static final String DEFAULT_CUSTOMER_PROCESS_KEY = "process.name.Order.Customer";
+	public static final String DEFAULT_PRODUCTION_PROCESS_KEY = "process.name.Production";
+	public static final String DEFAULT_MANAGEMENT_PROCESS_KEY = "process.name.Management";
 
 	public static enum ProcessType {
 		order_process,

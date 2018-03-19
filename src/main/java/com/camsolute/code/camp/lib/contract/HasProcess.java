@@ -44,6 +44,8 @@ import com.camsolute.code.camp.lib.models.process.ProcessList;
 import com.camsolute.code.camp.lib.models.rest.Message;
 import com.camsolute.code.camp.lib.models.rest.MessageList;
 import com.camsolute.code.camp.lib.models.rest.Request;
+import com.camsolute.code.camp.lib.models.rest.Request.Principal;
+import com.camsolute.code.camp.lib.models.rest.Request.RequestType;
 import com.camsolute.code.camp.lib.models.process.Process.ProcessType;
 
 public interface HasProcess<U extends IsObjectInstance<U>> extends IsObjectInstance<U> {
@@ -74,6 +76,6 @@ public interface HasProcess<U extends IsObjectInstance<U>> extends IsObjectInsta
   
   public MessageList prepareMessages(Enum<?> message);
   
-  public Request<?> prepareRequest();
+  public Request<?> prepareRequest(Principal principal, RequestType type);
   
 }

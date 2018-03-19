@@ -63,6 +63,8 @@ import com.camsolute.code.camp.lib.models.rest.Message;
 import com.camsolute.code.camp.lib.models.rest.MessageList;
 import com.camsolute.code.camp.lib.models.rest.OrderProcessMessage;
 import com.camsolute.code.camp.lib.models.rest.Request;
+import com.camsolute.code.camp.lib.models.rest.Request.Principal;
+import com.camsolute.code.camp.lib.models.rest.Request.RequestType;
 import com.camsolute.code.camp.lib.models.rest.OrderProcessMessage.CustomerOrderMessage;
 import com.camsolute.code.camp.lib.models.rest.ProductAttributeProcessMessage;
 import com.camsolute.code.camp.lib.models.rest.ProductAttributeProcessMessage.ProductAttributeMessage;
@@ -928,8 +930,8 @@ public abstract  class Attribute<U extends Value<?>> implements AttributeInterfa
 		return ml;
 	}
 	@Override
-	public Request<?> prepareRequest() {
-		return new Request<Attribute<U>>(this);
+	public Request<?> prepareRequest(Principal principal, RequestType type) {
+		return new Request<Attribute<U>>(this, principal, type);
 	}
 	
 

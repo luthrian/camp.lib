@@ -128,7 +128,7 @@ public class CampRest {
 			Call.put(Request.LOAD_CHILD_BY_GROUP, new String[] {"/load/child/by/group","/load/child/by/group?parentId=%s&group=%s","GET"});
 			Call.put(Request.LOAD_BY_GROUP, new String[] {"/load/by/group","/load/by/group?group=%s","GET"});
 			Call.put(Request.LOAD_BY_GROUP_VERSION, new String[] {"/load/by/group/version","/load/by/group/version?group=%s&version=%s","GET"});
-			Call.put(Request.CREATE_ORDER, new String[] {"/create","/create?businessId=%s&businessKey=%s&date=%s&byDate=%s","GET"});
+			Call.put(Request.CREATE_ORDER, new String[] {"/create","/create?businessId=%s&businessKey=%s&date=%s&byDate=%s&group=%s&version=%s","GET"});
 			Call.put(Request.CREATE_PRODUCT, new String[] {"/create","/create?businessId=%s&businessKey=%s&date=%s&endOfLife=%s&group=%s&version=%s","GET"});
 			Call.put(Request.CREATE_ATTRIBUTE, new String[] {"/create","/create?businessId=%s&businessKey=%s&date=%s&byDate=%s","GET"});
 			Call.put(Request.CREATE_MODEL, new String[] {"/create","/create?businessId=%s&releaseDate=%s&endOfLife=%s&businessKey=%s&group=%s&version=%s","GET"});
@@ -311,7 +311,7 @@ public class CampRest {
 			GET_TASKS_KEY,
 			GET_EXECUTIONS;
 		}
-			public static final String START_PROCESS = "/start/{processKey}";//	package ObjectInstance
+			public static final String START_PROCESS = "/start";//	package ObjectInstance
 			public static final String NOTIFY_PROCESS = "/notify";		
 			public static final String NOTIFY_PROCESS_GET = "/notify/get";		
 			public static final String NOTIFY_PROCESSES = "/s/notify";		// package = ObjectInstance
@@ -329,7 +329,7 @@ public class CampRest {
 		
 		static {
 			Call = new HashMap<Request,String[]>();
-			Call.put(Request.START_PROCESS, new String[]{"/start/{processKey}","/start?processKey=%s","POST"});//	package ObjectInstance
+			Call.put(Request.START_PROCESS, new String[]{"/start","/start?processKey=%s","POST"});//	package ObjectInstance
 			Call.put(Request.NOTIFY_PROCESS, new String[]{"/notify","/notify?processInstanceId=%s&messageType=%s&messageName=%s","POST"});		
 			Call.put(Request.NOTIFY_PROCESS_GET, new String[]{"/notify/get","/notify/get?processInstanceId=%s&messageName=%s&businessKey=%s&objectStatus=%s&objectBusinessId=%s&objectId=%s","POST"});		
 			Call.put(Request.NOTIFY_PROCESSES, new String[]{"/s/notify","/s/notify?messageType=%s&messageName=%s","POST"});		// package = ObjectInstance

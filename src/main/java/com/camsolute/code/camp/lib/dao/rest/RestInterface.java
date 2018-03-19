@@ -46,6 +46,7 @@ public interface RestInterface<T extends IsObjectInstance<T>> {
 			_f = "[resultPOST]";
 			msg = "====[ getting JSON result for '"+uri+"' service call ]====";LOG.info(String.format(fmt,_f,msg));
 		}
+		if(log && !Util._IN_PRODUCTION){msg = "----[rest call json("+json+")]----";LOG.info(String.format(fmt, _f,msg));}
     ResteasyClient client = new ResteasyClientBuilder().build();
 		
 		WebTarget target = client.target(uri);

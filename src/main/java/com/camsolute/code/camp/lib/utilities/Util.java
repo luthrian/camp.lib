@@ -517,6 +517,12 @@ public class Util {
           dataSource.setPoolProperties(p);
     		}
     	}
+    	
+    	public static void closeDatasource(){
+    		dataSource.purge();
+    		dataSource.close();
+    	}
+    	
     	public static DB instance(){
     		if(DB.instance == null){
     			DB.instance = new DB();

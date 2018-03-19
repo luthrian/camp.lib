@@ -29,27 +29,60 @@ import com.camsolute.code.camp.lib.models.rest.VariableValue.VariableValueType;
 import com.camsolute.code.camp.lib.utilities.Util;
 
 public class Request<T extends HasProcess<T>> implements Serialization<Request<?>> {
+	//the principal is the business entity that initiated/is initiating the process which manages the request initiator object 
+	public static enum Principal {
+		Order, 
+		Production,
+		Product,
+		Customer,
+		Attribute,
+		Model
+	};
+	
 	private String id;
 	private String key;
 	
 	private Variables  variables = new Variables();
 	private String businessKey;
-
-	public static enum RequestTypes {
-		START_PROCESS,
-		
+	
+	// TODO: this may need to be relocated 
+	public static enum RequestType {
+		START_BASE_PROCESS,
+		START_PRINCIPAL_PROCESS,
+		START_MANAGEMENT_PROCESS,
+		START_SUPPORT_PROCESS,
+		MANAGE_BASE_PROCESS,
+		MANAGE_PRINCIPAL_PROCESS,
+		MANAGE_MANGEMENT_PROCESS,
+		MANAGE_SUPPORT_PROCESS
 	};
 	
 	public Request() {
 	}
-	public Request(T o) {
+	public Request(T o, Principal principal,RequestType type) {
 		this.businessKey = o.businessKey();
 		this.initVariables(o);
-		initKey(o);
+		initKey(o,principal,type);
 	}
 	
-	protected String initKey(T o) {
-		setKey(Util.Config.instance().properties().getProperty("process.key."+o.getClass().getSimpleName()));
+	protected String initKey(T o, Principal principal,RequestType type) {
+		switch(type) {
+		case START_BASE_PROCESS:
+			setKey(Util.Config.instance().properties().getProperty("process.name."+o.getClass().getSimpleName()));
+			break;
+		case START_PRINCIPAL_PROCESS:
+			setKey(Util.Config.instance().properties().getProperty("process.name."+o.getClass().getSimpleName()+"."+principal.name()));
+			break;
+		case START_SUPPORT_PROCESS:
+			setKey(Util.Config.instance().properties().getProperty("process.name."+o.getClass().getSimpleName()+"."+((principal==null)?"":principal.name())+"."+"SupportProcess"));
+			break;
+		case START_MANAGEMENT_PROCESS:
+			setKey(Util.Config.instance().properties().getProperty("process.name."+o.getClass().getSimpleName()+"."+((principal==null)?"":principal.name())+"."+"ManagementProcess"));
+			break;
+		default:
+			setKey(Util.Config.instance().properties().getProperty("process.name."+o.getClass().getSimpleName()+"."+((principal==null)?"":principal.name())));
+			break;
+		}
 		return key();
 	}
 	
@@ -102,9 +135,9 @@ public class Request<T extends HasProcess<T>> implements Serialization<Request<?
 	}
 	@Override
 	public String toJson() {
-		return null;
+		return _toJson(this);
 	}
-	public String _toJson(Request<?> r) {
+	public static String _toJson(Request<?> r) {
 		String json = "{";
 		json += _toInnerJson(r);
 		json += "}";

@@ -63,8 +63,8 @@ public interface OrderInterface extends HasOrderPositionList , HasDate, HasByDat
   	json += "\"previousStatus\":\""+o.previousStatus().name()+"\",";
   	json += "\"group\":\""+o.group().name()+"\",";
   	json += "\"version\":\""+o.version().value()+"\",";
-  	json += "\"states\":\""+o.states().toJson()+",";
-  	json += "\"history\":\""+o.history().toJson()+",";
+  	json += "\"states\":"+o.states().toJson()+",";
+  	json += "\"history\":"+o.history().toJson()+",";
   	json += "\" orderPositions\":"+((o. orderPositions() != null && o. orderPositions().size() > 0)?o. orderPositions().toJson():"[]")+",";
   	json += "\"processInstances\":"+((o.processInstances() != null && o.processInstances().size() > 0)?o.processInstances().toJson():"[]");
 		return json;
@@ -86,9 +86,9 @@ public interface OrderInterface extends HasOrderPositionList , HasDate, HasByDat
 		CampInstance history = CampInstanceInterface._fromJSONObject(jo.getJSONObject("history"));
 		String group = jo.getString("group");
 		String version = jo.getString("version");
-		OrderProcessList pl = new OrderProcessList();
+		ProcessList pl = new OrderProcessList();
 		try {
-			pl = (OrderProcessList) ProcessList._fromJSONArray(jo.getJSONArray("processInstances"));
+			pl = ProcessList._fromJSONArray(jo.getJSONArray("processInstances"));
 		} catch (Exception e) {
 			if(!Util._IN_PRODUCTION){String msg = "----[JSON Error! Order has no associted Process.]----";LOG.info(String.format(fmt, "_fromJSONObject",msg));}
 			e.printStackTrace();

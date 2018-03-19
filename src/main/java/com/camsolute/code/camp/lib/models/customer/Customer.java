@@ -36,6 +36,8 @@ import com.camsolute.code.camp.lib.models.rest.CustomerProcessMessage.CustomerMe
 import com.camsolute.code.camp.lib.models.rest.Message;
 import com.camsolute.code.camp.lib.models.rest.MessageList;
 import com.camsolute.code.camp.lib.models.rest.Request;
+import com.camsolute.code.camp.lib.models.rest.Request.Principal;
+import com.camsolute.code.camp.lib.models.rest.Request.RequestType;
 import com.camsolute.code.camp.lib.utilities.Util;
 //TODO
 public class Customer implements CustomerInterface {
@@ -476,8 +478,8 @@ public class Customer implements CustomerInterface {
 		return ml;
 	}
 	@Override
-	public Request<?> prepareRequest() {
-		return new Request<Customer>(this);
+	public Request<?> prepareRequest(Principal principal, RequestType type) {
+		return new Request<Customer>(this,principal, type);
 	}
 	
 }
