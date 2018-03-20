@@ -88,7 +88,7 @@ public class ProcessRest implements ProcessRestInterface{
 			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		String prefix = CampRest.Process.Prefix;		
-		String serviceUri = CampRest.DaoService.callRequest(prefix,CampRest.DaoService.Request.LOAD_BY_ID);
+		String serviceUri = CampRest.ProcessDaoService.callRequest(prefix,CampRest.ProcessDaoService.Request.LOAD_BY_INSTANCE_ID);
 		String uri = serverUrl+domainUri+String.format(serviceUri,instanceId);
 		String result = RestInterface.resultGET(uri, log);
 		Process<?> p = ProcessInterface._fromJson(result);
@@ -201,7 +201,7 @@ public class ProcessRest implements ProcessRestInterface{
 
 	@Override
 	public Process<?> save(Process<?> p, boolean log) {
-	return save(serverUrl,p, log);
+		return save(serverUrl,p, log);
 	}
 	public Process<?> save(String serverUrl,Process<?> p, boolean log) {
 		long startTime = System.currentTimeMillis();
@@ -209,9 +209,11 @@ public class ProcessRest implements ProcessRestInterface{
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[save]";
-			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ process rest call: persist a process instance to the database via a the process API service point  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
-		String json = ProcessInterface._toJson(p);
+		String json = p.toJson();
+		if(log && !Util._IN_PRODUCTION){msg = "----[process rest call: save json("+json+")]----";LOG.info(String.format(fmt, _f,msg));}
+		
 		String prefix = CampRest.Process.Prefix;		
 		String serviceUri = CampRest.DaoService.callRequest(prefix,CampRest.DaoService.Request.SAVE);
 		String uri = serverUrl+domainUri+serviceUri;

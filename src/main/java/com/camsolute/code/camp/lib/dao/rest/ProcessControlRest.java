@@ -77,6 +77,7 @@ String uri = serverUrl+domainUri+String.format(serviceUri,processKey);
 if(log && !Util._IN_PRODUCTION){msg = "----[process control service call: uri("+uri+")]----";LOG.info(String.format(fmt, _f,msg));}
 if(log && !Util._IN_PRODUCTION){msg = "----[process control service call: uri("+uri+")]----";LOG.info(String.format(fmt, _f,msg));}
 String result = RestInterface.resultPost(uri, json, log);
+if(log && !Util._IN_PRODUCTION){msg = "----[process control rest call: result("+result+")]----";LOG.info(String.format(fmt, _f,msg));}
 Process<?> p = ProcessInterface._fromJson(result);
 
 if(log && !Util._IN_PRODUCTION) {

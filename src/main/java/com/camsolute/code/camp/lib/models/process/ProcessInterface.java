@@ -19,6 +19,8 @@
  ******************************************************************************/
 package com.camsolute.code.camp.lib.models.process;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
 import com.camsolute.code.camp.lib.contract.HasBusinessId;
@@ -31,10 +33,13 @@ import com.camsolute.code.camp.lib.models.CampStates;
 import com.camsolute.code.camp.lib.models.CampStatesInterface;
 import com.camsolute.code.camp.lib.models.Value;
 import com.camsolute.code.camp.lib.models.process.Process.ProcessType;
+import com.camsolute.code.camp.lib.utilities.Util;
 
 //public interface ProcessInterface<T, U extends Process<T,U>>  extends IsProcess<T>, IsObserver<T>, HasId, HasStates, HasBusinessId, Serialization<U>{
 public interface ProcessInterface<T>  extends IsProcess<T>, IsObserver<T>, HasId, HasStates, HasBusinessId, Serialization<Process<T>>{
-
+	public static final Logger LOG = LogManager.getLogger(ProcessInterface.class);
+	public static String fmt = "[%15s] [%s]";
+	
 //	public static <U extends Process<?,U>> String _toJson(Process<?,U> p) {
 	public static String _toJson(Process<?> p) {
 		String json = "{";
@@ -66,7 +71,10 @@ public interface ProcessInterface<T>  extends IsProcess<T>, IsObserver<T>, HasId
 	
 	public static <U extends Value<?>> Process<?> _fromJSONObject(JSONObject jo) {
 		int id = 0;
-		if(jo.has("id")) id = jo.getInt("id");
+		if(jo.has("id")) {
+			if(!Util._IN_PRODUCTION){String msg = "----[jo.get.id("+jo.get("id")+")]----";LOG.info(String.format(fmt, "_fromJSONObject",msg));}
+			id = jo.getInt("id");
+		}
 		String executionId = null;
 		if(jo.has("executionId") ) executionId = jo.getString("executionId");
 		String instanceId = jo.getString("instanceId");

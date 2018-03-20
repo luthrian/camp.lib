@@ -21,6 +21,8 @@ package com.camsolute.code.camp.lib.models.rest;
 
 import java.util.HashMap;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
 import com.camsolute.code.camp.lib.contract.HasProcess;
@@ -29,6 +31,9 @@ import com.camsolute.code.camp.lib.models.rest.VariableValue.VariableValueType;
 import com.camsolute.code.camp.lib.utilities.Util;
 
 public class Request<T extends HasProcess<T>> implements Serialization<Request<?>> {
+	private static final Logger LOG = LogManager.getLogger(Request.class);
+	private static String fmt = "[%15s] [%s]";
+	
 	//the principal is the business entity that initiated/is initiating the process which manages the request initiator object 
 	public static enum Principal {
 		Order, 
@@ -89,11 +94,16 @@ public class Request<T extends HasProcess<T>> implements Serialization<Request<?
 	protected void initVariables(T o,  Principal principal) {
 		updateId(String.valueOf(o.id()));
 		variables().put("objectId", new VariableValue(String.valueOf(o.id()),VariableValueType.valueOf("String"),false));
+		if(!Util._IN_PRODUCTION){String msg = "----[adding variable objectId("+o.id()+")]----";LOG.info(String.format(fmt, "initVariables",msg));}
 		variables().put("objectBusinessId", new VariableValue(o.onlyBusinessId(),VariableValueType.valueOf("String"),false));
+		if(!Util._IN_PRODUCTION){String msg = "----[adding variable objectBusinessId("+o.onlyBusinessId()+")]----";LOG.info(String.format(fmt, "initVariables",msg));}
 		variables().put("objectStatus", new VariableValue(o.status().name(),VariableValueType.valueOf("String"),false));
-		variables().put("objectType", new VariableValue(o.getClass().getSimpleName(),VariableValueType.valueOf("String")));
-		variables().put("objectPrincipal", new VariableValue(principal.name(),VariableValueType.valueOf("String")));
-		}
+		if(!Util._IN_PRODUCTION){String msg = "----[adding variable objectStatus("+o.status().name()+")]----";LOG.info(String.format(fmt, "initVariables",msg));}
+		variables().put("objectType", new VariableValue(o.getClass().getName(),VariableValueType.valueOf("String"),false));
+		if(!Util._IN_PRODUCTION){String msg = "----[adding variable objectType("+o.getClass().getName()+")]----";LOG.info(String.format(fmt, "initVariables",msg));}
+		variables().put("objectPrincipal", new VariableValue(principal.name(),VariableValueType.valueOf("String"),false));
+		if(!Util._IN_PRODUCTION){String msg = "----[adding variable objectPrincipal("+principal.name()+")]----";LOG.info(String.format(fmt, "initVariables",msg));}
+	}
 	
 	public Variables vars() {
 		return variables;

@@ -27,7 +27,7 @@ public class Process<T> implements ProcessInterface<T>{
 
 	public static final String DEFAULT_CUSTOMER_PROCESS_KEY = "process.name.Order.Customer";
 	public static final String DEFAULT_PRODUCTION_PROCESS_KEY = "process.name.Production";
-	public static final String DEFAULT_MANAGEMENT_PROCESS_KEY = "process.name.Management";
+	public static final String DEFAULT_MANAGEMENT_PROCESS_KEY = "process.name.Customer.ManagementProcess";
 
 	public static enum ProcessType {
 		order_process,
@@ -59,18 +59,18 @@ public class Process<T> implements ProcessInterface<T>{
 		;
 	};
 
-	int id = Util.NEW_ID;
-	String executionId;
-	String instanceId;
-	String businessId;
-	String businessKey; 
-	String processName;
-	String definitionId;
-	String tenantId;
-	String caseInstanceId;
-	boolean ended = false;
-	boolean suspended = false;
-	ProcessType type;
+	private int id = Util.NEW_ID;
+	private String executionId;
+	private String instanceId;
+	private String businessId;
+	private String businessKey; 
+	private String processName;
+	private String definitionId;
+	private String tenantId;
+	private String caseInstanceId;
+	private boolean ended = false;
+	private boolean suspended = false;
+	private ProcessType type;
 	
 	private CampStates states = new CampStates();
 	

@@ -41,7 +41,7 @@ public class ProductAttributeProcessMessage extends Message{
 	/**
 	 * Instantiates a ProductAttributeMessage to be sent to the process engine via rest service call.
 	 * @param message The {@link ProductAttributeMessage} enumeration name value to be sent to the process.
-	 * @param a The {@link com.camsolute.code.camp.models.Attribute} object type instance being managed by the process.
+	 * @param a The {@link com.camsolute.code.camp.lib.models.Attribute} object type instance being managed by the process.
 	 * @param attributeBusinessKey The business entity identifier aspect currently responsible for managing the Attribute object type instance.
 	 */
 	public ProductAttributeProcessMessage(ProductAttributeMessage message, Attribute<? extends Value<?>> a, String attributeBusinessKey) {

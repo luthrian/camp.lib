@@ -64,7 +64,7 @@ public class LoggerDao implements LoggerDaoInterface {
  }
 
  /**
-  * Returns a {@link java.lang.String} matrix containing the the database table field name and definition as defined in {@link com.camsolute.code.lib.data.CampSQL}.
+  * Returns a {@link java.lang.String} matrix containing the the database table field name and definition as defined in {@link com.camsolute.code.camp.lib.data.CampSQL}.
   *
   * @return tabledef {@link java.lang.String} matrix containing the table definition.
   */
