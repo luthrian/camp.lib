@@ -74,23 +74,25 @@ public class CampSQL {
 
 		public static final int _INSTANCE_LOG_INDEX = 0;
 
-		public static final String[] system_tables = {
+		public static final String[] logging_tables = {
 				"_instance_log", //0
 		};
 
 		public static final String[][] _instance_log_table_definition = {
 				{"_log_id_", "INT(11) NOT NULL AUTO_INCREMENT"},
 				{"_object_id", "INT(11) NOT NULL"},
-				{"_object_type", "VARCHAR(45) NOT NULL"},
+				{"_object_type", "VARCHAR(100) NOT NULL"},
 				{"_object_business_id", "VARCHAR(100) NOT NULL"},
+				{"_object_businesskey", "VARCHAR(100) NOT NULL"},
 				{"_instance_id", "varchar(45) NOT NULL"},
 				{"_current_instance_id", "varchar(45) NOT NULL"},
 				{"_initial_instance_id", "varchar(45) NOT NULL"},
 				{"_status", "varchar(45) NOT NULL"},
+				{"_group_name", "varchar(45) NOT NULL DEFAULT 0"},
+				{"_version_value", "varchar(45) NOT NULL DEFAULT 0"},
 				{"_log_timestamp", "timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP"},
 				{"_timestamp", "timestamp NOT NULL"},
-				{"_version_id", "INT(11) NOT NULL DEFAULT 0"},
-				{"_group_id", "INT(11) NOT NULL DEFAULT 0"},
+				{"_date", "timestamp NOT NULL"},
 				{"_end_of_life", "timestamp NOT NULL"},
 				{"_object_json", "LONGTEXT NULL"},
 				{"extra",  "PRIMARY KEY (`_log_id_`)"
@@ -788,6 +790,9 @@ public class CampSQL {
 //	}
 	public static final String sysTable(int dbIndex, int tableIndex){
 		return  " `"+database[dbIndex]+"`.`"+System.system_tables[tableIndex]+"` ";
+	}
+	public static final String logTable(int dbIndex, int tableIndex){
+		return  " `"+database[dbIndex]+"`.`"+Logging.logging_tables[tableIndex]+"` ";
 	}
 //  public static final String oTable(int dbIndex, int tableIndex){
 //        return  " `"+database[dbIndex]+"`.`"+Order.order_tables[tableIndex]+"` ";

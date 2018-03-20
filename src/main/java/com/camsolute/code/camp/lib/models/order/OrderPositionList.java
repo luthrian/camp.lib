@@ -36,14 +36,12 @@ public class OrderPositionList extends ArrayList<OrderPosition> implements Seria
 
 	@Override
 	public String toJson() {
-		// TODO Auto-generated method stub
-		return null;
+		return _toJson(this);
 	}
 
 	@Override
 	public OrderPositionList fromJson(String json) {
-		// TODO Auto-generated method stub
-		return null;
+		return _fromJson(json);
 	}
 
 	public static String _toJson(OrderPositionList opl) {

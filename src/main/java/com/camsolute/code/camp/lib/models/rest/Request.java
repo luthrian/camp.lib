@@ -61,7 +61,7 @@ public class Request<T extends HasProcess<T>> implements Serialization<Request<?
 	}
 	public Request(T o, Principal principal,RequestType type) {
 		this.businessKey = o.businessKey();
-		this.initVariables(o);
+		this.initVariables(o, principal);
 		initKey(o,principal,type);
 	}
 	
@@ -86,12 +86,14 @@ public class Request<T extends HasProcess<T>> implements Serialization<Request<?
 		return key();
 	}
 	
-	protected void initVariables(T o) {
+	protected void initVariables(T o,  Principal principal) {
 		updateId(String.valueOf(o.id()));
 		variables().put("objectId", new VariableValue(String.valueOf(o.id()),VariableValueType.valueOf("String"),false));
 		variables().put("objectBusinessId", new VariableValue(o.onlyBusinessId(),VariableValueType.valueOf("String"),false));
 		variables().put("objectStatus", new VariableValue(o.status().name(),VariableValueType.valueOf("String"),false));
-	}
+		variables().put("objectType", new VariableValue(o.getClass().getSimpleName(),VariableValueType.valueOf("String")));
+		variables().put("objectPrincipal", new VariableValue(principal.name(),VariableValueType.valueOf("String")));
+		}
 	
 	public Variables vars() {
 		return variables;

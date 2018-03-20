@@ -719,17 +719,34 @@ public class CampInstanceDao implements CampInstanceDaoInterface,HasResultSetToI
 				msg = "====[ load a list of persisted object instances that were persistied to the database within a range of 2 dates ]====";
 				LOG.traceEntry(String.format(fmt, (_f + ">>>>>>>>>").toUpperCase(), msg));
 			}
+			//TODO: refactor RangeTarget into all daterange queries
+			RangeTarget target = RangeTarget.DATE;
+			String targ = "";
+			switch(target) {
+			case TIMESTAMP:
+				targ = "_timestamp";
+				break;
+			case DATE:
+				targ = "_date";
+				break;
+			case END_OF_LIFE:
+				targ = "_end_of_life";
+				break;
+			default:
+				targ = "_date";
+				break;
+			}
 //			String sdt = Util.Time.datetime(Util.Time.timestamp(endDate)); //TODO: this may be better but slower check
-			String sdt = startDate.substring(0,19);
 //			String edt = Util.Time.datetime(Util.Time.timestamp(endDate)); //TODO: this may be better but slower check
+			String sdt = startDate.substring(0,19);
 			String edt = endDate.substring(0,19);
 			String fSQL = "";
 			if( (sdt == null || sdt.isEmpty())){
-				fSQL = " AND DATE_SUB('"+edt+"',INTERVAL "+CampFormats._DAYS_IN_PAST_SEARCH_RANGE+" DAY) <= ci.`_date` AND '"+edt+"' >= ci.`_date` ";
+				fSQL = " AND DATE_SUB('"+edt+"',INTERVAL "+CampFormats._DAYS_IN_PAST_SEARCH_RANGE+" DAY) <= ci.`"+targ+"` AND '"+edt+"' >= ci.`"+targ+"` ";
 			} else if( (edt == null || edt.isEmpty())) {
-				fSQL = " AND '"+sdt+"' <= ci.`_date` AND DATE_ADD('"+sdt+"',INTERVAL "+CampFormats._DAYS_IN_FUTURE_SEARCH_RANGE+" DAY) >= ci.`_date` ";
+				fSQL = " AND '"+sdt+"' <= ci.`"+targ+"` AND DATE_ADD('"+sdt+"',INTERVAL "+CampFormats._DAYS_IN_FUTURE_SEARCH_RANGE+" DAY) >= ci.`"+targ+"` ";
 			} else {
-				fSQL = " AND '"+sdt+"' <= ci.`_date` AND '"+edt+"' >= ci.`_date` ";
+				fSQL = " AND '"+sdt+"' <= ci.`"+targ+"` AND '"+edt+"' >= ci.`"+targ+"` ";
 			}
 			String select = " AND ci.`_object_business_id`=t.`"+dao.businessIdColumn(primary)+"`" 
 						+ fSQL
@@ -756,17 +773,34 @@ public class CampInstanceDao implements CampInstanceDaoInterface,HasResultSetToI
 				msg = "====[ load persisted object instance by timestamp '" + businessId + "' from database ]====";
 				LOG.traceEntry(String.format(fmt, (_f + ">>>>>>>>>").toUpperCase(), msg));
 			}
+			//TODO: refactor RangeTarget into all daterange queries
+			RangeTarget target = RangeTarget.DATE;
+			String targ = "";
+			switch(target) {
+			case TIMESTAMP:
+				targ = "_timestamp";
+				break;
+			case DATE:
+				targ = "_date";
+				break;
+			case END_OF_LIFE:
+				targ = "_end_of_life";
+				break;
+			default:
+				targ = "_date";
+				break;
+			}
 //			String sdt = Util.Time.datetime(Util.Time.timestamp(endDate)); //TODO: this may be better but slower check
-			String sdt = startDate.substring(0,19);
 //			String edt = Util.Time.datetime(Util.Time.timestamp(endDate)); //TODO: this may be better but slower check
+			String sdt = startDate.substring(0,19);
 			String edt = endDate.substring(0,19);
 			String fSQL = "";
 			if( (sdt == null || sdt.isEmpty())){
-				fSQL = " AND DATE_SUB('"+edt+"',INTERVAL "+CampFormats._DAYS_IN_PAST_SEARCH_RANGE+" DAY) <= ci.`_date` AND '"+edt+"' >= ci.`_date` ";
+				fSQL = " AND DATE_SUB('"+edt+"',INTERVAL "+CampFormats._DAYS_IN_PAST_SEARCH_RANGE+" DAY) <= ci.`"+targ+"` AND '"+edt+"' >= ci.`"+targ+"` ";
 			} else if( (edt == null || edt.isEmpty())) {
-				fSQL = " AND '"+sdt+"' <= ci.`_date` AND DATE_ADD('"+sdt+"',INTERVAL "+CampFormats._DAYS_IN_FUTURE_SEARCH_RANGE+" DAY) >= ci.`_date` ";
+				fSQL = " AND '"+sdt+"' <= ci.`"+targ+"` AND DATE_ADD('"+sdt+"',INTERVAL "+CampFormats._DAYS_IN_FUTURE_SEARCH_RANGE+" DAY) >= ci.`"+targ+"` ";
 			} else {
-				fSQL = " AND '"+sdt+"' <= ci.`_date` AND '"+edt+"' >= ci.`_date` ";
+				fSQL = " AND '"+sdt+"' <= ci.`"+targ+"` AND '"+edt+"' >= ci.`"+targ+"` ";
 			}
 			String select = " AND ci.`_object_business_id`='"+businessId+"'" 
 						+ fSQL

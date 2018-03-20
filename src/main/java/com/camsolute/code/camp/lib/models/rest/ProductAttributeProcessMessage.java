@@ -38,17 +38,25 @@ public class ProductAttributeProcessMessage extends Message{
 		papm_order_shipped,
 		papm_order_fulfilled;
 	}
-	
-	public ProductAttributeProcessMessage(ProductAttributeMessage message, Attribute<? extends Value<?>> a) {
+	/**
+	 * Instantiates a ProductAttributeMessage to be sent to the process engine via rest service call.
+	 * @param message The {@link ProductAttributeMessage} enumeration name value to be sent to the process.
+	 * @param a The {@link com.camsolute.code.camp.models.Attribute} object type instance being managed by the process.
+	 * @param attributeBusinessKey The business entity identifier aspect currently responsible for managing the Attribute object type instance.
+	 */
+	public ProductAttributeProcessMessage(ProductAttributeMessage message, Attribute<? extends Value<?>> a, String attributeBusinessKey) {
 		super(message.name(),a.processInstances().get(0).businessKey());
 		ProductAttributeProcess<?> p = (ProductAttributeProcess<?>) a.processInstances().get(0);
 		this.tenantId = p.tenantId();
 		this.processInstanceId = p.instanceId();
 		this.correlationKeys.variables().put("objectId", new VariableValue(String.valueOf(a.attributeId()), VariableValueType.Integer,false));
+		this.correlationKeys.variables().put("objectBusinessId", new VariableValue(a.businessId(),VariableValueType.valueOf("String")));
+		this.correlationKeys.variables().put("objectBusinessKey", new VariableValue(attributeBusinessKey,VariableValueType.valueOf("String")));
 		this.processVariables.variables().put("objectStatus",new VariableValue(a.status().name(), VariableValueType.String,false));
+		this.processVariables.variables().put("objectBusinessKey", new VariableValue(a.attributeBusinessKey(),VariableValueType.valueOf("String")));
 	}
 	
-	public ProductAttributeProcessMessage(ProductAttributeMessage messageName, String status, String attributeBusinessId, int attributeId, String businessKey) {
+	public ProductAttributeProcessMessage(ProductAttributeMessage messageName, String status, String attributeBusinessId, int attributeId, String attributeBusinessKey, String businessKey) {
 		super(messageName.name(),businessKey);
 		this.correlationKeys.variables().put("objectBusinessId", new VariableValue(attributeBusinessId,VariableValueType.String));
 		this.correlationKeys.variables().put("objectId", new VariableValue(String.valueOf(attributeId),VariableValueType.Integer));

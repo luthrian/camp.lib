@@ -30,6 +30,12 @@ import com.camsolute.code.camp.lib.dao.database.DBDaoInterface;
 import com.camsolute.code.camp.lib.models.CampInstance;
 
 public interface CampInstanceDaoInterface  {
+	
+	public static enum RangeTarget {
+		TIMESTAMP,
+		DATE,
+		END_OF_LIFE;
+	};
 
   public <T extends IsObjectInstance<T>>int addInstance(T object, boolean useObjectId) throws SQLException;
 

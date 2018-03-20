@@ -54,7 +54,10 @@ public class ProductProcessMessage extends Message{
 		this.tenantId = p.tenantId();
 		this.processInstanceId = p.instanceId();
 		this.correlationKeys.variables().put("objectId", new VariableValue(String.valueOf(pd.id()), VariableValueType.valueOf("Integer"),false));
+		this.correlationKeys.variables().put("objectBusinessKey", new VariableValue(pd.onlyBusinessId(),VariableValueType.valueOf("String")));
 		this.processVariables.variables().put("objectStatus",new VariableValue(pd.status().name(), VariableValueType.valueOf("String"),false));
+		this.processVariables.variables().put("objectBusinessId", new VariableValue(pd.onlyBusinessId(),VariableValueType.valueOf("String")));
+		this.processVariables.variables().put("objectId", new VariableValue(String.valueOf(pd.id()),VariableValueType.valueOf("Integer")));
 	}
 	
 	public ProductProcessMessage(ProductMessage messageName, String status, String productName, int productId, String businessKey) {

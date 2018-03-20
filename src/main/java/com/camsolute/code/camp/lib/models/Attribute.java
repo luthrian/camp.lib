@@ -907,7 +907,7 @@ public abstract  class Attribute<U extends Value<?>> implements AttributeInterfa
 	@Override
 	public Message prepareMessage(String insanceId, Enum<?> message) {
 		ProductAttributeMessage msg = ProductAttributeMessage.valueOf(message.name());
-		ProductAttributeProcessMessage m = new ProductAttributeProcessMessage(msg, this);
+		ProductAttributeProcessMessage m = new ProductAttributeProcessMessage(msg, this, this.attributeBusinessKey());
 		for(Process<?> p: processes){
 			m.setProcessInstanceId(p.instanceId());
 			m.setTenantId(p.tenantId());
@@ -921,7 +921,7 @@ public abstract  class Attribute<U extends Value<?>> implements AttributeInterfa
 		MessageList ml = new MessageList();
 		
 		for(Process<?> p: processes){
-			ProductAttributeProcessMessage m = new ProductAttributeProcessMessage(msg, this);
+			ProductAttributeProcessMessage m = new ProductAttributeProcessMessage(msg, this,this.attributeBusinessKey());
 			m.setProcessInstanceId(p.instanceId());
 			m.setTenantId(p.tenantId());
 			ml.add(m);

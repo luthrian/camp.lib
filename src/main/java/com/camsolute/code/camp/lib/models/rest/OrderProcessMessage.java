@@ -41,9 +41,9 @@ public class OrderProcessMessage extends Message{
 		OrderProcess p = (OrderProcess) o.processInstances().get(0);
 		this.tenantId = p.tenantId();
 		this.processInstanceId = p.instanceId();
-		this.correlationKeys.variables().put("objectBusinessId", new VariableValue(o.businessId(),VariableValueType.valueOf("String")));
+		this.correlationKeys.variables().put("objectBusinessId", new VariableValue(o.onlyBusinessId(),VariableValueType.valueOf("String")));
 		this.correlationKeys.variables().put("objectId", new VariableValue(String.valueOf(o.id()),VariableValueType.valueOf("Integer")));
-		this.processVariables.variables().put("objectBusinessId", new VariableValue(o.businessId(),VariableValueType.valueOf("String")));
+		this.processVariables.variables().put("objectBusinessId", new VariableValue(o.onlyBusinessId(),VariableValueType.valueOf("String")));
 		this.processVariables.variables().put("objectId", new VariableValue(String.valueOf(o.id()),VariableValueType.valueOf("Integer")));
 		this.processVariables.variables().put("objectStatus",new VariableValue(o.status().name(), VariableValueType.valueOf("String")));
 		

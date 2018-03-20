@@ -52,7 +52,7 @@ public class CustomerProcessMessage extends Message{
 		this.processVariables.variables().put("objectBusinessId", new VariableValue(c.businessId(),VariableValueType.valueOf("String")));
 		this.processVariables.variables().put("objectId", new VariableValue(String.valueOf(c.id()),VariableValueType.valueOf("String")));
 		this.processVariables.variables().put("objectStatus",new VariableValue(c.status().name(), VariableValueType.valueOf("String")));
-		
+	
 	}
 	
 	public CustomerProcessMessage(CustomerMessage messageName, String customerStatus, String customerBusinessId, int customerId, String businessKey) {
