@@ -1420,11 +1420,11 @@ public class CustomerDao implements CustomerDaoInterface {
 	@Override
 	public String formatUpdateSQL(String SQL, Customer c, boolean log) {
 		return String.format(SQL,
-				c.businessId()
-				,c.businessKey()
-				,c.type().name()
-				,c.origin().name()
-				,c.version().value()
+				"'"+c.businessId()+"'"
+				,"'"+c.businessKey()+"'"
+				,"'"+c.type().name()+"'"
+				,"'"+c.origin().name()+"'"
+				,"'"+c.version().value()+"'"
 				,c.id());
 	}
 

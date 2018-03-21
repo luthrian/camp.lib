@@ -17,7 +17,7 @@
  * Contributors:
  * 	Christopher Campbell - all code prior and post initial release
  ******************************************************************************/
-package com.camsolute.code.camp.lib.models.customer;
+package com.camsolute.code.camp.lib.dao.rest;
 
 import com.camsolute.code.camp.lib.data.CampRest;
 

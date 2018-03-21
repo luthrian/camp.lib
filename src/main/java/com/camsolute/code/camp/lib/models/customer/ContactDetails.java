@@ -19,10 +19,7 @@
  ******************************************************************************/
 package com.camsolute.code.camp.lib.models.customer;
 
-import org.json.JSONObject;
-
 import com.camsolute.code.camp.lib.models.CampStates;
-import com.camsolute.code.camp.lib.models.CampStatesInterface;
 import com.camsolute.code.camp.lib.utilities.Util;
 
 public class ContactDetails implements ContactDetailsInterface{
@@ -33,7 +30,6 @@ public class ContactDetails implements ContactDetailsInterface{
 	private String telephone;
 	private String skype;
 	private String misc;
-	private TouchPointList contactHistory;
 	
 	private CampStates states = new CampStates();
 
@@ -117,18 +113,6 @@ public class ContactDetails implements ContactDetailsInterface{
 	}
 	public void setMisc(String misc) {
 		this.misc=misc;
-	}
-	
-	public TouchPointList contactHistory(){
-		return this.contactHistory;
-	}
-	public void addTouchPoint(TouchPoint touchPoint) {
-		touchPoint.states().modify();
-		this.contactHistory.add(touchPoint);
-		this.states.modify();
-	}
-	public void setContactHistory(TouchPointList contactHistory) {
-		this.contactHistory=contactHistory;
 	}
 	
 	public CampStates states() {

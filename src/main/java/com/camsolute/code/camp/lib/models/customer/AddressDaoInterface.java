@@ -20,9 +20,10 @@
 package com.camsolute.code.camp.lib.models.customer;
 
 import com.camsolute.code.camp.lib.dao.DaoInterface;
+import com.camsolute.code.camp.lib.dao.InstanceDaoInterface;
 import com.camsolute.code.camp.lib.dao.database.DBDaoInterface;
 import com.camsolute.code.camp.lib.models.CampInstanceDaoInterface;
 
-public interface AddressDaoInterface extends DaoInterface<Address>, DBDaoInterface<Address>, CampInstanceDaoInterface{
+public interface AddressDaoInterface extends DaoInterface<Address>, DBDaoInterface<Address>, CampInstanceDaoInterface, InstanceDaoInterface<Address>{
 
 }

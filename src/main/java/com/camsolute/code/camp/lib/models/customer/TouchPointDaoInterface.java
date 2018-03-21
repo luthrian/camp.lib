@@ -19,6 +19,10 @@
  ******************************************************************************/
 package com.camsolute.code.camp.lib.models.customer;
 
-public interface TouchPointDaoInterface {
+import com.camsolute.code.camp.lib.dao.DaoInterface;
+import com.camsolute.code.camp.lib.dao.database.DBDaoInterface;
+import com.camsolute.code.camp.lib.models.CampInstanceDaoInterface;
+
+public interface TouchPointDaoInterface extends DaoInterface<TouchPoint>, DBDaoInterface<TouchPoint>, CampInstanceDaoInterface {
 
 }

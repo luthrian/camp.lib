@@ -368,7 +368,10 @@ public class CampSQL {
 		public static final int _TOUCH_POINT_TABLE_INDEX = 4;
 		public static final int _TOUCH_POINT_REF_TABLE_INDEX = 5;
 		public static final int _CUSTOMER_UPDATES_TABLE_INDEX = 6;
-		public static final int _CUSTOMER_HAS_PROCESS_TABLE_INDEX = 1;
+		public static final int _CONTACT_DETAILS_UPDATES_TABLE_INDEX = 7;
+		public static final int _ADDRESS_UPDATES_TABLE_INDEX = 8;
+		public static final int _TOUCH_POINT_UPDATES_TABLE_INDEX = 9;
+		public static final int _CUSTOMER_HAS_PROCESS_TABLE_INDEX = 10;
 
 		public static final String[] customer_management_tables = {
 				"customer", //0
@@ -377,11 +380,11 @@ public class CampSQL {
 				"address", //3
 				"touch_point",//4
 				"touch_point_ref",//5
-				"customer_updates",
-				"contact_details_updates",
-				"address_updates",
-				"touch_point_updates",
-				"customer_has_process",
+				"customer_updates",//6
+				"contact_details_updates",//7
+				"address_updates",//8
+				"touch_point_updates",//9
+				"customer_has_process",//10
 		};
 		
 		public static final String[][] customer_table_definition = {
@@ -430,13 +433,14 @@ public class CampSQL {
 		public static final String[][] address_table_definition = {
 				{"_address_id_", "int(11) NOT NULL AUTO_INCREMENT"},
 				{"address_country", "varchar(45) NOT NULL"},
-				{"address_state", "varchar(45) NOT NULL"},
+				{"address_state", "varchar(45) NULL"},
 				{"address_postcode", "varchar(45) NOT NULL"},
 				{"address_city", "varchar(45) not null"},
 				{"address_street", "varchar(45) not null"},
 				{"address_street_number", "varchar(45) not null"},
-				{"address_floor", "varchar(45) not null"},
-				{"address_room_number", "varchar(45) not null"},
+				{"address_floor", "varchar(45) null"},
+				{"address_room_number", "varchar(45) null"},
+				{"address_business_id", "varchar(150) not null"},
 				{"address_businesskey", "varchar(45) not null"},
 				{"extra", "PRIMARY KEY (`_address_id_`)"
 						+ ",UNIQUE KEY `_address_id_UNIQUE` (`_address_id_`)"
@@ -482,7 +486,7 @@ public class CampSQL {
 		};
 
 		public static final String[][] address_updates_table_definition = {
-				{"_address_business_id", "INT(11) NOT NULL"},
+				{"_address_business_id", "VARCHAR(150) NOT NULL"},
 				{"_businesskey", "VARCHAR(45) NOT NULL"},
 				{"_target", "varchar(45) NOT NULL"},
 				{"_timestamp", "TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP"},

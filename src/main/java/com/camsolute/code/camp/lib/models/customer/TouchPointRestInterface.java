@@ -19,6 +19,9 @@
  ******************************************************************************/
 package com.camsolute.code.camp.lib.models.customer;
 
-public interface TouchPointRestInterface {
+import com.camsolute.code.camp.lib.dao.DaoInterface;
+import com.camsolute.code.camp.lib.dao.rest.CampInstanceRestDaoInterface;
+
+public interface TouchPointRestInterface extends DaoInterface<TouchPoint>, CampInstanceRestDaoInterface{
 
 }
