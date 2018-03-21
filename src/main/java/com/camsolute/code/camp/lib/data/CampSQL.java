@@ -474,7 +474,7 @@ public class CampSQL {
 		};
 
 		public static final String[][] contact_details_updates_table_definition = {
-				{"_customer_id", "INT(11) NOT NULL"},
+				{"_customer_business_id", "VARCHAR(45) NOT NULL"},
 				{"_businesskey", "VARCHAR(45) NOT NULL"},
 				{"_target", "varchar(45) NOT NULL"},
 				{"_timestamp", "TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP"},

@@ -19,10 +19,33 @@
  ******************************************************************************/
 package com.camsolute.code.camp.lib.models.customer;
 
-import com.camsolute.code.camp.lib.dao.DaoInterface;
-import com.camsolute.code.camp.lib.dao.database.DBDaoInterface;
-import com.camsolute.code.camp.lib.models.CampInstanceDaoInterface;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-public interface AddressDaoInterface extends DaoInterface<Address>, DBDaoInterface<Address>, CampInstanceDaoInterface{
+public interface ContactDetailsDBDaoInterface {
+	
+	public String dbName();
+	
+	public String table();
+	
+	public String[][] tabledef();
+	
+	public String updatestable();
+	
+	public String[][] updatestabledef();
+	
+	public String insertValues(ContactDetails c, boolean log);
+	
+	public String insertValues(ContactDetailsList cl, boolean log);
+	
+	public String insertUpdateValues(ContactDetails c, String target);
+	
+	public String insertUpdateValues(ContactDetailsList cl, String target);
+	
+	public ContactDetails rsToI(ResultSet rs, boolean log) throws SQLException; 
+	
+	public int createTable(boolean log);
+	
+	public int clearTables(boolean log);
 
 }

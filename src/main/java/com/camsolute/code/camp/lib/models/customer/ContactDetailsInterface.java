@@ -56,10 +56,6 @@ public interface ContactDetailsInterface extends Serialization<ContactDetails>, 
 	public void updateMisc(String misc);
 	public void setMisc(String misc);
 	
-	public TouchPointList contactHistory();
-	public void addTouchPoint(TouchPoint touchPoint);
-	public void setContactHistory(TouchPointList contactHistory);
-	
 	public static String _toJson(ContactDetailsInterface d) {
 		return "{"+_toInnerJson(d)+"}";
 	}
@@ -71,7 +67,6 @@ public interface ContactDetailsInterface extends Serialization<ContactDetails>, 
 		json += "\"telephone\":\""+d.telephone()+"\",";
 		json += "\"skype\":\""+((d.skype()!=null)?d.skype():"")+"\",";
 		json += "\"misc\":\""+((d.misc()!=null)?d.misc():"")+"\",";
-		json += ((d.contactHistory()!=null||d.contactHistory().size()>0)?"\"contactHistory\":"+d.contactHistory().toJson()+",":"");
 		json += "\"states\":"+d.states().toJson();
 		return json;
 	}
@@ -88,17 +83,7 @@ public interface ContactDetailsInterface extends Serialization<ContactDetails>, 
 		String skype = jo.getString("skype");
 		String misc = jo.getString("misc");
 		CampStates states = CampStatesInterface._fromJSONObject(jo.getJSONObject("states"));
-		TouchPointList contactHistory = null;
-		try {
-			contactHistory = TouchPointList._fromJSONArray(jo.getJSONArray("contactHistory"));
-		} catch (Exception e){
-			if(!Util._IN_PRODUCTION){String msg = "----[ JSON Error! Contact history missing.]----";LOG.info(String.format(fmt,"_fromJSONObject",msg));}
-			e.printStackTrace();
-		}
 		ContactDetails d = new ContactDetails(id,email,mobile,telephone,skype,misc);
-		if(contactHistory != null) {
-			d.setContactHistory(contactHistory);
-		}
 		d.states().update(states);
 		return d;
 	}
