@@ -67,6 +67,7 @@ public class CampRest {
 			LOAD_CHILD_BY_GROUP,
 			LOAD_BY_GROUP,
 			LOAD_BY_GROUP_VERSION,
+			CREATE_CUSTOMER, 
 			CREATE_ORDER, 
 			CREATE_PRODUCT, 
 			CREATE_ATTRIBUTE, 
@@ -96,6 +97,7 @@ public class CampRest {
 		public static final String LOAD_CHILD_BY_GROUP = "/load/child/by/group";
 		public static final String LOAD_BY_GROUP = "/load/by/group";
 		public static final String LOAD_BY_GROUP_VERSION = "/load/by/group/version";
+		public static final String CREATE_CUSTOMER = "/create";
 		public static final String CREATE_ORDER = "/create";
 		public static final String CREATE_PRODUCT = "/create";
 		public static final String CREATE_ATTRIBUTE = "/create";
@@ -128,6 +130,7 @@ public class CampRest {
 			Call.put(Request.LOAD_CHILD_BY_GROUP, new String[] {"/load/child/by/group","/load/child/by/group?parentId=%s&group=%s","GET"});
 			Call.put(Request.LOAD_BY_GROUP, new String[] {"/load/by/group","/load/by/group?group=%s","GET"});
 			Call.put(Request.LOAD_BY_GROUP_VERSION, new String[] {"/load/by/group/version","/load/by/group/version?group=%s&version=%s","GET"});
+			Call.put(Request.CREATE_CUSTOMER, new String[] {"/create","/create?origin=%s&type=%s&businessId=%s&businessKey=%s&group=%s&version=%s","GET"});
 			Call.put(Request.CREATE_ORDER, new String[] {"/create","/create?businessId=%s&businessKey=%s&date=%s&byDate=%s&group=%s&version=%s","GET"});
 			Call.put(Request.CREATE_PRODUCT, new String[] {"/create","/create?businessId=%s&businessKey=%s&date=%s&endOfLife=%s&group=%s&version=%s","GET"});
 			Call.put(Request.CREATE_ATTRIBUTE, new String[] {"/create","/create?businessId=%s&businessKey=%s&date=%s&byDate=%s","GET"});
@@ -685,6 +688,9 @@ public class CampRest {
 			return prefix + ProcessEngineDaoService.Call.get(request)[0];
 		}
 	}		
+	public static class Customer {
+		public static final String Prefix = "/customer";
+	}
  	public static class Order {
 		public static final String Prefix = "/order";
 	}
