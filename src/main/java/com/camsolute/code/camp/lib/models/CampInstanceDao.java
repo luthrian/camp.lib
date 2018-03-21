@@ -707,10 +707,10 @@ public class CampInstanceDao implements CampInstanceDaoInterface,HasResultSetToI
 
 		@Override
 		public <T extends InstanceDaoInterface<?>,U extends IsObjectInstance<U>, E extends ArrayList<U>> E loadDateRange(String startDate, String endDate, T dao, boolean primary) throws SQLException {
-			return _loadDateRange(startDate, endDate, dao,primary, !Util._IN_PRODUCTION);
+			return _loadDateRange(startDate, endDate, RangeTarget.DATE, dao,primary, !Util._IN_PRODUCTION);
 		}
 		@SuppressWarnings("unchecked")
-		public <T extends InstanceDaoInterface<?>,U extends IsObjectInstance<U>, E extends ArrayList<U>> E _loadDateRange(String startDate, String endDate, T dao, boolean primary, boolean log) throws SQLException {
+		public <T extends InstanceDaoInterface<?>,U extends IsObjectInstance<U>, E extends ArrayList<U>> E _loadDateRange(String startDate, String endDate, RangeTarget target, T dao, boolean primary, boolean log) throws SQLException {
 			long startTime = System.currentTimeMillis();
 			String _f = null;
 			String msg = null;
@@ -720,7 +720,6 @@ public class CampInstanceDao implements CampInstanceDaoInterface,HasResultSetToI
 				LOG.traceEntry(String.format(fmt, (_f + ">>>>>>>>>").toUpperCase(), msg));
 			}
 			//TODO: refactor RangeTarget into all daterange queries
-			RangeTarget target = RangeTarget.DATE;
 			String targ = "";
 			switch(target) {
 			case TIMESTAMP:
@@ -761,10 +760,10 @@ public class CampInstanceDao implements CampInstanceDaoInterface,HasResultSetToI
 		}
 		@Override
 		public <T extends InstanceDaoInterface<?>,U extends IsObjectInstance<U>, E extends ArrayList<U>> E loadDateRange(String businessId, String startDate, String endDate, T dao, boolean primary) throws SQLException {
-			return _loadDateRange(businessId, startDate, endDate, dao,primary, !Util._IN_PRODUCTION);
+			return _loadDateRange(businessId, startDate, endDate, RangeTarget.DATE, dao,primary, !Util._IN_PRODUCTION);
 		}
 		@SuppressWarnings("unchecked")
-		public <T extends InstanceDaoInterface<?>,U extends IsObjectInstance<U>, E extends ArrayList<U>> E _loadDateRange(String businessId, String startDate, String endDate, T dao, boolean primary, boolean log) throws SQLException {
+		public <T extends InstanceDaoInterface<?>,U extends IsObjectInstance<U>, E extends ArrayList<U>> E _loadDateRange(String businessId, String startDate, String endDate, RangeTarget target, T dao, boolean primary, boolean log) throws SQLException {
 			long startTime = System.currentTimeMillis();
 			String _f = null;
 			String msg = null;
@@ -774,7 +773,6 @@ public class CampInstanceDao implements CampInstanceDaoInterface,HasResultSetToI
 				LOG.traceEntry(String.format(fmt, (_f + ">>>>>>>>>").toUpperCase(), msg));
 			}
 			//TODO: refactor RangeTarget into all daterange queries
-			RangeTarget target = RangeTarget.DATE;
 			String targ = "";
 			switch(target) {
 			case TIMESTAMP:

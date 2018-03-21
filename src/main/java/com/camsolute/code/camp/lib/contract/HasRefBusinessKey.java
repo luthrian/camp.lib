@@ -19,8 +19,8 @@
  ******************************************************************************/
 package com.camsolute.code.camp.lib.contract;
 
-public interface HasRefBusinessId {
-	public String updateRefBusinessId(String id);
-	public void setRefBusinessId(String id);
-	public String refBusinessId();
+public interface HasRefBusinessKey {
+	public String updateRefBusinessKey(String id);
+	public void setRefBusinessKey(String id);
+	public String refBusinessKey();
 }

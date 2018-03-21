@@ -58,17 +58,17 @@ public class Customer implements CustomerInterface {
 	};
 	
 	public static enum Type {
-		INT_CONSUMER,
+		INT_PERSON,
 		INT_BUSINESS,
-		EXT_CONSUMER,
+		EXT_PERSON,
 		EXT_BUSINESS,
-		ORG_CONSUMER,
+		ORG_PERSON,
 		ORG_BUSINESS,
-		NGO_CONSUMER,
+		NGO_PERSON,
 		NGO_BUSINESS,
-		GOV_CONSUMER,
+		GOV_PERSON,
 		GOV_BUSINESS,
-		MIL_CONSUMER,
+		MIL_PERSON,
 		MIL_BUSINESS
 		;
 	}
@@ -77,36 +77,77 @@ public class Customer implements CustomerInterface {
 		FOREIGN
 	}
 	
+	public static enum PersonTitle {
+		NA,
+		MR,
+		MRS,
+		MISS,
+		PROF,
+		DR;
+	}
+	
+	public static enum BusinessTitle {
+		LTD,
+		CORP,
+		PART;
+	}
 	private int id = Util.NEW_ID;
 	private int refId = Util.NEW_ID;
-	private String title;
-	private String firstName;
-	private String surName;
+	private Type type;
+	private Origin origin;
+	private String businessId;
 	private String businessKey;
 	private Group group;
 	private Version version;
-	private CampInstance history = new CampInstance();
-	private CampStates states = new CampStates();
+	private int addressId = Util.NEW_ID;
+	private int deliveryAddressId = Util.NEW_ID;
+	private int touchPointId = Util.NEW_ID;
+	private int contactId = Util.NEW_ID;
 	private Status status = Status.CREATED;
 	private Status previousStatus = Status.CLEAN;
-	private int addressId = Util.NEW_ID;
-	private Address address = null;//
+	private CampInstance history = new CampInstance();
+	private CampStates states = new CampStates();
 	private ContactDetails contact = null;
+	private AddressList addressList = new AddressList();//
 	private ProcessList processes = new ProcessList();
+	private TouchPointList touchPoints = new TouchPointList();
 	
-	public Customer(int id, String title, String firstName, String surName, String businessKey){
+	public Customer(int id, Origin origin, Type type, String businessId, String businessKey, Group group, Version version){
 		this.id = id;
-		this.title = title;
-		this.firstName = firstName;
-		this.surName = surName;
+		this.type = type;
+		this.origin = origin;
+		this.businessId = businessId;
 		this.businessKey = businessKey;
+		this.group = group;
+		this.version = version;
 	}
 	
-	public Customer(String title, String firstName, String surName, String businessKey){
-		this.title = title;
-		this.firstName = firstName;
-		this.surName = surName;
+	public Customer(Origin origin, Type type, String businessId, String businessKey, Group group, Version version){
+		this.type = type;
+		this.origin = origin;
+		this.businessId = businessId;
 		this.businessKey = businessKey;
+		this.group = group;
+		this.version = version;
+	}
+	
+	public Customer(int id, Origin origin, Type type, String businessId, String businessKey, String group, String version){
+		this.id = id;
+		this.type = type;
+		this.origin = origin;
+		this.businessId = businessId;
+		this.businessKey = businessKey;
+		this.group = new Group(group);
+		this.version = new Version(version);
+	}
+	
+	public Customer(Origin origin, Type type, String businessId, String businessKey, String group, String version){
+		this.type = type;
+		this.origin = origin;
+		this.businessId = businessId;
+		this.businessKey = businessKey;
+		this.group = new Group(group);
+		this.version = new Version(version);
 	}
 	
 	@Override
@@ -122,50 +163,17 @@ public class Customer implements CustomerInterface {
 	public void setRefId(int id) {
 		this.refId = id;
 	}
-	public String firstName() {
-		return firstName;
-	}
-	public String updateFirstName(String name) {
-		String prev = this.firstName;
-		this.firstName = name;
-		return prev;
-	}
-	public void setFirstName(String name) {
-		this.firstName = name;
-	}
-	public String surName() {
-		return surName;
-	}
-	public String updateSurName(String name) {
-		String prev = this.surName;
-		this.surName = name;
-		return prev;
-	}
-	public void setSurName(String name) {
-		this.surName = name;
-	}
 	@Override
 	public String name() {
-		return firstName+Util.DB._VS+surName;
+		return onlyBusinessId();
 	}
 	@Override
 	public String updateName(String name) {
-		String prev = name();
-		String names[] = name.split(Util.DB._VS);
-		if(names.length == 2) {
-			this.firstName = names[0];
-			this.surName = names[1];
-			return prev;
-		}
-		return null;
+		return updateBusinessId(name);
 	}
 	@Override
 	public void setName(String name) {
-		String names[] = name.split(Util.DB._VS);
-		if(names.length == 2) {
-			this.firstName = names[0];
-			this.surName = names[1];
-		}
+		setBusinessId(name);
 	}
 	@Override
 	public Version version() {
@@ -205,23 +213,26 @@ public class Customer implements CustomerInterface {
 	}
 	@Override
 	public String initialBusinessId() {
-		return name();
+		return this.businessId;
 	}
 	@Override
 	public String businessId() {
-		return name();
+		return this.origin.name()+Util.DB._VS+this.type.name()+Util.DB._VS+this.businessId;
 	}
 	@Override
 	public String updateBusinessId(String newId) {
-		return updateName(newId);
+		String prev = this.businessId;
+		this.businessId = newId;
+		this.states.modify();
+		return prev;
 	}
 	@Override
 	public void setBusinessId(String newId) {
-		setName(newId);
+		this.businessId = newId;
 	}
 	@Override
 	public String onlyBusinessId() {
-		return name();
+		return this.businessId;
 	}
 	@Override
 	public String businessKey() {
@@ -246,19 +257,26 @@ public class Customer implements CustomerInterface {
 	}
 	@Override
 	public int getObjectId() {
-		return id();
+		return this.refId;
 	}
 	@Override
 	public String getObjectBusinessId() {
-		return businessId();
+		return this.businessId;
 	}
 	@Override
 	public CampInstance getObjectHistory() {
-		return history();
+		return this.history;
 	}
 	@Override
 	public int getRefId() {
-		return this.refId;
+		return this.history.objectRefId();
+	}
+	@Override
+	public int updateRefId(int id) {
+		int prev = this.history.objectRefId();
+		this.refId = id;
+		this.history.setObjectRefId(id);
+		return prev;
 	}
 	@Override
 	public CampStates states() {
@@ -310,15 +328,40 @@ public class Customer implements CustomerInterface {
 		}
 	}
 	
-	public String title() {
-		return this.title();
+	public Type type() {
+		return this.type;
 	}
-	public void setTitle(String title) {
-		this.title = title;
+	public void setType(String type) {
+		this.type = Type.valueOf(type);
 	}
-	public String updateTitle(String title) {
-		String prev = this.title;
-		this.title = title;
+	public Type updateType(String type) {
+		Type prev = this.type;
+		this.type = Type.valueOf(type);
+		this.states.modify();
+		return prev;
+	}
+	public Type updateType(Type type) {
+		Type prev = this.type;
+		this.type = (Type) type;
+		this.states.modify();
+		return prev;
+	}
+	
+	public Origin origin() {
+		return this.origin;
+	}
+	public void setOrigin(String origin) {
+		this.origin = Origin.valueOf(origin);
+	}
+	public Origin updateOrigin(String origin) {
+		Origin prev = this.origin;
+		this.origin = Origin.valueOf(origin);
+		this.states.modify();
+		return prev;
+	}
+	public Origin updateOrigin(Origin origin) {
+		Origin prev = this.origin;
+		this.origin = (Origin) origin;
 		this.states.modify();
 		return prev;
 	}
@@ -329,16 +372,74 @@ public class Customer implements CustomerInterface {
 	public void setAddressId(int id) {
 		this.addressId = id;
 	}
+	public int deliveryAddressId() {
+		return this.deliveryAddressId;
+	}
+	public void setDeliveryAddressId(int id) {
+		this.deliveryAddressId = id;
+	}
 	public Address address(){ 
-		return this.address;
+		for(Address a:this.addressList) {
+			if(a.id() == this.addressId) {
+				return a;
+			}
+		}
+		return null;
 	}
-	public void setAddress(Address address) {
-		this.address = address;
+	public Address deliveryAddress(){ 
+		for(Address a:this.addressList) {
+			if(a.id() == this.deliveryAddressId) {
+				return a;
+			}
+		}
+		return null;
 	}
-	public void updateAddress(Address address) {
-		this.address = address;
+	public AddressList addressList() {
+		return this.addressList;
+	}
+	public void setAddressList(AddressList addressList) {
+		this.addressList = addressList;
+	}
+	public boolean addAddress(Address address) {
+		for(Address a:this.addressList) {
+			if(a.id() == address.id()) {
+				return false;
+			}
+		}
+		this.addressList.add(address);
+		address.states().modify();
 		this.states.modify();
+		return true;
 	}
+	public Address removeAddress(Address address) {
+		Address a = null;
+		for(Address ad:this.addressList){
+			int ctr = 0;
+			if(ad.id() == address.id()) {
+				a = this.addressList.get(ctr);
+				this.addressList.remove(ctr);
+				this.states.modify();
+				break;
+			}
+			ctr++;
+		}
+		return a;
+	}
+	public Address removeAddress(int addressId) {
+		Address a = null;
+		for(Address ad:this.addressList){
+			int ctr = 0;
+			if(ad.id() == addressId) {
+				a = this.addressList.get(ctr);
+				this.addressList.remove(ctr);
+				this.states.modify();
+				break;
+			}
+			ctr++;
+		}
+		return a;
+	}
+	
 	@Override
 	public String toJson() {
 		return CustomerInterface._toJson(this);
@@ -349,6 +450,14 @@ public class Customer implements CustomerInterface {
 	}
 
 	@Override
+	public int contactId() {
+		return this.contactId;
+	}
+	@Override
+	public void setContactId(int id) {
+		this.contactId = id;
+	}
+	@Override
 	public ContactDetails contact() {
 		return this.contact;
 	}
@@ -356,12 +465,14 @@ public class Customer implements CustomerInterface {
 	@Override
 	public void updateContact(ContactDetails contactDetails) {
 		this.contact = contactDetails;
+		this.contactId = contactDetails.id();
 		this.states.modify();
 	}
 
 	@Override
 	public void setContact(ContactDetails contactDetails) {
 		this.contact = contactDetails;
+		this.contactId = contactDetails.id();
 	}
 
 
@@ -481,5 +592,81 @@ public class Customer implements CustomerInterface {
 	public Request<?> prepareRequest(Principal principal, RequestType type) {
 		return new Request<Customer>(this,principal, type);
 	}
+	@Override
+	public int touchPointId() {
+		return touchPointId;
+	}
+	
+	@Override
+	public void setTouchPointId(int id) {
+		this.touchPointId = id;
+	}
+
+	@Override
+	public TouchPointList touchPoints() {
+		return touchPoints;
+	}
+
+	@Override
+	public void setTouchPoints(TouchPointList touchPoints) {
+		this.touchPoints = touchPoints;
+	}
+
+	@Override
+	public boolean addTouchPoint(TouchPoint touchPoint) {
+		for(TouchPoint tp:this.touchPoints){
+			if(tp.id() == touchPoint.id()){
+				return false;
+			}
+		}
+		touchPoint.states().modify();
+		this.touchPoints.add(touchPoint);
+		this.touchPointId = touchPoint.id();
+		this.states.modify();
+		return true;
+	}
+
+	@Override
+	public TouchPoint removeTouchPoint(TouchPoint touchPoint) {
+		TouchPoint tp = null;
+		int ctr = 0;
+		int size = this.touchPoints.size();
+		for(TouchPoint t:this.touchPoints){
+			if(t.id() == touchPoint.id()) {
+				tp = this.touchPoints.get(ctr);
+				this.touchPoints.remove(ctr);
+				this.states.modify();
+				// if we removed the last touch point list entry we set the Customer.touchPointId to the id of the new last entry 
+				if(ctr+1 == size) {
+					this.touchPointId = touchPoints.get(touchPoints.size()-1).id();
+				}
+				break;
+			}
+			ctr++;
+		}
+		return tp;
+	}
+
+	@Override
+	public TouchPoint removeTouchPoint(int touchPointId) {
+		TouchPoint tp = null;
+		int ctr = 0;
+		int size = this.touchPoints.size();
+		for(TouchPoint t:this.touchPoints){
+			if(t.id() == touchPointId) {
+				tp = this.touchPoints.get(ctr);
+				this.touchPoints.remove(ctr);
+				this.states.modify();
+				// if we removed the last touch point list entry we set the Customer.touchPointId to the id of the new last entry 
+				if(ctr+1 == size) {
+					this.touchPointId = touchPoints.get(touchPoints.size()-1).id();
+				}
+				break;
+			}
+			ctr++;
+		}
+		return tp;
+	}
+
 	
 }

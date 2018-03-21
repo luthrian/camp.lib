@@ -56,8 +56,8 @@ public class TouchPoint implements TouchPointInterface{
 	}
 	private int id = Util.NEW_ID;
 	private int refId = Util.NEW_ID;
-	private String businessKeyResponsible;
-	private String businessIdResponsible;
+	private String businessKeyResponsible;//ref
+	private String businessIdResponsible;//ref
 	private String businessKeyCustomer;
 	private String businessIdCustomer;
 	private Timestamp date;
@@ -367,22 +367,62 @@ public void setBusinessIdCustomer(String businessIdCustomer) {
 	public void setHistory(CampInstance instance) {
 		this.history = instance;
 	}
+	
+	@Override
+	public String updateRefBusinessKey(String key) {
+		return updateBusinessKeyResponsible(key);
+	}
+
+	@Override
+	public void setRefBusinessKey(String key) {
+		setBusinessKeyResponsible(key);
+	}
+
+	@Override
+	public String refBusinessKey() {
+		return this.businessKeyResponsible;
+	}
+
+	@Override
+	public String updateRefBusinessId(String id) {
+		return updateBusinessIdResponsible(id);
+	}
+
+	@Override
+	public void setRefBusinessId(String id) {
+		setBusinessIdResponsible(id);
+	}
+
+	@Override
+	public String refBusinessId() {
+		// TODO Auto-generated method stub
+		return this.businessIdResponsible;
+	}
+
 
 	@Override
 	public int getObjectId() {
-		return this.id;
+		return this.refId;
 	}
 
 	@Override
 	public String getObjectBusinessId() {
-		return this.businessId();
+		return this.businessIdResponsible;
 	}
 
 	@Override
 	public CampInstance getObjectHistory() {
-		return this.history();
+		return this.history;
 	}
 
+	@Override
+	public int updateRefId(int id) {
+		int prev = this.history().objectRefId();
+		this.refId = id;
+		this.history().setObjectRefId(id);
+		return prev;
+	}
+	
 	@Override
 	public int getRefId() {
 		return this.refId;
@@ -456,5 +496,5 @@ public void setBusinessIdCustomer(String businessIdCustomer) {
 	public TouchPoint fromJson(String json) {
 		return TouchPointInterface._fromJson(json);
 	}
-	
+
 }

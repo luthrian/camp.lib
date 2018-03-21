@@ -1,23 +1,4 @@
-/*******************************************************************************
- * Copyright (C) 2018 Christopher Campbell
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * Contributors:
- * 	Christopher Campbell - all code prior and post initial release
- ******************************************************************************/
-package com.camsolute.code.camp.lib.models.order;
+package com.camsolute.code.camp.lib.models.customer;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -30,110 +11,70 @@ import org.apache.logging.log4j.Logger;
 
 import com.camsolute.code.camp.lib.data.CampSQL;
 import com.camsolute.code.camp.lib.models.CampInstanceDao;
-import com.camsolute.code.camp.lib.models.Model;
-import com.camsolute.code.camp.lib.models.CampInstanceDaoInterface.RangeTarget;
 import com.camsolute.code.camp.lib.models.CampStatesInterface.IOAction;
+import com.camsolute.code.camp.lib.models.Group;
+import com.camsolute.code.camp.lib.models.Version;
+import com.camsolute.code.camp.lib.models.CampInstanceDaoInterface.RangeTarget;
+import com.camsolute.code.camp.lib.models.customer.Customer.Origin;
+import com.camsolute.code.camp.lib.models.customer.Customer.Type;
 import com.camsolute.code.camp.lib.models.process.Process;
 import com.camsolute.code.camp.lib.models.process.ProcessDao;
 import com.camsolute.code.camp.lib.models.process.ProcessList;
-import com.camsolute.code.camp.lib.models.process.ProductProcess;
-import com.camsolute.code.camp.lib.models.product.Product;
 import com.camsolute.code.camp.lib.utilities.Util;
 
-public class OrderPositionDao implements OrderPositionDaoInterface{
+public class CustomerDao implements CustomerDaoInterface {
 
-	private static final Logger LOG = LogManager.getLogger(OrderPositionDao.class);
+	private static final Logger LOG = LogManager.getLogger(CustomerDao.class);
 	private static String fmt = "[%15s] [%s]";
 
-	public static String dbName = CampSQL.database[CampSQL._ORDER_DB_INDEX];
+	public static String dbName = CampSQL.database[CampSQL._CUSTOMER_DB_INDEX];
 
-	public static String table = CampSQL.omTable(CampSQL._ORDER_DB_INDEX, CampSQL.Order._ORDER_POSITION_TABLE_INDEX);
+	public static String table = CampSQL.cmTable(CampSQL._CUSTOMER_DB_INDEX, CampSQL.Customer._CUSTOMER_TABLE_INDEX);
 
-	public static String[][] tabledef = CampSQL.Order.order_position_table_definition;
+	public static String[][] tabledef = CampSQL.Customer.customer_table_definition;
 
-	public static String updatestable = CampSQL.omTable(CampSQL._ORDER_DB_INDEX, CampSQL.Order._ORDER_POSITION_UPDATES_TABLE_INDEX);
+	public static String updatestable = CampSQL.cmTable(CampSQL._CUSTOMER_DB_INDEX, CampSQL.Customer._CUSTOMER_UPDATES_TABLE_INDEX);
 	
-	public static String[][] updatestabledef = CampSQL.Order.order_position_updates_table_definition;
+	public static String[][] updatestabledef = CampSQL.Customer.customer_updates_table_definition;
 
-	public static String reftable = CampSQL.omTable(CampSQL._ORDER_DB_INDEX, CampSQL.Order._ORDER_POSITION_REF_TABLE_INDEX);
+	public static String reftable = CampSQL.cmTable(CampSQL._CUSTOMER_DB_INDEX, CampSQL.Customer._CUSTOMER_REF_TABLE_INDEX);
 
-	public static String[][] reftabledef = CampSQL.Order.order_position_ref_table_definition;
+	public static String[][] reftabledef = CampSQL.Customer.customer_ref_table_definition;
 
-	public static String ohptable = CampSQL.omTable(CampSQL._ORDER_DB_INDEX, CampSQL.Order._ORDER_POSITION_HAS_PROCESS_TABLE_INDEX);
+	public static String chptable = CampSQL.cmTable(CampSQL._CUSTOMER_DB_INDEX, CampSQL.Customer._CUSTOMER_HAS_PROCESS_TABLE_INDEX);
 
-	public static String[][] ohptabledef = CampSQL.Order.order_position_has_process_table_definition;
+	public static String[][] chptabledef = CampSQL.Customer.customer_has_process_table_definition;
 
-
-	private static OrderPositionDao instance = null;
+	private static CustomerDao instance = null;
 	
-	private OrderPositionDao(){
+	private CustomerDao(){
 	}
 	
-	public static OrderPositionDao instance(){
+	public static CustomerDao instance(){
 		if(instance == null) {
-			instance = new OrderPositionDao();
+			instance = new CustomerDao();
 		}
 		return instance;
 	}
 	
 	@Override
-	public String dbName() {
-		return dbName;
-	}
-
-	@Override
-	public String table() {
-		return table;
-	}
-
-	@Override
-	public String[][] tabledef() {
-		return tabledef;
-	}
-
-	@Override
-	public String updatestable() {
-		return updatestable;
-	}
-
-	@Override
-	public String[][] updatestabledef() {
-		return updatestabledef;
-	}
-
-	public String reftable() {
-		return reftable;
-	}
-
-	public String[][] reftabledef() {
-		return reftabledef;
-	}
-
-	public String ohptable() {
-		return ohptable;
-	}
-
-	public String[][] ohptabledef() {
-		return ohptabledef;
-	}
-
-
-	@Override
-	public OrderPosition loadById(int id, boolean log) {
+	public Customer loadById(int id, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[loadById]";
-			msg = "====[ load an order position object instance by id  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer dao call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
-		OrderPosition op = null;
+		Customer c = null;
 		Connection conn = null;
 		ResultSet rs = null;
 		Statement dbs = null;
 		int retVal = 0;
 		try{
 			conn = Util.DB.__conn(log);
+			
+			dbs = conn.createStatement();
 			
 			String SQL = "SELECT * FROM "+ table + " AS t, "+reftable+" AS rt, "
 			    +CampInstanceDao.table+" AS ti WHERE "
@@ -141,19 +82,16 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 					+ " AND t.`"+tabledef[0][0]+"`="+id
 					+ " AND rt.`"+reftabledef[0][0]+"`=ti.`_object_ref_id`"
 					+ " AND ti.`_instance_id`=ti.`_current_instance_id`";
-
+			
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
 			
-			dbs = conn.createStatement();
-			
-			rs = dbs.executeQuery(SQL);
+			rs = dbs.executeQuery(SQL);		
 			if (rs.next()) {
-				op = rsToI(rs, log);
-				op.setHistory(CampInstanceDao.instance().rsToI(rs, log));
-				op.states().ioAction(IOAction.LOAD);
+				c = rsToI(rs,log);
+				c.setHistory(CampInstanceDao.instance().rsToI(rs, log));
+				retVal = 1;
 			}
-			retVal = 1;
-			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' updated model instance entr"+((retVal!=1)?"ies":"y")+" loaded ]----";LOG.info(String.format(fmt,_f,msg));}
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
 			
 		} catch(SQLException e) {
 			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
@@ -164,28 +102,23 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			Util.DB._releaseRS(rs, log);
 			Util.DB._releaseStatement(dbs, log);
 		}
-
 		if(log && !Util._IN_PRODUCTION) {
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[loadById completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
-		return op;
+		return c;
 	}
 
 	@Override
-	public OrderPosition loadByBusinessId(String businessId, boolean log) {
+	public Customer loadByBusinessId(String businessId, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[loadByBusinessId]";
-			msg = "====[ load an order position object instances by businessId ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer dao call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
-		String[] bid = businessId.split(Util.DB._VS);
-		if(bid.length <2 ) {
-			if(log && !Util._IN_PRODUCTION){msg = "----[EXCEPTION: businessId has wrong format! MUST be <orderBusinessId>"+Util.DB._VS+"<businessId>]----";LOG.info(String.format(fmt, _f,msg));}
-		}	
-		OrderPosition op = null;
+		Customer c = null;
 		Connection conn = null;
 		ResultSet rs = null;
 		Statement dbs = null;
@@ -193,26 +126,24 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 		try{
 			conn = Util.DB.__conn(log);
 			
+			dbs = conn.createStatement();
+			
 			String SQL = "SELECT * FROM "+ table + " AS t, "+reftable+" AS rt, "
 			    +CampInstanceDao.table+" AS ti WHERE "
 					+ " t.`"+tabledef[0][0]+"`=ti.`_object_id`"
-					+ " AND t.`op_business_id`='"+bid[1]+"'"
-					+ " AND t.`op_order_business_id`='"+bid[0]+"'"
+					+ " AND t.`customer_business_id`='"+businessId+"'"
 					+ " AND rt.`"+reftabledef[0][0]+"`=ti.`_object_ref_id`"
 					+ " AND ti.`_instance_id`=ti.`_current_instance_id`";
-
+			
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
 			
-			dbs = conn.createStatement();
-			
-			rs = dbs.executeQuery(SQL);
+			rs = dbs.executeQuery(SQL);		
 			if (rs.next()) {
-				op = rsToI(rs, log);
-				op.setHistory(CampInstanceDao.instance().rsToI(rs, log));
-				op.states().ioAction(IOAction.LOAD);
+				c = rsToI(rs,log);
+				c.setHistory(CampInstanceDao.instance().rsToI(rs, log));
+				retVal = 1;
 			}
-			retVal = 1;
-			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' updated model instance entr"+((retVal!=1)?"ies":"y")+" loaded ]----";LOG.info(String.format(fmt,_f,msg));}
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
 			
 		} catch(SQLException e) {
 			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
@@ -223,25 +154,24 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			Util.DB._releaseRS(rs, log);
 			Util.DB._releaseStatement(dbs, log);
 		}
-
 		if(log && !Util._IN_PRODUCTION) {
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[loadByBusinessId completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
-		return op;
+		return c;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <E extends ArrayList<OrderPosition>> E loadListByBusinessKey(String businessKey, boolean log) {
+	public <E extends ArrayList<Customer>> E loadListByBusinessKey(String businessKey, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[loadListByBusinessKey]";
-			msg = "====[ load a list of order position object instances that share a common businesskey]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		msg = "====[ customer dao call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
-		OrderPositionList pl = new OrderPositionList();
+		CustomerList cl = new CustomerList();
 		Connection conn = null;
 		ResultSet rs = null;
 		Statement dbs = null;
@@ -249,27 +179,26 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 		try{
 			conn = Util.DB.__conn(log);
 			
-			String SQL = "SELECT * FROM "+ table + " AS t, "+reftable+" AS rt, "
-			    +CampInstanceDao.table+" AS ti WHERE "
-					+ " t.`"+tabledef[0][0]+"`=ti.`_object_id`"
-					+ " AND t.`op_businesskey`='"+businessKey+"'"
-					+ " AND rt.`"+reftabledef[0][0]+"`=ti.`_object_ref_id`"
-					+ " AND ti.`_instance_id`=ti.`_current_instance_id`"
-					+ " ORDER BY t.`"+tabledef[0][0]+"` ASC";
-
-			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
-			
 			dbs = conn.createStatement();
 			
-			rs = dbs.executeQuery(SQL);
-			while (rs.next()) {
-				OrderPosition op = rsToI(rs, log);
-				op.setHistory(CampInstanceDao.instance().rsToI(rs, log));
-				op.states().ioAction(IOAction.LOAD);
-				pl.add(op);
-			}
-			
-			if(log && !Util._IN_PRODUCTION) {retVal = pl.size();msg = "----[ '"+retVal+"' updated model instance entr"+((retVal!=1)?"ies":"y")+" loaded ]----";LOG.info(String.format(fmt,_f,msg));}
+			String SQL = "SELECT * FROM "+ table + " AS t, "+reftable+" AS rt, "
+		    +CampInstanceDao.table+" AS ti WHERE "
+				+ " t.`"+tabledef[0][0]+"`=ti.`_object_id`"
+				+ " AND t.`customer_businesskey`='"+businessKey+"'"
+				+ " AND rt.`"+reftabledef[0][0]+"`=ti.`_object_ref_id`"
+				+ " AND ti.`_instance_id`=ti.`_current_instance_id`"
+				+ " ORDER BY t.`"+tabledef[0][0]+"` ASC";
+		
+		if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
+		
+		rs = dbs.executeQuery(SQL);		
+		if (rs.next()) {
+			Customer c = rsToI(rs,log);
+			c.setHistory(CampInstanceDao.instance().rsToI(rs, log));
+			cl.add(c);
+		}
+		retVal = cl.size();
+		if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
 			
 		} catch(SQLException e) {
 			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
@@ -280,25 +209,24 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			Util.DB._releaseRS(rs, log);
 			Util.DB._releaseStatement(dbs, log);
 		}
-
 		if(log && !Util._IN_PRODUCTION) {
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
-			msg = "====[loadListByBusinessKey completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		msg = "====[loadListByBusinessKey completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
-		return (E) pl;
+		return (E)cl;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public OrderPositionList loadListByGroup(String group, boolean log) {
+	public <E extends ArrayList<Customer>> E loadListByGroup(String group, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[loadListByGroup]";
-			msg = "====[ load a list of persisted order position object instances that share the same group. ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer dao call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
-		OrderPositionList ol = new OrderPositionList();
+		CustomerList cl = new CustomerList();
 		Connection conn = null;
 		ResultSet rs = null;
 		Statement dbs = null;
@@ -308,26 +236,24 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			
 			dbs = conn.createStatement();
 			
-			String SQL = "SELECT * FROM "+table+" AS t, , "+reftable+" AS rt, "+CampInstanceDao.table+" AS i WHERE "
-					+ " i.`_group_name`='"+group+"' "
-					+ " AND i.`_object_id`=t.`"+tabledef[0][0]+"` "
-					+ " AND i.`_object_business_id`=t.`order_number` "
-					+ " AND rt.`"+reftabledef[0][0]+"`=ti.`_object_ref_id`"
-					+ " AND i.`_instance_id`=i.`_current_instance_id` "
-					+ " ORDER BY rt.`op_position`" 
-					;
+			String SQL = "SELECT * FROM "+ table + " AS t, "+reftable+" AS rt, "
+					+CampInstanceDao.table+" AS ti WHERE "
+					+ " t.`"+tabledef[0][0]+"`=ti.`_object_id`"
+					+ " AND rt.`customer_group`='"+group+"'"
+							+ " AND rt.`"+reftabledef[0][0]+"`=ti.`_object_ref_id`"
+							+ " AND ti.`_instance_id`=ti.`_current_instance_id`"
+							+ " ORDER BY t.`"+tabledef[0][0]+"` ASC";
 			
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
 			
 			rs = dbs.executeQuery(SQL);		
-			while (rs.next()) {		
-				OrderPosition o = rsToI(rs,log);
-				o.setHistory(CampInstanceDao.instance().rsToI(rs, log));
-				o.states().ioAction(IOAction.LOAD);
-				ol.add(o);
+			if (rs.next()) {
+				Customer c = rsToI(rs,log);
+				c.setHistory(CampInstanceDao.instance().rsToI(rs, log));
+				cl.add(c);
 			}
-			retVal = ol.size();
-			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" loaded ]----";LOG.info(String.format(fmt,_f,msg));}
+			retVal = cl.size();
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
 			
 		} catch(SQLException e) {
 			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
@@ -342,20 +268,20 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[loadListByGroup completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
-		return ol;
+		return (E)cl;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public OrderPositionList loadListByGroupVersion(String group, String version, boolean log) {
+	public <E extends ArrayList<Customer>> E loadListByGroupVersion(String group, String version, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
-			_f = "[loadListByKey]";
-			msg = "====[ load a list of persisted order position object instances that share the same group and version aspects ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			_f = "[loadListByGroupVersion]";
+			msg = "====[ customer dao call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
-		OrderPositionList ol = new OrderPositionList();
+		CustomerList cl = new CustomerList();
 		Connection conn = null;
 		ResultSet rs = null;
 		Statement dbs = null;
@@ -365,27 +291,25 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			
 			dbs = conn.createStatement();
 			
-			String SQL = "SELECT * FROM "+table+" AS t, "+CampInstanceDao.table+" AS i WHERE "
-					+ " i.`_group_name`='"+group+"' "
-					+ " AND i.`_version_value`='"+version+"' "
-					+ " AND i.`_object_id`=t.`"+tabledef[0][0]+"` "
-					+ " AND i.`_object_business_id`=t.`order_number` "
-					+ " AND rt.`"+reftabledef[0][0]+"`=ti.`_object_ref_id`"
-					+ " AND i.`_instance_id`=i.`_current_instance_id` "
-					+ " ORDER BY rt.`op_position`" 
-					;
+			String SQL = "SELECT * FROM "+ table + " AS t, "+reftable+" AS rt, "
+					+CampInstanceDao.table+" AS ti WHERE "
+					+ " t.`"+tabledef[0][0]+"`=ti.`_object_id`"
+					+ " AND t.`customer_version`='"+version+"'"
+					+ " AND rt.`customer_group`='"+group+"'"
+							+ " AND rt.`"+reftabledef[0][0]+"`=ti.`_object_ref_id`"
+							+ " AND ti.`_instance_id`=ti.`_current_instance_id`"
+							+ " ORDER BY t.`"+tabledef[0][0]+"` ASC";
 			
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
 			
 			rs = dbs.executeQuery(SQL);		
-			while (rs.next()) {		
-				OrderPosition o = rsToI(rs,log);
-				o.setHistory(CampInstanceDao.instance().rsToI(rs, log));
-				o.states().ioAction(IOAction.LOAD);
-				ol.add(o);
+			if (rs.next()) {
+				Customer c = rsToI(rs,log);
+				c.setHistory(CampInstanceDao.instance().rsToI(rs, log));
+				cl.add(c);
 			}
-			retVal = ol.size();
-			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" loaded ]----";LOG.info(String.format(fmt,_f,msg));}
+			retVal = cl.size();
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
 			
 		} catch(SQLException e) {
 			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
@@ -400,22 +324,21 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[loadListByGroupVersion completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
-		return ol;
+		return (E)cl;
 	}
 
-
 	@Override
-	public OrderPosition save(OrderPosition op, boolean log) {
+	public Customer save(Customer c, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[save]";
-			msg = "====[ persist an order position object instance to the database ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer dao call: persiste customer object instance to database]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
-		// we only save order position object that are ready to save
-		if(op.states().notReadyToSave(op)) {
-			return op; // skip this entry if not ready to save
+// we only save objects that are ready to save
+		if(c.states().notReadyToSave(c)) {
+			return c; // skip this entry if not ready to save
 		}
 		
 		Connection conn = null;
@@ -428,7 +351,7 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			dbs = conn.createStatement();
 			
 			String SQL = "INSERT INTO " + table + "( " + Util.DB._columns(tabledef, Util.DB.dbActionType.INSERT, log)
-			+ " ) VALUES ( " + insertValues(op,log) + " )";
+			+ " ) VALUES ( " + insertValues(c,log) + " )";
 			
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
 			
@@ -436,12 +359,12 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			
 			rs = dbs.getGeneratedKeys();						
 			if (rs.next()) {
-				op.updateId(rs.getInt(tabledef[0][0]));
+				c.updateId(rs.getInt(tabledef[0][0]));
 			} 
 			rs.close();
 			
 			SQL = "INSERT INTO " + reftable + "( " + Util.DB._columns(reftabledef, Util.DB.dbActionType.INSERT, log)
-			+ " ) VALUES ( " + insertRefValues(op,log) + " )";
+			+ " ) VALUES ( " + insertRefValues(c,log) + " )";
 			
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
 			
@@ -449,48 +372,44 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			
 			rs = dbs.getGeneratedKeys();						
 			if (rs.next()) {
-				op.updateRefId(rs.getInt(reftabledef[0][0]));
+				c.updateRefId(rs.getInt(reftabledef[0][0]));
 			}
-			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" persisted ]----";LOG.info(String.format(fmt,_f,msg));}
 			
-			op.history().stamptime();
-			op.cleanStatus(op);
-			CampInstanceDao.instance()._addInstance(op, false, log);
+			CampInstanceDao.instance()._addInstance(c, false, log);
 			
-			op.states().ioAction(IOAction.SAVE);
+			c.states().ioAction(IOAction.SAVE);
 		} catch(SQLException e) {
 			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
 			e.printStackTrace();
-			//throw e;
 		} finally {
 			if(log && !Util._IN_PRODUCTION){msg = "----[ releasing connection]----";LOG.info(String.format(fmt, _f,msg));}
 			Util.DB.__release(conn,log);
 			Util.DB._releaseRS(rs, log);
-			//Util.DB._releaseStatement(dbp, log);
 			Util.DB._releaseStatement(dbs, log);
 		}
 		if(log && !Util._IN_PRODUCTION) {
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[save completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
-		return op;
+		return c;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <E extends ArrayList<OrderPosition>> E saveList(E pl, boolean log) {
+	public <E extends ArrayList<Customer>> E saveList(E cl, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[saveList]";
-			msg = "====[ persist a list of order position object instances to the database ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer dao call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
-		// we only save order position object that are ready to save
-		OrderPositionList rpl = new OrderPositionList();
-		for(OrderPosition op: pl) {
-			if(op.states().notReadyToSave(op)) continue; // skip this entry if not ready to save
-			rpl.add(op);
+		// we only save objects that are ready to save
+		CustomerList rcl = new CustomerList();
+		for(Customer c: cl) {
+			if(c.states().notReadyToSave(c)) continue; // skip this entry if not ready to save
+			rcl.add(c);
 		}
 		Connection conn = null;
 		ResultSet rs = null;
@@ -502,7 +421,7 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			dbs = conn.createStatement();
 			
 			String SQL = "INSERT INTO " + table + "( " + Util.DB._columns(tabledef, Util.DB.dbActionType.INSERT, log)
-			+ " ) VALUES " + insertListValues(rpl,log);
+			+ " ) VALUES " + insertListValues(rcl,log);
 			
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
 			
@@ -511,13 +430,13 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			rs = dbs.getGeneratedKeys();						
 			int count = 0;
 			while (rs.next()) {
-				rpl.get(count).updateId(rs.getInt(tabledef[0][0]));
+				rcl.get(count).updateId(rs.getInt(tabledef[0][0]));
 				count++;
 			} 
 			rs.close();
 			
 			SQL = "INSERT INTO " + reftable + "( " + Util.DB._columns(reftabledef, Util.DB.dbActionType.INSERT, log)
-			+ " ) VALUES " + insertListRefValues(rpl,log);
+			+ " ) VALUES " + insertListRefValues(rcl,log);
 			
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
 			
@@ -526,20 +445,20 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			rs = dbs.getGeneratedKeys();						
 			count = 0;
 			while (rs.next()) {
-				rpl.get(count).updateRefId(rs.getInt(reftabledef[0][0]));
+				rcl.get(count).updateRefId(rs.getInt(reftabledef[0][0]));
 				count++;
 			}
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
 			
-			for(OrderPosition op: rpl) {
-				op.history().stamptime();
-				op.cleanStatus(op);
+			for(Customer c: rcl) {
+				c.history().stamptime();
+				c.cleanStatus(c);
 			}
 			
-			CampInstanceDao.instance()._addInstances(rpl, false, log);
+			CampInstanceDao.instance()._addInstances(rcl, false, log);
 			
-			for(OrderPosition op : rpl) {
-				op.states().ioAction(IOAction.SAVE);
+			for(Customer c : rcl) {
+				c.states().ioAction(IOAction.SAVE);
 			}
 		} catch(SQLException e) {
 			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
@@ -558,20 +477,20 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[saveList completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
-		return (E) rpl;
+		return (E) rcl;
 	}
 
 	@Override
-	public OrderPosition update(OrderPosition op, boolean log) {
+	public Customer update(Customer c, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[update]";
-			msg = "====[ update a persisted order position object instance database entry  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer dao call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
-		if(log && !Util._IN_PRODUCTION){msg = "----[CURRENT STATES: "+op.states().print()+"]----";LOG.info(String.format(fmt, _f,msg));}
-		if(!op.states().isModified() || op.states().isNew()) {
+		if(log && !Util._IN_PRODUCTION){msg = "----[CURRENT STATES: "+c.states().print()+"]----";LOG.info(String.format(fmt, _f,msg));}
+		if(!c.states().isModified() || c.states().isNew()) {
 			if(log && !Util._IN_PRODUCTION){msg = "----[ERROR! Attempt to update unmodified object instance! ]----";LOG.info(String.format(fmt, _f,msg));}
 			return null;
 		}
@@ -583,7 +502,7 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			conn = Util.DB.__conn(log);
 			
 			String SQL = "INSERT INTO " + reftable +" ( "+ Util.DB._columns(reftabledef, Util.DB.dbActionType.INSERT, log)
-			+ " ) VALUES ( "+insertRefValues(op, log)+" )";
+			+ " ) VALUES ( "+insertRefValues(c, log)+" )";
 
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
 			
@@ -593,49 +512,43 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			
 			rs = dbs.getGeneratedKeys();
 			if (rs.next()) {
-				op.updateRefId(rs.getInt(reftabledef[0][0]));
+				c.updateRefId(rs.getInt(reftabledef[0][0]));
 			}
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
 			
-//			op.history().stamptime();
-//			op.cleanStatus(op);
-//			op.history().updateInstance();// no check required since is update
-			CampInstanceDao.instance()._addInstance(op, false, log);
-			op.states().ioAction(IOAction.UPDATE);
+			CampInstanceDao.instance()._addInstance(c, false, log);
+			c.states().ioAction(IOAction.UPDATE);
 		} catch(SQLException e) {
 			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
 			e.printStackTrace();
-			//throw e;
 		} finally {
 			if(log && !Util._IN_PRODUCTION){msg = "----[ releasing connection]----";LOG.info(String.format(fmt, _f,msg));}
 			Util.DB.__release(conn,log);
 			Util.DB._releaseRS(rs, log);
-			//Util.DB._releaseStatement(dbp, log);
 			Util.DB._releaseStatement(dbs, log);
 		}
-		//return retVal;
 		
 		if(log && !Util._IN_PRODUCTION) {
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[update completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
-		return op;
+		return c;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <E extends ArrayList<OrderPosition>> E updateList(E pl, boolean log) {
+	public <E extends ArrayList<Customer>> E updateList(E cl, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[updateList]";
-			msg = "====[ update a list of persisted order position object instances ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer dao call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
-		OrderPositionList rpl = new OrderPositionList();
-		for(OrderPosition op: pl) {
-			if(!op.states().isModified() || op.states().isNew()) continue;
-			rpl.add(op);
+		CustomerList rcl = new CustomerList();
+		for(Customer c: cl) {
+			if(!c.states().isModified() || c.states().isNew()) continue;
+			rcl.add(c);
 		}
 		Connection conn = null;
 		ResultSet rs = null;
@@ -648,7 +561,7 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 
 			
 			String SQL = "INSERT INTO " + reftable +" ( "+ Util.DB._columns(reftabledef, Util.DB.dbActionType.INSERT, log)
-			+ " ) VALUES "+insertListRefValues(rpl, log);
+			+ " ) VALUES "+insertListRefValues(rcl, log);
 				
 			if(log && !Util._IN_PRODUCTION){ msg = "----[SQL : "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
 
@@ -657,21 +570,16 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			rs = dbs.getGeneratedKeys();
 			int ctr = 0;
 			while (rs.next()) {
-				rpl.get(ctr).updateRefId(rs.getInt(reftabledef[0][0]));
+				rcl.get(ctr).updateRefId(rs.getInt(reftabledef[0][0]));
 				ctr++;
 			}
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
 
-//			for(OrderPosition op: rpl) {
-//				op.history().stamptime();
-//				op.cleanStatus(op);
-//				op.history().updateInstance();// no check required 
-//			}
-			CampInstanceDao.instance()._addInstances(rpl, false, log);
+			CampInstanceDao.instance()._addInstances(rcl, false, log);
 			
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
-			for(OrderPosition op : pl) {
-				op.states().ioAction(IOAction.UPDATE);
+			for(Customer c : cl) {
+				c.states().ioAction(IOAction.UPDATE);
 			}
 
 		} catch(SQLException e) {
@@ -689,19 +597,20 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[updateList completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
-		return (E) rpl;
+		return (E) rcl;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public <E extends ArrayList<OrderPosition>> E loadUpdates(String businessKey, String target, boolean log) {
+	public <E extends ArrayList<Customer>> E loadUpdates(String businessKey, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[loadUpdatesByKey]";
-			msg = "====[ load a list of order position object current instances that were registered in the order position updates table ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer dao call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
-		OrderPositionList pl = new OrderPositionList();
+		CustomerList cl = new CustomerList();
 		Connection conn = null;
 		ResultSet rs = null;
 		Statement dbs = null;
@@ -716,11 +625,10 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 					+ " AND ti.`_instance_id`=ti.`_current_instance_id`"
 					+ " AND EXISTS "
 					+ " (SELECT * FROM "+updatestable+" AS u WHERE "
-					+ " u.`_oposu_businesskey`=t.`op_businesskey` "
-					+ " AND u.`_oposu_target`='"+target+"' "
-					+ " AND u.`_oposu_businesskey`='"+businessKey+"' "
-					+ " AND u.`_oposu_business_id`=t.`op_business_id`"
-					+ " AND u.`_oposu_order_business_id`=t.`op_order_business_id`)"
+					+ " u.`_businesskey`=t.`customer_businesskey` "
+					+ " AND u.`_target`='"+target+"' "
+					+ " AND u.`_businesskey`='"+businessKey+"' "
+					+ " AND u.`_customer_business_id`=t.`customer_business_id`)"
 					+ " ORDER BY  t.`"+tabledef[0][0]+"`";
 
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
@@ -729,13 +637,13 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			
 			rs = dbs.executeQuery(SQL);
 			while (rs.next()) {
-				OrderPosition op = rsToI(rs, log);
-				op.setHistory(CampInstanceDao.instance().rsToI(rs, log));
-				op.states().ioAction(IOAction.LOAD);
-				pl.add(op);
+				Customer c = rsToI(rs, log);
+				c.setHistory(CampInstanceDao.instance().rsToI(rs, log));
+				c.states().ioAction(IOAction.LOAD);
+				cl.add(c);
 			}
-			
-			if(log && !Util._IN_PRODUCTION) {retVal = pl.size();msg = "----[ '"+retVal+"' updated model instance entr"+((retVal!=1)?"ies":"y")+" loaded ]----";LOG.info(String.format(fmt,_f,msg));}
+			retVal = cl.size();
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' updated model instance entr"+((retVal!=1)?"ies":"y")+" loaded ]----";LOG.info(String.format(fmt,_f,msg));}
 			
 		} catch(SQLException e) {
 			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
@@ -751,20 +659,20 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[loadUpdatesByKey completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
-		return (E) pl;
+		return (E) cl;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <E extends ArrayList<OrderPosition>> E loadUpdatesByKey(String businessKey, boolean log) {
+	public <E extends ArrayList<Customer>> E loadUpdatesByKey(String businessKey, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[loadUpdatesByKey]";
-			msg = "====[ load a list of order position object current instances that were registered in the order position updates table ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer dao call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
-		OrderPositionList pl = new OrderPositionList();
+		CustomerList cl = new CustomerList();
 		Connection conn = null;
 		ResultSet rs = null;
 		Statement dbs = null;
@@ -779,10 +687,9 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 					+ " AND ti.`_instance_id`=ti.`_current_instance_id`"
 					+ " AND EXISTS "
 					+ " (SELECT * FROM "+updatestable+" AS u WHERE "
-					+ " u.`_oposu_businesskey`=t.`op_businesskey` "
-					+ " AND u.`_oposu_businesskey`='"+businessKey+"' "
-					+ " AND u.`_oposu_business_id`=t.`op_business_id`"
-					+ " AND u.`_oposu_order_business_id`=t.`op_order_business_id`)"
+					+ " u.`_businesskey`=t.`customer_businesskey` "
+					+ " AND u.`_businesskey`='"+businessKey+"' "
+					+ " AND u.`_customer_business_id`=t.`customer_business_id`)"
 					+ " ORDER BY  t.`"+tabledef[0][0]+"`";
 
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
@@ -791,13 +698,13 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			
 			rs = dbs.executeQuery(SQL);
 			while (rs.next()) {
-				OrderPosition op = rsToI(rs, log);
-				op.setHistory(CampInstanceDao.instance().rsToI(rs, log));
-				op.states().ioAction(IOAction.LOAD);
-				pl.add(op);
+				Customer c = rsToI(rs, log);
+				c.setHistory(CampInstanceDao.instance().rsToI(rs, log));
+				c.states().ioAction(IOAction.LOAD);
+				cl.add(c);
 			}
 			
-			if(log && !Util._IN_PRODUCTION) {retVal = pl.size();msg = "----[ '"+retVal+"' updated model instance entr"+((retVal!=1)?"ies":"y")+" loaded ]----";LOG.info(String.format(fmt,_f,msg));}
+			if(log && !Util._IN_PRODUCTION) {retVal = cl.size();msg = "----[ '"+retVal+"' updated model instance entr"+((retVal!=1)?"ies":"y")+" loaded ]----";LOG.info(String.format(fmt,_f,msg));}
 			
 		} catch(SQLException e) {
 			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
@@ -813,20 +720,20 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[loadUpdatesByKey completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
-		return (E) pl;
+		return (E) cl;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <E extends ArrayList<OrderPosition>> E loadUpdatesByTarget(String target, boolean log) {
+	public <E extends ArrayList<Customer>> E loadUpdatesByTarget(String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[loadUpdatesByTarget]";
-			msg = "====[ load a list of order position object current instances that were registered in the order position updates table ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer dao call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
-		OrderPositionList pl = new OrderPositionList();
+		CustomerList cl = new CustomerList();
 		Connection conn = null;
 		ResultSet rs = null;
 		Statement dbs = null;
@@ -841,10 +748,9 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 					+ " AND ti.`_instance_id`=ti.`_current_instance_id`"
 					+ " AND EXISTS "
 					+ " (SELECT * FROM "+updatestable+" AS u WHERE "
-					+ " u.`_oposu_businesskey`=t.`op_businesskey` "
-					+ " AND u.`_oposu_target`='"+target+"' "
-					+ " AND u.`_oposu_business_id`=t.`op_business_id`"
-					+ " AND u.`_oposu_order_business_id`=t.`op_order_business_id`)"
+					+ " u.`_businesskey`=t.`customer_businesskey` "
+					+ " AND u.`_target`='"+target+"' "
+					+ " AND u.`_customer_business_id`=t.`customer_business_id`)"
 					+ " ORDER BY  t.`"+tabledef[0][0]+"`";
 
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
@@ -853,13 +759,13 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			
 			rs = dbs.executeQuery(SQL);
 			while (rs.next()) {
-				OrderPosition op = rsToI(rs, log);
-				op.setHistory(CampInstanceDao.instance().rsToI(rs, log));
-				op.states().ioAction(IOAction.LOAD);
-				pl.add(op);
+				Customer c = rsToI(rs, log);
+				c.setHistory(CampInstanceDao.instance().rsToI(rs, log));
+				c.states().ioAction(IOAction.LOAD);
+				cl.add(c);
 			}
 			
-			if(log && !Util._IN_PRODUCTION) {retVal = pl.size();msg = "----[ '"+retVal+"' updated model instance entr"+((retVal!=1)?"ies":"y")+" loaded ]----";LOG.info(String.format(fmt,_f,msg));}
+			if(log && !Util._IN_PRODUCTION) {retVal = cl.size();msg = "----[ '"+retVal+"' updated model instance entr"+((retVal!=1)?"ies":"y")+" loaded ]----";LOG.info(String.format(fmt,_f,msg));}
 			
 		} catch(SQLException e) {
 			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
@@ -875,17 +781,17 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[loadUpdatesByTarget completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
-		return (E) pl;
+		return (E) cl;
 	}
 
 	@Override
-	public OrderPosition loadUpdate(OrderPosition op, String businessKey, String target, boolean log) {
+	public Customer loadUpdate(Customer c, String businessKey, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[loadUpdate]";
-			msg = "====[ load a specific order position object instance if it is registered in the order position updates table this is not neccessarily the current instance ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer dao call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		Connection conn = null;
 		ResultSet rs = null;
@@ -896,18 +802,17 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			
 			String SQL = "SELECT * FROM "+ table + " AS t, "+reftable+" AS rt, "
 			    +CampInstanceDao.table+" AS ti WHERE "
-					+ "t.`op_businesskey`='"+businessKey+"' "
+					+ "t.`customer_businesskey`='"+businessKey+"' "
 					+ " AND t.`"+tabledef[0][0]+"`=ti.`_object_id`"
-					+ " AND t.`"+tabledef[0][0]+"`="+op.id()
+					+ " AND t.`"+tabledef[0][0]+"`="+c.id()
 					+ " AND rt.`"+reftabledef[0][0]+"`=ti.`_object_ref_id`"
 					+ " AND ti.`_instance_id`=ti.`_current_instance_id`"
 					+ " AND EXISTS "
 					+ " (SELECT * FROM "+updatestable+" AS u WHERE "
-					+ " u.`_oposu_businesskey`=t.`op_businesskey` "
-					+ " AND u.`_oposu_businesskey`='"+businessKey+"' "
-					+ " AND u.`_oposu_target`='"+target+"' "
-					+ " AND u.`_oposu_business_id`='"+op.onlyBusinessId()+"' "
-					+ " AND u.`_oposu_order_business_id`='"+op.onlyOrderBusinessId()+"')";
+					+ " u.`_businesskey`=t.`customer_businesskey` "
+					+ " AND u.`_businesskey`='"+businessKey+"' "
+					+ " AND u.`_target`='"+target+"' "
+					+ " AND u.`_customer_business_id`='"+c.businessId()+"')";
 			
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
 			
@@ -915,9 +820,9 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			
 			rs = dbs.executeQuery(SQL);
 			if (rs.next()) {
-				op = rsToI(rs, log);
-				op.setHistory(CampInstanceDao.instance().rsToI(rs, log));
-				op.states().ioAction(IOAction.LOAD);
+				c = rsToI(rs, log);
+				c.setHistory(CampInstanceDao.instance().rsToI(rs, log));
+				c.states().ioAction(IOAction.LOAD);
 				retVal = 1;
 			}
 			
@@ -937,17 +842,17 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[loadUpdate completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
-		return op;
+		return c;
 	}
 
 	@Override
-	public int addToUpdates(OrderPosition op, String businessKey, String target, boolean log) {
+	public int addToUpdates(Customer c, String businessKey, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[addToUpdates]";
-			msg = "====[ add order position object instance reference to the updates table ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer dao call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		Connection conn = null;
 		ResultSet rs = null;
@@ -957,7 +862,7 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			conn = Util.DB.__conn(log);
 			
 			String SQL = "INSERT INTO " + updatestable + "( " + Util.DB._columns(updatestabledef, Util.DB.dbActionType.INSERT, log)
-			+ " ) VALUES ( " + insertUpdateValues(op,target) + " )";
+			+ " ) VALUES ( " + insertUpdateValues(c,target) + " )";
 			
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
 			
@@ -985,14 +890,13 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 	}
 
 	@Override
-	public <E extends ArrayList<OrderPosition>> int addToUpdates(E pl, String businessKey, String target,
-			boolean log) {
+	public <E extends ArrayList<Customer>> int addToUpdates(E cl, String businessKey, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[addToUpdates]";
-			msg = "====[ add a list of order position object instances to the updates list ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer dao call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		Connection conn = null;
 		ResultSet rs = null;
@@ -1002,7 +906,7 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			conn = Util.DB.__conn(log);
 			
 			String SQL = "INSERT INTO " + updatestable + "( " + Util.DB._columns(updatestabledef, Util.DB.dbActionType.INSERT, log)
-			+ " ) VALUES " + insertUpdateListValues(pl,target);
+			+ " ) VALUES " + insertUpdateListValues(cl,target);
 			
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
 			
@@ -1036,7 +940,7 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[deleteAllFromUpdates]";
-			msg = "====[ delete all updates table entries of registered order position object instances by their businesskey and target aspect values ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer dao call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		Connection conn = null;
 		ResultSet rs = null;
@@ -1046,7 +950,7 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			conn = Util.DB.__conn(log);
 			
 			String SQL = "DELETE FROM "+updatestable+" WHERE "
-			+ "`_oposu_businesskey`='"+businessKey+"' AND `_oposu_target`='"+target+"'";
+			+ "`_businesskey`='"+businessKey+"' AND `_target`='"+target+"'";
 			
 			
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
@@ -1081,7 +985,7 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[deleteAllFromUpdates]";
-			msg = "====[ delete all updates table entries of registered order position object instances by their businesskey identifier aspect values ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer dao call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		Connection conn = null;
 		ResultSet rs = null;
@@ -1091,7 +995,7 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			conn = Util.DB.__conn(log);
 			
 			String SQL = "DELETE FROM "+updatestable+" WHERE "
-			+ "`_oposu_businesskey`='"+businessKey+"'";
+			+ "`_businesskey`='"+businessKey+"'";
 			
 			
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
@@ -1126,7 +1030,7 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[deleteAllFromUpdates]";
-			msg = "====[ delete updates table entries of registered order position object instances by their target identifier aspect values ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer dao call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		Connection conn = null;
 		ResultSet rs = null;
@@ -1136,7 +1040,7 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			conn = Util.DB.__conn(log);
 			
 			String SQL = "DELETE FROM "+updatestable+" WHERE "
-			+ "`_oposu_target`='"+target+"'";
+			+ "`_target`='"+target+"'";
 			
 			
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
@@ -1164,7 +1068,6 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 		return retVal;
 	}
 
-
 	@Override
 	public int deleteFromUpdates(String businessId, String businessKey, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
@@ -1172,10 +1075,8 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[deleteFromUpdates]";
-			msg = "====[ delete all updates table entries of registered order position object instances by their order, businesskey and target aspect values ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer dao call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
-		String ids[] = businessId.split(Util.DB._VS);
-		if(ids.length < 2) return 0;
 		Connection conn = null;
 		ResultSet rs = null;
 		Statement dbs = null;
@@ -1184,9 +1085,8 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			conn = Util.DB.__conn(log);
 			
 			String SQL = "DELETE FROM "+updatestable+" WHERE "
-			+ "`_oposu_business_id`='"+ids[1]+"'"
-			+ " AND `_oposu_order_business_id`='"+ids[0]+"'"
-			+ " AND `_oposu_businesskey`='"+businessKey+"' AND `_oposu_target`='"+target+"'";
+			+ "`_customer_business_id`='"+businessId+"'"
+			+ " AND `_businesskey`='"+businessKey+"' AND `_target`='"+target+"'";
 			
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
 			
@@ -1214,14 +1114,14 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 	}
 
 	@Override
-	public <E extends ArrayList<OrderPosition>> int deleteFromUpdates(E pl, String businessKey,
-			String target, boolean log) {
+	public <E extends ArrayList<Customer>> int deleteFromUpdates(E cl, String businessKey, String target,
+			boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[deleteFromUpdates]";
-			msg = "====[ delete all updates table entries of a list of registered order position object instances by their name, businesskey and target aspect values ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer dao call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		Connection conn = null;
 		ResultSet rs = null;
@@ -1232,11 +1132,10 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			
 			dbs = conn.createStatement();
 			
-			for(OrderPosition op: pl) {
+			for(Customer c: cl) {
 				String SQL = "DELETE FROM "+updatestable+" WHERE "
-						+ "`_oposu_business_id`='"+op.onlyBusinessId()+"'"
-						+ " AND `_oposu_order_business_id`='"+op.onlyOrderBusinessId()+"'"
-						+ " AND `_oposu_businesskey`='"+businessKey+"' AND `_oposu_target`='"+target+"'";
+						+ "`_customer_business_id`='"+c.businessId()+"'"
+						+ " AND `_businesskey`='"+businessKey+"' AND `_target`='"+target+"'";
 				
 				if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
 				
@@ -1264,14 +1163,15 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 	}
 
 	@Override
-	public int addProcessReference(String businessId, String instanceId, String processKey, boolean log) {
+	public Customer instanceLoad(String select, boolean primary, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
-			_f = "[addProcessReferences]";
-			msg = "====[ register all associated processes in the reference database table ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			_f = "[instanceLoad]";
+			msg = "====[ customer dao call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
+		Customer c = null;
 		Connection conn = null;
 		ResultSet rs = null;
 		Statement dbs = null;
@@ -1279,202 +1179,24 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 		try{
 			conn = Util.DB.__conn(log);
 			
-			dbs = conn.createStatement();
-			
-			String SQL = "INSERT INTO " + ohptable + "( " + Util.DB._columns(ohptabledef, Util.DB.dbActionType.INSERT, log)
-			+ " ) VALUES '"+businessId+"','"+instanceId+"','"+processKey+"')" ;
-			
+			String SQL = "SELECT * FROM "+ table + " AS t, "+reftable+" AS rt, "
+			    +CampInstanceDao.table+" AS ci WHERE "
+					+ " rt.`"+reftabledef[0][0]+"`=ci.`_object_ref_id`"
+					+ select; 
+
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
 			
-			retVal = dbs.executeUpdate(SQL);
-			
-			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
-			
-		} catch(SQLException e) {
-			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
-			e.printStackTrace();
-		} finally {
-			if(log && !Util._IN_PRODUCTION){msg = "----[ releasing connection]----";LOG.info(String.format(fmt, _f,msg));}
-			Util.DB.__release(conn,log);
-			Util.DB._releaseRS(rs, log);
-			Util.DB._releaseStatement(dbs, log);
-		}
-		if(log && !Util._IN_PRODUCTION) {
-			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
-			msg = "====[addProcessReferences completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
-		}
-		return retVal;
-	}
-
-
-	@Override
-	public int addProcessReferences(String businessId, ProcessList pl, boolean log) {
-		long startTime = System.currentTimeMillis();
-		String _f = null;
-		String msg = null;
-		if(log && !Util._IN_PRODUCTION) {
-			_f = "[addProcessReferences]";
-			msg = "====[ register all associated processes in the reference database table ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
-		}
-//		String ids[] = businessId.split(Util.DB._VS);
-//		if(ids.length <2) return 0;
-		Connection conn = null;
-		ResultSet rs = null;
-		Statement dbs = null;
-		int retVal = 0;
-		try{
-			conn = Util.DB.__conn(log);
-			
 			dbs = conn.createStatement();
 			
-			String SQL = "INSERT INTO " + ohptable + "( " + Util.DB._columns(ohptabledef, Util.DB.dbActionType.INSERT, log)
-			+ " ) VALUES " + insertProcessReferenceValues(businessId, pl,log) ;
-			
-			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
-			
-			retVal = dbs.executeUpdate(SQL);
-			
-			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
-			
-		} catch(SQLException e) {
-			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
-			e.printStackTrace();
-		} finally {
-			if(log && !Util._IN_PRODUCTION){msg = "----[ releasing connection]----";LOG.info(String.format(fmt, _f,msg));}
-			Util.DB.__release(conn,log);
-			Util.DB._releaseRS(rs, log);
-			Util.DB._releaseStatement(dbs, log);
-		}
-		if(log && !Util._IN_PRODUCTION) {
-			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
-			msg = "====[addProcessReferences completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
-		}
-		return retVal;
-	}
-
-	@Override
-	public int delProcessReference(String businessId, String instanceId, String processKey, boolean log) {
-		long startTime = System.currentTimeMillis();
-		String _f = null;
-		String msg = null;
-		if(log && !Util._IN_PRODUCTION) {
-			_f = "[delProcessReference]";
-			msg = "====[ deregister an associated process from the reference database table ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
-		}
-		Connection conn = null;
-		ResultSet rs = null;
-		Statement dbs = null;
-		int retVal = 0;
-		try{
-			conn = Util.DB.__conn(log);
-			
-			dbs = conn.createStatement();
-			
-			String SQL = "DELETE FROM " + ohptable + " WHERE " 
-			+ " `_ophp_business_id`='"+businessId+"' AND `_ophp_process_instance_id`='"+instanceId+"' AND `_ophp_process_key`='"+processKey+"'";
-			
-			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
-			
-			retVal = dbs.executeUpdate(SQL);
-			
-			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
-			
-		} catch(SQLException e) {
-			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
-			e.printStackTrace();
-		} finally {
-			if(log && !Util._IN_PRODUCTION){msg = "----[ releasing connection]----";LOG.info(String.format(fmt, _f,msg));}
-			Util.DB.__release(conn,log);
-			Util.DB._releaseRS(rs, log);
-			Util.DB._releaseStatement(dbs, log);
-		}
-		if(log && !Util._IN_PRODUCTION) {
-			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
-			msg = "====[delProcessReference completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
-		}
-		return retVal;
-	}
-
-	@Override
-	public int delAllProcessReferences(String businessId, boolean log) {
-		long startTime = System.currentTimeMillis();
-		String _f = null;
-		String msg = null;
-		if(log && !Util._IN_PRODUCTION) {
-			_f = "[delProcessReferences]";
-			msg = "====[ deregister all associated processes in the reference database table ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
-		}
-		Connection conn = null;
-		ResultSet rs = null;
-		Statement dbs = null;
-		int retVal = 0;
-		try{
-			conn = Util.DB.__conn(log);
-			
-			dbs = conn.createStatement();
-			
-			String SQL = "DELETE FROM " + ohptable + " WHERE " 
-			+ " `_ophp_business_id`='"+businessId+"'";
-			
-			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
-			
-			retVal = dbs.executeUpdate(SQL);
-			
-			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
-			
-		} catch(SQLException e) {
-			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
-			e.printStackTrace();
-		} finally {
-			if(log && !Util._IN_PRODUCTION){msg = "----[ releasing connection]----";LOG.info(String.format(fmt, _f,msg));}
-			Util.DB.__release(conn,log);
-			Util.DB._releaseRS(rs, log);
-			Util.DB._releaseStatement(dbs, log);
-		}
-		if(log && !Util._IN_PRODUCTION) {
-			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
-			msg = "====[delProcessReferences completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
-		}
-		return retVal;
-	}
-
-	@Override
-	public int delProcessReferences(String businessId, ProcessList pl, boolean log) {
-		long startTime = System.currentTimeMillis();
-		String _f = null;
-		String msg = null;
-		if(log && !Util._IN_PRODUCTION) {
-			_f = "[delProcessReferences]";
-			msg = "====[ deregister a list of associated processes in the reference database table ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
-		}
-		Connection conn = null;
-		ResultSet rs = null;
-		Statement dbs = null;
-		int retVal = 0;
-		try{
-			conn = Util.DB.__conn(log);
-			
-			dbs = conn.createStatement();
-			
-			String SQL = "DELETE FROM " + ohptable + " WHERE " 
-			+ " `_ophp_business_id`='"+businessId+"'";
-			
-			boolean start = true;
-			for(Process<?>p:pl) {
-				if(!start) {
-					SQL += " OR";
-				} else {
-					SQL += " AND";
-					start = false;
-				}
-				SQL += " (`_ophp_instance_id`='"+p.instanceId()+"' AND `_ophp_businesskey`='"+p.businessKey()+"')";
+			rs = dbs.executeQuery(SQL);
+			if (rs.next()) {
+				c = rsToI(rs, log);
+				c.setHistory(CampInstanceDao.instance().rsToI(rs, log));
+				c.states().ioAction(IOAction.LOAD);
+				retVal = 1;
 			}
-
-			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
 			
-			retVal = dbs.executeUpdate(SQL);
-			
-			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' updated model instance entr"+((retVal!=1)?"ies":"y")+" loaded ]----";LOG.info(String.format(fmt,_f,msg));}
 			
 		} catch(SQLException e) {
 			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
@@ -1485,22 +1207,25 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			Util.DB._releaseRS(rs, log);
 			Util.DB._releaseStatement(dbs, log);
 		}
+		
 		if(log && !Util._IN_PRODUCTION) {
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
-			msg = "====[delProcessReferences completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+			msg = "====[instanceLoad completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
-		return retVal;
+		return c;
 	}
 
-	public ProcessList loadProcessReferences(String businessId, boolean log) {
+	@SuppressWarnings("unchecked")
+	@Override
+	public <E extends ArrayList<Customer>> E instanceListLoad(String select, boolean primary, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
-			_f = "[loadProcesses]";
-			msg = "====[ load all persisted process object instances associated with the order position object instance ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			_f = "[_instanceListLoad]";
+			msg = "====[ customer dao call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
-		ProcessList pl = new ProcessList();
+		CustomerList cl = new CustomerList();
 		Connection conn = null;
 		ResultSet rs = null;
 		Statement dbs = null;
@@ -1508,23 +1233,24 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 		try{
 			conn = Util.DB.__conn(log);
 			
-			dbs = conn.createStatement();
-			
-			String SQL = "SELECT * FROM "+ProcessDao.table+" AS p, "+ohptable+" AS r WHERE "
-					+ "p.`instance_id`=r.`_ophp_process_instance_id` "
-					+ " AND r.`_ophp_business_id`='"+businessId+"'";
-			
+			String SQL = "SELECT * FROM "+ table + " AS t, "+reftable+" AS rt, "
+			    +CampInstanceDao.table+" AS ci WHERE "
+					+ " rt.`"+reftabledef[0][0]+"`=ci.`_object_ref_id`"
+					+ select; 
+
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
 			
-			rs = dbs.executeQuery(SQL);		
-			while (rs.next()) {		
-				Process<Product> pr = ProcessDao.instance().rsToI(rs, log);
-				pr.states().ioAction(IOAction.LOAD);
-				pl.add(pr);
+			dbs = conn.createStatement();
+			
+			rs = dbs.executeQuery(SQL);
+			while (rs.next()) {
+				Customer c = rsToI(rs, log);
+				c.setHistory(CampInstanceDao.instance().rsToI(rs, log));
+				c.states().ioAction(IOAction.LOAD);
+				cl.add(c);
 			}
-			retVal = pl.size();
-
-			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
+			
+			if(log && !Util._IN_PRODUCTION) {retVal = cl.size();msg = "----[ '"+retVal+"' updated model instance entr"+((retVal!=1)?"ies":"y")+" loaded ]----";LOG.info(String.format(fmt,_f,msg));}
 			
 		} catch(SQLException e) {
 			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
@@ -1535,112 +1261,169 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			Util.DB._releaseRS(rs, log);
 			Util.DB._releaseStatement(dbs, log);
 		}
+
 		if(log && !Util._IN_PRODUCTION) {
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
-			msg = "====[loadProcesses completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+			msg = "====[_instanceListLoad completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
-		return pl;
+		return (E) cl;
 	}
 
 	@Override
-	public String insertValues(OrderPosition p, boolean log) {
-		String values = "'"+p.onlyBusinessId()+"',"
-				+ "'"+p.onlyOrderBusinessId()+"',"
-				+ "'"+p.businessKey()+"',"
-				+ "'"+p.group().name()+"',"
-				+ "'"+p.version().value()+"'";
+	public String dbName(boolean primary) {
+		return dbName;
+	}
+
+	@Override
+	public String table(boolean primary) {
+		return table;
+	}
+
+	@Override
+	public String[][] tabledef(boolean primary) {
+		return tabledef;
+	}
+
+	@Override
+	public String updatestable(boolean primary) {
+		return updatestable;
+	}
+
+	@Override
+	public String[][] updatestabledef(boolean primary) {
+		return updatestabledef;
+	}
+
+	@Override
+	public String businessIdColumn(boolean primary) {
+		return "customer_business_id";
+	}
+
+	@Override
+	public String dbName() {
+		return dbName;
+	}
+
+	@Override
+	public String table() {
+		return table;
+	}
+
+	@Override
+	public String[][] tabledef() {
+		return tabledef;
+	}
+
+	@Override
+	public String updatestable() {
+		return updatestable;
+	}
+
+	@Override
+	public String[][] updatestabledef() {
+		return updatestabledef;
+	}
+
+	@Override
+	public String insertValues(Customer c, boolean log) {
+		String values = "'"+c.businessId()+"'"
+				+",'"+c.businessKey()+"'"
+				+",'"+c.type().name()+"'"
+				+",'"+c.origin().name()+"'"
+				+",'"+c.version().value()+"'";
 		return values;
 	}
 
-	public String insertRefValues(OrderPosition p, boolean log) {
-		String values = p.position()+","
-				+ p.quantity()+","
-				+ p.productId()+","
-				+ p.modelId()+","
-				+ "'"+p.refBusinessKey()+"',"
-				+ "'"+p.date().toString()+"'";
+	public String insertRefValues(Customer c, boolean log) {
+		String values = c.id()
+				+","+c.addressId()
+				+","+c.deliveryAddressId()
+				+","+c.contact().id()
+				+","+c.touchPointId()
+				+",'"+c.group().name()+"'";
 		return values;
 	}
 
+	
 	@Override
-	public <E extends ArrayList<OrderPosition>> String insertListValues(E pl, boolean log) {
-		String values = "";
+	public <E extends ArrayList<Customer>> String insertListValues(E cl, boolean log) {
+		String values ="";
 		boolean start = true;
-		for(OrderPosition op: pl) {
+		for(Customer c: cl) {
 			if(!start) {
 				values += ",";
 			} else {
 				start = false;
 			}
-			values += "(" + insertValues(op,log) + ")";
+			values += "("+insertValues(c,log)+")";
 		}
 		return values;
 	}
 
-	public <E extends ArrayList<OrderPosition>> String insertListRefValues(E pl, boolean log) {
-		String values = "";
+	public <E extends ArrayList<Customer>> String insertListRefValues(E cl, boolean log) {
+		String values ="";
 		boolean start = true;
-		for(OrderPosition op: pl) {
+		for(Customer c: cl) {
 			if(!start) {
 				values += ",";
 			} else {
 				start = false;
 			}
-			values += "(" + insertRefValues(op,log) + ")";
+			values += "("+insertRefValues(c,log)+")";
 		}
 		return values;
 	}
 
 	@Override
-	public <E extends ArrayList<OrderPosition>> String insertUpdateListValues(E pl, String target) {
-		String values = "";
+	public <E extends ArrayList<Customer>> String insertUpdateListValues(E cl, String target) {
+		String values ="";
 		boolean start = true;
-		for(OrderPosition op:pl) {
+		for(Customer c: cl) {
 			if(!start) {
 				values += ",";
 			} else {
 				start = false;
 			}
-			values += "(" + insertUpdateValues(op,target) + ")";
+			values += "("+insertUpdateValues(c,target)+")";
 		}
 		return values;
 	}
 
 	@Override
-	public String insertUpdateValues(OrderPosition p, String target) {
-		String values = "'"+p.onlyBusinessId()+"',"
-				+ "'"+p.onlyOrderBusinessId()+"',"
-				+ "'"+p.businessKey() +"',"
-				+ "'"+target+"'";
+	public String insertUpdateValues(Customer c, String target) {
+		String values = "'"+c.businessId()+"'"
+				+",'"+c.businessKey()+"'"
+				+",'"+target+"'"
+				+",'"+Util.Time.timeStampString()+"'";
 		return values;
 	}
 
 	@Override
-	public String formatUpdateSQL(String SQL, OrderPosition p, boolean log) {
-		String values = String.format(SQL, 
-				p.position(),
-				p.quantity(),
-				p.productId(),
-				p.modelId(),
-				p.refBusinessKey(),
-				p.date(),
-				p.getRefId());
-		return values;
+	public String formatUpdateSQL(String SQL, Customer c, boolean log) {
+		return String.format(SQL,
+				c.businessId()
+				,c.businessKey()
+				,c.type().name()
+				,c.origin().name()
+				,c.version().value()
+				,c.id());
 	}
 
 	@Override
-	public String insertProcessReferenceValues(String businessId, ProcessList pl, boolean log) {
-		String values = "";
-		boolean start = true;
-		for(Process<?> pr:pl) {
-			if(!start) {
-				values += ",";
-			} else {
-				start = false;
-			}
-			values += "('"+businessId+"','"+pr.instanceId()+"','"+pr.businessKey()+"')";
-		}
-		return values;
+	public Customer rsToI(ResultSet rs, boolean log) throws SQLException {
+		Customer c = new Customer(rs.getInt(tabledef[0][0])
+				, Origin.valueOf(rs.getString("customer_origin"))
+				, Type.valueOf(rs.getString("customer_type"))
+				, rs.getString("customer_business_id")
+				, rs.getString("customer_businesskey")
+				, rs.getString("customer_group")
+				, rs.getString("customer_version"));
+		c.setAddressId(rs.getInt("customer_address_id"));
+		c.setDeliveryAddressId(rs.getInt("customer_delivery_address_id"));
+		c.setContactId(rs.getInt("customer_contact_id"));
+		c.setTouchPointId(rs.getInt("customer_touchpoint_id"));
+		c.setRefId(rs.getInt(reftabledef[0][0]));
+		return c;
 	}
 
 	@Override
@@ -1677,8 +1460,8 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 				+ ") ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
 		if (log && !Util._IN_PRODUCTION) { msg = "----[SQL : " + rSQL + "]----"; LOG.info(String.format(fmt, _f, msg)); }
 
-		String pcolDef = Util.DB._columns(ohptabledef, action, log);
-		String pSQL = "CREATE TABLE IF NOT EXISTS " + ohptable + " " + " ( " + pcolDef
+		String pcolDef = Util.DB._columns(chptabledef, action, log);
+		String pSQL = "CREATE TABLE IF NOT EXISTS " + chptable + " " + " ( " + pcolDef
 				+ ") ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
 		if (log && !Util._IN_PRODUCTION) { msg = "----[SQL : " + rSQL + "]----"; LOG.info(String.format(fmt, _f, msg)); }
 
@@ -1756,7 +1539,7 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 
 			dbs.addBatch(SQL);
 								
-			SQL = "DELETE FROM "+ohptable;
+			SQL = "DELETE FROM "+chptable;
 			
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
 
@@ -1785,35 +1568,14 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 	}
 
 	@Override
-	public OrderPosition rsToI(ResultSet rs, boolean log) throws SQLException {
-		int id = rs.getInt(tabledef[0][0]);
-		String businessId = rs.getString("op_business_id");
-		String orderBusinessId = rs.getString("op_order_business_id");
-		int quantity = rs.getInt("op_quantity");
-		int position = rs.getInt("op_position");
-		String refBusinessKey = rs.getString("op_ref_businesskey");
-		String businessKey = rs.getString("op_businesskey");
-		String status = rs.getString("_status");
-		int refId = rs.getInt(reftabledef[0][0]);
-		OrderPosition op = new OrderPosition(id, businessId, orderBusinessId, position);
-		op.updateRefId(refId);
-		op.setQuantity(quantity);
-		op.setRefBusinessKey(refBusinessKey);
-		op.setBusinessKey(businessKey);
-		op.setStatus(status);
-		return op;
-	}
-
-	@Override
-	public OrderPosition instanceLoad(String select, boolean primary, boolean log) {
+	public int addProcessReference(String businessId, String instanceId, String processKey, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
-			_f = "[instanceLoad]";
-			msg = "====[ load order position instance from SQL select fragment ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			_f = "[addProcessReferences]";
+			msg = "====[ register all associated processes in the reference database table ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
-		OrderPosition o = null;
 		Connection conn = null;
 		ResultSet rs = null;
 		Statement dbs = null;
@@ -1821,24 +1583,16 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 		try{
 			conn = Util.DB.__conn(log);
 			
-			String SQL = "SELECT * FROM "+ table + " AS t, "+reftable+" AS rt, "
-			    +CampInstanceDao.table+" AS ci WHERE "
-					+ " rt.`"+reftabledef[0][0]+"`=ci.`_object_ref_id`"
-					+ select; 
-
-			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
-			
 			dbs = conn.createStatement();
 			
-			rs = dbs.executeQuery(SQL);
-			if (rs.next()) {
-				o = rsToI(rs, log);
-				o.setHistory(CampInstanceDao.instance().rsToI(rs, log));
-				o.states().ioAction(IOAction.LOAD);
-				retVal = 1;
-			}
+			String SQL = "INSERT INTO " + chptable + "( " + Util.DB._columns(chptabledef, Util.DB.dbActionType.INSERT, log)
+			+ " ) VALUES '"+businessId+"','"+instanceId+"','"+processKey+"')" ;
 			
-			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' updated model instance entr"+((retVal!=1)?"ies":"y")+" loaded ]----";LOG.info(String.format(fmt,_f,msg));}
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
+			
+			retVal = dbs.executeUpdate(SQL);
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
 			
 		} catch(SQLException e) {
 			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
@@ -1849,25 +1603,22 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			Util.DB._releaseRS(rs, log);
 			Util.DB._releaseStatement(dbs, log);
 		}
-		
 		if(log && !Util._IN_PRODUCTION) {
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
-			msg = "====[instanceLoad completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+			msg = "====[addProcessReferences completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
-		return o;
+		return retVal;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public <E extends ArrayList<OrderPosition>> E instanceListLoad(String select, boolean primary, boolean log) {
+	public int addProcessReferences(String businessId, ProcessList pl, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
-			_f = "[_instanceListLoad]";
-			msg = "====[ load an order position object instance from SQL select fragment ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			_f = "[addProcessReferences]";
+			msg = "====[ register all associated processes in the reference database table ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
-		OrderPositionList ol = new OrderPositionList();
 		Connection conn = null;
 		ResultSet rs = null;
 		Statement dbs = null;
@@ -1875,24 +1626,16 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 		try{
 			conn = Util.DB.__conn(log);
 			
-			String SQL = "SELECT * FROM "+ table + " AS t, "+reftable+" AS rt, "
-			    +CampInstanceDao.table+" AS ci WHERE "
-					+ " rt.`"+reftabledef[0][0]+"`=ci.`_object_ref_id`"
-					+ select; 
-
-			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
-			
 			dbs = conn.createStatement();
 			
-			rs = dbs.executeQuery(SQL);
-			while (rs.next()) {
-				OrderPosition op = rsToI(rs, log);
-				op.setHistory(CampInstanceDao.instance().rsToI(rs, log));
-				op.states().ioAction(IOAction.LOAD);
-				ol.add(op);
-			}
+			String SQL = "INSERT INTO " + chptable + "( " + Util.DB._columns(chptabledef, Util.DB.dbActionType.INSERT, log)
+			+ " ) VALUES " + insertProcessReferenceValues(businessId, pl,log) ;
 			
-			if(log && !Util._IN_PRODUCTION) {retVal = ol.size();msg = "----[ '"+retVal+"' updated model instance entr"+((retVal!=1)?"ies":"y")+" loaded ]----";LOG.info(String.format(fmt,_f,msg));}
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
+			
+			retVal = dbs.executeUpdate(SQL);
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
 			
 		} catch(SQLException e) {
 			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
@@ -1903,59 +1646,250 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			Util.DB._releaseRS(rs, log);
 			Util.DB._releaseStatement(dbs, log);
 		}
-
 		if(log && !Util._IN_PRODUCTION) {
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
-			msg = "====[_instanceListLoad completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+			msg = "====[addProcessReferences completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
-		return (E) ol;
+		return retVal;
 	}
 
 	@Override
-	public String dbName(boolean primary) {
-		return dbName;
+	public int delProcessReference(String businessId, String instanceId, String processKey, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[delProcessReference]";
+			msg = "====[ deregister an associated process from the reference database table ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		Connection conn = null;
+		ResultSet rs = null;
+		Statement dbs = null;
+		int retVal = 0;
+		try{
+			conn = Util.DB.__conn(log);
+			
+			dbs = conn.createStatement();
+			
+			String SQL = "DELETE FROM " + chptable + " WHERE " 
+			+ " `_chp_business_id`='"+businessId+"' AND `_chp_process_instance_id`='"+instanceId+"' AND `_chp_process_key`='"+processKey+"'";
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
+			
+			retVal = dbs.executeUpdate(SQL);
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
+			
+		} catch(SQLException e) {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
+			e.printStackTrace();
+		} finally {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ releasing connection]----";LOG.info(String.format(fmt, _f,msg));}
+			Util.DB.__release(conn,log);
+			Util.DB._releaseRS(rs, log);
+			Util.DB._releaseStatement(dbs, log);
+		}
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[delProcessReference completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return retVal;
 	}
 
 	@Override
-	public String table(boolean primary) {
-		return table;
+	public int delAllProcessReferences(String businessId, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[delProcessReferences]";
+			msg = "====[ deregister all associated processes in the reference database table ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		Connection conn = null;
+		ResultSet rs = null;
+		Statement dbs = null;
+		int retVal = 0;
+		try{
+			conn = Util.DB.__conn(log);
+			
+			dbs = conn.createStatement();
+			
+			String SQL = "DELETE FROM " + chptable + " WHERE " 
+			+ " `_chp_business_id`='"+businessId+"'";
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
+			
+			retVal = dbs.executeUpdate(SQL);
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
+			
+		} catch(SQLException e) {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
+			e.printStackTrace();
+		} finally {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ releasing connection]----";LOG.info(String.format(fmt, _f,msg));}
+			Util.DB.__release(conn,log);
+			Util.DB._releaseRS(rs, log);
+			Util.DB._releaseStatement(dbs, log);
+		}
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[delProcessReferences completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return retVal;
 	}
 
 	@Override
-	public String[][] tabledef(boolean primary) {
-		return tabledef;
+	public int delProcessReferences(String businessId, ProcessList pl, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[delProcessReferences]";
+			msg = "====[ deregister a list of associated processes in the reference database table ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		Connection conn = null;
+		ResultSet rs = null;
+		Statement dbs = null;
+		int retVal = 0;
+		try{
+			conn = Util.DB.__conn(log);
+			
+			dbs = conn.createStatement();
+			
+			String SQL = "DELETE FROM " + chptable + " WHERE " 
+			+ " `_chp_business_id`='"+businessId+"'";
+			
+			boolean start = true;
+			for(Process<?>p:pl) {
+				if(!start) {
+					SQL += " OR";
+				} else {
+					SQL += " AND";
+					start = false;
+				}
+				SQL += " (`_chp_instance_id`='"+p.instanceId()+"' AND `_chp_businesskey`='"+p.businessKey()+"')";
+			}
+
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
+			
+			retVal = dbs.executeUpdate(SQL);
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
+			
+		} catch(SQLException e) {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
+			e.printStackTrace();
+		} finally {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ releasing connection]----";LOG.info(String.format(fmt, _f,msg));}
+			Util.DB.__release(conn,log);
+			Util.DB._releaseRS(rs, log);
+			Util.DB._releaseStatement(dbs, log);
+		}
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[delProcessReferences completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return retVal;
 	}
 
 	@Override
-	public String updatestable(boolean primary) {
-		return updatestable;
+	public ProcessList loadProcessReferences(String businessId, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[loadProcesses]";
+			msg = "====[ load all persisted process object instances associated with the customer object instance ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		ProcessList pl = new ProcessList();
+		Connection conn = null;
+		ResultSet rs = null;
+		Statement dbs = null;
+		int retVal = 0;
+		try{
+			conn = Util.DB.__conn(log);
+			
+			dbs = conn.createStatement();
+			
+			String SQL = "SELECT * FROM "+ProcessDao.table+" AS p, "+chptable+" AS r WHERE "
+					+ "p.`instance_id`=r.`_chp_process_instance_id` "
+					+ " AND r.`_chp_business_id`='"+businessId+"'";
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
+			
+			rs = dbs.executeQuery(SQL);		
+			while (rs.next()) {		
+				Process<?> pr = ProcessDao.instance().rsToI(rs, log);
+				pr.states().ioAction(IOAction.LOAD);
+				pl.add(pr);
+			}
+			retVal = pl.size();
+
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
+			
+		} catch(SQLException e) {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
+			e.printStackTrace();
+		} finally {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ releasing connection]----";LOG.info(String.format(fmt, _f,msg));}
+			Util.DB.__release(conn,log);
+			Util.DB._releaseRS(rs, log);
+			Util.DB._releaseStatement(dbs, log);
+		}
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[loadProcesses completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return pl;
 	}
 
 	@Override
-	public String[][] updatestabledef(boolean primary) {
-		return updatestabledef;
+	public Customer create(Origin origin, Type type, String businessId, String businessKey, Group group, Version version,
+			boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[create]";
+			msg = "====[ customer dao call: create and persist a new customer ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		Customer c = new Customer(origin, type, businessId, businessKey, group, version);
+		c = save(c,log);
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[create completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return c;
 	}
 
 	@Override
-	public String businessIdColumn(boolean primary) {
-		return "op_business_id";
+	public String insertProcessReferenceValues(String businessId, ProcessList pl, boolean log) {
+		String values = "";
+		boolean start = true;
+		for(Process<?> p: pl) {
+			if(!start) {
+				values += ",";
+			} else {
+				start = false;
+			}
+			values += "('"+businessId+"'.'"+p.instanceId()+"','"+p.businessKey()+"')";
+		}
+		return values;
 	}
 
 	@Override
-	public OrderPosition loadFirst(String businessId) {
-		return _loadFirst(businessId, !Util._IN_PRODUCTION);
-	}
-	public static OrderPosition _loadFirst(String businessId, boolean log) {
+	public Customer loadFirst(String businessId, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[_loadFirst]";
-			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer dao call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
-		OrderPosition o = null;
+		Customer c = null;
 		try {
-			o = CampInstanceDao.instance()._loadFirst(businessId, OrderPositionDao.instance(), false,log);
+			c = CampInstanceDao.instance()._loadFirst(businessId, CustomerDao.instance(), false,log);
 		} catch (SQLException e) {
 			if(log && !Util._IN_PRODUCTION){msg = "----[SQL EXCEPTION! loadFirst FAILED]----";LOG.info(String.format(fmt, _f,msg));}
 			e.printStackTrace();
@@ -1964,24 +1898,21 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[_loadFirst completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
-		return o;
+		return c;
 	}
 
 	@Override
-	public OrderPosition loadPrevious(OrderPosition orderPosition) {
-		return _loadPrevious(orderPosition, !Util._IN_PRODUCTION);
-	}
-	public static OrderPosition _loadPrevious(OrderPosition orderPosition,boolean log) {
+	public Customer loadPrevious(Customer customer, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[_loadPrevious]";
-			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer dao call:  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
-		OrderPosition o = null;
+		Customer c = null;
 		try {
-			o = CampInstanceDao.instance()._loadPrevious(orderPosition, OrderPositionDao.instance(), false, log);
+			c = CampInstanceDao.instance()._loadPrevious(customer, CustomerDao.instance(), false, log);
 		} catch(SQLException e) {
 			if(log && !Util._IN_PRODUCTION){msg = "----[SQL EXCEPTION! _loadPrevious FAILED]----";LOG.info(String.format(fmt, _f,msg));}
 			e.printStackTrace();
@@ -1990,24 +1921,21 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[_loadPrevious completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
-		return o;
+		return c;
 	}
 
 	@Override
-	public OrderPosition loadNext(OrderPosition orderPosition) {
-		return _loadNext(orderPosition, !Util._IN_PRODUCTION);
-	}
-	public static OrderPosition _loadNext(OrderPosition orderPosition, boolean log) {
+	public Customer loadNext(Customer customer, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[_loadNext]";
-			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer dao call:  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
-		OrderPosition o = null;
+		Customer c = null;
 		try {
-			o = CampInstanceDao.instance()._loadNext(orderPosition, OrderPositionDao.instance(), false, log);
+			c = CampInstanceDao.instance()._loadNext(customer, CustomerDao.instance(), false, log);
 		} catch(SQLException e) {
 			if(log && !Util._IN_PRODUCTION){msg = "----[SQL EXCEPTION! _loadNext FAILED]----";LOG.info(String.format(fmt, _f,msg));}
 			e.printStackTrace();
@@ -2016,24 +1944,24 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[_loadNext completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
-		return o;
+		return c;
 	}
 
 	@Override
-	public OrderPositionList loadDate(String businessId, String date) {
+	public CustomerList loadDate(String businessId, String date) {
 		return _loadDate(businessId, date, !Util._IN_PRODUCTION);
 	}
-	public static OrderPositionList _loadDate(String businessId, String date, boolean log) {
+	public CustomerList _loadDate(String businessId, String date, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[_loadDate]";
-			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer dao call:  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
-		OrderPositionList ol = null;
+		CustomerList cl = null;
 		try {
-			ol = CampInstanceDao.instance()._loadDate(businessId, date, OrderPositionDao.instance(), false,log);
+			cl = CampInstanceDao.instance()._loadDate(businessId, date, CustomerDao.instance(), false,log);
 		} catch (SQLException e) {
 			if(log && !Util._IN_PRODUCTION){msg = "----[SQL EXCEPTION! _loadDate FAILED]----";LOG.info(String.format(fmt, _f,msg));}
 			e.printStackTrace();
@@ -2042,24 +1970,24 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[_loadDate completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
-		return ol;
+		return cl;
 	}
 
 	@Override
-	public OrderPositionList loadDateRange(String businessId, String startDate, String endDate) {
+	public CustomerList loadDateRange(String businessId, String startDate, String endDate) {
 		return _loadDateRange(businessId, startDate, endDate, RangeTarget.DATE, !Util._IN_PRODUCTION);
 	}
-	public static OrderPositionList _loadDateRange(String businessId, String startDate, String endDate, RangeTarget target, boolean log) {
+	public CustomerList _loadDateRange(String businessId, String startDate, String endDate, RangeTarget target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[_loadDateRange]";
-			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer dao call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
-		OrderPositionList ol = null;
+		CustomerList cl = null;
 		try {
-			ol = CampInstanceDao.instance()._loadDateRange(businessId, startDate, endDate, target, OrderPositionDao.instance(), false,log);
+			cl = CampInstanceDao.instance()._loadDateRange(businessId, startDate, endDate, target, CustomerDao.instance(), false,log);
 		} catch (SQLException e) {
 			if(log && !Util._IN_PRODUCTION){msg = "----[SQL EXCEPTION! _loadDateRange FAILED]----";LOG.info(String.format(fmt, _f,msg));}
 			e.printStackTrace();
@@ -2068,24 +1996,24 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[_loadDateRange completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
-		return ol;
+		return cl;
 	}
 
 	@Override
-	public OrderPositionList loadDate(String date) {
-		return _loadDate(date,!Util._IN_PRODUCTION);
+	public CustomerList loadDate(String date) {
+		return _loadDate(date, !Util._IN_PRODUCTION);
 	}
-	public static OrderPositionList _loadDate(String date,boolean log) {
+	public CustomerList _loadDate(String date, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[_loadDate]";
-			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer dao call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
-		OrderPositionList ol = null;
+		CustomerList cl = null;
 		try {
-			ol = CampInstanceDao.instance()._loadDate(date, OrderPositionDao.instance(), false,log);
+			cl = CampInstanceDao.instance()._loadDate(date, CustomerDao.instance(), false,log);
 		} catch (SQLException e) {
 			if(log && !Util._IN_PRODUCTION){msg = "----[SQL EXCEPTION! _loadDate FAILED]----";LOG.info(String.format(fmt, _f,msg));}
 			e.printStackTrace();
@@ -2094,24 +2022,24 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[_loadDate completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
-		return ol;
+		return cl;
 	}
 
 	@Override
-	public OrderPositionList loadDateRange(String startDate, String endDate) {
-		return _loadDateRange(startDate,endDate, RangeTarget.DATE,!Util._IN_PRODUCTION);
+	public CustomerList loadDateRange(String startDate, String endDate) {
+		return _loadDateRange(startDate, endDate, RangeTarget.DATE, !Util._IN_PRODUCTION);
 	}
-	public static OrderPositionList _loadDateRange(String startDate, String endDate, RangeTarget target, boolean log) {
+	public CustomerList _loadDateRange(String startDate, String endDate, RangeTarget target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[_loadDateRange]";
-			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer dao call:  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
-		OrderPositionList ol = null;
+		CustomerList cl = null;
 		try {
-			ol = CampInstanceDao.instance()._loadDateRange(startDate, endDate, target, OrderPositionDao.instance(), false,log);
+			cl = CampInstanceDao.instance()._loadDateRange(startDate, endDate, target, CustomerDao.instance(), false,log);
 		} catch (SQLException e) {
 			if(log && !Util._IN_PRODUCTION){msg = "----[SQL EXCEPTION! _loadDateRange FAILED]----";LOG.info(String.format(fmt, _f,msg));}
 			e.printStackTrace();
@@ -2120,9 +2048,7 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[_loadDateRange completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
-		return ol;
+		return cl;
 	}
 
-
 }
-

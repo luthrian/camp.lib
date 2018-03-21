@@ -33,6 +33,7 @@ import com.camsolute.code.camp.lib.contract.HasProcess;
 import com.camsolute.code.camp.lib.contract.HasProduct;
 import com.camsolute.code.camp.lib.contract.HasQuantity;
 import com.camsolute.code.camp.lib.contract.HasRefBusinessId;
+import com.camsolute.code.camp.lib.contract.HasRefBusinessKey;
 import com.camsolute.code.camp.lib.contract.HasRefId;
 import com.camsolute.code.camp.lib.contract.IsObjectInstance;
 import com.camsolute.code.camp.lib.contract.Serialization;
@@ -45,7 +46,7 @@ import com.camsolute.code.camp.lib.models.process.OrderPositionProcess;
 import com.camsolute.code.camp.lib.models.process.ProcessList;
 import com.camsolute.code.camp.lib.utilities.Util;
 
-public interface OrderPositionInterface extends HasDate, HasRefId, HasRefBusinessId, HasQuantity, HasProcess<OrderPosition>, HasPosition, HasModelId, HasProduct, HasOrder ,IsObjectInstance<OrderPosition>{
+public interface OrderPositionInterface extends HasDate, HasRefId, HasRefBusinessKey, HasQuantity, HasProcess<OrderPosition>, HasPosition, HasModelId, HasProduct, HasOrder ,IsObjectInstance<OrderPosition>{
 
 	public static final Logger LOG = LogManager.getLogger(OrderPositionInterface.class);
 	public static String fmt = "[%15s] [%s]";

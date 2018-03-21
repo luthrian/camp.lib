@@ -35,6 +35,7 @@ import org.joda.time.DateTime;
 import com.camsolute.code.camp.lib.contract.IsObjectInstance;
 import com.camsolute.code.camp.lib.data.CampSQL;
 import com.camsolute.code.camp.lib.models.Attribute.AttributeType;
+import com.camsolute.code.camp.lib.models.CampInstanceDaoInterface.RangeTarget;
 import com.camsolute.code.camp.lib.models.CampStatesInterface.IOAction;
 import com.camsolute.code.camp.lib.models.process.OrderProcess;
 import com.camsolute.code.camp.lib.models.process.OrderProcessList;
@@ -4483,9 +4484,9 @@ public class  AttributeDao implements AttributeDaoInterface{
 
 	@Override
 	public AttributeList loadDateRange(String businessId, String startDate, String endDate) {
-		return _loadDateRange(businessId, startDate, endDate, !Util._IN_PRODUCTION);
+		return _loadDateRange(businessId, startDate, endDate, RangeTarget.DATE, !Util._IN_PRODUCTION);
 	}
-	public AttributeList _loadDateRange(String businessId, String startDate, String endDate, boolean log) {
+	public AttributeList _loadDateRange(String businessId, String startDate, String endDate, RangeTarget target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -4495,7 +4496,7 @@ public class  AttributeDao implements AttributeDaoInterface{
 		}
 		AttributeList al = null;
 		try {
-			al = CampInstanceDao.instance()._loadDateRange(businessId, startDate, endDate, AttributeDao.instance(), false,log);
+			al = CampInstanceDao.instance()._loadDateRange(businessId, startDate, endDate, target, AttributeDao.instance(), false,log);
 		} catch (SQLException e) {
 			if(log && !Util._IN_PRODUCTION){msg = "----[SQL EXCEPTION! _loadDateRange FAILED]----";LOG.info(String.format(fmt, _f,msg));}
 			e.printStackTrace();
@@ -4535,9 +4536,9 @@ public class  AttributeDao implements AttributeDaoInterface{
 
 	@Override
 	public AttributeList loadDateRange(String startDate, String endDate) {
-		return _loadDateRange(startDate,endDate,!Util._IN_PRODUCTION);
+		return _loadDateRange(startDate,endDate, RangeTarget.DATE,!Util._IN_PRODUCTION);
 	}
-	public AttributeList _loadDateRange(String startDate, String endDate, boolean log) {
+	public AttributeList _loadDateRange(String startDate, String endDate, RangeTarget target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -4547,7 +4548,7 @@ public class  AttributeDao implements AttributeDaoInterface{
 		}
 		AttributeList al = null;
 		try {
-			al = CampInstanceDao.instance()._loadDateRange(startDate, endDate, AttributeDao.instance(), false,log);
+			al = CampInstanceDao.instance()._loadDateRange(startDate, endDate, target, AttributeDao.instance(), false,log);
 		} catch (SQLException e) {
 			if(log && !Util._IN_PRODUCTION){msg = "----[SQL EXCEPTION! _loadDateRange FAILED]----";LOG.info(String.format(fmt, _f,msg));}
 			e.printStackTrace();

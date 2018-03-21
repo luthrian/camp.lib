@@ -23,8 +23,30 @@ import com.camsolute.code.camp.lib.dao.DaoInterface;
 import com.camsolute.code.camp.lib.dao.HasProcessReference;
 import com.camsolute.code.camp.lib.dao.InstanceDaoInterface;
 import com.camsolute.code.camp.lib.dao.database.DBDaoInterface;
+import com.camsolute.code.camp.lib.models.Group;
+import com.camsolute.code.camp.lib.models.Version;
+import com.camsolute.code.camp.lib.models.customer.Customer.Origin;
+import com.camsolute.code.camp.lib.models.customer.Customer.Type;
 import com.camsolute.code.camp.lib.models.order.Order;
+import com.camsolute.code.camp.lib.models.process.ProcessList;
 
-public interface CustomerDaoInterface extends DaoInterface<Customer>, InstanceDaoInterface<Customer>, DBDaoInterface<Order>, HasProcessReference{
+public interface CustomerDaoInterface extends DaoInterface<Customer>, InstanceDaoInterface<Customer>, DBDaoInterface<Customer>, HasProcessReference{
+	
+	public Customer create(Origin origin, Type type, String businessId, String businessKey, Group group, Version version, boolean log);
 
+	public String insertProcessReferenceValues(String businessId, ProcessList pl, boolean log);
+	
+	public Customer loadFirst(String businessId, boolean log);
+
+	public Customer loadPrevious(Customer customer, boolean log);
+	
+	public Customer loadNext(Customer customer, boolean log);
+	
+	public CustomerList loadDate(String businessId, String date);
+
+	public CustomerList loadDateRange(String businessId, String startDate, String endDate);
+
+	public CustomerList loadDate(String date);
+
+	public CustomerList loadDateRange(String startDate, String endDate);
 }

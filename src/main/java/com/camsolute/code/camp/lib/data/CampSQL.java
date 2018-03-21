@@ -362,32 +362,141 @@ public class CampSQL {
 
 	public static class Customer {
 		public static final int _CUSTOMER_TABLE_INDEX = 0;
-		public static final int _CUSTOMER_UPDATES_TABLE_INDEX = 1;
+		public static final int _CUSTOMER_REF_TABLE_INDEX = 1;
+		public static final int _CONTACT_DETAILS_TABLE_INDEX = 2;
+		public static final int _ADDRESS_TABLE_INDEX = 3;
+		public static final int _TOUCH_POINT_TABLE_INDEX = 4;
+		public static final int _TOUCH_POINT_REF_TABLE_INDEX = 5;
+		public static final int _CUSTOMER_UPDATES_TABLE_INDEX = 6;
 		public static final int _CUSTOMER_HAS_PROCESS_TABLE_INDEX = 1;
 
 		public static final String[] customer_management_tables = {
-				"customer",
+				"customer", //0
+				"customer_ref", //1
+				"contact_details", //2
+				"address", //3
+				"touch_point",//4
+				"touch_point_ref",//5
 				"customer_updates",
-				"customer_has_process"
+				"contact_details_updates",
+				"address_updates",
+				"touch_point_updates",
+				"customer_has_process",
 		};
 		
 		public static final String[][] customer_table_definition = {
-				{"id_", "int(11) NOT NULL AUTO_INCREMENT"},
-				{"businesskey", "varchar(45) NOT NULL"},
-				{"customer_id", "varchar(45) NOT NULL"},
-				{"customer_name", "varchar(45) NOT NULL"},
-				{"extra", "PRIMARY KEY (`customer_id`),"
-						+ "UNIQUE KEY `id_UNIQUE` (`id_`),"
-						+ "UNIQUE KEY `customer_key_UNIQUE` (`customer_id`),"
-						+ "UNIQUE KEY `customer_businesskey_UNIQUE` (`customer_businesskey`)"}
+				{"_customer_id_", "int(11) NOT NULL AUTO_INCREMENT"},
+				{"customer_business_id", "varchar(150) NOT NULL"},
+				{"customer_businesskey", "varchar(45) not null"},
+				{"customer_type", "varchar(45) NOT NULL"},
+				{"customer_origin", "varchar(45) NOT NULL"},
+				{"customer_version", "varchar(45) NOT NULL"},
+				{"extra", "PRIMARY KEY (`_customer_id_`)"
+						+ ",UNIQUE KEY `_customer_id_UNIQUE` (`_customer_id_`)"
+						+ ",INDEX `customer_businesskey_idx` (`customer_businesskey` ASC)"
+						+ ",INDEX `customer_type_idx` (`customer_type` ASC)"
+						+ ",INDEX `customer_origin_idx` (`customer_origin` ASC)"}
+		};
+
+		public static final String[][] customer_ref_table_definition = {
+				{"_customer_ref_id_", "int(11) NOT NULL AUTO_INCREMENT"},
+				{"customer_id", "int(11) NOT NULL"},
+				{"customer_address_id", "int(11) NOT NULL"},
+				{"customer_delivery_address_id", "int(11) NULL"},
+				{"customer_contact_id", "int(11) not null"},
+				{"customer_touchpoint_id", "int(11) NOT NULL"},
+				{"customer_group", "varchar(45) NOT NULL"},
+				{"extra", "PRIMARY KEY (`_customer_id_`)"
+						+ ",UNIQUE KEY `_customer_ref_id_UNIQUE` (`_customer_ref_id_`)"
+						+ ",INDEX `customer_business_id_idx` (`customer_business_id` ASC)"
+						+ ",INDEX `customer_businesskey_idx` (`customer_businesskey` ASC)"
+						+ ",INDEX `customer_group_idx` (`customer_group` ASC)"}
+		};
+
+		public static final String[][] contact_details_table_definition = {
+				{"_contact_id_", "int(11) NOT NULL AUTO_INCREMENT"},
+				{"contact_customer_id", "int(11) NOT NULL AUTO_INCREMENT"},
+				{"contact_email", "varchar(150) NOT NULL"},
+				{"contact_mobile", "varchar(45) NOT NULL"},
+				{"contact_telephone", "varchar(45) NOT NULL"},
+				{"contact_skype", "varchar(45) not null"},
+				{"contact_misc", "varchar(45) not null"},
+				{"extra", "PRIMARY KEY (`_contact_id_`)"
+						+ ",UNIQUE KEY `_contact_id_UNIQUE` (`_contact_id_`)"
+						+ ",UNIQUE KEY `_contact_email_UNIQUE` (`_contact_email_`)"
+						+ ",INDEX `customer_businesskey_idx` (`customer_businesskey` ASC)"}
+		};
+
+		public static final String[][] address_table_definition = {
+				{"_address_id_", "int(11) NOT NULL AUTO_INCREMENT"},
+				{"address_country", "varchar(45) NOT NULL"},
+				{"address_state", "varchar(45) NOT NULL"},
+				{"address_postcode", "varchar(45) NOT NULL"},
+				{"address_city", "varchar(45) not null"},
+				{"address_street", "varchar(45) not null"},
+				{"address_street_number", "varchar(45) not null"},
+				{"address_floor", "varchar(45) not null"},
+				{"address_room_number", "varchar(45) not null"},
+				{"address_businesskey", "varchar(45) not null"},
+				{"extra", "PRIMARY KEY (`_address_id_`)"
+						+ ",UNIQUE KEY `_address_id_UNIQUE` (`_address_id_`)"
+						+ ",INDEX `address_businesskey_idx` (`address_businesskey` ASC)"}
+		};
+
+		public static final String[][] touch_point_table_definition = {
+				{"_touchpoint_id_", "int(11) NOT NULL AUTO_INCREMENT"},
+				{"_topic", "varchar(45) NOT NULL"},
+				{"extra", "PRIMARY KEY (`_touchpoint_id_`)"
+						+ ",UNIQUE KEY `_touchpoint_id_UNIQUE` (`_touchpoint_id_`)"}
+		};
+
+		public static final String[][] touch_point_ref_table_definition = {
+				{"_touchpoint_ref_id_", "int(11) NOT NULL AUTO_INCREMENT"},
+				{"_touchpoint_id", "int(11) NOT NULL"},
+				{"_customer_id", "int(11) NOT NULL"},
+				{"_customer_business_id", "varchar(100) NOT NULL"},
+				{"_responsible_business_id", "varchar(100) NOT NULL"},
+				{"_responsible_businesskey", "varchar(100) NOT NULL"},
+				{"_next_date", "TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP"},
+				{"_minutes", "LONGTEXT NOT NULL"},
+				{"extra", "PRIMARY KEY (`_touchpoint_ref_id_`)"
+						+ ",UNIQUE KEY `_touchpoint_ref_id_UNIQUE` (`_touchpoint_ref_id_`)"
+						+ ",INDEX `_responsible_businesskey_idx` (`_responsible_businesskey` ASC)"
+						+ ",INDEX `_responsible_business_id_idx` (`_responsible_business_id` ASC)"}
 		};
 
 		public static final String[][] customer_updates_table_definition = {
-				{"customer_id", "VARCHAR(45) NOT NULL"},
-				{"businesskey", "VARCHAR(45) NOT NULL"},
-				{"target", "varchar(45) NOT NULL"},
-				{"extra", "INDEX `c_updates_customer_id_idx` (`customer_id` ASC)"}
+				{"_customer_business_id", "VARCHAR(45) NOT NULL"},
+				{"_businesskey", "VARCHAR(45) NOT NULL"},
+				{"_target", "varchar(45) NOT NULL"},
+				{"_timestamp", "TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP"},
+				{"extra", "INDEX `cu_customer_business_id_idx` (`_customer_business_id` ASC)"}
 		};
+
+		public static final String[][] contact_details_updates_table_definition = {
+				{"_customer_id", "INT(11) NOT NULL"},
+				{"_businesskey", "VARCHAR(45) NOT NULL"},
+				{"_target", "varchar(45) NOT NULL"},
+				{"_timestamp", "TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP"},
+				{"extra", "INDEX `cu_customer_id_idx` (`_customer_id` ASC)"}
+		};
+
+		public static final String[][] address_updates_table_definition = {
+				{"_address_business_id", "INT(11) NOT NULL"},
+				{"_businesskey", "VARCHAR(45) NOT NULL"},
+				{"_target", "varchar(45) NOT NULL"},
+				{"_timestamp", "TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP"},
+				{"extra", "INDEX `cu_customer_id_idx` (`_customer_id` ASC)"}
+		};
+
+		public static final String[][] touch_point_updates_table_definition = {
+				{"_customer_business_id", "VARCHAR(100) NOT NULL"},
+				{"_businesskey", "VARCHAR(100) NOT NULL"},
+				{"_target", "varchar(45) NOT NULL"},
+				{"_timestamp", "TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP"},
+				{"extra", "INDEX `cu_customer_id_idx` (`_customer_id` ASC)"}
+		};
+
 		public static final String[][] customer_has_process_table_definition = {
 				{"_chp_business_id", "varchar(100) NOT NULL"},
 				{"_chp_process_instance_id", "varchar(45) NOT NULL"},

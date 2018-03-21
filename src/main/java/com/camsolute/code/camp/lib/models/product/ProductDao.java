@@ -34,6 +34,7 @@ import com.camsolute.code.camp.lib.data.CampSQL;
 import com.camsolute.code.camp.lib.models.AttributeDao;
 import com.camsolute.code.camp.lib.models.AttributeMap;
 import com.camsolute.code.camp.lib.models.CampInstanceDao;
+import com.camsolute.code.camp.lib.models.CampInstanceDaoInterface.RangeTarget;
 import com.camsolute.code.camp.lib.models.Group;
 import com.camsolute.code.camp.lib.models.Model;
 import com.camsolute.code.camp.lib.models.ModelDao;
@@ -2466,9 +2467,9 @@ public class ProductDao implements ProductDaoInterface {
 
 	@Override
 	public ProductList loadDateRange(String businessId, String startDate, String endDate) {
-		return _loadDateRange(businessId, startDate, endDate, !Util._IN_PRODUCTION);
+		return _loadDateRange(businessId, startDate, endDate, RangeTarget.DATE,!Util._IN_PRODUCTION);
 	}
-	public static ProductList _loadDateRange(String businessId, String startDate, String endDate, boolean log) {
+	public static ProductList _loadDateRange(String businessId, String startDate, String endDate, RangeTarget target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -2478,7 +2479,7 @@ public class ProductDao implements ProductDaoInterface {
 		}
 		ProductList pl = null;
 		try {
-			pl = CampInstanceDao.instance()._loadDateRange(businessId, startDate, endDate, ProductDao.instance(), false,log);
+			pl = CampInstanceDao.instance()._loadDateRange(businessId, startDate, endDate, target, ProductDao.instance(), false,log);
 		} catch (SQLException e) {
 			if(log && !Util._IN_PRODUCTION){msg = "----[SQL EXCEPTION! _loadDateRange FAILED]----";LOG.info(String.format(fmt, _f,msg));}
 			e.printStackTrace();
@@ -2518,9 +2519,9 @@ public class ProductDao implements ProductDaoInterface {
 
 	@Override
 	public ProductList loadDateRange(String startDate, String endDate) {
-		return _loadDateRange(startDate,endDate,!Util._IN_PRODUCTION);
+		return _loadDateRange(startDate,endDate,RangeTarget.DATE,!Util._IN_PRODUCTION);
 	}
-	public static ProductList _loadDateRange(String startDate, String endDate, boolean log) {
+	public static ProductList _loadDateRange(String startDate, String endDate, RangeTarget target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -2530,7 +2531,7 @@ public class ProductDao implements ProductDaoInterface {
 		}
 		ProductList pl = null;
 		try {
-			pl = CampInstanceDao.instance()._loadDateRange(startDate, endDate, ProductDao.instance(), false,log);
+			pl = CampInstanceDao.instance()._loadDateRange(startDate, endDate, target, ProductDao.instance(), false,log);
 		} catch (SQLException e) {
 			if(log && !Util._IN_PRODUCTION){msg = "----[SQL EXCEPTION! _loadDateRange FAILED]----";LOG.info(String.format(fmt, _f,msg));}
 			e.printStackTrace();

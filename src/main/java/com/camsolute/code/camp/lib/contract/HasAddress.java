@@ -20,11 +20,18 @@
 package com.camsolute.code.camp.lib.contract;
 
 import com.camsolute.code.camp.lib.models.customer.Address;
+import com.camsolute.code.camp.lib.models.customer.AddressList;
 
 public interface HasAddress {
 	public int addressId();
 	public void setAddressId(int id);
+	public int deliveryAddressId();
+	public void setDeliveryAddressId(int id);
 	public Address address();
-	public void setAddress(Address address);
-	public void updateAddress(Address address);
+	public Address deliveryAddress();
+	public AddressList addressList();
+	public void setAddressList(AddressList addressList);
+	public boolean addAddress(Address address);
+	public Address removeAddress(Address address);
+	public Address removeAddress(int addressId);
 }

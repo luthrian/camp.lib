@@ -33,7 +33,7 @@ public class ContactDetails implements ContactDetailsInterface{
 	private String telephone;
 	private String skype;
 	private String misc;
-	private TouchPoint contactHistory;
+	private TouchPointList contactHistory;
 	
 	private CampStates states = new CampStates();
 
@@ -119,14 +119,15 @@ public class ContactDetails implements ContactDetailsInterface{
 		this.misc=misc;
 	}
 	
-	public TouchPoint contactHistory(){
+	public TouchPointList contactHistory(){
 		return this.contactHistory;
 	}
-	public void updatecontactHistory(TouchPoint contactHistory) {
-		this.contactHistory = contactHistory;
+	public void addTouchPoint(TouchPoint touchPoint) {
+		touchPoint.states().modify();
+		this.contactHistory.add(touchPoint);
 		this.states.modify();
 	}
-	public void setContactHistory(TouchPoint contactHistory) {
+	public void setContactHistory(TouchPointList contactHistory) {
 		this.contactHistory=contactHistory;
 	}
 	

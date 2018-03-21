@@ -31,6 +31,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.camsolute.code.camp.lib.data.CampSQL;
 import com.camsolute.code.camp.lib.models.CampInstanceDao;
+import com.camsolute.code.camp.lib.models.CampInstanceDaoInterface.RangeTarget;
 import com.camsolute.code.camp.lib.models.CampStatesInterface.IOAction;
 import com.camsolute.code.camp.lib.models.process.OrderProcess;
 import com.camsolute.code.camp.lib.models.process.OrderProcessList;
@@ -2185,9 +2186,9 @@ public class OrderDao implements OrderDaoInterface {
 
 	@Override
 	public OrderList loadDateRange(String businessId, String startDate, String endDate) {
-		return _loadDateRange(businessId, startDate, endDate, !Util._IN_PRODUCTION);
+		return _loadDateRange(businessId, startDate, endDate,RangeTarget.DATE, !Util._IN_PRODUCTION);
 	}
-	public static OrderList _loadDateRange(String businessId, String startDate, String endDate, boolean log) {
+	public static OrderList _loadDateRange(String businessId, String startDate, String endDate, RangeTarget target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -2197,7 +2198,7 @@ public class OrderDao implements OrderDaoInterface {
 		}
 		OrderList ol = null;
 		try {
-			ol = CampInstanceDao.instance()._loadDateRange(businessId, startDate, endDate, OrderDao.instance(), false,log);
+			ol = CampInstanceDao.instance()._loadDateRange(businessId, startDate, endDate, target, OrderDao.instance(), false,log);
 		} catch (SQLException e) {
 			if(log && !Util._IN_PRODUCTION){msg = "----[SQL EXCEPTION! _loadDateRange FAILED]----";LOG.info(String.format(fmt, _f,msg));}
 			e.printStackTrace();
@@ -2237,9 +2238,9 @@ public class OrderDao implements OrderDaoInterface {
 
 	@Override
 	public OrderList loadDateRange(String startDate, String endDate) {
-		return _loadDateRange(startDate,endDate,!Util._IN_PRODUCTION);
+		return _loadDateRange(startDate,endDate,RangeTarget.DATE, !Util._IN_PRODUCTION);
 	}
-	public static OrderList _loadDateRange(String startDate, String endDate, boolean log) {
+	public static OrderList _loadDateRange(String startDate, String endDate, RangeTarget target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -2249,7 +2250,7 @@ public class OrderDao implements OrderDaoInterface {
 		}
 		OrderList ol = null;
 		try {
-			ol = CampInstanceDao.instance()._loadDateRange(startDate, endDate, OrderDao.instance(), false,log);
+			ol = CampInstanceDao.instance()._loadDateRange(startDate, endDate, target, OrderDao.instance(), false,log);
 		} catch (SQLException e) {
 			if(log && !Util._IN_PRODUCTION){msg = "----[SQL EXCEPTION! _loadDateRange FAILED]----";LOG.info(String.format(fmt, _f,msg));}
 			e.printStackTrace();

@@ -56,22 +56,22 @@ public interface ContactDetailsInterface extends Serialization<ContactDetails>, 
 	public void updateMisc(String misc);
 	public void setMisc(String misc);
 	
-	public TouchPoint contactHistory();
-	public void updatecontactHistory(TouchPoint contactHistory);
-	public void setContactHistory(TouchPoint contactHistory);
+	public TouchPointList contactHistory();
+	public void addTouchPoint(TouchPoint touchPoint);
+	public void setContactHistory(TouchPointList contactHistory);
 	
 	public static String _toJson(ContactDetailsInterface d) {
 		return "{"+_toInnerJson(d)+"}";
 	}
 	public static String _toInnerJson(ContactDetailsInterface d) {
 		String json = "";
-		json += "\"id\":\""+d.id()+"\",";
+		json += "\"id\":"+d.id()+",";
 		json += "\"email\":\""+d.email()+"\",";
 		json += "\"mobile\":\""+d.mobile()+"\",";
 		json += "\"telephone\":\""+d.telephone()+"\",";
 		json += "\"skype\":\""+((d.skype()!=null)?d.skype():"")+"\",";
 		json += "\"misc\":\""+((d.misc()!=null)?d.misc():"")+"\",";
-		json += "\"contactHistory\":"+((d.contactHistory()!=null)?d.contactHistory().toJson():"")+",";
+		json += ((d.contactHistory()!=null||d.contactHistory().size()>0)?"\"contactHistory\":"+d.contactHistory().toJson()+",":"");
 		json += "\"states\":"+d.states().toJson();
 		return json;
 	}
@@ -88,15 +88,17 @@ public interface ContactDetailsInterface extends Serialization<ContactDetails>, 
 		String skype = jo.getString("skype");
 		String misc = jo.getString("misc");
 		CampStates states = CampStatesInterface._fromJSONObject(jo.getJSONObject("states"));
-		TouchPoint contactHistory = null;
+		TouchPointList contactHistory = null;
 		try {
-			contactHistory = TouchPointInterface._fromJSONObject(jo.getJSONObject("contactHistory"));
+			contactHistory = TouchPointList._fromJSONArray(jo.getJSONArray("contactHistory"));
 		} catch (Exception e){
 			if(!Util._IN_PRODUCTION){String msg = "----[ JSON Error! Contact history missing.]----";LOG.info(String.format(fmt,"_fromJSONObject",msg));}
 			e.printStackTrace();
 		}
 		ContactDetails d = new ContactDetails(id,email,mobile,telephone,skype,misc);
-		d.setContactHistory(contactHistory);
+		if(contactHistory != null) {
+			d.setContactHistory(contactHistory);
+		}
 		d.states().update(states);
 		return d;
 	}
