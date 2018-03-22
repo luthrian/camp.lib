@@ -474,7 +474,7 @@ public class TouchPointRest implements TouchPointRestInterface {
 	}
 
 	@Override
-	public int deleteFromUpdates(String businessId, String businessKey, String target, boolean log) {
+	public int deleteFromUpdates(String customerBusinessId, String customerBusinessKey, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -483,8 +483,8 @@ public class TouchPointRest implements TouchPointRestInterface {
 			msg = "====[ TouchPointRest rest call:  ]====";LOG.info(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		String prefix = CampRest.TouchPoint.Prefix;		
-		String serviceUri = CampRest.DaoService.callRequest(prefix,CampRest.DaoService.Request.DELETE_UPDATE);
-		String uri = serverUrl+domainUri+String.format(serviceUri,businessId, businessKey, target);
+		String serviceUri = CampRest.TouchPointDaoService.callRequest(prefix,CampRest.TouchPointDaoService.Request.DELETE_UPDATES);
+		String uri = serverUrl+domainUri+String.format(serviceUri,customerBusinessId, customerBusinessKey, target);
 		String result = RestInterface.resultGET(uri, log);
 		int retVal = Integer.valueOf(result);
 		if (log && !Util._IN_PRODUCTION) { msg = "----[ '" + retVal + "' entr"+((retVal>1)?"ies":"y")+" loaded ]----"; LOG.info(String.format(fmt, _f, msg)); }
@@ -680,6 +680,148 @@ public class TouchPointRest implements TouchPointRestInterface {
 			msg = "====[loadDateRange completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
 		return ol;
+	}
+
+	@Override
+	public int deleteAllResponsibleFromUpdates(String responsibleBusinessKey, String target, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[deleteAllResponsibleFromUpdates]";
+			msg = "====[ TouchPointRest rest call:  ]====";LOG.info(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		String prefix = CampRest.TouchPoint.Prefix;		
+		String serviceUri = CampRest.TouchPointDaoService.callRequest(prefix,CampRest.TouchPointDaoService.Request.DELETE_ALL_RESPONSIBLE_UPDATES);
+		String uri = serverUrl+domainUri+String.format(serviceUri,responsibleBusinessKey, target);
+		String result = RestInterface.resultGET(uri, log);
+		int retVal = Integer.valueOf(result);
+		if (log && !Util._IN_PRODUCTION) { msg = "----[ '" + retVal + "' entr"+((retVal>1)?"ies":"y")+" loaded ]----"; LOG.info(String.format(fmt, _f, msg)); }
+		
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[deleteAllResponsibleFromUpdates completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return retVal;
+	}
+
+	@Override
+	public int deleteResponsibleFromUpdatesByKey(String responsibleBusinessKey, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[deleteResponsibleFromUpdatesByKey]";
+			msg = "====[ TouchPointRest rest call:  ]====";LOG.info(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		String prefix = CampRest.TouchPoint.Prefix;		
+		String serviceUri = CampRest.TouchPointDaoService.callRequest(prefix,CampRest.TouchPointDaoService.Request.DELETE_RESPONSIBLE_UPDATES_KEY);
+		String uri = serverUrl+domainUri+String.format(serviceUri,responsibleBusinessKey);
+		String result = RestInterface.resultGET(uri, log);
+		int retVal = Integer.valueOf(result);
+		if (log && !Util._IN_PRODUCTION) { msg = "----[ '" + retVal + "' entr"+((retVal>1)?"ies":"y")+" loaded ]----"; LOG.info(String.format(fmt, _f, msg)); }
+		
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[deleteResponsibleFromUpdatesByKey completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return retVal;
+	}
+
+	@Override
+	public int deleteAllFromUpdates(String customerBusinessKey, String responsibleBusinessKey, String target,
+			boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[deleteAllFromUpdates]";
+			msg = "====[ TouchPointRest rest call:  ]====";LOG.info(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		String prefix = CampRest.TouchPoint.Prefix;		
+		String serviceUri = CampRest.TouchPointDaoService.callRequest(prefix,CampRest.TouchPointDaoService.Request.DELETE_ALL_UPDATES);
+		String uri = serverUrl+domainUri+String.format(serviceUri,customerBusinessKey, responsibleBusinessKey, target);
+		String result = RestInterface.resultGET(uri, log);
+		int retVal = Integer.valueOf(result);
+		if (log && !Util._IN_PRODUCTION) { msg = "----[ '" + retVal + "' entr"+((retVal>1)?"ies":"y")+" loaded ]----"; LOG.info(String.format(fmt, _f, msg)); }
+		
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[deleteAllFromUpdates completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return retVal;
+	}
+
+	@Override
+	public int deleteFromUpdatesByKey(String customerBusinessKey, String responsibleBusinessKey, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[deleteFromUpdatesByKey]";
+			msg = "====[ TouchPointRest rest call:  ]====";LOG.info(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		String prefix = CampRest.TouchPoint.Prefix;		
+		String serviceUri = CampRest.TouchPointDaoService.callRequest(prefix,CampRest.TouchPointDaoService.Request.DELETE_UPDATES_KEY);
+		String uri = serverUrl+domainUri+String.format(serviceUri,customerBusinessKey, responsibleBusinessKey);
+		String result = RestInterface.resultGET(uri, log);
+		int retVal = Integer.valueOf(result);
+		if (log && !Util._IN_PRODUCTION) { msg = "----[ '" + retVal + "' entr"+((retVal>1)?"ies":"y")+" loaded ]----"; LOG.info(String.format(fmt, _f, msg)); }
+		
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[deleteFromUpdatesByKey completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return retVal;
+	}
+	
+	
+	@Override
+	public int deleteFromUpdates(TouchPoint p, String target, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[deleteFromUpdates]";
+			msg = "====[ TouchPointRest rest call:  ]====";LOG.info(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		String json = p.toJson();
+		String prefix = CampRest.TouchPoint.Prefix;		
+		String serviceUri = CampRest.TouchPointDaoService.callRequest(prefix,CampRest.TouchPointDaoService.Request.DELETE_UPDATES_POST);
+		String uri = serverUrl+domainUri+String.format(serviceUri,target);
+		String result = RestInterface.resultPost(uri,json, log);
+		int retVal = Integer.valueOf(result);
+		if (log && !Util._IN_PRODUCTION) { msg = "----[ '" + retVal + "' entr"+((retVal>1)?"ies":"y")+" loaded ]----"; LOG.info(String.format(fmt, _f, msg)); }
+		
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[deleteFromUpdates completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return retVal;
+	}
+
+	@Override
+	public int deleteResponsibleFromUpdates(TouchPoint p, String target, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[deleteResponsibleFromUpdates]";
+			msg = "====[ TouchPointRest rest call:  ]====";LOG.info(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		String json = p.toJson();
+		String prefix = CampRest.TouchPoint.Prefix;		
+		String serviceUri = CampRest.TouchPointDaoService.callRequest(prefix,CampRest.TouchPointDaoService.Request.DELETE_RESPONSIBLE_UPDATES);
+		String uri = serverUrl+domainUri+String.format(serviceUri,p, target);
+		String result = RestInterface.resultPost(uri,json, log);
+		int retVal = Integer.valueOf(result);
+		if (log && !Util._IN_PRODUCTION) { msg = "----[ '" + retVal + "' entr"+((retVal>1)?"ies":"y")+" loaded ]----"; LOG.info(String.format(fmt, _f, msg)); }
+		
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[deleteResponsibleFromUpdates completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return retVal;
 	}
 
 }
