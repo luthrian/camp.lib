@@ -449,7 +449,8 @@ public class CampSQL {
 
 		public static final String[][] touch_point_table_definition = {
 				{"_touchpoint_id_", "int(11) NOT NULL AUTO_INCREMENT"},
-				{"_topic", "varchar(45) NOT NULL"},
+				{"_topic", "varchar(200) NOT NULL"},
+				{"_date", "TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP"},
 				{"extra", "PRIMARY KEY (`_touchpoint_id_`)"
 						+ ",UNIQUE KEY `_touchpoint_id_UNIQUE` (`_touchpoint_id_`)"}
 		};
@@ -457,8 +458,8 @@ public class CampSQL {
 		public static final String[][] touch_point_ref_table_definition = {
 				{"_touchpoint_ref_id_", "int(11) NOT NULL AUTO_INCREMENT"},
 				{"_touchpoint_id", "int(11) NOT NULL"},
-				{"_customer_id", "int(11) NOT NULL"},
 				{"_customer_business_id", "varchar(100) NOT NULL"},
+				{"_customer_businesskey", "varchar(45) NOT NULL"},
 				{"_responsible_business_id", "varchar(100) NOT NULL"},
 				{"_responsible_businesskey", "varchar(100) NOT NULL"},
 				{"_next_date", "TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP"},
@@ -495,10 +496,12 @@ public class CampSQL {
 
 		public static final String[][] touch_point_updates_table_definition = {
 				{"_customer_business_id", "VARCHAR(100) NOT NULL"},
-				{"_businesskey", "VARCHAR(100) NOT NULL"},
+				{"_responsible_business_id", "VARCHAR(100) NOT NULL"},
+				{"_customer_businesskey", "VARCHAR(45) NOT NULL"},
+				{"_responsible_businesskey", "VARCHAR(45) NOT NULL"},
 				{"_target", "varchar(45) NOT NULL"},
 				{"_timestamp", "TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP"},
-				{"extra", "INDEX `cu_customer_id_idx` (`_customer_id` ASC)"}
+				{"extra", "INDEX `cu_target_idx` (`_target` ASC)"}
 		};
 
 		public static final String[][] customer_has_process_table_definition = {

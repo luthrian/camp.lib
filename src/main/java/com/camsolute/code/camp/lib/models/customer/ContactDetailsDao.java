@@ -28,7 +28,18 @@ public class ContactDetailsDao implements ContactDetailsDaoInterface, ContactDet
 	
 	public static String[][] updatestabledef = CampSQL.Customer.contact_details_updates_table_definition;
 
-
+	private static ContactDetailsDao instance = null;
+	
+	private ContactDetailsDao(){
+	}
+	
+	public static ContactDetailsDao instance(){
+		if(instance == null) {
+			instance = new ContactDetailsDao();
+		}
+		return instance;
+	}
+	
 	@Override
 	public String dbName() {
 		return dbName;

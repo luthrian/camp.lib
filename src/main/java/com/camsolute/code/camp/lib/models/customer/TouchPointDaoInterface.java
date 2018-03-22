@@ -20,9 +20,23 @@
 package com.camsolute.code.camp.lib.models.customer;
 
 import com.camsolute.code.camp.lib.dao.DaoInterface;
+import com.camsolute.code.camp.lib.dao.InstanceDaoInterface;
 import com.camsolute.code.camp.lib.dao.database.DBDaoInterface;
-import com.camsolute.code.camp.lib.models.CampInstanceDaoInterface;
 
-public interface TouchPointDaoInterface extends DaoInterface<TouchPoint>, DBDaoInterface<TouchPoint>, CampInstanceDaoInterface {
+public interface TouchPointDaoInterface extends DaoInterface<TouchPoint>, DBDaoInterface<TouchPoint>, InstanceDaoInterface<TouchPoint> {
+
+	public TouchPoint loadFirst(String businessId, boolean log);
+
+	public TouchPoint loadPrevious(TouchPoint p, boolean log);
+
+	public TouchPoint loadNext(TouchPoint p, boolean log);
+
+	public TouchPointList loadDate( String businessId, String date, boolean log);
+
+	public TouchPointList loadDateRange( String businessId, String startDate, String endDate, boolean log);
+
+	public TouchPointList loadDate( String date, boolean log);
+
+	public TouchPointList loadDateRange( String startDate, String endDate, boolean log);
 
 }

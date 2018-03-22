@@ -25,6 +25,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.json.JSONObject;
 
+import com.camsolute.code.camp.lib.contract.HasCustomer;
 import com.camsolute.code.camp.lib.contract.HasDate;
 import com.camsolute.code.camp.lib.contract.HasRefBusinessId;
 import com.camsolute.code.camp.lib.contract.HasRefBusinessKey;
@@ -37,7 +38,7 @@ import com.camsolute.code.camp.lib.models.CampStatesInterface;
 import com.camsolute.code.camp.lib.models.customer.TouchPoint.Status;
 import com.camsolute.code.camp.lib.utilities.Util;
 
-public interface TouchPointInterface extends HasDate, HasRefBusinessKey, HasRefBusinessId, HasRefId, IsObjectInstance<TouchPoint> {
+public interface TouchPointInterface extends HasCustomer, HasDate, HasRefBusinessKey, HasRefBusinessId, HasRefId, IsObjectInstance<TouchPoint> {
 
 	public static final Logger LOG = LogManager.getLogger(TouchPointInterface.class);
 	public static String fmt = "[%15s] [%s]";

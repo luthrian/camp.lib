@@ -70,6 +70,7 @@ public class TouchPoint implements TouchPointInterface{
 	private Status previousStatus;
 	private Group group;
 	private Version version;
+	private Customer customer = null;
 	
 	public TouchPoint(String businessKeyResponsible,String businessIdResponsible,String businessKeyCustomer,String businessIdCustomer,Timestamp date,String topic,String minutes){
 		this.businessKeyResponsible=businessKeyResponsible;
@@ -495,6 +496,26 @@ public void setBusinessIdCustomer(String businessIdCustomer) {
 	@Override
 	public TouchPoint fromJson(String json) {
 		return TouchPointInterface._fromJson(json);
+	}
+
+	@Override
+	public Customer customer() {
+		return customer;
+	}
+
+	@Override
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+		this.businessIdCustomer = customer.businessId();
+		this.businessKeyCustomer = customer.businessKey();
+	}
+
+	@Override
+	public void updateCustomer(Customer customer) {
+		this.customer =customer;
+		this.businessIdCustomer = customer.businessId();
+		this.businessKeyCustomer = customer.businessKey();
+		this.states.modify();
 	}
 
 }
