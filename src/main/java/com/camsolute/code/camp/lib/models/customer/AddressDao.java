@@ -28,10 +28,9 @@ import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.camsolute.code.camp.lib.contract.IsObjectInstance;
-import com.camsolute.code.camp.lib.dao.InstanceDaoInterface;
 import com.camsolute.code.camp.lib.data.CampSQL;
 import com.camsolute.code.camp.lib.models.CampInstanceDao;
+import com.camsolute.code.camp.lib.models.CampInstanceDaoInterface.RangeTarget;
 import com.camsolute.code.camp.lib.models.CampStatesInterface.IOAction;
 import com.camsolute.code.camp.lib.utilities.Util;
 
@@ -526,6 +525,7 @@ public class AddressDao implements AddressDaoInterface {
 		return al;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public <E extends ArrayList<Address>> E loadUpdates(String businessKey, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
@@ -582,6 +582,7 @@ public class AddressDao implements AddressDaoInterface {
 		return (E) al;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public <E extends ArrayList<Address>> E loadUpdatesByKey(String businessKey, boolean log) {
 		long startTime = System.currentTimeMillis();
@@ -1429,23 +1430,10 @@ public class AddressDao implements AddressDaoInterface {
 	}
 
 	@Override
-	public <T extends IsObjectInstance<T>> int addInstance(T object, boolean useObjectId) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public <T extends IsObjectInstance<T>, E extends ArrayList<T>> int addInstances(E objectList, boolean useObjectId) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public <T extends InstanceDaoInterface<?>, E extends IsObjectInstance<E>> E loadCurrent(String businessId, T dao,boolean primary) throws SQLException {
+	public Address loadCurrent(String businessId, AddressDao dao,boolean primary) throws SQLException {
 		return _loadCurrent(businessId, dao, primary, !Util._IN_PRODUCTION);
 	}
-	@SuppressWarnings("unchecked")
-	public static <T extends InstanceDaoInterface<?>, E extends IsObjectInstance<E>> E _loadCurrent(String businessId, T dao, boolean primary, boolean log) throws SQLException {
+	public static Address _loadCurrent(String businessId, AddressDao dao, boolean primary, boolean log) throws SQLException {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -1464,15 +1452,14 @@ public class AddressDao implements AddressDaoInterface {
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[_loadFirst completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
-		return (E)a;
+		return a;
 	}
 
 	@Override
-	public <T extends InstanceDaoInterface<?>, E extends IsObjectInstance<E>> E loadFirst(String businessId, T dao,boolean primary) throws SQLException {
+	public Address loadFirst(String businessId, AddressDao dao,boolean primary) throws SQLException {
 		return _loadFirst(businessId, dao, primary, !Util._IN_PRODUCTION);
 	}
-	@SuppressWarnings("unchecked")
-	public static <T extends InstanceDaoInterface<?>, E extends IsObjectInstance<E>> E _loadFirst(String businessId, T dao, boolean primary, boolean log) throws SQLException {
+	public static Address _loadFirst(String businessId, AddressDao dao, boolean primary, boolean log) throws SQLException {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -1491,15 +1478,14 @@ public class AddressDao implements AddressDaoInterface {
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[_loadFirst completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
-		return (E)a;
+		return a;
 	}
 
 	@Override
-	public <T extends InstanceDaoInterface<?>, E extends IsObjectInstance<E>> E loadPrevious(E address, T dao,boolean primary) throws SQLException {
+	public Address loadPrevious(Address address, AddressDao dao,boolean primary) throws SQLException {
 		return _loadPrevious(address, dao, primary, !Util._IN_PRODUCTION);
 	}
-	@SuppressWarnings("unchecked")
-	public static <T extends InstanceDaoInterface<?>, E extends IsObjectInstance<E>> E _loadPrevious(E address, T dao, boolean primary, boolean log)throws SQLException {
+	public static Address _loadPrevious(Address address, AddressDao dao, boolean primary, boolean log)throws SQLException {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -1518,15 +1504,14 @@ public class AddressDao implements AddressDaoInterface {
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[_loadNext completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
-		return (E)a;
+		return a;
 	}
 
 	@Override
-	public <T extends InstanceDaoInterface<?>, E extends IsObjectInstance<E>> E loadNext(E address, T dao, boolean primary)throws SQLException {
+	public Address loadNext(Address address, AddressDao dao, boolean primary)throws SQLException {
 		return _loadNext(address, dao, primary, !Util._IN_PRODUCTION);
 	}
-	@SuppressWarnings("unchecked")
-	public static <T extends InstanceDaoInterface<?>, E extends IsObjectInstance<E>> E _loadNext(E address, T dao, boolean primary, boolean log)throws SQLException {
+	public static Address _loadNext(Address address, AddressDao dao, boolean primary, boolean log)throws SQLException {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -1545,15 +1530,14 @@ public class AddressDao implements AddressDaoInterface {
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[_loadNext completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
-		return (E)a;
+		return a;
 	}
 
 	@Override
-	public <T extends InstanceDaoInterface<?>, U extends IsObjectInstance<U>, E extends ArrayList<U>> E loadDate(String businessId, String date, T dao, boolean primary) throws SQLException {
+	public AddressList loadDate(String businessId, String date, AddressDao dao, boolean primary) throws SQLException {
 		return _loadDate(businessId,date, dao, primary, !Util._IN_PRODUCTION);
 	}
-	@SuppressWarnings("unchecked")
-	public static <T extends InstanceDaoInterface<?>, U extends IsObjectInstance<U>, E extends ArrayList<U>> E _loadDate(String businessId, String date, T dao, boolean primary, boolean log) throws SQLException {
+	public static AddressList _loadDate(String businessId, String date, AddressDao dao, boolean primary, boolean log) throws SQLException {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -1572,15 +1556,14 @@ public class AddressDao implements AddressDaoInterface {
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[_loadDate completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
-		return (E)al;
+		return al;
 	}
 
 	@Override
-	public <T extends InstanceDaoInterface<?>, U extends IsObjectInstance<U>, E extends ArrayList<U>> E loadDateRange(String businessId, String startDate, String endDate, T dao, boolean primary) throws SQLException {
+	public AddressList loadDateRange(String businessId, String startDate, String endDate, AddressDao dao, boolean primary) throws SQLException {
 		return _loadDateRange(businessId, startDate, endDate, RangeTarget.DATE, dao, primary, !Util._IN_PRODUCTION);
 	}
-	@SuppressWarnings("unchecked")
-	public static <T extends InstanceDaoInterface<?>, U extends IsObjectInstance<U>, E extends ArrayList<U>> E _loadDateRange(String businessId, String startDate, String endDate, RangeTarget target, T dao, boolean primary, boolean log) throws SQLException {
+	public static AddressList _loadDateRange(String businessId, String startDate, String endDate, RangeTarget target, AddressDao dao, boolean primary, boolean log) throws SQLException {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -1599,15 +1582,14 @@ public class AddressDao implements AddressDaoInterface {
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[_loadDateRange completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
-		return (E)al;
+		return al;
 	}
 
 	@Override
-	public <T extends InstanceDaoInterface<?>, U extends IsObjectInstance<U>, E extends ArrayList<U>> E loadDate(String date, T dao, boolean primary) throws SQLException {
+	public AddressList loadDate(String date, AddressDao dao, boolean primary) throws SQLException {
 		return _loadDate(date, dao, primary, !Util._IN_PRODUCTION);
 	}
-	@SuppressWarnings("unchecked")
-	public static <T extends InstanceDaoInterface<?>, U extends IsObjectInstance<U>, E extends ArrayList<U>> E _loadDate(String date, T dao, boolean primary, boolean log) throws SQLException {
+	public static AddressList _loadDate(String date, AddressDao dao, boolean primary, boolean log) throws SQLException {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -1626,15 +1608,14 @@ public class AddressDao implements AddressDaoInterface {
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[_loadDate completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
-		return (E)al;
+		return al;
 	}
 
 	@Override
-	public <T extends InstanceDaoInterface<?>, U extends IsObjectInstance<U>, E extends ArrayList<U>> E loadDateRange(String startDate, String endDate, T dao, boolean primary) throws SQLException {
+	public AddressList loadDateRange(String startDate, String endDate, AddressDao dao, boolean primary) throws SQLException {
 		return _loadDateRange(startDate, endDate, RangeTarget.DATE, dao, primary, !Util._IN_PRODUCTION);
 	}
-	@SuppressWarnings("unchecked")
-	public static <T extends InstanceDaoInterface<?>, U extends IsObjectInstance<U>, E extends ArrayList<U>> E _loadDateRange(String startDate, String endDate, RangeTarget target, T dao, boolean primary, boolean log) throws SQLException {
+	public static AddressList _loadDateRange(String startDate, String endDate, RangeTarget target, AddressDao dao, boolean primary, boolean log) throws SQLException {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -1653,7 +1634,7 @@ public class AddressDao implements AddressDaoInterface {
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[_loadDateRange completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
-		return (E)al;
+		return al;
 	}
 
 }
