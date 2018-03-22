@@ -82,7 +82,7 @@ public class CustomerRest implements CustomerRestInterface {
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[addProcessReferences]";
-			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer rest call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		String json = pl.toJson();
 		String prefix = CampRest.Customer.Prefix;		
@@ -105,7 +105,7 @@ public class CustomerRest implements CustomerRestInterface {
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[delProcessReference]";
-			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer rest call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		String prefix = CampRest.Customer.Prefix;		
 		String serviceUri = CampRest.ProcessReferenceDaoService.callRequest(prefix,CampRest.ProcessReferenceDaoService.Request.DEL_REFERENCE);
@@ -127,7 +127,7 @@ public class CustomerRest implements CustomerRestInterface {
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[delAllProcessReferences]";
-			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer rest call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		String prefix = CampRest.Customer.Prefix;		
 		String serviceUri = CampRest.ProcessReferenceDaoService.callRequest(prefix,CampRest.ProcessReferenceDaoService.Request.DEL_ALL_REFERENCES);
@@ -149,7 +149,7 @@ public class CustomerRest implements CustomerRestInterface {
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[delProcessReferences]";
-			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer rest call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		String json = pl.toJson();
 		String prefix = CampRest.Customer.Prefix;		
@@ -172,7 +172,7 @@ public class CustomerRest implements CustomerRestInterface {
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[loadProcessReferences]";
-			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer rest call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		String prefix = CampRest.Customer.Prefix;		
 		String serviceUri = CampRest.ProcessReferenceDaoService.callRequest(prefix,CampRest.ProcessReferenceDaoService.Request.LOAD);
@@ -196,7 +196,7 @@ public class CustomerRest implements CustomerRestInterface {
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[loadById]";
-			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer rest call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		Customer c = null;
 		String prefix = CampRest.Customer.Prefix;		
@@ -219,7 +219,7 @@ public class CustomerRest implements CustomerRestInterface {
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[loadByBusinessId]";
-			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer rest call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		Customer c = null;
 		String prefix = CampRest.Customer.Prefix;		
@@ -242,7 +242,7 @@ public class CustomerRest implements CustomerRestInterface {
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[loadListByBusinessKey]";
-			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer rest call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		CustomerList cl = null;
 		String prefix = CampRest.Customer.Prefix;		
@@ -265,7 +265,7 @@ public class CustomerRest implements CustomerRestInterface {
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[loadListByGroup]";
-			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer rest call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		CustomerList cl = null;
 		String prefix = CampRest.Customer.Prefix;		
@@ -288,7 +288,7 @@ public class CustomerRest implements CustomerRestInterface {
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[loadListByGroupVersion]";
-			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer rest call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		CustomerList cl = null;
 		String prefix = CampRest.Customer.Prefix;		
@@ -311,7 +311,7 @@ public class CustomerRest implements CustomerRestInterface {
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[save]";
-			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer rest call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		String json = c.toJson();
 		String prefix = CampRest.Customer.Prefix;		
@@ -333,7 +333,7 @@ public class CustomerRest implements CustomerRestInterface {
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[saveList]";
-			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer rest call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		String json = ((CustomerList)cl).toJson();
 		String prefix = CampRest.Customer.Prefix;		
@@ -355,7 +355,7 @@ public class CustomerRest implements CustomerRestInterface {
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[update]";
-			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer rest call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		String json = customer.toJson();
 		String prefix = CampRest.Customer.Prefix;		
@@ -377,7 +377,7 @@ public class CustomerRest implements CustomerRestInterface {
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[updateList]";
-			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer rest call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		String json = ((CustomerList)customerList).toJson();
 		String prefix = CampRest.Customer.Prefix;		
@@ -399,7 +399,7 @@ public class CustomerRest implements CustomerRestInterface {
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[loadUpdates]";
-			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer rest call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		CustomerList cl = null;
 		String prefix = CampRest.Customer.Prefix;		
@@ -422,7 +422,7 @@ public class CustomerRest implements CustomerRestInterface {
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[loadUpdatesByKey]";
-			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer rest call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		CustomerList cl = null;
 		String prefix = CampRest.Customer.Prefix;		
@@ -445,7 +445,7 @@ public class CustomerRest implements CustomerRestInterface {
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[loadUpdatesByTarget]";
-			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer rest call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		CustomerList cl = null;
 		String prefix = CampRest.Customer.Prefix;		
@@ -468,7 +468,7 @@ public class CustomerRest implements CustomerRestInterface {
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[loadUpdate]";
-			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer rest call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		Customer cl = null;
 		String prefix = CampRest.Customer.Prefix;		
@@ -491,7 +491,7 @@ public class CustomerRest implements CustomerRestInterface {
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[addToUpdates]";
-			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer rest call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		String prefix = CampRest.Customer.Prefix;		
 		String serviceUri = CampRest.DaoService.callRequest(prefix,CampRest.DaoService.Request.ADD_UPDATE);
@@ -514,7 +514,7 @@ public class CustomerRest implements CustomerRestInterface {
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[addToUpdates]";
-			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer rest call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		String json = ((CustomerList)customerList).toJson();
 		String prefix = CampRest.Customer.Prefix;		
@@ -536,7 +536,7 @@ public class CustomerRest implements CustomerRestInterface {
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[deleteAllFromUpdates]";
-			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer rest call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		String prefix = CampRest.Customer.Prefix;		
 		String serviceUri = CampRest.DaoService.callRequest(prefix,CampRest.DaoService.Request.DELETE_ALL_UPDATES);
@@ -559,7 +559,7 @@ public class CustomerRest implements CustomerRestInterface {
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[deleteFromUpdatesByKey]";
-			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer rest call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		String prefix = CampRest.Customer.Prefix;		
 		String serviceUri = CampRest.DaoService.callRequest(prefix,CampRest.DaoService.Request.DELETE_KEY_UPDATES);
@@ -582,7 +582,7 @@ public class CustomerRest implements CustomerRestInterface {
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[deleteFromUpdatesByTarget]";
-			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer rest call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		String prefix = CampRest.Customer.Prefix;		
 		String serviceUri = CampRest.DaoService.callRequest(prefix,CampRest.DaoService.Request.DELETE_TARGET_UPDATES);
@@ -605,7 +605,7 @@ public class CustomerRest implements CustomerRestInterface {
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[deleteFromUpdates]";
-			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer rest call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		String prefix = CampRest.Customer.Prefix;		
 		String serviceUri = CampRest.DaoService.callRequest(prefix,CampRest.DaoService.Request.DELETE_UPDATE);
@@ -628,7 +628,7 @@ public class CustomerRest implements CustomerRestInterface {
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[deleteFromUpdates]";
-			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer rest call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		String json = ((CustomerList)customerList).toJson();
 		String prefix = CampRest.Customer.Prefix;		
@@ -647,99 +647,22 @@ public class CustomerRest implements CustomerRestInterface {
 		return retVal;
 	}
 
-	@Override
-	public <T extends IsObjectInstance<T>> int addInstance(T object, boolean useObjectId) throws SQLException {
-		return addInstance(object,useObjectId,!Util._IN_PRODUCTION);
-	}
-	public <T extends IsObjectInstance<T>> int addInstance(T object, boolean useObjectId, boolean log) throws SQLException {
-		long startTime = System.currentTimeMillis();
-		String _f = null;
-		String msg = null;
-		if(log && !Util._IN_PRODUCTION) {
-			_f = "[addInstance]";
-			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
-		}
-		String json = object.toJson();
-		String prefix = CampRest.Customer.Prefix;		
-		String serviceUri = CampRest.InstanceDaoService.callRequest(prefix,CampRest.InstanceDaoService.Request.ADD_INSTANCE);
-		String uri = serverUrl+domainUri+String.format(serviceUri,useObjectId);
-		String result = RestInterface.resultPost(uri, json,log);
-		int retVal = Integer.valueOf(result);
-		if (log && !Util._IN_PRODUCTION) { msg = "----[ '" + retVal + "' entr"+((retVal>1)?"ies":"y")+" added ]----"; LOG.info(String.format(fmt, _f, msg)); }
-		
-		if(log && !Util._IN_PRODUCTION) {
-			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
-			msg = "====[addInstance completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
-		}
-		return retVal;
-	}
 
 	@Override
-	public <T extends IsObjectInstance<T>, E extends ArrayList<T>> int addInstances(E objectList, boolean useObjectId) throws SQLException {
-		return addInstances(objectList,useObjectId,!Util._IN_PRODUCTION);
+	public Customer loadFirst(String businessId, boolean log) {
+		return _loadFirst(businessId, log);
 	}
-	public <T extends IsObjectInstance<T>, E extends ArrayList<T>> int addInstances(E objectList, boolean useObjectId,boolean log) throws SQLException {
-		long startTime = System.currentTimeMillis();
-		String _f = null;
-		String msg = null;
-		if(log && !Util._IN_PRODUCTION) {
-			_f = "[addInstances]";
-			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
-		}
-		String json = ((CustomerList)objectList).toJson();
-		String prefix = CampRest.Customer.Prefix;		
-		String serviceUri = CampRest.InstanceDaoService.callRequest(prefix,CampRest.InstanceDaoService.Request.ADD_INSTANCES);
-		String uri = serverUrl+domainUri+String.format(serviceUri,useObjectId);
-				String result = RestInterface.resultPost(uri, json, log);
-		int retVal = Integer.valueOf(result);
-		if (log && !Util._IN_PRODUCTION) { msg = "----[ '" + retVal + "' entr"+((retVal>1)?"ies":"y")+" added ]----"; LOG.info(String.format(fmt, _f, msg)); }
-		
-		if(log && !Util._IN_PRODUCTION) {
-			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
-			msg = "====[addInstances completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
-		}
-		return retVal;
-	}
-
-	@Override
-	public <E extends IsObjectInstance<E>> E loadCurrent(String businessId, boolean primary) throws SQLException {
-		return loadCurrent(businessId,primary,!Util._IN_PRODUCTION);
-	}
-	public <E extends IsObjectInstance<E>> E loadCurrent(String businessId, boolean primary, boolean log) throws SQLException {
-		long startTime = System.currentTimeMillis();
-		String _f = null;
-		String msg = null;
-		if(log && !Util._IN_PRODUCTION) {
-			_f = "[loadCurrent]";
-			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
-		}
-		String prefix = CampRest.Customer.Prefix;		
-		String serviceUri = CampRest.InstanceDaoService.callRequest(prefix,CampRest.InstanceDaoService.Request.LOAD_CURRENT);
-		String uri = serverUrl+domainUri+String.format(serviceUri,businessId, primary);
-		String result = RestInterface.resultGET(uri, log);
-		Customer c = CustomerInterface._fromJson(result);
-		if(log && !Util._IN_PRODUCTION) {
-			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
-			msg = "====[loadCurrent completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
-		}
-		return (E)c;
-	}
-
-	@Override
-	public <E extends IsObjectInstance<E>> E loadFirst(String businessId, boolean primary) throws SQLException {
-		return loadFirst(businessId, primary, !Util._IN_PRODUCTION);
-	}
-	public <E extends IsObjectInstance<E>> E loadFirst(String businessId, boolean primary,boolean log) throws SQLException {
+	public static Customer _loadFirst(String businessId, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[loadFirst]";
-			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer rest call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		String prefix = CampRest.Customer.Prefix;		
 		String serviceUri = CampRest.InstanceDaoService.callRequest(prefix,CampRest.InstanceDaoService.Request.LOAD_FIRST);
-		String uri = serverUrl+domainUri+String.format(serviceUri,businessId, primary);
+		String uri = serverUrl+domainUri+String.format(serviceUri,businessId, false);
 		String result = RestInterface.resultGET(uri, log);
 		Customer c = CustomerInterface._fromJson(result);
 		
@@ -747,21 +670,21 @@ public class CustomerRest implements CustomerRestInterface {
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[loadFirst completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
-		return (E)c;
+		return c;
 		
 	}
 
 	@Override
-	public <E extends IsObjectInstance<E>> E loadPrevious(E customer, boolean primary) throws SQLException {
+	public Customer loadPrevious(Customer customer, boolean primary) {
 		return loadPrevious(customer,primary,!Util._IN_PRODUCTION);
 	}
-	public <E extends IsObjectInstance<E>> E loadPrevious(E customer, boolean primary, boolean log) throws SQLException {
+	public Customer loadPrevious(Customer customer, boolean primary, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[loadPrevious]";
-			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer rest call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		String json = customer.toJson();
 		String prefix = CampRest.Customer.Prefix;		
@@ -774,26 +697,26 @@ public class CustomerRest implements CustomerRestInterface {
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[loadPrevious completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
-		return (E)c;
+		return c;
 		
 	}
 
 	@Override
-	public <E extends IsObjectInstance<E>> E loadNext(E object, boolean primary) throws SQLException {
-		return loadNext(object, primary, !Util._IN_PRODUCTION);
+	public Customer loadNext(Customer customer, boolean log) {
+		return _loadNext(customer, log);
 	}
-	public <E extends IsObjectInstance<E>> E loadNext(E object, boolean primary, boolean log) throws SQLException {
+	public static Customer _loadNext(Customer customer, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[loadNext]";
-			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer rest call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
-		String json = object.toJson();
+		String json = customer.toJson();
 		String prefix = CampRest.Customer.Prefix;		
 		String serviceUri = CampRest.InstanceDaoService.callRequest(prefix,CampRest.InstanceDaoService.Request.LOAD_NEXT);
-		String uri = serverUrl+domainUri+String.format(serviceUri,primary);
+		String uri = serverUrl+domainUri+String.format(serviceUri,false);
 		String result = RestInterface.resultPost(uri, json, log);
 		Customer c = CustomerInterface._fromJson(result);
 		
@@ -801,27 +724,27 @@ public class CustomerRest implements CustomerRestInterface {
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[loadNext completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
 		}
-		return (E)c;
+		return c;
 		
 	}
 
 	@Override
-	public <U extends IsObjectInstance<U>, E extends ArrayList<U>> E loadDate(String businessId, String date, boolean primary) throws SQLException {
-		return loadDate(businessId, date, primary, !Util._IN_PRODUCTION); 
+	public CustomerList loadDate(String businessId, String date, boolean log) {
+		return _loadDate(businessId, date, log); 
 	}
-	public <U extends IsObjectInstance<U>, E extends ArrayList<U>> E loadDate(String businessId, String date, boolean primary, boolean log) throws SQLException {
+	public static CustomerList _loadDate(String businessId, String date, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[loadDate]";
-			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer rest call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		String prefix = CampRest.Customer.Prefix;		
 		String serviceUri = CampRest.InstanceDaoService.callRequest(prefix,CampRest.InstanceDaoService.Request.LOAD_CURRENT);
-		String uri = serverUrl+domainUri+String.format(serviceUri,businessId, date, primary);
+		String uri = serverUrl+domainUri+String.format(serviceUri,businessId, date, false);
 		String result = RestInterface.resultGET(uri, log);
-		E cl = (E) CustomerList._fromJson(result);
+		CustomerList cl = CustomerList._fromJson(result);
 		if(log && !Util._IN_PRODUCTION) {
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[loadDate completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
@@ -830,22 +753,22 @@ public class CustomerRest implements CustomerRestInterface {
 	}
 
 	@Override
-	public <U extends IsObjectInstance<U>, E extends ArrayList<U>> E loadDateRange(String businessId, String startDate, String endDate, boolean primary) throws SQLException {
-		return loadDateRange(businessId, startDate, endDate, primary, !Util._IN_PRODUCTION);
+	public CustomerList loadDateRange(String businessId, String startDate, String endDate, boolean log) {
+		return _loadDateRange(businessId, startDate, endDate, log);
 	}
-	public <U extends IsObjectInstance<U>, E extends ArrayList<U>> E loadDateRange(String businessId, String startDate, String endDate, boolean primary, boolean log) throws SQLException {
+	public static CustomerList _loadDateRange(String businessId, String startDate, String endDate, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[loadDateRange]";
-			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer rest call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		String prefix = CampRest.Customer.Prefix;		
 		String serviceUri = CampRest.InstanceDaoService.callRequest(prefix,CampRest.InstanceDaoService.Request.LOAD_CURRENT);
-		String uri = serverUrl+domainUri+String.format(serviceUri,businessId, startDate, endDate, primary);
+		String uri = serverUrl+domainUri+String.format(serviceUri,businessId, startDate, endDate, log);
 		String result = RestInterface.resultGET(uri, log);
-		E cl = (E) CustomerList._fromJson(result);
+		CustomerList cl = CustomerList._fromJson(result);
 		if(log && !Util._IN_PRODUCTION) {
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[loadDateRange completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
@@ -854,22 +777,22 @@ public class CustomerRest implements CustomerRestInterface {
 	}
 
 	@Override
-	public <U extends IsObjectInstance<U>, E extends ArrayList<U>> E loadDate(String date, boolean primary) throws SQLException {
-		return loadDate(date, primary,!Util._IN_PRODUCTION);
+	public CustomerList loadDate(String date, boolean log) {
+		return _loadDate(date, log);
 	}
-	public <U extends IsObjectInstance<U>, E extends ArrayList<U>> E loadDate(String date, boolean primary, boolean log) throws SQLException {
+	public static CustomerList _loadDate(String date, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[loadDate]";
-			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer rest call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		String prefix = CampRest.Customer.Prefix;		
 		String serviceUri = CampRest.InstanceDaoService.callRequest(prefix,CampRest.InstanceDaoService.Request.LOAD_CURRENT);
-		String uri = serverUrl+domainUri+String.format(serviceUri,date, primary);
+		String uri = serverUrl+domainUri+String.format(serviceUri,date, false);
 		String result = RestInterface.resultGET(uri, log);
-		E cl = (E) CustomerList._fromJson(result);
+		CustomerList cl = CustomerList._fromJson(result);
 		if(log && !Util._IN_PRODUCTION) {
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[loadDate completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
@@ -878,22 +801,22 @@ public class CustomerRest implements CustomerRestInterface {
 	}
 
 	@Override
-	public <U extends IsObjectInstance<U>, E extends ArrayList<U>> E loadDateRange(String startDate, String endDate, boolean primary) throws SQLException {
-		return loadDateRange(startDate, endDate, primary, !Util._IN_PRODUCTION);
+	public CustomerList loadDateRange(String startDate, String endDate, boolean log) {
+		return _loadDateRange(startDate, endDate, log);
 	}
-	public <U extends IsObjectInstance<U>, E extends ArrayList<U>> E loadDateRange(String startDate, String endDate, boolean primary, boolean log) throws SQLException {
+	public static CustomerList _loadDateRange(String startDate, String endDate, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
 		if(log && !Util._IN_PRODUCTION) {
 			_f = "[loadDateRange]";
-			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+			msg = "====[ customer rest call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		String prefix = CampRest.Customer.Prefix;		
 		String serviceUri = CampRest.InstanceDaoService.callRequest(prefix,CampRest.InstanceDaoService.Request.LOAD_CURRENT);
-		String uri = serverUrl+domainUri+String.format(serviceUri,startDate, endDate, primary);
+		String uri = serverUrl+domainUri+String.format(serviceUri,startDate, endDate, false);
 		String result = RestInterface.resultGET(uri, log);
-		E cl = (E) CustomerList._fromJson(result);
+		CustomerList cl = CustomerList._fromJson(result);
 		if(log && !Util._IN_PRODUCTION) {
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[loadDateRange completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));

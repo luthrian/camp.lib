@@ -28,14 +28,22 @@ import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.camsolute.code.camp.lib.contract.IsObjectInstance;
-import com.camsolute.code.camp.lib.dao.InstanceDaoInterface;
 import com.camsolute.code.camp.lib.data.CampSQL;
 import com.camsolute.code.camp.lib.models.CampInstanceDao;
 import com.camsolute.code.camp.lib.models.CampInstanceDaoInterface.RangeTarget;
 import com.camsolute.code.camp.lib.models.CampStatesInterface.IOAction;
 import com.camsolute.code.camp.lib.utilities.Util;
 
+/**
+ * TouchPointDao (Dao == Database access object) provides a range of standard function calls required for
+ * object instance life-cycle management in addition to functionality geared towards the updates system tables
+ * which are used primarily by processes to poll any updates to objects they are not directly managing but still need to monitor.
+ * See: {@link com.camsolute.code.camp.lib.dao.DaoInterface}, {@link com.camsolute.code.camp.lib.dao.InstanceDaoInterface},
+ * {@link com.camsolute.code.camp.lib.dao.database.DBDaoInterface}
+ * <br>Patterns Employed: Singleton (yeah we heard about it...) 
+ * @author Christopher Campbell
+ *
+ */
 @SuppressWarnings("unchecked")
 public class TouchPointDao implements TouchPointDaoInterface {
 

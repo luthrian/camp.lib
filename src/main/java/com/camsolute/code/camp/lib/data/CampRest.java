@@ -141,6 +141,7 @@ public class CampRest {
 			Call.put(Request.UPDATE_LIST, new String[] {"/s/update","/s/update","POST"});
 			Call.put(Request.UPDATE_ATTRIBUTE, new String[] {"/update/attribute","/update/attribute?attributeType=%s&businessId=%s&attributeValue=%s"});
 			Call.put(Request.LOAD_UPDATE_BY_BUSINESSID, new String[] {"/updates/load/businessId","/updates/load/businessId?businessId=%s&businessKey=%s&target=%s","GET"});
+			Call.put(Request.LOAD_UPDATE, new String[] {"/updates/load","/updates/load?businessKey=%s&target=%s","POST"});
 			Call.put(Request.LOAD_UPDATES, new String[] {"/s/updates/load","/s/updates/load?businessKey=%s&target=%s","GET"});
 			Call.put(Request.LOAD_UPDATES_KEY, new String[] {"/s/updates/key/load","/s/updates/key/load?businessKey=%s","GET"});
 			Call.put(Request.LOAD_UPDATES_TARGET, new String[] {"/s/updates/target/load","/s/updates/target/load?target=%s","GET"});
@@ -688,6 +689,12 @@ public class CampRest {
 			return prefix + ProcessEngineDaoService.Call.get(request)[0];
 		}
 	}		
+	public static class TouchPoint {
+		public static final String Prefix = "/customer/touchpoint	";
+	}
+	public static class Address {
+		public static final String Prefix = "/customer/address	";
+	}
 	public static class Customer {
 		public static final String Prefix = "/customer";
 	}

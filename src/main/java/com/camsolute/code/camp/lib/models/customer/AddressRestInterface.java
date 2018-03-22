@@ -20,8 +20,21 @@
 package com.camsolute.code.camp.lib.models.customer;
 
 import com.camsolute.code.camp.lib.dao.DaoInterface;
-import com.camsolute.code.camp.lib.dao.rest.CampInstanceRestDaoInterface;
 
-public interface AddressRestInterface extends DaoInterface<Address>, CampInstanceRestDaoInterface{
+public interface AddressRestInterface extends DaoInterface<Address> {
+	public Address loadFirst(String businessId, boolean log);
+
+	public Address loadPrevious(Address p, boolean log);
+
+	public Address loadNext(Address p, boolean log);
+
+	public AddressList loadDate( String businessId, String date, boolean log);
+
+	public AddressList loadDateRange( String businessId, String startDate, String endDate, boolean log);
+
+	public AddressList loadDate( String date, boolean log);
+
+	public AddressList loadDateRange( String startDate, String endDate, boolean log);
+
 
 }

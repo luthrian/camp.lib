@@ -23,6 +23,20 @@ import com.camsolute.code.camp.lib.dao.DaoInterface;
 import com.camsolute.code.camp.lib.dao.HasProcessReference;
 import com.camsolute.code.camp.lib.dao.rest.CampInstanceRestDaoInterface;
 
-public interface CustomerRestInterface  extends HasProcessReference, DaoInterface<Customer>, CampInstanceRestDaoInterface {
+public interface CustomerRestInterface  extends HasProcessReference, DaoInterface<Customer> {
+	public Customer loadFirst(String businessId, boolean log);
+
+	public Customer loadPrevious(Customer c, boolean log);
+
+	public Customer loadNext(Customer c, boolean log);
+
+	public CustomerList loadDate( String businessId, String date, boolean log);
+
+	public CustomerList loadDateRange( String businessId, String startDate, String endDate, boolean log);
+
+	public CustomerList loadDate( String date, boolean log);
+
+	public CustomerList loadDateRange( String startDate, String endDate, boolean log);
+
 
 }
