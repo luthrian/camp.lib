@@ -418,16 +418,16 @@ public class CampSQL {
 
 		public static final String[][] contact_details_table_definition = {
 				{"_contact_id_", "int(11) NOT NULL AUTO_INCREMENT"},
-				{"contact_customer_id", "int(11) NOT NULL AUTO_INCREMENT"},
+				{"c_customer_business_id", "VARCHAR(100) NOT NULL AUTO_INCREMENT"},
+				{"c_customer_businesskey", "VARCHAR(100) NOT NULL AUTO_INCREMENT"},
 				{"contact_email", "varchar(150) NOT NULL"},
 				{"contact_mobile", "varchar(45) NOT NULL"},
 				{"contact_telephone", "varchar(45) NOT NULL"},
 				{"contact_skype", "varchar(45) not null"},
 				{"contact_misc", "varchar(45) not null"},
 				{"extra", "PRIMARY KEY (`_contact_id_`)"
-						+ ",UNIQUE KEY `_contact_id_UNIQUE` (`_contact_id_`)"
-						+ ",UNIQUE KEY `_contact_email_UNIQUE` (`_contact_email_`)"
-						+ ",INDEX `customer_businesskey_idx` (`customer_businesskey` ASC)"}
+						+ ",UNIQUE KEY `contact_id_UNIQUE` (`_contact_id_`)"
+						+ ",UNIQUE KEY `contact_email_UNIQUE` (`contact_email_`)"}
 		};
 
 		public static final String[][] address_table_definition = {

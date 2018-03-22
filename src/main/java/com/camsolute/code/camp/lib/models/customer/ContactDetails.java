@@ -25,6 +25,8 @@ import com.camsolute.code.camp.lib.utilities.Util;
 public class ContactDetails implements ContactDetailsInterface{
 	
 	private int id = Util.NEW_ID;
+	private String customerBusinessId;
+	private String customerBusinessKey;
 	private String email;
 	private String mobile;
 	private String telephone;
@@ -55,9 +57,31 @@ public class ContactDetails implements ContactDetailsInterface{
 	}
 	
 	public int updateId(int id) {
-		int prev = id;
+		int prev = this.id;
 		this.id = id;
 		return prev;
+	}
+	
+	public String customerBusinessId(){
+		return this.customerBusinessId;
+	}	
+	public void updateCustomerBusinessId(String id) {
+		this.customerBusinessId = id;
+		this.states.modify();
+	}
+	public void setCustomerBusinessId(String id) {
+		this.customerBusinessId = id;
+	}
+	
+	public String customerBusinessKey(){
+		return this.customerBusinessKey;
+	}	
+	public void updateCustomerBusinessKey(String key) {
+		this.customerBusinessKey = key;
+		this.states.modify();
+	}
+	public void setCustomerBusinessKey(String key) {
+		this.customerBusinessKey = key;
 	}
 	
 	public String email(){

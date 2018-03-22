@@ -94,6 +94,7 @@ public class AddressDao implements AddressDaoInterface {
 			if (rs.next()) {
 				a = rsToI(rs,log);
 				a.setHistory(CampInstanceDao.instance().rsToI(rs, log));
+				a.states().ioAction(IOAction.LOAD);
 				retVal =1;
 			}
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
@@ -145,6 +146,7 @@ public class AddressDao implements AddressDaoInterface {
 			if (rs.next()) {
 				a = rsToI(rs,log);
 				a.setHistory(CampInstanceDao.instance().rsToI(rs, log));
+				a.states().ioAction(IOAction.LOAD);
 				retVal =1;
 			}
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
@@ -197,6 +199,7 @@ public class AddressDao implements AddressDaoInterface {
 			if (rs.next()) {
 				Address a = rsToI(rs,log);
 				a.setHistory(CampInstanceDao.instance().rsToI(rs, log));
+				a.states().ioAction(IOAction.LOAD);
 				al.add(a);
 			}
 			retVal = al.size();
@@ -247,9 +250,10 @@ public class AddressDao implements AddressDaoInterface {
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
 			
 			rs = dbs.executeQuery(SQL);		
-			if (rs.next()) {
+			while (rs.next()) {
 				Address a = rsToI(rs,log);
 				a.setHistory(CampInstanceDao.instance().rsToI(rs, log));
+				a.states().ioAction(IOAction.LOAD);
 				al.add(a);
 			}
 			retVal = al.size();
@@ -301,9 +305,10 @@ public class AddressDao implements AddressDaoInterface {
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
 			
 			rs = dbs.executeQuery(SQL);		
-			if (rs.next()) {
+			while (rs.next()) {
 				Address a = rsToI(rs,log);
 				a.setHistory(CampInstanceDao.instance().rsToI(rs, log));
+				a.states().ioAction(IOAction.LOAD);
 				al.add(a);
 			}
 			retVal = al.size();
@@ -450,7 +455,7 @@ public class AddressDao implements AddressDaoInterface {
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
 			
 			retVal = dbs.executeUpdate(SQL);
-			
+			if(retVal>0)a.states().ioAction(IOAction.UPDATE);
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
 			
 		} catch(SQLException e) {
@@ -555,6 +560,7 @@ public class AddressDao implements AddressDaoInterface {
 			while (rs.next()) {		
 				Address a = rsToI(rs,log);
 				a.setHistory(CampInstanceDao.instance().rsToI(rs, log));
+				a.states().ioAction(IOAction.LOAD);
 				al.add(a);
 			}
 			
@@ -609,6 +615,7 @@ public class AddressDao implements AddressDaoInterface {
 			while (rs.next()) {		
 				Address a = rsToI(rs,log);
 				a.setHistory(CampInstanceDao.instance().rsToI(rs, log));
+				a.states().ioAction(IOAction.LOAD);
 				al.add(a);
 			}
 			
@@ -664,6 +671,7 @@ public class AddressDao implements AddressDaoInterface {
 			while (rs.next()) {		
 				Address a = rsToI(rs,log);
 				a.setHistory(CampInstanceDao.instance().rsToI(rs, log));
+				a.states().ioAction(IOAction.LOAD);
 				al.add(a);
 			}
 			
@@ -722,6 +730,7 @@ public class AddressDao implements AddressDaoInterface {
 			if (rs.next()) {		
 				la = rsToI(rs,log);
 				la.setHistory(CampInstanceDao.instance().rsToI(rs, log));
+				la.states().ioAction(IOAction.LOAD);
 				retVal = 1;
 			} else {
 				if(log && !Util._IN_PRODUCTION){msg = "----[SQL ERROR! loadUpdate FAILED]----";LOG.info(String.format(fmt, _f,msg));}
@@ -981,7 +990,7 @@ public class AddressDao implements AddressDaoInterface {
 			dbs = conn.createStatement();
 			
 			String SQL = "DELETE FROM "+updatestable+" WHERE "
-					+ "`_business_id`='"+businessId+"'"
+					+ "`_address_business_id`='"+businessId+"'"
 					+ " AND `_businesskey`='"+businessKey+"'"
 					+ " AND `_target`='"+target+"'";
 			
@@ -1028,7 +1037,7 @@ public class AddressDao implements AddressDaoInterface {
 			
 			for(Address a:al){
 				String SQL = "DELETE FROM "+updatestable+" WHERE "
-						+"`_business_id`='"+a.businessId()+"' "
+						+"`_address_business_id`='"+a.businessId()+"' "
 						+" AND `_businesskey`='"+a.businessKey()+"' "
 						+" AND `_target`='"+target+"' ";
 				

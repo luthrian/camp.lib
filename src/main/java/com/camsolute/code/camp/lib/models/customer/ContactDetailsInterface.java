@@ -37,6 +37,14 @@ public interface ContactDetailsInterface extends Serialization<ContactDetails>, 
 	
 	public int updateId(int id);
 	
+	public String customerBusinessId();	
+	public void setCustomerBusinessId(String id);
+	public void updateCustomerBusinessId(String id);
+	
+	public String customerBusinessKey();	
+	public void setCustomerBusinessKey(String key);
+	public void updateCustomerBusinessKey(String key);
+	
 	public String email();
 	public void updateEmail(String email);
 	public void setEmail(String email);
@@ -62,6 +70,8 @@ public interface ContactDetailsInterface extends Serialization<ContactDetails>, 
 	public static String _toInnerJson(ContactDetailsInterface d) {
 		String json = "";
 		json += "\"id\":"+d.id()+",";
+		json += "\"customerBusinessId\":\""+d.customerBusinessId()+"\",";
+		json += "\"customerBusinessKey\":\""+d.customerBusinessKey()+"\",";
 		json += "\"email\":\""+d.email()+"\",";
 		json += "\"mobile\":\""+d.mobile()+"\",";
 		json += "\"telephone\":\""+d.telephone()+"\",";
@@ -77,6 +87,8 @@ public interface ContactDetailsInterface extends Serialization<ContactDetails>, 
 	public static ContactDetails _fromJSONObject(JSONObject jo) {
 		int id = 0;
 		if(jo.has("id")) id = jo.getInt("id");
+		String customerBusinessId = jo.getString("customerBusinessId");
+		String customerBusinessKey = jo.getString("customerBusinessKey");
 		String email = jo.getString("email");
 		String mobile = jo.getString("mobile");
 		String telephone = jo.getString("telephone");
@@ -85,6 +97,9 @@ public interface ContactDetailsInterface extends Serialization<ContactDetails>, 
 		CampStates states = CampStatesInterface._fromJSONObject(jo.getJSONObject("states"));
 		ContactDetails d = new ContactDetails(id,email,mobile,telephone,skype,misc);
 		d.states().update(states);
+		d.setCustomerBusinessId(customerBusinessId);
+		d.setCustomerBusinessKey(customerBusinessKey);
+		
 		return d;
 	}
 }
