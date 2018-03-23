@@ -52,6 +52,27 @@ public class ContactDetails implements ContactDetailsInterface{
 		this.misc = misc;
 	}
 	
+	public ContactDetails(String businessId, String businessKey, String email, String mobile, String telephone, String skype, String misc) {
+		this.customerBusinessId = businessId;
+		this.customerBusinessKey = businessKey;
+		this.email = email;
+		this.mobile = mobile;
+		this.telephone = telephone;
+		this.skype = skype;
+		this.misc = misc;
+	}
+	
+	public ContactDetails(int id, String businessId, String businessKey, String email, String mobile, String telephone, String skype, String misc) {
+		this.id = id;
+		this.customerBusinessId = businessId;
+		this.customerBusinessKey = businessKey;
+		this.email = email;
+		this.mobile = mobile;
+		this.telephone = telephone;
+		this.skype = skype;
+		this.misc = misc;
+	}
+	
 	public int id(){
 		return this.id;
 	}

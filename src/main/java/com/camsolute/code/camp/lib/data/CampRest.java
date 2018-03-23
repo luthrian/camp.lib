@@ -68,6 +68,9 @@ public class CampRest {
 			LOAD_BY_GROUP,
 			LOAD_BY_GROUP_VERSION,
 			CREATE_CUSTOMER, 
+			CREATE_CUSTOMER_DETAILS, 
+			CREATE_ADDRESS, 
+			CREATE_TOUCHPOINT, 
 			CREATE_ORDER, 
 			CREATE_PRODUCT, 
 			CREATE_ATTRIBUTE, 
@@ -98,6 +101,9 @@ public class CampRest {
 		public static final String LOAD_BY_GROUP = "/load/by/group";
 		public static final String LOAD_BY_GROUP_VERSION = "/load/by/group/version";
 		public static final String CREATE_CUSTOMER = "/create";
+		public static final String CREATE_CUSTOMER_DETAILS = "/create";
+		public static final String CREATE_ADDRESS = "/create";
+		public static final String CREATE_TOUCHPOINT = "/create";
 		public static final String CREATE_ORDER = "/create";
 		public static final String CREATE_PRODUCT = "/create";
 		public static final String CREATE_ATTRIBUTE = "/create";
@@ -131,6 +137,9 @@ public class CampRest {
 			Call.put(Request.LOAD_BY_GROUP, new String[] {"/load/by/group","/load/by/group?group=%s","GET"});
 			Call.put(Request.LOAD_BY_GROUP_VERSION, new String[] {"/load/by/group/version","/load/by/group/version?group=%s&version=%s","GET"});
 			Call.put(Request.CREATE_CUSTOMER, new String[] {"/create","/create?origin=%s&type=%s&businessId=%s&businessKey=%s&group=%s&version=%s","GET"});
+			Call.put(Request.CREATE_TOUCHPOINT, new String[] {"/create","/create?businessKeyResponsible=%s&businessIdResponsible=%s&businessIdCustomer=%s&businessKeyCustomer=%s&date=%s&topic=%s&group=%s&version=%s","GET"});
+			Call.put(Request.CREATE_ADDRESS, new String[] {"/create","/create?country=%s&state=%s&postCode=%s&city=%s&street=%s&streetnumber=%s&businessKey=%s&group=%s&version=%s","GET"});
+			Call.put(Request.CREATE_CUSTOMER_DETAILS, new String[] {"/create","/create?businessId=%s&businessKey=%s&email=%s&mobile=%s&telephone=%s&skype=%s&misc=%s","GET"});
 			Call.put(Request.CREATE_ORDER, new String[] {"/create","/create?businessId=%s&businessKey=%s&date=%s&byDate=%s&group=%s&version=%s","GET"});
 			Call.put(Request.CREATE_PRODUCT, new String[] {"/create","/create?businessId=%s&businessKey=%s&date=%s&endOfLife=%s&group=%s&version=%s","GET"});
 			Call.put(Request.CREATE_ATTRIBUTE, new String[] {"/create","/create?businessId=%s&businessKey=%s&date=%s&byDate=%s","GET"});
@@ -474,6 +483,44 @@ public class CampRest {
 		}
 	}
 	
+	public static class ContactDetailsDaoService {
+		public static enum Request {
+			LOAD_BY_EMAIL,
+			LOAD_BY_MOBILE,
+			LOAD_BY_TELEPHONE,
+			LOAD_BY_SKYPE,
+			LOAD_BY_MISC,
+			LOAD_BY_CUSTOMER_BUSINESS_ID,
+			LOAD_BY_CUSTOMER_BUSINESSKEY;
+		}
+			public static final String LOAD_BY_EMAIL = "/load/email";
+			public static final String LOAD_BY_MOBILE = "/load/mobile";
+			public static final String LOAD_BY_TELEPHONE = "/s/load/telephone";
+			public static final String LOAD_BY_SKYPE = "/load/skype";
+			public static final String LOAD_BY_MISC = "/s/save/misc";
+			public static final String LOAD_BY_CUSTOMER_BUSINESS_ID = "/s/load/customer/id";
+			public static final String LOAD_BY_CUSTOMER_BUSINESSKEY = "/s/load/customer/key";
+		public static final HashMap<Request,String[]> Call;
+		
+		static {
+			Call = new HashMap<Request,String[]>();
+			Call.put(Request.LOAD_BY_EMAIL, new String[]{"/load/email","/load/email?emailAddress=%s","GET"});
+			Call.put(Request.LOAD_BY_MOBILE, new String[]{"/load/mobile","/load/mobile?mobileNumber=%","GET"});
+			Call.put(Request.LOAD_BY_TELEPHONE, new String[]{"/s/load/telephone","/s/load/telephone?phoneNumber=%","GET"});
+			Call.put(Request.LOAD_BY_SKYPE, new String[]{"/load/skype","/load/skype?skype=%","GET"});
+			Call.put(Request.LOAD_BY_MISC, new String[]{"/s/save/misc","/s/save/misc?misc=%","GET"});
+			Call.put(Request.LOAD_BY_CUSTOMER_BUSINESS_ID, new String[]{"/s/load/customer/id","/s/load/customer/id?businessId=%s","GET"});
+			Call.put(Request.LOAD_BY_CUSTOMER_BUSINESSKEY, new String[]{"/s/load/customer/key","/s/load/customer/key?businessKey=%s","GET"});
+		}
+		
+		public static String callRequest(String prefix, ContactDetailsDaoService.Request request) {
+			return prefix + ContactDetailsDaoService.Call.get(request)[1];
+		}
+		public static String path(String prefix, ContactDetailsDaoService.Request request) {
+			return prefix + ContactDetailsDaoService.Call.get(request)[0];
+		}
+
+	}
 
 	public static class AttributeDaoService {
 		public static final String Prefix = "/attr"; 
@@ -731,6 +778,9 @@ public class CampRest {
 	}
 	public static class Address {
 		public static final String Prefix = "/customer/address	";
+	}
+	public static class ContactDetails {
+		public static final String Prefix = "/customer/details";
 	}
 	public static class Customer {
 		public static final String Prefix = "/customer";

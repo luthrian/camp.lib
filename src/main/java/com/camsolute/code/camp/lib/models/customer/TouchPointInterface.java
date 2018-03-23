@@ -35,6 +35,8 @@ import com.camsolute.code.camp.lib.models.CampInstance;
 import com.camsolute.code.camp.lib.models.CampInstanceInterface;
 import com.camsolute.code.camp.lib.models.CampStates;
 import com.camsolute.code.camp.lib.models.CampStatesInterface;
+import com.camsolute.code.camp.lib.models.Group;
+import com.camsolute.code.camp.lib.models.Version;
 import com.camsolute.code.camp.lib.models.customer.TouchPoint.Status;
 import com.camsolute.code.camp.lib.utilities.Util;
 
@@ -133,7 +135,7 @@ public interface TouchPointInterface extends HasCustomer, HasDate, HasRefBusines
 		Status previousStatus = Status.valueOf(jo.getString("previousStatus"));
 		String group = jo.getString("group");
 		String version = jo.getString("version");
-		TouchPoint t = new TouchPoint(businessKeyResponsible, businessIdResponsible, businessKeyCustomer, businessIdCustomer, date, topic, minutes);
+		TouchPoint t = new TouchPoint(businessKeyResponsible, businessIdResponsible, businessKeyCustomer, businessIdCustomer, date, topic, minutes,new Group(group), new Version(version));
 		t.updateId(id);
 		t.setRefId(refId);
 		t.setNextDate(nextDate);

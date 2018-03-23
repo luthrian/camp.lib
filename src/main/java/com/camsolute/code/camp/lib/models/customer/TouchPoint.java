@@ -72,7 +72,7 @@ public class TouchPoint implements TouchPointInterface{
 	private Version version;
 	private Customer customer = null;
 	
-	public TouchPoint(String businessKeyResponsible,String businessIdResponsible,String businessKeyCustomer,String businessIdCustomer,Timestamp date,String topic,String minutes){
+	public TouchPoint(String businessKeyResponsible,String businessIdResponsible,String businessKeyCustomer,String businessIdCustomer,Timestamp date,String topic,String minutes,Group group, Version version){
 		this.businessKeyResponsible=businessKeyResponsible;
 		this.businessIdResponsible=businessIdResponsible;
 		this.businessKeyCustomer=businessKeyCustomer;
@@ -80,6 +80,33 @@ public class TouchPoint implements TouchPointInterface{
 		this.date=date;
 		this.topic=topic;
 		this.minutes=minutes;	
+		this.group = group;
+		this.version = version;
+	}
+
+	public TouchPoint(int id, int refId, String businessKeyResponsible,String businessIdResponsible,String businessKeyCustomer,String businessIdCustomer,Timestamp date,String topic,String minutes, Group group, Version version){
+		this.id = id;
+		this.refId = refId;
+		this.businessKeyResponsible=businessKeyResponsible;
+		this.businessIdResponsible=businessIdResponsible;
+		this.businessKeyCustomer=businessKeyCustomer;
+		this.businessIdCustomer=businessIdCustomer;
+		this.date=date;
+		this.topic=topic;
+		this.minutes=minutes;	
+		this.group = group;
+		this.version = version;
+	}
+
+	public TouchPoint(String businessKeyResponsible,String businessIdResponsible,String businessKeyCustomer,String businessIdCustomer,Timestamp date,String topic,Group group, Version version){
+		this.businessKeyResponsible=businessKeyResponsible;
+		this.businessIdResponsible=businessIdResponsible;
+		this.businessKeyCustomer=businessKeyCustomer;
+		this.businessIdCustomer=businessIdCustomer;
+		this.date=date;
+		this.topic=topic;
+		this.group = group;
+		this.version = version;
 	}
 
 	@Override

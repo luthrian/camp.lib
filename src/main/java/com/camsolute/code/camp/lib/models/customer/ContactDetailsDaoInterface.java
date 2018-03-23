@@ -23,6 +23,10 @@ public interface ContactDetailsDaoInterface {
 	
 	public ContactDetails loadById(int id, boolean log);
 	
+	public ContactDetails loadByBusinessId(String businessIdCustomer, boolean log);
+	
+	public ContactDetails loadByKey(String businessKeyCustomer, boolean log);
+	
 	public ContactDetails loadByEmail(String emailAddress, boolean log);
 	
 	public ContactDetails loadBySkype(String mobileNumber, boolean log);
