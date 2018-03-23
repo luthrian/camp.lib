@@ -494,7 +494,7 @@ public class CampRest {
 			LOAD_BY_CUSTOMER_BUSINESSKEY;
 		}
 			public static final String LOAD_BY_EMAIL = "/load/email";
-			public static final String LOAD_BY_MOBILE = "/load/mobile";
+			public static final String LOAD_BY_MOBILE = "/s/load/mobile";
 			public static final String LOAD_BY_TELEPHONE = "/s/load/telephone";
 			public static final String LOAD_BY_SKYPE = "/load/skype";
 			public static final String LOAD_BY_MISC = "/s/save/misc";
@@ -505,7 +505,7 @@ public class CampRest {
 		static {
 			Call = new HashMap<Request,String[]>();
 			Call.put(Request.LOAD_BY_EMAIL, new String[]{"/load/email","/load/email?emailAddress=%s","GET"});
-			Call.put(Request.LOAD_BY_MOBILE, new String[]{"/load/mobile","/load/mobile?mobileNumber=%","GET"});
+			Call.put(Request.LOAD_BY_MOBILE, new String[]{"/s/load/mobile","/s/load/mobile?mobileNumber=%","GET"});
 			Call.put(Request.LOAD_BY_TELEPHONE, new String[]{"/s/load/telephone","/s/load/telephone?phoneNumber=%","GET"});
 			Call.put(Request.LOAD_BY_SKYPE, new String[]{"/load/skype","/load/skype?skype=%","GET"});
 			Call.put(Request.LOAD_BY_MISC, new String[]{"/s/save/misc","/s/save/misc?misc=%","GET"});

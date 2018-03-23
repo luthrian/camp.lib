@@ -38,8 +38,8 @@ public interface CustomerServicePointInterface {
 	public String loadUpdates(String businessKey, String target);
 	public String loadUpdatesByKey(String businessKey);
 	public String loadUpdatesByTarget(String target);
-	public String loadUpdate(String businessId, String businessKey, String target);
-	public String addToUpdates(String businessId, String businessKey, String target);
+	public String loadUpdate(String customer, String businessKey, String target);
+	public String addToUpdates(String customer, String businessKey, String target);
 	public String addListToUpdates(String customerList, String businessKey, String target);
 	public String deleteAllFromUpdates(String businessKey, String target);
 	public String deleteFromUpdatesByKey(String businessKey);

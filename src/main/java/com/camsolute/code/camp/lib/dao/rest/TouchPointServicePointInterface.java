@@ -26,6 +26,8 @@ public interface TouchPointServicePointInterface {
 	public static final String serverUrl = CampRest.CUSTOMER_API_SERVER_URL;
 	public static final String domainUri = CampRest.CUSTOMER_API_DOMAIN;
 
+  public String loadById(int id);
+  
   public String loadByBusinessId(String businessId);
 
   public String loadListByBusinessKey(String businessKey);
