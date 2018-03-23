@@ -1349,10 +1349,11 @@ public class AddressDao implements AddressDaoInterface {
 			conn = Util.DB.__conn(log);
 
 			dbs = conn.createStatement();
-			dbs.addBatch(SQL);
-			dbs.addBatch(uSQL);
-			retVal = Util.Math.addArray(dbs.executeBatch());
-
+			retVal += dbs.executeUpdate(SQL);
+			retVal += dbs.executeUpdate(uSQL);
+//			retVal = Util.Math.addArray(dbs.executeBatch());
+			if (log && !Util._IN_PRODUCTION) { msg = "----[ '" + retVal + "' table"+((retVal>1)?"s":"")+" created ]----"; LOG.info(String.format(fmt, _f, msg)); }
+			
 		} catch (Exception e) {
 			msg = "SQL Exception Happend!!!";
 			if (log && Util._IN_PRODUCTION)

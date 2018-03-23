@@ -26,62 +26,59 @@ public interface AddressServicePointInterface {
 	public static final String serverUrl = CampRest.CUSTOMER_API_SERVER_URL;
 	public static final String domainUri = CampRest.CUSTOMER_API_DOMAIN;
 
-	public String loadById(int id, boolean log) ;
+	public String loadById(int id) ;
 	
-	public String loadByBusinessId(String businessId, boolean log) ;
+	public String loadByBusinessId(String businessId) ;
 
-	public String loadListByBusinessKey(String businessKey, boolean log);
+	public String loadListByBusinessKey(String businessKey);
 	
-	public String loadListByGroup(String group, boolean log) ;
+	public String loadListByGroup(String group) ;
 
-	public String loadListByGroupVersion(String group, String version, boolean log);
+	public String loadListByGroupVersion(String group, String version);
 	
-	public String save(String address, boolean log);
+	public String save(String address);
 	
-	public String saveList(String addressList, boolean log);
+	public String saveList(String addressList);
 	
-	public String update(String address, boolean log);
+	public String update(String address);
 	
-	public String updateList(String addressList, boolean log);
+	public String updateList(String addressList);
 	
-	public String loadUpdates(String businessKey, String target, boolean log);
+	public String loadUpdates(String businessKey, String target);
 	
-	public String loadUpdatesByKey(String businessKey, boolean log);
+	public String loadUpdatesByKey(String businessKey);
 	
-	public String loadUpdatesByTarget(String target, boolean log);
+	public String loadUpdatesByTarget(String target);
 	
-	public String loadUpdate(String address, String businessKey, String target, boolean log);
+	public String loadUpdate(String address, String businessKey, String target);
 	
-	public String addToUpdates(String address, String businessKey, String target, boolean log);
+	public String addToUpdates(String address, String businessKey, String target);
 	
-	public String addListToUpdates(String addressList, String businessKey, String target,boolean log);
+	public String addListToUpdates(String addressList, String businessKey, String target);
 	
-	public String deleteAllFromUpdates(String businessKey, String target, boolean log);
+	public String deleteAllFromUpdates(String businessKey, String target);
 	
-	public String deleteFromUpdatesByKey(String businessKey, boolean log);
+	public String deleteFromUpdatesByKey(String businessKey);
 	
-	public String deleteFromUpdatesByTarget(String target, boolean log);
+	public String deleteFromUpdatesByTarget(String target);
 	
-	public String deleteFromUpdates(String addressId, String businessKey, String target, boolean log);
+	public String deleteFromUpdates(String addressId, String businessKey, String target);
 	
-	public String deleteListFromUpdates(String addressList, String businessKey, String target, boolean log);
+	public String deleteListFromUpdates(String addressList, String businessKey, String target);
 	
-	public String addInstance(String customer, boolean useObjectId);
-	
-	public String addInstances(String customerList, boolean useObjectId);
-	
-	public String loadCurrent(String businessId, boolean primary);
-	
-	public String loadFirst(String businessId, boolean primary);
-	
-	public String loadPrevious(String customer, boolean primary);
-	
-	public String loadNext(String customer, boolean primary);
-	
-	public String loadDate(String businessId, String date, boolean primary);
-	
-	public String loadDateRange(String businessId, String startDate, String endDate, boolean primary);
-	
-	public String loadDateRange(String startDate, String endDate,boolean primary);
+	public String loadFirst(String businessId);
+
+	public String loadPrevious(String address);
+
+	public String loadNext(String address);
+
+	public String loadDate(String businessId, String date);
+
+	public String loadDateRange(String businessId, String startDate, String endDate);
+
+	public String loadDate(String date);
+
+	public String loadDateRange(String startDate, String endDate);
+
 
 }

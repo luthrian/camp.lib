@@ -26,12 +26,6 @@ public interface CustomerServicePointInterface {
 	public static final String serverUrl = CampRest.CUSTOMER_API_SERVER_URL;
 	public static final String domainUri = CampRest.CUSTOMER_API_DOMAIN;
 
-	public String addProcessReference(String businessId, String instanceId, String processKey);
-	public String addProcessReferences(String businessId, String processList);
-	public String delProcessReference(String businessId, String instanceId, String processKey);
-	public String delAllProcessReferences(String businessId);
-	public String delProcessReferences(String businessId, String processList);
-	public String loadProcessReferences(String businessId);
 	public String loadById(int id);
 	public String loadByBusinessId(String businessId);
 	public String loadListByBusinessKey(String businessKey);
@@ -52,15 +46,18 @@ public interface CustomerServicePointInterface {
 	public String deleteFromUpdatesByTarget(String target);
 	public String deleteFromUpdates(String businessId, String businessKey, String target);
 	public String deleteListFromUpdates(String customerList, String businessKey, String target);
-	public String addInstance(String customer, boolean useObjectId);
-	public String addInstances(String customerList, boolean useObjectId);	
-	public String addInstances(String customerList, boolean useObjectId,boolean log);
-	public String loadCurrent(String businessId, boolean primary);
-	public String loadFirst(String businessId, boolean primary); 	
-	public String loadPrevious(String customer, boolean primary);	
-	public String loadNext(String customer, boolean primary);	
-	public String loadDate(String businessId, String date, boolean primary);	
-	public String loadDateRange(String businessId, String startDate, String endDate, boolean primary);
-	public String loadDate(String date, boolean primary);
-	public String loadDateRange(String startDate, String endDate, boolean primary);
+	public String loadFirst(String businessId);
+	public String loadPrevious(String customer);
+	public String loadNext(String customer);
+	public String loadDate( String businessId, String date);
+	public String loadDateRange( String businessId, String startDate, String endDate);
+	public String loadDate( String date);
+	public String loadDateRange( String startDate, String endDate);
+	public String addProcessReference(String businessId, String instanceId, String processKey);
+	public String addProcessReferences(String businessId, String processList);
+	public String delProcessReference(String businessId, String instanceId, String processKey);
+	public String delAllProcessReferences(String businessId);
+	public String delProcessReferences(String businessId, String processList);
+	public String loadProcessReferences(String businessId);
+
 }

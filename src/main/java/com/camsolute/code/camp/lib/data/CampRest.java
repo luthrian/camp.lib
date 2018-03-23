@@ -164,32 +164,32 @@ public class CampRest {
 	
 	public static class TouchPointDaoService {
 		public static enum Request {
-			DELETE_ALL_RESPONSIBLE_UPDATES,
-			DELETE_RESPONSIBLE_UPDATES_KEY,
+			DELETE_ALL_UPDATES_RESPONSIBLE,
+			DELETE_UPDATES_KEY_RESPONSIBLE,
+			DELETE_UPDATES_RESPONSIBLE,
 			DELETE_ALL_UPDATES,
 			DELETE_UPDATES_KEY,
 			DELETE_UPDATES,
-			DELETE_UPDATES_POST,
-			DELETE_RESPONSIBLE_UPDATES;
+			DELETE_UPDATES_POST;
 		};
-		public static final String DELETE_ALL_RESPONSIBLE_UPDATES = "/s/updates/resp/del/all";
-		public static final String DELETE_RESPONSIBLE_UPDATES_KEY = "/s/updates/resp/del/key";
+		public static final String DELETE_ALL_UPDATES_RESPONSIBLE = "/s/updates/resp/del/all";
+		public static final String DELETE_UPDATES_KEY_RESPONSIBLE = "/s/updates/resp/del/key";
+		public static final String DELETE_UPDATES_RESPONSIBLE = "/s/update/resp/del";
 		public static final String DELETE_ALL_UPDATES = "/s/updates/cust/resp/del/all";
 		public static final String DELETE_UPDATES_KEY = "/s/updates/cust/resp/del/key";
-		public static final String DELETE_UPDATES = "/updates/cust/del";
-		public static final String DELETE_UPDATES_POST = "/s/updates/cust/del";
-		public static final String DELETE_RESPONSIBLE_UPDATES = "/s/update/resp/del";
+		public static final String DELETE_UPDATES_POST = "/updates/cust/resp/del";
+		public static final String DELETE_UPDATES = "/s/updates/cust/del";
 		public static final HashMap<Request,String[]> Call;
 		
 		static {
 			Call = new HashMap<Request,String[]>();
-			Call.put(Request.DELETE_ALL_RESPONSIBLE_UPDATES, new String[] {"/s/updates/resp/del/all","/s/updates/resp/del/all?responsibleBusinessKey=%s&target=%s","GET"});
-			Call.put(Request.DELETE_RESPONSIBLE_UPDATES_KEY, new String[] {"/s/updates/resp/del/key","/s/updates/resp/del/key?responsibleBusinessKey=%s","GET"});
+			Call.put(Request.DELETE_ALL_UPDATES_RESPONSIBLE, new String[] {"/s/updates/resp/del/all","/s/updates/resp/del/all?responsibleBusinessKey=%s&target=%s","GET"});
+			Call.put(Request.DELETE_UPDATES_KEY_RESPONSIBLE, new String[] {"/s/updates/resp/del/key","/s/updates/resp/del/key?responsibleBusinessKey=%s","GET"});
+			Call.put(Request.DELETE_UPDATES_RESPONSIBLE, new String[] {"/s/update/resp/del","/s/update/resp/del?target=%s","POST"});
 			Call.put(Request.DELETE_ALL_UPDATES, new String[] {"/s/updates/cust/resp/del/all","/s/updates/cust/resp/del/all?customerBusinessKey=%s&responsibleBusinessKey=%s&target=%s","GET"});
 			Call.put(Request.DELETE_UPDATES_KEY, new String[] {"/s/updates/cust/resp/del/key","/s/updates/cust/resp/del/key?customerBusinessKey=%s&responsibleBusinessKey=%s","GET"});
-			Call.put(Request.DELETE_UPDATES, new String[] {"/updates/cust/del","/updates/cust/del?customerBusinessID=%s&customerBusinessKey=%s&target=%s","GET"});
-			Call.put(Request.DELETE_UPDATES_POST, new String[] {"/s/updates/cust/del","/s/updates/cust/del?target=%s","POST"});
-			Call.put(Request.DELETE_RESPONSIBLE_UPDATES, new String[] {"/s/update/resp/del","/s/update/resp/del?target=%s","POST"});
+			Call.put(Request.DELETE_UPDATES_POST, new String[] {"/updates/cust/rest/del","/updates/cust/resp/del?target=%s","POST"});
+			Call.put(Request.DELETE_UPDATES, new String[] {"/s/updates/cust/del","/s/updates/cust/del?customerBusinessID=%s&customerBusinessKey=%s&target=%s","GET"});
 		}
 		public static String callRequest(String prefix, TouchPointDaoService.Request request) {
 			return prefix + TouchPointDaoService.Call.get(request)[1];

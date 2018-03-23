@@ -690,7 +690,7 @@ public class TouchPointRest implements TouchPointRestInterface {
 			msg = "====[ TouchPointRest rest call:  ]====";LOG.info(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		String prefix = CampRest.TouchPoint.Prefix;		
-		String serviceUri = CampRest.TouchPointDaoService.callRequest(prefix,CampRest.TouchPointDaoService.Request.DELETE_ALL_RESPONSIBLE_UPDATES);
+		String serviceUri = CampRest.TouchPointDaoService.callRequest(prefix,CampRest.TouchPointDaoService.Request.DELETE_ALL_UPDATES_RESPONSIBLE);
 		String uri = serverUrl+domainUri+String.format(serviceUri,responsibleBusinessKey, target);
 		String result = RestInterface.resultGET(uri, log);
 		int retVal = Integer.valueOf(result);
@@ -713,7 +713,7 @@ public class TouchPointRest implements TouchPointRestInterface {
 			msg = "====[ TouchPointRest rest call:  ]====";LOG.info(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		String prefix = CampRest.TouchPoint.Prefix;		
-		String serviceUri = CampRest.TouchPointDaoService.callRequest(prefix,CampRest.TouchPointDaoService.Request.DELETE_RESPONSIBLE_UPDATES_KEY);
+		String serviceUri = CampRest.TouchPointDaoService.callRequest(prefix,CampRest.TouchPointDaoService.Request.DELETE_UPDATES_KEY_RESPONSIBLE);
 		String uri = serverUrl+domainUri+String.format(serviceUri,responsibleBusinessKey);
 		String result = RestInterface.resultGET(uri, log);
 		int retVal = Integer.valueOf(result);
@@ -808,7 +808,7 @@ public class TouchPointRest implements TouchPointRestInterface {
 		}
 		String json = p.toJson();
 		String prefix = CampRest.TouchPoint.Prefix;		
-		String serviceUri = CampRest.TouchPointDaoService.callRequest(prefix,CampRest.TouchPointDaoService.Request.DELETE_RESPONSIBLE_UPDATES);
+		String serviceUri = CampRest.TouchPointDaoService.callRequest(prefix,CampRest.TouchPointDaoService.Request.DELETE_UPDATES_RESPONSIBLE);
 		String uri = serverUrl+domainUri+String.format(serviceUri,p, target);
 		String result = RestInterface.resultPost(uri,json, log);
 		int retVal = Integer.valueOf(result);

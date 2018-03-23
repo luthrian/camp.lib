@@ -418,8 +418,8 @@ public class CampSQL {
 
 		public static final String[][] contact_details_table_definition = {
 				{"_contact_id_", "int(11) NOT NULL AUTO_INCREMENT"},
-				{"c_customer_business_id", "VARCHAR(100) NOT NULL AUTO_INCREMENT"},
-				{"c_customer_businesskey", "VARCHAR(100) NOT NULL AUTO_INCREMENT"},
+				{"c_customer_business_id", "VARCHAR(100) NOT NULL"},
+				{"c_customer_businesskey", "VARCHAR(100) NOT NULL"},
 				{"contact_email", "varchar(150) NOT NULL"},
 				{"contact_mobile", "varchar(45) NOT NULL"},
 				{"contact_telephone", "varchar(45) NOT NULL"},
@@ -427,7 +427,7 @@ public class CampSQL {
 				{"contact_misc", "varchar(45) not null"},
 				{"extra", "PRIMARY KEY (`_contact_id_`)"
 						+ ",UNIQUE KEY `contact_id_UNIQUE` (`_contact_id_`)"
-						+ ",UNIQUE KEY `contact_email_UNIQUE` (`contact_email_`)"}
+						+ ",UNIQUE KEY `contact_email_UNIQUE` (`contact_email`)"}
 		};
 
 		public static final String[][] address_table_definition = {
@@ -483,7 +483,7 @@ public class CampSQL {
 				{"_businesskey", "VARCHAR(45) NOT NULL"},
 				{"_target", "varchar(45) NOT NULL"},
 				{"_timestamp", "TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP"},
-				{"extra", "INDEX `cu_customer_id_idx` (`_customer_id` ASC)"}
+				{"extra", "INDEX `cdu_customer_business_id_idx` (`_customer_business_id` ASC)"}
 		};
 
 		public static final String[][] address_updates_table_definition = {
@@ -491,7 +491,7 @@ public class CampSQL {
 				{"_businesskey", "VARCHAR(45) NOT NULL"},
 				{"_target", "varchar(45) NOT NULL"},
 				{"_timestamp", "TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP"},
-				{"extra", "INDEX `cu_customer_id_idx` (`_customer_id` ASC)"}
+				{"extra", "INDEX `au__address_business_id_idx` (`_address_business_id` ASC)"}
 		};
 
 		public static final String[][] touch_point_updates_table_definition = {
@@ -501,7 +501,7 @@ public class CampSQL {
 				{"_responsible_businesskey", "VARCHAR(45) NOT NULL"},
 				{"_target", "varchar(45) NOT NULL"},
 				{"_timestamp", "TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP"},
-				{"extra", "INDEX `cu_target_idx` (`_target` ASC)"}
+				{"extra", "INDEX `tpu_target_idx` (`_target` ASC)"}
 		};
 
 		public static final String[][] customer_has_process_table_definition = {
