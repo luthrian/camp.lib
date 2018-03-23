@@ -32,6 +32,8 @@ import com.camsolute.code.camp.lib.data.CampSQL;
 import com.camsolute.code.camp.lib.models.CampInstanceDao;
 import com.camsolute.code.camp.lib.models.CampInstanceDaoInterface.RangeTarget;
 import com.camsolute.code.camp.lib.models.CampStatesInterface.IOAction;
+import com.camsolute.code.camp.lib.models.Group;
+import com.camsolute.code.camp.lib.models.Version;
 import com.camsolute.code.camp.lib.utilities.Util;
 
 /**
@@ -891,7 +893,7 @@ public class TouchPointDao implements TouchPointDaoInterface {
 		return retVal;
 	}
 
-	public int deleteAllResponsibleFromUpdates(String responsibleBusinessKey, String target, boolean log) {
+	public int deleteAllFromUpdatesResponsible(String responsibleBusinessKey, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -934,7 +936,7 @@ public class TouchPointDao implements TouchPointDaoInterface {
 		return retVal;
 	}
 
-	public int deleteResponsibleFromUpdatesByKey(String responsibleBusinessKey, boolean log) {
+	public int deleteFromUpdatesByKeyResponsible(String responsibleBusinessKey, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -1240,7 +1242,55 @@ public class TouchPointDao implements TouchPointDaoInterface {
 		return retVal;
 	}
 
-	public int deleteResponsibleFromUpdates(TouchPoint p, String target, boolean log) {
+	public int deleteFromUpdates(TouchPointList pl, String target, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[deleteFromUpdates]";
+			msg = "====[ TouchPointDao dao call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		
+		Connection conn = null;
+		ResultSet rs = null;
+		Statement dbs = null;
+		int retVal = 0;
+		try{
+			conn = Util.DB.__conn(log);
+			
+			dbs = conn.createStatement();
+			
+			for(TouchPoint p:pl) {
+				String SQL = "DELETE FROM " + updatestable + "WHERE "
+						+ "`_customer_business_id`='"+p.businessIdCustomer()+"'"
+						+ "AND `_customer_businesskey`='"+p.businessKeyCustomer()+"'"
+						+ " AND `_responsible_business_id`='"+p.businessIdResponsible()+"'"
+						+ "AND `_responsible_businesskey`='"+p.businessKeyResponsible()+"'"
+						+ "AND `_target`='"+target+"'";
+				
+				if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
+				dbs.addBatch(SQL);
+			}
+			retVal = Util.Math.addArray(dbs.executeBatch());		
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" persisted ]----";LOG.info(String.format(fmt,_f,msg));}
+		} catch(SQLException e) {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
+			e.printStackTrace();
+		} finally {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ releasing connection]----";LOG.info(String.format(fmt, _f,msg));}
+			Util.DB.__release(conn,log);
+			Util.DB._releaseRS(rs, log);
+			Util.DB._releaseStatement(dbs, log);
+		}
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[deleteFromUpdates completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return retVal;
+	}
+
+	public int deleteFromUpdatesResponsible(TouchPoint p, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -1531,7 +1581,9 @@ public class TouchPointDao implements TouchPointDaoInterface {
 				, rs.getString("_customer_business_id")
 				, rs.getTimestamp("_date")
 				, rs.getString("_topic")
-				, rs.getString("_minutes"));
+				, rs.getString("_minutes")
+				, new Group(rs.getString("_group_name"))
+				, new Version(rs.getString("_version_value")));
 		p.setNextDate(rs.getTimestamp("_next_date"));
 		return p;
 	}

@@ -93,7 +93,7 @@ public class ContactDetailsRest implements ContactDetailsDaoInterface {
 	}
 
 	@Override
-	public ContactDetails loadByKey(String businessKeyCustomer, boolean log) {
+	public ContactDetailsList loadByKey(String businessKeyCustomer, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -101,12 +101,12 @@ public class ContactDetailsRest implements ContactDetailsDaoInterface {
 			_f = "[loadById]";
 			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
-		ContactDetails o = null;
+		ContactDetailsList o = null;
 		String prefix = CampRest.ContactDetails.Prefix;		
 		String serviceUri = CampRest.ContactDetailsDaoService.callRequest(prefix,CampRest.ContactDetailsDaoService.Request.LOAD_BY_CUSTOMER_BUSINESSKEY);
 		String uri = serverUrl+domainUri+String.format(serviceUri,businessKeyCustomer);
 		String result = RestInterface.resultGET(uri, log);
-		o = ContactDetailsInterface._fromJson(result);
+		o = ContactDetailsList._fromJson(result);
 		
 		if(log && !Util._IN_PRODUCTION) {
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";

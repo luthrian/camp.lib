@@ -317,6 +317,107 @@ public class ContactDetailsDao implements ContactDetailsDaoInterface, ContactDet
 	}
 
 	@Override
+	public ContactDetails loadByBusinessId(String businessId, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[loadById]";
+			msg = "====[ contact details dao call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		ContactDetails c = null;
+		Connection conn = null;
+		ResultSet rs = null;
+		Statement dbs = null;
+		int retVal = 0;
+		try{
+			conn = Util.DB.__conn(log);
+			
+			dbs = conn.createStatement();
+			
+			String SQL = "SELECT * FROM "+ table + " AS t WHERE "
+					+ " t.`"+tabledef[0][0]+"`=ti.`_object_id`"
+					+ " AND t.`c_customer_business_id`='"+businessId+"'"
+					+ " ORDER BY t.`"+tabledef[0][0]+"` ASC";
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
+			
+			rs = dbs.executeQuery(SQL);		
+			if (rs.next()) {
+				c = rsToI(rs,log);
+				c.states().ioAction(IOAction.LOAD);
+			}
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
+			
+		} catch(SQLException e) {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
+			e.printStackTrace();
+		} finally {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ releasing connection]----";LOG.info(String.format(fmt, _f,msg));}
+			Util.DB.__release(conn,log);
+			Util.DB._releaseRS(rs, log);
+			Util.DB._releaseStatement(dbs, log);
+		}
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[loadById completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return c;
+	}
+
+	@Override
+	public ContactDetailsList loadByKey(String businessKey, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[loadById]";
+			msg = "====[ contact details dao call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		ContactDetailsList cl = new ContactDetailsList();
+		Connection conn = null;
+		ResultSet rs = null;
+		Statement dbs = null;
+		int retVal = 0;
+		try{
+			conn = Util.DB.__conn(log);
+			
+			dbs = conn.createStatement();
+			
+			String SQL = "SELECT * FROM "+ table + " AS t WHERE "
+					+ " t.`"+tabledef[0][0]+"`=ti.`_object_id`"
+					+ " AND t.`c_customer_businesskey`='"+businessKey+"'"
+					+ " ORDER BY t.`"+tabledef[0][0]+"` ASC";
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
+			
+			rs = dbs.executeQuery(SQL);		
+			if (rs.next()) {
+				ContactDetails c = rsToI(rs,log);
+				c.states().ioAction(IOAction.LOAD);
+				cl.add(c);
+			}
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
+			
+		} catch(SQLException e) {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
+			e.printStackTrace();
+		} finally {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ releasing connection]----";LOG.info(String.format(fmt, _f,msg));}
+			Util.DB.__release(conn,log);
+			Util.DB._releaseRS(rs, log);
+			Util.DB._releaseStatement(dbs, log);
+		}
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[loadById completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return cl;
+	}
+
+	@Override
 	public ContactDetails loadByEmail(String emailAddress, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;

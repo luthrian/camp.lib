@@ -39,9 +39,9 @@ public interface TouchPointDaoInterface extends DaoInterface<TouchPoint>, DBDaoI
 
 	public TouchPointList loadDateRange( String startDate, String endDate, boolean log);
 
-	public int deleteAllResponsibleFromUpdates(String responsibleBusinessKey, String target, boolean log);
+	public int deleteAllFromUpdatesResponsible(String responsibleBusinessKey, String target, boolean log);
 	
-	public int deleteResponsibleFromUpdatesByKey(String responsibleBusinessKey, boolean log);
+	public int deleteFromUpdatesByKeyResponsible(String responsibleBusinessKey, boolean log);
 	
 	public int deleteAllFromUpdates(String customerBusinessKey, String responsibleBusinessKey, String target, boolean log);
 	
@@ -51,7 +51,7 @@ public interface TouchPointDaoInterface extends DaoInterface<TouchPoint>, DBDaoI
 	
 	public int deleteFromUpdates(TouchPoint p, String target, boolean log);
 	
-	public int deleteResponsibleFromUpdates(TouchPoint p, String target, boolean log);
+	public int deleteFromUpdatesResponsible(TouchPoint p, String target, boolean log);
 	
 	
 	

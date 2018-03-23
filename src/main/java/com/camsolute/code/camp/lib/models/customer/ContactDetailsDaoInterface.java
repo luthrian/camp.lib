@@ -25,7 +25,7 @@ public interface ContactDetailsDaoInterface {
 	
 	public ContactDetails loadByBusinessId(String businessIdCustomer, boolean log);
 	
-	public ContactDetails loadByKey(String businessKeyCustomer, boolean log);
+	public ContactDetailsList loadByKey(String businessKeyCustomer, boolean log);
 	
 	public ContactDetails loadByEmail(String emailAddress, boolean log);
 	
