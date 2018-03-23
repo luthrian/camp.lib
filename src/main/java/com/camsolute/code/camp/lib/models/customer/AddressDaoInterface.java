@@ -27,13 +27,12 @@ import com.camsolute.code.camp.lib.dao.database.DBDaoInterface;
 import com.camsolute.code.camp.lib.models.CampInstanceDaoInterface;
 
 public interface AddressDaoInterface extends DaoInterface<Address>, DBDaoInterface<Address>, InstanceDaoInterface<Address>{
-	public Address loadCurrent(String businessId, AddressDao dao,boolean primary) throws SQLException;
-	public Address loadFirst(String businessId, AddressDao dao,boolean primary) throws SQLException;
-	public Address loadPrevious(Address address, AddressDao dao,boolean primary) throws SQLException;
-	public Address loadNext(Address address, AddressDao dao, boolean primary)throws SQLException;
-	public AddressList loadDate(String businessId, String date, AddressDao dao, boolean primary) throws SQLException;
-	public AddressList loadDateRange(String businessId, String startDate, String endDate, AddressDao dao, boolean primary) throws SQLException;
-	public AddressList loadDate(String date, AddressDao dao, boolean primary) throws SQLException;
-	public AddressList loadDateRange(String startDate, String endDate, AddressDao dao, boolean primary) throws SQLException;
+	public Address loadFirst(String businessId);
+	public Address loadPrevious(Address address);
+	public Address loadNext(Address address)throws SQLException;
+	public AddressList loadDate(String businessId, String date);
+	public AddressList loadDateRange(String businessId, String startDate, String endDate);
+	public AddressList loadDate(String date);
+	public AddressList loadDateRange(String startDate, String endDate);
 
 }

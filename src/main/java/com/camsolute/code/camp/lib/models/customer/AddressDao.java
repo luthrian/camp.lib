@@ -1431,36 +1431,10 @@ public class AddressDao implements AddressDaoInterface {
 	}
 
 	@Override
-	public Address loadCurrent(String businessId, AddressDao dao,boolean primary) throws SQLException {
-		return _loadCurrent(businessId, dao, primary, !Util._IN_PRODUCTION);
+	public Address loadFirst(String businessId) {
+		return _loadFirst(businessId, !Util._IN_PRODUCTION);
 	}
-	public static Address _loadCurrent(String businessId, AddressDao dao, boolean primary, boolean log) throws SQLException {
-		long startTime = System.currentTimeMillis();
-		String _f = null;
-		String msg = null;
-		if(log && !Util._IN_PRODUCTION) {
-			_f = "[_loadFirst]";
-			msg = "====[ address dao call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
-		}
-		Address a = null;
-		try {
-			a = CampInstanceDao._loadCurrent(businessId, CustomerDao.instance(), false,log);
-		} catch (SQLException e) {
-			if(log && !Util._IN_PRODUCTION){msg = "----[SQL EXCEPTION! loadFirst FAILED]----";LOG.info(String.format(fmt, _f,msg));}
-			e.printStackTrace();
-		}
-		if(log && !Util._IN_PRODUCTION) {
-			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
-			msg = "====[_loadFirst completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
-		}
-		return a;
-	}
-
-	@Override
-	public Address loadFirst(String businessId, AddressDao dao,boolean primary) throws SQLException {
-		return _loadFirst(businessId, dao, primary, !Util._IN_PRODUCTION);
-	}
-	public static Address _loadFirst(String businessId, AddressDao dao, boolean primary, boolean log) throws SQLException {
+	public static Address _loadFirst(String businessId, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -1483,10 +1457,10 @@ public class AddressDao implements AddressDaoInterface {
 	}
 
 	@Override
-	public Address loadPrevious(Address address, AddressDao dao,boolean primary) throws SQLException {
-		return _loadPrevious(address, dao, primary, !Util._IN_PRODUCTION);
+	public Address loadPrevious(Address address) {
+		return _loadPrevious(address, !Util._IN_PRODUCTION);
 	}
-	public static Address _loadPrevious(Address address, AddressDao dao, boolean primary, boolean log)throws SQLException {
+	public static Address _loadPrevious(Address address, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -1509,10 +1483,10 @@ public class AddressDao implements AddressDaoInterface {
 	}
 
 	@Override
-	public Address loadNext(Address address, AddressDao dao, boolean primary)throws SQLException {
-		return _loadNext(address, dao, primary, !Util._IN_PRODUCTION);
+	public Address loadNext(Address address) {
+		return _loadNext(address, !Util._IN_PRODUCTION);
 	}
-	public static Address _loadNext(Address address, AddressDao dao, boolean primary, boolean log)throws SQLException {
+	public static Address _loadNext(Address address, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -1535,10 +1509,10 @@ public class AddressDao implements AddressDaoInterface {
 	}
 
 	@Override
-	public AddressList loadDate(String businessId, String date, AddressDao dao, boolean primary) throws SQLException {
-		return _loadDate(businessId,date, dao, primary, !Util._IN_PRODUCTION);
+	public AddressList loadDate(String businessId, String date) {
+		return _loadDate(businessId,date, !Util._IN_PRODUCTION);
 	}
-	public static AddressList _loadDate(String businessId, String date, AddressDao dao, boolean primary, boolean log) throws SQLException {
+	public static AddressList _loadDate(String businessId, String date, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -1561,10 +1535,10 @@ public class AddressDao implements AddressDaoInterface {
 	}
 
 	@Override
-	public AddressList loadDateRange(String businessId, String startDate, String endDate, AddressDao dao, boolean primary) throws SQLException {
-		return _loadDateRange(businessId, startDate, endDate, RangeTarget.DATE, dao, primary, !Util._IN_PRODUCTION);
+	public AddressList loadDateRange(String businessId, String startDate, String endDate) {
+		return _loadDateRange(businessId, startDate, endDate, RangeTarget.DATE, !Util._IN_PRODUCTION);
 	}
-	public static AddressList _loadDateRange(String businessId, String startDate, String endDate, RangeTarget target, AddressDao dao, boolean primary, boolean log) throws SQLException {
+	public static AddressList _loadDateRange(String businessId, String startDate, String endDate, RangeTarget target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -1587,10 +1561,10 @@ public class AddressDao implements AddressDaoInterface {
 	}
 
 	@Override
-	public AddressList loadDate(String date, AddressDao dao, boolean primary) throws SQLException {
-		return _loadDate(date, dao, primary, !Util._IN_PRODUCTION);
+	public AddressList loadDate(String date) {
+		return _loadDate(date, !Util._IN_PRODUCTION);
 	}
-	public static AddressList _loadDate(String date, AddressDao dao, boolean primary, boolean log) throws SQLException {
+	public static AddressList _loadDate(String date, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -1613,10 +1587,10 @@ public class AddressDao implements AddressDaoInterface {
 	}
 
 	@Override
-	public AddressList loadDateRange(String startDate, String endDate, AddressDao dao, boolean primary) throws SQLException {
-		return _loadDateRange(startDate, endDate, RangeTarget.DATE, dao, primary, !Util._IN_PRODUCTION);
+	public AddressList loadDateRange(String startDate, String endDate) {
+		return _loadDateRange(startDate, endDate, RangeTarget.DATE, !Util._IN_PRODUCTION);
 	}
-	public static AddressList _loadDateRange(String startDate, String endDate, RangeTarget target, AddressDao dao, boolean primary, boolean log) throws SQLException {
+	public static AddressList _loadDateRange(String startDate, String endDate, RangeTarget target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
