@@ -36,6 +36,8 @@ public interface ProductDaoInterface extends HasProcessReference, HasModelRefere
 	
 	public Product loadUpdate(String businessId, int modelId, String businessKey, String target, boolean log);
 	
+	public ProductList loadList(boolean log);
+	
 //	public int addModelReferences(Product p, boolean log);
 //
 //	public Product loadModels(Product p, boolean log);

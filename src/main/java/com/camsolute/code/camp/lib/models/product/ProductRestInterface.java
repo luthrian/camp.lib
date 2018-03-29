@@ -30,6 +30,8 @@ public interface ProductRestInterface extends DaoInterface<Product>, HasModelRef
 
 	public Product create(String businessId, String businessKey, String date, String endOfLife, String group, String version, boolean log);
 
+	public ProductList loadList(boolean log);
+	
 	public Product loadUpdate(String businessId, int modelId, String businessKey, String target, boolean log);
 	
 	public Product loadFirst(String businessId, boolean primary, boolean log);

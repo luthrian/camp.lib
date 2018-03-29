@@ -160,6 +160,11 @@ public class Product implements ProductInterface {
 
 	@Override
 	public void setModels(ModelList ml) {
+		if(ml.size()>0 && this.modelId==0) {
+			this.model = ml.get(0);
+			this.modelId = this.model.id();
+//			this.states.modify();
+		}
 		this.models = ml;
 	}
 

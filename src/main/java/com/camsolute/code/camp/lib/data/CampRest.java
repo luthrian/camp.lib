@@ -63,6 +63,7 @@ public class CampRest {
 		public static enum Request {
 			LOAD_BY_ID,
 			LOAD,
+			LOAD_LIST,
 			LOAD_BY_KEY,
 			LOAD_CHILD_BY_GROUP,
 			LOAD_BY_GROUP,
@@ -96,6 +97,7 @@ public class CampRest {
 		};
 		public static final String LOAD_BY_ID = "/load/by/id/{id}";
 		public static final String LOAD = "/load/by/businessId";
+		public static final String LOAD_LIST = "/s/load/all";
 		public static final String LOAD_BY_KEY = "/load/by/key";
 		public static final String LOAD_CHILD_BY_GROUP = "/load/child/by/group";
 		public static final String LOAD_BY_GROUP = "/load/by/group";
@@ -132,6 +134,7 @@ public class CampRest {
 			Call = new HashMap<Request,String[]>();
 			Call.put(Request.LOAD_BY_ID, new String[] {"/load/by/id/{id}","/load/by/id/%s","GET"});
 			Call.put(Request.LOAD, new String[] {"/load/by/businessId","/load/by/businessId?businessId=%s","GET"});
+			Call.put(Request.LOAD_LIST, new String[] {"/s/load/all","/s/load/all","GET"});
 			Call.put(Request.LOAD_BY_KEY, new String[] {"/load/by/key","/load/by/key?businessKey=%s","GET"});
 			Call.put(Request.LOAD_CHILD_BY_GROUP, new String[] {"/load/child/by/group","/load/child/by/group?parentId=%s&group=%s","GET"});
 			Call.put(Request.LOAD_BY_GROUP, new String[] {"/load/by/group","/load/by/group?group=%s","GET"});

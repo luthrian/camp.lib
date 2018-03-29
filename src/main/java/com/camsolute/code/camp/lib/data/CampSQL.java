@@ -779,20 +779,22 @@ public class CampSQL {
 	public static class Product {
 		public static final int _PRODUCT_TABLE_INDEX = 0;
 		public static final int _PRODUCT_MODEL_TABLE_INDEX = 1;
-		public static final int _PRODUCT_UPDATES_TABLE_INDEX = 2;
-		public static final int _PRODUCT_MODEL_UPDATES_TABLE_INDEX = 3;
-		public static final int _PRODUCT_ATTRIBUTE_UPDATES_TABLE_INDEX = 4;
-		public static final int _PRODUCT_HAS_MODEL_TABLE_INDEX = 5;
-		public static final int _PRODUCT_HAS_PROCESS_TABLE_INDEX = 6;
+		public static final int _PRODUCT_DESCRIPTION_TABLE_INDEX = 2;
+		public static final int _PRODUCT_UPDATES_TABLE_INDEX = 3;
+		public static final int _PRODUCT_MODEL_UPDATES_TABLE_INDEX = 4;
+		public static final int _PRODUCT_ATTRIBUTE_UPDATES_TABLE_INDEX = 5;
+		public static final int _PRODUCT_HAS_MODEL_TABLE_INDEX = 6;
+		public static final int _PRODUCT_HAS_PROCESS_TABLE_INDEX = 7;
 	
 		public static final String[] product_management_tables = {
 				"product",					//0
 				"product_model",		//1
-				"product_updates",			//2
-				"product_model_updates",//3
-				"product_attribute_updates",//4
-				"product_has_model",//5
-				"product_has_process",//6
+				"product_description",	//2
+				"product_updates",			//3
+				"product_model_updates",//4
+				"product_attribute_updates",//5
+				"product_has_model",//6
+				"product_has_process",//7
 		};
 		public static final String[][] product_table_definition = {
 				{"_product_id_", "int(11) NOT NULL AUTO_INCREMENT"},
@@ -816,6 +818,17 @@ public class CampSQL {
 				{"extra", "PRIMARY KEY (`_model_id_`)"
 					+ ",INDEX `p_model_end_of_life_idx` (`model_end_of_life` ASC)"
 					+ ",INDEX `p_model_release_date_idx` (`model_release_date` ASC)"}
+		};
+		public static final String[][] product_description_table_definition = {
+				{"_description_id_", "int(11) NOT NULL AUTO_INCREMENT"},
+				{"description_product_id", "int(11) NOT NULL"},
+				{"description_business_id", "varchar(200) NOT NULL"},
+				{"description_businesskey", "varchar(45) NOT NULL"},
+				{"description_title", "varchar(200) NOT NULL"},
+				{"description_body", "LONGTEXT NOT NULL"},
+				{"extra", "PRIMARY KEY (`_description_id_`)"
+					+ ",INDEX `p_description_business_id_idx` (`description_business_id` ASC)"
+					+ ",INDEX `p_description_businesskey_idx` (`description_businesskey` ASC)"}
 		};
 		//to hell!!! with both of you for this. seriously
 		public static final String[][] product_updates_table_definition = {

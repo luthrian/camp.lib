@@ -40,6 +40,8 @@ public interface ProductServicePointInterface {
 	
 	
 	public String loadById(int id);
+
+	public String loadList();
 	
 	public String loadByBusinessId(String businessId);
 	

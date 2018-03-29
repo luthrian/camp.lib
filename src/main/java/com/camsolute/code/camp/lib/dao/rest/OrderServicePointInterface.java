@@ -61,8 +61,6 @@ public interface OrderServicePointInterface {
 	
 	public String loadDateRange(String startDate, String endDate, boolean primary);
 	
-	public String addInstance(String orderPosition, boolean useObjectId);
-
 	public String loadDate(String businessId, String date, boolean primary);
 	
 	public String loadDateRange(String businessId, String startDate, String endDate, boolean primary);

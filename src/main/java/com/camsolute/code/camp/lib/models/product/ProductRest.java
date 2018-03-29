@@ -131,6 +131,34 @@ public class ProductRest implements ProductRestInterface {
 	}
 
 
+	@Override
+	public ProductList loadList(boolean log) {
+	return loadList(serverUrl,log);
+	}
+	@SuppressWarnings("unchecked")
+	public ProductList loadList(String serverUrl, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[loadListByBusinessKey]";
+			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		ProductList pl = null;
+		String prefix = CampRest.Product.Prefix;		
+		String serviceUri = CampRest.DaoService.callRequest(prefix,CampRest.DaoService.Request.LOAD_LIST);
+		String uri = serverUrl+domainUri+serviceUri;
+		String result = RestInterface.resultGET(uri, log);
+		pl = ProductList._fromJson(result);
+		
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[loadListByBusinessKey completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return pl;
+	}
+
+
 	
 	@SuppressWarnings("unchecked")
 	@Override
