@@ -586,7 +586,7 @@ public class CampSQL {
 				{"extra","INDEX `ohop_order_business_id_idx` (`_ohop_order_business_id_` ASC)"}
 		};
 		public static final String[][] order_has_process_table_definition = {
-				{"_ohp_business_id", "varchar(10) NOT NULL"},
+				{"_ohp_business_id", "varchar(45) NOT NULL"},
 				{"_ohp_process_instance_id", "varchar(45) NOT NULL"},
 				{"_ohp_businesskey", "varchar(45) NOT NULL"},
 				{"extra", "INDEX `ohp_business_id_idx` (`_ohp_business_id` ASC),"

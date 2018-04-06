@@ -30,7 +30,7 @@ public class CustomerProcessMessage extends Message{
 	//TODO: add correct messages
 	public static enum CustomerMessage {
 		cpm_customer_created, cpm_customer_new, cpm_customer_id_unverified, cpm_customer_id_verified, cpm_customer_credit_unverified,cpm_customer_credit_verified,
-		cpm_customer_active,cpm_customer_deactiviated
+		cpm_customer_active,cpm_customer_deactiviated, cpm_customer_billed, cpm_customer_paid
 		;
 	}
 	public static final CustomerMessage CUSTOMER_CREATED = CustomerMessage.cpm_customer_created;
@@ -39,6 +39,8 @@ public class CustomerProcessMessage extends Message{
 	public static final CustomerMessage CUSTOMER_ID_VERIFIED = CustomerMessage.cpm_customer_id_verified;
 	public static final CustomerMessage CUSTOMER_CREDIT_UNVERIFIED = CustomerMessage.cpm_customer_credit_unverified;
 	public static final CustomerMessage CUSTOMER_CREDIT_VERIFIED = CustomerMessage.cpm_customer_credit_verified;
+	public static final CustomerMessage CUSTOMER_BILLED = CustomerMessage.cpm_customer_billed;
+	public static final CustomerMessage CUSTOMER_PAID = CustomerMessage.cpm_customer_paid;
 	public static final CustomerMessage CUSTOMER_ACTIVE = CustomerMessage.cpm_customer_active;
 	public static final CustomerMessage CUSTOMER_DEACTIVIATED = CustomerMessage.cpm_customer_deactiviated;
 	

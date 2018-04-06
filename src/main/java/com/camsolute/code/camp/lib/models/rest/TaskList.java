@@ -20,6 +20,7 @@
 package com.camsolute.code.camp.lib.models.rest;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -65,7 +66,9 @@ public class TaskList extends ArrayList<Task> implements Serialization<TaskList>
 	
 	public static TaskList _fromJSONArray(JSONArray ja) {
 		TaskList tl = new TaskList();
-		for(Object jo:ja.toList()) {
+		Iterator<Object> i = ja.iterator();
+		while(i.hasNext()) {
+			JSONObject jo = (JSONObject) i.next();
 			tl.add(Task._fromJSONObject((JSONObject) jo));
 		}
 		return tl;

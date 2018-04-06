@@ -27,7 +27,7 @@ public class Process<T> implements ProcessInterface<T>{
 
 	public static final String DEFAULT_CUSTOMER_PROCESS_KEY = "process.name.Order.Customer";
 	public static final String DEFAULT_PRODUCTION_PROCESS_KEY = "process.name.Production";
-	public static final String DEFAULT_MANAGEMENT_PROCESS_KEY = "process.name.Customer.ManagementProcess";
+	public static final String DEFAULT_MANAGEMENT_PROCESS_KEY = "process.name.Order.Customer.ManagementProcess";
 
 	public static enum ProcessType {
 		order_process,

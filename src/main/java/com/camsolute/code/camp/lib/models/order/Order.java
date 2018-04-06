@@ -122,6 +122,7 @@ public class Order implements OrderInterface {
 	     						Util.Config.instance().defaultEndOfLifeDays("Order"),
 	     						Util.Time.formatDateTime)));
   	}
+  	
   	public Order(String orderNumber, String businessKey, Timestamp byDate) {
         this.orderNumber = orderNumber;
         this.businessKey = businessKey;
@@ -213,6 +214,7 @@ public class Order implements OrderInterface {
 		public ProcessList processes() {
 			return processInstances;
 		}
+		
 		@Override
 		public ProcessList processes(ProcessType type) {
 			ProcessList opl = new OrderProcessList();
