@@ -39,6 +39,7 @@ import javax.naming.InitialContext;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.text.ParseException;
 
 import org.apache.tomcat.jdbc.pool.DataSource;
@@ -480,10 +481,10 @@ public class Util {
         }
 	
         public static String nowPlus(int days,String format) {
-            DateTime dt = new DateTime();
-            dt = dt.plusDays(days);
-            if(format == null || format.isEmpty()) return dt.toString().substring(0,19);
-            return dt.toString(format);
+          DateTime dt = new DateTime();
+          dt = dt.plusDays(days);
+          if(format == null || format.isEmpty()) return dt.toString().substring(0,19);
+          return dt.toString(format);
         }
 	
         public static String timeStampString() {

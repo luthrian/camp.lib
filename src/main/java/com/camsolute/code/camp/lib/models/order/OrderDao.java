@@ -1476,9 +1476,11 @@ public class OrderDao implements OrderDaoInterface {
 		String businessId = rs.getString("order_number");
 		String businessKey = rs.getString("order_businesskey");
 		Timestamp date = rs.getTimestamp("order_date");
+		Timestamp byDate = rs.getTimestamp("order_by_date");
 		String status = rs.getString("_status");
 		Order o = new Order(businessId,businessKey,date);
 		o.updateId(id);
+		o.setByDate(byDate);
 		o.setStatus(status);
 		return o;
 	}
