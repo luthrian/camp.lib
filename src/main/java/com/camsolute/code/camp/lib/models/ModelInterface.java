@@ -49,6 +49,7 @@ import com.camsolute.code.camp.lib.contract.HasStates;
 import com.camsolute.code.camp.lib.contract.HasStatus;
 import com.camsolute.code.camp.lib.contract.HasStatusChange;
 import com.camsolute.code.camp.lib.contract.HasVersion;
+import com.camsolute.code.camp.lib.contract.Clonable;
 import com.camsolute.code.camp.lib.contract.HasHistory;
 import com.camsolute.code.camp.lib.contract.IsDisplayable;
 import com.camsolute.code.camp.lib.contract.IsObjectInstance;
@@ -58,7 +59,7 @@ import com.camsolute.code.camp.lib.models.product.Product;
 import com.camsolute.code.camp.lib.utilities.Util;
 import static com.camsolute.code.camp.lib.utilities.Util.*;
 
-public interface ModelInterface extends HasModelLifeCycle, HasProduct, IsObjectInstance<Model> {
+public interface ModelInterface extends Clonable<Model>, HasModelLifeCycle, HasProduct, IsObjectInstance<Model> {
 
   public static String _toJson(Model m) {
     String json = "{";

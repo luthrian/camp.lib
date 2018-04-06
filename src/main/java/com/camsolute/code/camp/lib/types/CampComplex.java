@@ -27,6 +27,7 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import com.camsolute.code.camp.lib.models.Attribute;
+import com.camsolute.code.camp.lib.models.AttributeInterface;
 import com.camsolute.code.camp.lib.models.AttributeList;
 import com.camsolute.code.camp.lib.models.Value;
 import com.camsolute.code.camp.lib.models.ValueInterface;
@@ -83,10 +84,6 @@ public class CampComplex extends Attribute<ComplexValue> implements CampComplexI
 	}
 
 	@Override
-	public ComplexValue clone(){
-		return  (ComplexValue) this.value().value().clone();
-	}
-
 	public Set<String> keySet(){
 		return this.value().value().keySet();
 	}

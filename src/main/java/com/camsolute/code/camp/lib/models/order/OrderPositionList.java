@@ -20,15 +20,18 @@
 package com.camsolute.code.camp.lib.models.order;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.camsolute.code.camp.lib.contract.HasListSelection;
 import com.camsolute.code.camp.lib.contract.Serialization;
 
 
-public class OrderPositionList extends ArrayList<OrderPosition> implements Serialization<OrderPositionList> {
+public class OrderPositionList extends ArrayList<OrderPosition> implements Serialization<OrderPositionList>, HasListSelection<OrderPosition> {
 
+	private int selected = 0;
 	/**
 	 * 
 	 */
@@ -45,7 +48,10 @@ public class OrderPositionList extends ArrayList<OrderPosition> implements Seria
 	}
 
 	public static String _toJson(OrderPositionList opl) {
-		String json = "[";
+		String json = "{";
+		json += "\"selected\":"+opl.selectionIndex();
+		json += ",\"isEmpty\":"+opl.isEmpty();
+		json += ",\"list\":[";
 		boolean start = true;
 		for(OrderPosition op:opl) {
 			if(!start) {
@@ -56,20 +62,67 @@ public class OrderPositionList extends ArrayList<OrderPosition> implements Seria
 			json += OrderPositionInterface._toJson(op);
 			
 		}
-		json += "]";
+		json += "]}";
 		return json;
 	}
 	
 	public static OrderPositionList _fromJson(String json) {
-		return _fromJSONArray(new JSONArray(json));
+		return _fromJSONObject(new JSONObject(json));
 	}
 	
-	public static OrderPositionList _fromJSONArray(JSONArray ja) {
+	public static OrderPositionList _fromJSONObject(JSONObject jo) {
 		OrderPositionList opl = new OrderPositionList();
-		for(Object jo:ja.toList()) {
-			opl.add(OrderPositionInterface._fromJSONObject((JSONObject) jo));
+		if(jo.getBoolean("isEmpty")) {
+			return opl;
+		}
+		opl.setSelectionIndex(jo.getInt("selected"));
+		Iterator<Object> i = jo.getJSONArray("list").iterator();
+		while(i.hasNext()){
+			JSONObject j = (JSONObject)i.next();
+			opl.add(OrderPositionInterface._fromJSONObject(j));
 		}
 		return opl;
+	}
+
+	@Override
+	public OrderPosition selected() {
+		return get(selected);
+	}
+
+	@Override
+	public int selectionIndex() {
+		return selected;
+	}
+
+	@Override
+	public void setSelectionIndex(int index) {
+		selected = index;
+	}
+
+	@Override
+	public int select(int itemId) {
+		int ctr = 0; 
+		for(OrderPosition op : this) {
+			if(op.id() == itemId) {
+				selected = ctr;
+				break;
+			}
+			ctr++;
+		}
+		return selected;
+	}
+
+	@Override
+	public int select(OrderPosition item) {
+		int ctr = 0;
+		for(OrderPosition op: this) {
+			if(item.businessId().equals(op.businessId())) {
+				selected = ctr;
+				break;
+			}
+			ctr++;
+		}
+		return selected;
 	}
 
 

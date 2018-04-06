@@ -27,7 +27,7 @@ import com.camsolute.code.camp.lib.models.rest.VariableValue.VariableValueType;
 public class OrderProcessMessage extends Message{
 
 	public static enum CustomerOrderMessage {
-		cmp_orderrejected, opp_ordershipped, cop_ordercancelled, cop_orderupdated, cop_ordersubmitted,cmp_orderreleased
+		cmp_orderrejected, opp_ordershipped, cop_ordercancelled, cop_orderupdated, cop_ordersubmitted,cop_orderfulfilled,cmp_orderreleased,omp_orderdeleted
 	}
 	public static final CustomerOrderMessage ORDER_REJECTED_MSG = CustomerOrderMessage.cmp_orderrejected;
 	public static final CustomerOrderMessage ORDER_SHIPPED_MSG = CustomerOrderMessage.opp_ordershipped;
@@ -35,6 +35,8 @@ public class OrderProcessMessage extends Message{
 	public static final CustomerOrderMessage ORDER_UPDATED_MSG = CustomerOrderMessage.cop_orderupdated;
 	public static final CustomerOrderMessage ORDER_SUBMITTED_MSG = CustomerOrderMessage.cop_ordersubmitted;
 	public static final CustomerOrderMessage ORDER_RELEASED_MSG = CustomerOrderMessage.cmp_orderreleased;
+	public static final CustomerOrderMessage ORDER_FULFILLED_MSG = CustomerOrderMessage.cop_orderfulfilled;
+	public static final CustomerOrderMessage ORDER_DELETED_MSG = CustomerOrderMessage.omp_orderdeleted;
 	
 	public OrderProcessMessage(CustomerOrderMessage messageName, Order o) {
 		super(messageName.name(),o.businessKey());

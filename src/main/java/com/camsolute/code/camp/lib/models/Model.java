@@ -415,4 +415,17 @@ public class Model implements ModelInterface {
 		return 0;
 	}
 	
+	public Model clone() {
+		return ModelInterface._fromJson(this.toJson());
+	}
+	public void mirror(Model object) {
+		this.id = object.id();
+		this.productId = object.productId();
+		this.name = object.onlyBusinessId();
+		this.releaseDate = object.releaseDate();
+		this.endOfLife = object.endOfLife();
+		this.businessKey = object.businessKey();
+		this.version = object.version();
+		this.group = object.group();
+	}
 }

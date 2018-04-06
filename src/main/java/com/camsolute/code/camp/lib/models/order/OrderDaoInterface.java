@@ -30,6 +30,8 @@ import com.camsolute.code.camp.lib.models.ModelList;
 
 public interface OrderDaoInterface extends InstanceDaoInterface<Order>, DaoInterface<Order>, DBDaoInterface<Order>, HasProcessReference, HasOrderPositionReference {
 
+	OrderList loadList(boolean log);
+	
 	Order loadFirst(String businessId);
 
 	Order loadPrevious(Order order);

@@ -140,6 +140,39 @@ public class OrderRest implements OrderRestInterface {
 		return o;
 	}
 
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public OrderList loadList(boolean log) {
+		return loadList(serverUrl,log);
+	}
+	public OrderList loadList(String serverUrl, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[loadList]";
+			msg = "====[ load all order object instances via rest call  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		OrderList ol = new OrderList();
+		
+		String prefix = CampRest.Order.Prefix;
+		
+		String serviceUri = CampRest.DaoService.callRequest(prefix, CampRest.DaoService.Request.LOAD_LIST);
+		
+		String uri = serverUrl+domainUri+serviceUri;
+		
+		String result = RestInterface.resultGET(uri, log);
+		
+		ol = OrderList._fromJson(result);
+		
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[loadList completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return ol;
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public <E extends ArrayList<Order>> E loadListByBusinessKey(String businessKey, boolean log) {

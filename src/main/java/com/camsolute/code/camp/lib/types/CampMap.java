@@ -106,11 +106,6 @@ public class CampMap extends Attribute<MapValue> implements CampMapInterface {
       return this.value().value().containsValue(value);
 	}
 
-	@SuppressWarnings("unchecked")
-	public HashMap<String,Attribute<?>> clone(){
-      return  (HashMap<String, Attribute<?>>) this.value().value().clone();
-	}
-
 	public Set<String> keySet(){
       return this.value().value().keySet();
 	}

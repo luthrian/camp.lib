@@ -25,6 +25,8 @@ import com.camsolute.code.camp.lib.dao.DaoInterface;
 
 public interface ModelRestInterface extends DaoInterface<Model> {
 
+	public ModelList loadList(boolean log);
+	
 	public Model create(String businessId, Timestamp releaseDate, Timestamp endOfLife, String businessKey, Version version, Group group, boolean log);	
 
 }

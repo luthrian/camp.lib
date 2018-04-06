@@ -48,6 +48,17 @@ public interface CampInstanceInterface extends Serialization<CampInstance>  {
     
     public void endOfLife(Timestamp eol);
 
+    public CampInstance clone();
+    
+    public static CampInstance clone(CampInstance instance) {
+    	CampInstance h = new CampInstance(instance.id(),instance.currentId(),instance.initialId());
+    	h.setObjectRefId(instance.objectRefId());
+    	h.date(instance.date());
+    	h.timestamp(instance.timestamp());
+    	h.endOfLife(instance.endOfLife());
+    	return h;
+    }
+    
     public static String _toJson(CampInstance i){
       String json = "{";
       json += _toInnerJson(i);

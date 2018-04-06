@@ -1922,7 +1922,7 @@ public class Value<T> implements ValueInterface<T> {
 		}
 		public static Value<?> rsToV(int aid, int oid, ResultSet rs, boolean log) throws SQLException {
 
-			AttributeType type = AttributeType.valueOf(rs.getString("attribute_type"));
+			AttributeType type = AttributeType.valueOf(AttributeType.class,rs.getString("attribute_type"));
 
 			int id = rs.getInt(integertabledef[0][0]);
 
@@ -2013,4 +2013,9 @@ public class Value<T> implements ValueInterface<T> {
 
 	}
 
+ 	@SuppressWarnings("unchecked")
+ 	@Override
+	public Value<T> clone() {
+ 		return (Value<T>) ValueInterface.clone(this);
+ 	}
 }

@@ -23,4 +23,5 @@ import com.camsolute.code.camp.lib.dao.rest.ProcessRestDaoInterface;
 
 public interface ProcessRestInterface extends ProcessRestDaoInterface {
 
+	public ProcessList loadList(boolean log);
 }

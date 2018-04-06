@@ -25,6 +25,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
+import com.camsolute.code.camp.lib.contract.Clonable;
 import com.camsolute.code.camp.lib.contract.HasByDate;
 import com.camsolute.code.camp.lib.contract.HasDate;
 import com.camsolute.code.camp.lib.contract.HasOrderPositionList;
@@ -41,7 +42,7 @@ import com.camsolute.code.camp.lib.models.process.OrderProcessList;
 import com.camsolute.code.camp.lib.models.process.ProcessList;
 import com.camsolute.code.camp.lib.utilities.Util;
 
-public interface OrderInterface extends HasOrderPositionList , HasDate, HasByDate,HasProcess<Order>, HasStatus ,IsObjectInstance<Order> {
+public interface OrderInterface extends Clonable<Order>, HasOrderPositionList , HasDate, HasByDate,HasProcess<Order>, HasStatus ,IsObjectInstance<Order> {
    public static final Logger LOG = LogManager.getLogger(OrderInterface.class);
    public static String fmt = "[%15s] [%s]";
 	 
@@ -54,19 +55,19 @@ public interface OrderInterface extends HasOrderPositionList , HasDate, HasByDat
 
 	public static String _fromInnerJson(Order o) {
 		String json = "";
-  	json += "\"id\":"+o.id()+",";
-  	json += "\"orderNumber\":\""+o.onlyBusinessId()+"\",";
-  	json += "\"businessKey\":\""+o.businessKey()+"\",";
-  	json += "\"date\":\""+o.date().toString()+"\",";
-  	json += "\"byDate\":\""+o.byDate().toString()+"\",";
-  	json += "\"status\":\""+o.status().name()+"\",";
-  	json += "\"previousStatus\":\""+o.previousStatus().name()+"\",";
-  	json += "\"group\":\""+o.group().name()+"\",";
-  	json += "\"version\":\""+o.version().value()+"\",";
-  	json += "\"states\":"+o.states().toJson()+",";
-  	json += "\"history\":"+o.history().toJson()+",";
-  	json += "\" orderPositions\":"+((o. orderPositions() != null && o. orderPositions().size() > 0)?o. orderPositions().toJson():"[]")+",";
-  	json += "\"processInstances\":"+((o.processInstances() != null && o.processInstances().size() > 0)?o.processInstances().toJson():"[]");
+  	json += "\"id\":"+o.id();
+  	json += ","+"\"orderNumber\":\""+o.onlyBusinessId()+"\"";
+  	json += ","+"\"businessKey\":\""+o.businessKey()+"\"";
+  	json += ","+"\"date\":\""+o.date().toString()+"\"";
+  	json += ","+"\"byDate\":\""+o.byDate().toString()+"\"";
+  	json += ","+"\"status\":\""+o.status().name()+"\"";
+  	json += ","+"\"previousStatus\":\""+o.previousStatus().name()+"\"";
+  	json += ","+"\"group\":\""+o.group().name()+"\"";
+  	json += ","+"\"version\":\""+o.version().value()+"\"";
+  	json += ","+"\"states\":"+o.states().toJson();
+  	json += ","+"\"history\":"+o.history().toJson();
+  	json += ((o.orderPositions() != null && !o.orderPositions().isEmpty())?","+"\" orderPositions\":"+o. orderPositions().toJson():"");
+  	json += ((o.processInstances() != null && o.processInstances().size() > 0)?","+"\"processInstances\":"+o.processInstances().toJson():"");
 		return json;
 	}
 	public static Order _fromJson(String json) {
@@ -87,19 +88,13 @@ public interface OrderInterface extends HasOrderPositionList , HasDate, HasByDat
 		String group = jo.getString("group");
 		String version = jo.getString("version");
 		ProcessList pl = new OrderProcessList();
-		try {
+		if(jo.has("processInstances")) {
 			pl = ProcessList._fromJSONArray(jo.getJSONArray("processInstances"));
-		} catch (Exception e) {
-			if(!Util._IN_PRODUCTION){String msg = "----[JSON Error! Order has no associted Process.]----";LOG.info(String.format(fmt, "_fromJSONObject",msg));}
-			e.printStackTrace();
-		}
+		} 
 		OrderPositionList opl = new OrderPositionList();
-		try {
-			opl = OrderPositionList._fromJSONArray(jo.getJSONArray("orderPositions"));
-		} catch (Exception e) {
-			if(!Util._IN_PRODUCTION){String msg = "----[JSON Error! Order has no associted order positions.]----";LOG.info(String.format(fmt, "_fromJSONObject",msg));}
-			e.printStackTrace();
-		}
+		if(jo.has("orderPositions")) {
+			opl = OrderPositionList._fromJSONObject(jo.getJSONObject("orderPositions"));
+		} 
 			
 		Order o = new Order(orderNumber);
 		o.updateId(id);

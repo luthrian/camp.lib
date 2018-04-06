@@ -73,12 +73,17 @@ public class Product implements ProductInterface {
 	public Product(String name) {
 		this.name = name;
 		this.history.date(this.date);
+		this.businessKey = Util.Config.instance().properties().getProperty("object.create.Product.businessKey");
+		this.group = new Group(Util.Config.instance().properties().getProperty("object.create.Product.group"));
+		this.version = new Version(Util.Config.instance().properties().getProperty("object.create.Product.version"));
 	}
 
 	public Product(String name, String businessKey) {
 		this.name = name;
 		this.businessKey = businessKey;
 		this.history.date(this.date);
+		this.group = new Group(Util.Config.instance().properties().getProperty("object.create.Product.group"));
+		this.version = new Version(Util.Config.instance().properties().getProperty("object.create.Product.version"));
 	}
 
 	public Product(String name, String businessKey, Group group, Version version, Timestamp date) {
@@ -610,5 +615,26 @@ public int getRefId() {
 		return new Request<Product>(this,principal,type);
 	}
 
+	public Product clone(){
+		return ProductInterface._fromJson(this.toJson());
+	}
+	
+	public void mirror(Product object) {
+		this.id = object.id();
+		this.name = object.onlyBusinessId();
+		this.businessKey = object.businessKey();
+		this.modelId = object.modelId();
+		this.model = object.model().clone();
+		this.models = object.models().clone();
+		this.version = object.version();
+		this.group = object.group();
+		this.date = object.date();
+		this.status = (Status) object.status();
+		this.previousStatus = (Status) object.previousStatus();
+		this.states.update(object.states());
+		this.history = object.history().clone();
+		this.attributes = object.attributes().clone();
+		this.processes = object.processes().clone();
+	}
 
 }

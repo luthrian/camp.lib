@@ -29,6 +29,8 @@ public interface ModelDaoInterface extends InstanceDaoInterface<Model>, DaoInter
 
 	public Model create(String businessId, Timestamp releaseDate, Timestamp endOfLife, String businessKey, Version version, Group group, boolean log);
 	
+	public ModelList loadList(boolean Lost);
+	
 	public Model loadFirst(String businessId);
 
 	public Model loadPrevious(Model model);

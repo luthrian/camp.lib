@@ -30,7 +30,14 @@ public class AttributeMap extends HashMap<String,AttributeList> implements Seria
 	 * 
 	 */
 	private static final long serialVersionUID = -7656221443212960098L;
+	
+	public AttributeMap clone() {
+		return clone(this);
+	}
 
+	public static AttributeMap clone(AttributeMap map) {
+		return _fromJson(map.toJson());
+	}
 	@Override
 	public String toJson() {
 		return _toJson(this);

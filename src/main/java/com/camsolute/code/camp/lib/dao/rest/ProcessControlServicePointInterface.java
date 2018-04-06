@@ -39,6 +39,8 @@ public interface ProcessControlServicePointInterface {
 	
 	public void delegateTask(String taskId, String userId);
 	
+	public void completeCurrentTask(String processInstanceId, String principal, String object);
+	
 	public void completeTask(String taskId, String variables);
 	
 	public String getTask(String taskId);

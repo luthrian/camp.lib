@@ -33,10 +33,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Properties;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.naming.InitialContext;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.text.ParseException;
 
 import org.apache.tomcat.jdbc.pool.DataSource;
@@ -246,6 +248,9 @@ public class Util {
     			new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ"),
     			new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSz"),
     			new SimpleDateFormat("yyyy-MM-dd"),
+    			new SimpleDateFormat("yyyy/MM/dd"),
+    			new SimpleDateFormat("yyyy/MM/dd HH:mm:ss"),
+    			new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS"),
     			new SimpleDateFormat("dd/MM/yyyy"),
     			new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"),
     			new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS"),
@@ -300,6 +305,12 @@ public class Util {
             return new Timestamp(dt.getMillis());
         }
 
+        
+        @SuppressWarnings("deprecation")
+				public static LocalDate getLocalDate(Timestamp datetime) {
+        	return LocalDate.of(datetime.getYear(),datetime.getMonth(),datetime.getDate());
+        }
+        
         /**
          *  Returns the string value of  a Timesamp with format "yyyy-MM-dd HH:mm:ss".
          *
@@ -369,6 +380,10 @@ public class Util {
             return Timestamp.valueOf(timestamp);
         }
 
+        public static Timestamp timstamp(String timestamp, final String format) {
+        	DateTime dt = new DateTime(timestamp);
+        	return Timestamp.valueOf(dt.toString(format));
+        }
         /**
          *  Returns the string value of a <code>DateTime</code> with format "yyyy-MM-dd".
          *
@@ -1449,6 +1464,22 @@ public class Util {
     		return properties;
     	}
     	
+    	public String defaultBusinessId(String object) {
+    		return properties.getProperty("object.create."+object+".businessId")+"."+UUID.randomUUID().toString();
+    	}
+
+    	public String defaultBusinessKey(String object) {
+    		return properties.getProperty("object.create."+object+".businessKey")+"."+UUID.randomUUID().toString();
+    	}
+
+    	public String defaultGroup(String object) {
+    		return properties.getProperty("object.create."+object+".group")+"."+UUID.randomUUID().toString();
+    	}
+
+    	public String defaultVersion(String object) {
+    		return properties.getProperty("object.create."+object+".version")+"."+UUID.randomUUID().toString();
+    	}
+
    }
 
     public static class Test {

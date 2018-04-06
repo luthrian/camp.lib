@@ -23,4 +23,9 @@ import java.util.HashMap;
 
 public class ProductMap extends HashMap<String, Product> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5745502336306862059L;
+
 }

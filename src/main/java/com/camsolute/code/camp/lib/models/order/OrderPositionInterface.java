@@ -59,24 +59,24 @@ public interface OrderPositionInterface extends HasDate, HasRefId, HasRefBusines
 	}
 	
 	public static String _toInnerJson(OrderPosition op) {
-		String json = "\"id\":"+op.id()+",";
-		json += "\"refId\":"+op.getRefId()+",";
-		json += "\"productId\":"+op.productId()+",";
-		json += "\"modelId\":"+op.modelId()+",";
-		json += "\"businessId\":\""+op.businessId()+"\",";
-		json += "\"orderBusinessId\":\""+op.orderBusinessId()+"\",";
-		json += "\"businessKey\":\""+op.businessKey()+"\",";
-		json += "\"refBusinessKey\":\""+op.refBusinessKey()+"\",";
-		json += "\"date\":"+op.date()+",";
-		json += "\"position\":"+op.position()+",";
-		json += "\"quantity\":"+op.quantity()+",";
-		json += "\"states\":"+op.states().toJson()+",";
-		json += "\"history\":"+op.history().toJson()+",";
-		json += "\"status\":\""+op.status().name()+"\",";
-		json += "\"previousStatus\":\""+op.previousStatus().name()+"\",";
-		json += "\"group\":\""+op.group()+"\",";
-		json += "\"version\":\""+op.version()+"\",";
-		json += "\"processes\":"+((op.processes()!=null && op.processes().size() >0)?op.processes().toJson():"[]");
+		String json = "\"id\":"+op.id();
+		json += ",\"refId\":"+op.getRefId();
+		json += ",\"productId\":"+op.productId();
+		json += ",\"modelId\":"+op.modelId();
+		json += ",\"businessId\":\""+op.businessId()+"\"";
+		json += ",\"orderBusinessId\":\""+op.orderBusinessId()+"\"";
+		json += ",\"businessKey\":\""+op.businessKey()+"\"";
+		json += ",\"refBusinessKey\":\""+op.refBusinessKey()+"\"";
+		json += ",\"date\":\""+op.date().toString()+"\"";
+		json += ",\"position\":"+op.position();
+		json += ",\"quantity\":"+op.quantity();
+		json += ",\"states\":"+op.states().toJson();
+		json += ",\"history\":"+op.history().toJson();
+		json += ",\"status\":\""+op.status().name()+"\"";
+		json += ",\"previousStatus\":\""+op.previousStatus().name()+"\"";
+		json += ",\"group\":\""+op.group()+"\"";
+		json += ",\"version\":\""+op.version()+"\"";
+		json += ((op.processes()!=null && op.processes().size() >0)?",\"processes\":"+op.processes().toJson():"");
 
 		return json;
 	}
@@ -101,12 +101,9 @@ public interface OrderPositionInterface extends HasDate, HasRefId, HasRefBusines
 		Status status = Status.valueOf(jo.getString("status"));
 		Status previousStatus = Status.valueOf(jo.getString("previousStatus"));
 		ProcessList processes = new ProcessList();
-		try {
+		if(jo.has("processes")) {
 			processes = ProcessList._fromJSONArray(jo.getJSONArray("processes"));
-		} catch (Exception e) {
-			if(!Util._IN_PRODUCTION){String msg = "----[ JSON EXCEPTION! transform FAILED.]----";LOG.info(String.format(fmt,"_fromJSONObject",msg));}
-			e.printStackTrace();
-		}
+		} 
 		OrderPosition op = new OrderPosition(id, businessId, orderBusinessId, position);
 		op.setQuantity(quantity);
 		op.setProductId(productId);

@@ -287,6 +287,30 @@ return p;
 	}
 
 	@Override
+	public <T extends HasProcess<?>> void completeTask(String processInstanceId, String principal, T object, boolean log) {
+		_completeTask(serverUrl, processInstanceId, principal, object, log);
+	}
+	public <T extends HasProcess<?>> void _completeTask(String serverUrl,String processInstanceId, String principal, T object, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[completeTask]";
+			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		String json = object.toJson();
+		String prefix = CampRest.ProcessControl.Prefix;		
+		String serviceUri = CampRest.ProcessControlDaoService.callRequest(prefix,CampRest.ProcessControlDaoService.Request.COMPLETE_CURRENT_TASK);
+		String uri = serverUrl+domainUri+String.format(serviceUri, processInstanceId, principal);
+		String result = RestInterface.resultPost(uri, json, log);
+		if(log && !Util._IN_PRODUCTION){msg = "----[RestServiceCall result: "+result+"]----";LOG.info(String.format(fmt, _f,msg));}
+		
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[completeTask completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+	}
+
 	public void completeTask(String taskId, Variables variables, boolean log) {
 		_completeTask(serverUrl, taskId, variables, log);
 	}

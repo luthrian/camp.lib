@@ -21,6 +21,44 @@ package com.camsolute.code.camp.lib.models.order;
 
 import java.util.HashMap;
 
-public class OrderMap extends HashMap<String,Order> {
-    
+import org.json.JSONObject;
+
+import com.camsolute.code.camp.lib.contract.Serialization;
+
+public class OrderMap extends HashMap<String,Order> implements Serialization<OrderMap> {
+    public String toJson() {
+    	return _toJson(this);
+    }
+    public static String _toJson(OrderMap om) {
+    	String json = "{";
+    	json += _toInnerJson(om);
+    	json += "}";
+    	return json;
+    }
+    public static String _toInnerJson(OrderMap om) {
+    	String json = "";
+    	boolean start = true;
+    	for(String key:om.keySet()) {
+    		if(!start) {
+    			json += ",";
+    		} else {
+    			start = false;
+    		}
+    		json += "\""+key+"\":"+om.get(key).toJson();
+    	}
+    	return json;
+    }
+    public OrderMap fromJson(String json) {
+    	return _fromJson(json);
+    }
+    public static OrderMap _fromJson(String json) {
+    	return _fromJSONObject(new JSONObject(json));
+    }
+    public static OrderMap _fromJSONObject(JSONObject jo) {
+    	OrderMap om = new OrderMap();
+    	for(String key:jo.keySet()) {
+    		om.put(key,OrderInterface._fromJSONObject(jo.getJSONObject(key)));
+    	}
+    	return om;
+    }
 }

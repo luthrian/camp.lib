@@ -20,6 +20,7 @@
 package com.camsolute.code.camp.lib.models.order;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -67,11 +68,18 @@ public class OrderList extends ArrayList<Order> implements Serialization<OrderLi
 	
 	public static OrderList _fromJSONArray(JSONArray ja) {
 		OrderList ol = new OrderList();
-		for(Object jo:ja.toList()) {
-			ol.add(OrderInterface._fromJSONObject((JSONObject) jo));
+		Iterator<Object> i = ja.iterator();
+		while(i.hasNext()) {
+			JSONObject jo = (JSONObject)i.next();
+			ol.add(OrderInterface._fromJSONObject(jo));
 		}
+//		for(Object jo:ja.toList()) {
+//			ol.add(OrderInterface._fromJSONObject((JSONObject) jo));
+//		}
 		return ol;
 	}
 
-
+	public OrderList clone() {
+		return OrderList._fromJson(this.toJson());
+	}
 }

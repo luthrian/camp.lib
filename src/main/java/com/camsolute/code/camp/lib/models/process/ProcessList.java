@@ -44,6 +44,18 @@ public class  ProcessList extends ArrayList<Process<?>> implements Serialization
 	}
 	
 	@Override
+	public ProcessList clone() {
+		return clone(this);
+	}
+	
+	public static ProcessList clone(ProcessList list) {
+		ProcessList pl = new ProcessList();
+		for(Process<?> p: list) {
+			pl.add(new Process<>(p.id(), p.executionId(), p.instanceId(), p.businessKey(), p.processName(), p.definitionId(), p.tenantId(), p.caseInstanceId(), p.ended(), p.suspended(), p.type()));
+		}
+		return pl;
+	}
+	@Override
 	public String toJson() {
 		return _toJson(this);
 	}

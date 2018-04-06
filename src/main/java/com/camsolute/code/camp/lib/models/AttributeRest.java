@@ -40,6 +40,18 @@ public class AttributeRest implements AttributeRestInterface {
 	public static final String serverUrl = CampRest.PRODUCT_API_SERVER_URL;
 	public static final String domainUri = CampRest.PROCESS_API_DOMAIN;
 	
+	private static AttributeRest instance = null;
+	
+	private AttributeRest(){
+	}
+	
+	public static AttributeRest instance(){
+		if(instance == null) {
+			instance = new AttributeRest();
+		}
+		return instance;
+	}
+	
 	@Override
 	public Attribute<? extends Value<?>> loadById(int id, boolean log) {
 		long startTime = System.currentTimeMillis();

@@ -124,6 +124,31 @@ public class ModelRest implements ModelRestInterface {
 		return ml;
 	}
 
+	@Override
+	public ModelList loadList(boolean log) {
+		return loadList(serverUrl, log);
+	}
+	public ModelList loadList(String serverUrl, boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[loadList]";
+			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		
+		String prefix = CampRest.Model.Prefix;		
+		String serviceUri = CampRest.DaoService.callRequest(prefix,CampRest.DaoService.Request.LOAD_LIST);
+		String uri = serverUrl+domainUri+serviceUri;
+		String result = RestInterface.resultGET(uri, log);
+		ModelList ml = ModelList._fromJson(result);
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[loadList completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return ml;
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public ModelList loadListByGroup(String group, boolean log) {

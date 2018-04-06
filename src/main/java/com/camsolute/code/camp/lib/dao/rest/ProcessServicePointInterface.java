@@ -36,6 +36,7 @@ public interface ProcessServicePointInterface {
 
 	public String loadListByBusinessId(String businessId);
 
+	public String loadList();
 
 	public String loadListByKey(String businessKey);
 

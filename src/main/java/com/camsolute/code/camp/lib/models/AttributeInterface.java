@@ -225,8 +225,8 @@ public interface AttributeInterface<U extends Value<?>> extends HasValue<U>, Has
     		if(jo.has("id")) id = jo.getInt("id");
         int attributeId = jo.getInt("attributeId");
         String name = jo.getString("name");
-        AttributeType type = AttributeType.valueOf(jo.getString("type"));
-        String defaultValue = jo.getJSONObject("defaultValue").toString();
+        AttributeType type = AttributeType.valueOf(AttributeType.class,jo.getString("type"));
+        String defaultValue = jo.getString("defaultValue");
         int valueId = jo.getInt("valueId");
         Value<?> value = ValueInterface._fromJSONObject(jo.getJSONObject("value"));
         String businessKey = jo.getString("businessKey");
@@ -244,12 +244,9 @@ public interface AttributeInterface<U extends Value<?>> extends HasValue<U>, Has
         CampInstance history = CampInstanceInterface._fromJSONObject(jo.getJSONObject("history")); 
         CampInstance valueHistory = CampInstanceInterface._fromJSONObject(jo.getJSONObject("valueHistory")); 
         ProcessList processes = new ProcessList();
-        try {
+        if(jo.has("processes")) {
         	processes = ProcessList._fromJSONArray(jo.getJSONArray("processes"));
-        } catch (Exception e) {
-        	if(!Util._IN_PRODUCTION){String msg = "----[ JSON ERROR! product attribute process list is empty.]----";LOG.info(String.format(fmt, "_fromJSONObject",msg));}
-        	e.printStackTrace();
-        }
+        } 
         switch(type){
         case _boolean:
             a = new CampBoolean(name,defaultValue);
@@ -331,28 +328,34 @@ public interface AttributeInterface<U extends Value<?>> extends HasValue<U>, Has
     }
     public static String _toInnerJson(Attribute<? extends Value<?>> a) {
         String json = "";
-        json += "\"id\":"+a.id()+",";
-        json += "\"attributeId\":"+a.id()+",";
-        json += "\"name\":\""+a.name()+"\",";
-        json += "\"type\":\""+a.attributeType().name()+"\",";
-        json += "\"defaultValue\":"+a.defaultValue()+",";
-        json += "\"valueId\":"+a.valueId()+",";
-        json += "\"businessKey\":\""+a.businessKey()+"\",";
-        json += "\"group\":\""+a.group().name()+"\",";
-        json += "\"version\":\""+a.version().value()+"\",";
-        json += "\"position\":"+a.position()+",";
-        json += "\"attributeBusinessKey\":\""+a.attributeBusinessKey()+"\",";
-        json += "\"attributeGroup\":\""+a.attributeGroup().name()+"\",";
-        json += "\"attributePosition\":"+a.attributePosition()+",";
-        json += "\"hasParent\":"+a.hasParent()+",";
-        json += "\"parentId\":"+a.parentId()+",";
-        json += "\"attributeParentId\":"+a.attributeParentId()+",";
-        json += "\"states\":"+a.states().toJson()+",";
-        json += "\"valueStates\":"+a.valueStates().toJson()+",";
-        json += "\"history\":"+a.history().toJson()+",";
-        json += "\"valueHistory\":"+a.valueHistory().toJson()+",";
-        json += "\"value\":"+a.value().toJson()+",";
-        json += "\"processes\":"+((a.processes() != null && a.processes().size() >0)?a.processes().toJson():"[]");
+        json += "\"id\":"+a.id();
+        json += ",\"attributeId\":"+a.id();
+        json += ",\"name\":\""+a.name()+"\"";
+        json += ",\"type\":\""+a.attributeType().name()+"\"";
+        json += ",\"defaultValue\":"+JSONObject.quote(a.defaultValue())+"";
+        json += ",\"valueId\":"+a.valueId();
+        json += ",\"businessKey\":\""+a.businessKey()+"\"";
+        json += ",\"group\":\""+a.group().name()+"\"";
+        json += ",\"version\":\""+a.version().value()+"\"";
+        json += ",\"position\":"+a.position();
+        json += ",\"attributeBusinessKey\":\""+a.attributeBusinessKey()+"\"";
+        json += ",\"attributeGroup\":\""+a.attributeGroup().name()+"\"";
+        json += ",\"attributePosition\":"+a.attributePosition();
+        json += ",\"hasParent\":"+a.hasParent();
+        json += ",\"parentId\":"+a.parentId();
+        json += ",\"attributeParentId\":"+a.attributeParentId();
+        json += ",\"states\":"+a.states().toJson();
+        json += ",\"valueStates\":"+a.valueStates().toJson();
+        json += ",\"history\":"+a.history().toJson();
+        json += ",\"valueHistory\":"+a.valueHistory().toJson();
+        json += ",\"value\":"+a.value().toJson();
+        json += ((a.processes() != null && a.processes().size() >0)?","+"\"processes\":"+a.processes().toJson():"");
         return json;
+    }
+    
+    public Attribute<? extends Value<?>> clone();
+    
+    public static Attribute<? extends Value<?>> clone(Attribute<? extends Value<?>> attribute) {
+      return _fromJson(attribute.toJson());
     }
 }

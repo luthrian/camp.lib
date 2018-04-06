@@ -61,8 +61,6 @@ public interface CampMapInterface extends AttributeInterface<MapValue>  {
 
 	public boolean containsValue(Attribute<?> value);
 
-	public HashMap<String,Attribute<?>> clone();
-
 	public Set<String> keySet();
 
 	public Collection<Attribute<?>> values();

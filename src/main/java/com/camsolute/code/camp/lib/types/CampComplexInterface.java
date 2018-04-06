@@ -47,8 +47,6 @@ public interface CampComplexInterface extends AttributeInterface<ComplexValue> {
 
 	public boolean containsValue(ArrayList<Attribute<?>> value);
 
-	public ComplexValue clone();
-
 	public Set<String> keySet();
 
 	public Collection<ArrayList<Attribute<?>>> values();

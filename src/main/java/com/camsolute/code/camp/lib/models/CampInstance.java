@@ -221,7 +221,11 @@ public class CampInstance implements CampInstanceInterface {
     this.endOfLife = eol;
   }
 
-	@Override
+  public CampInstance clone() {
+  	return CampInstanceInterface.clone(this);
+  }
+  
+  @Override
 	public String toString() {
       return CampInstanceInterface._toJson(this);
 	}

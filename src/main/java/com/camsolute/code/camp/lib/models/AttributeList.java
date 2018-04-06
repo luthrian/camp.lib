@@ -22,6 +22,7 @@ package com.camsolute.code.camp.lib.models;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -49,6 +50,12 @@ public class AttributeList extends ArrayList<Attribute<? extends Value<?>>> impl
 	 */
 	private static final long serialVersionUID = -7656221443212960098L;
 
+	public AttributeList clone() {
+		return clone(this);
+	}
+	public static AttributeList clone(AttributeList list) {
+		return _fromJson(list.toJson());
+	}
 	@Override
 	public String toJson() {
 		return _toJson(this);
@@ -81,8 +88,11 @@ public class AttributeList extends ArrayList<Attribute<? extends Value<?>>> impl
 	
 	public static AttributeList _fromJSONArray(JSONArray ja) {
 		AttributeList al = new AttributeList();
-		for(Object jo:ja.toList()) {
-			al.add(AttributeInterface._fromJSONObject((JSONObject) jo));
+		Iterator<Object> i = ja.iterator();
+		while(i.hasNext()) {
+//		for(Object jo:ja.toList()) {
+			JSONObject jo = (JSONObject) i.next();
+			al.add(AttributeInterface._fromJSONObject(jo));
 		}
 		return al;
 	}

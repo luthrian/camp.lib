@@ -46,7 +46,7 @@ public class Order implements OrderInterface {
         SUBMITTED,
         REJECTED,
         UPDATED,
-        CANCELED,
+        CANCELLED,
         PRODUCTION,
         SHIPPING,
         TRANSIT,
@@ -54,6 +54,7 @@ public class Order implements OrderInterface {
         PAID,
         RECALLED,
         INTURNED,
+        DELETED,
         CLEAN,
         MODIFIED,
         DIRTY;
@@ -95,17 +96,45 @@ public class Order implements OrderInterface {
 
   	public Order(String orderNumber) {
   		this.orderNumber = orderNumber;
+  		this.businessKey = Util.Config.instance().properties().getProperty("object.create.Product.businessKey");
+  		this.date = Util.Time.timestamp();
+  		this.byDate = Util.Time.timestamp(Util.Time.nowPlus(10, Util.Time.formatDateTime));
+   		this.group = new Group(Util.Config.instance().properties().getProperty("object.create.Product.group"));
+   		this.version = new Version(Util.Config.instance().properties().getProperty("object.create.Product.version"));
   	}
-  	public Order(String orderNumber, String businessKey, Timestamp date) {
+  	
+  	public Order(String orderNumber, String businessKey) {
         this.orderNumber = orderNumber;
         this.businessKey = businessKey;
-        this.date = date;
+        this.date = Util.Time.timestamp();
+        this.byDate = Util.Time.timestamp(Util.Time.nowPlus(10, Util.Time.formatDateTime));
+     		this.businessKey = Util.Config.instance().properties().getProperty("object.create.Product.businessKey");
+     		this.group = new Group(Util.Config.instance().properties().getProperty("object.create.Product.group"));
+     		this.version = new Version(Util.Config.instance().properties().getProperty("object.create.Product.version"));
   	}
-  	public Order(String orderNumber, String businessKey, String date) {
+  	public Order(String orderNumber, String businessKey, Timestamp byDate) {
         this.orderNumber = orderNumber;
         this.businessKey = businessKey;
-        this.date = Util.Time.timestamp(date);
+        this.date = Util.Time.timestamp();
+        this.byDate = byDate;
+     		this.businessKey = Util.Config.instance().properties().getProperty("object.create.Product.businessKey");
+     		this.group = new Group(Util.Config.instance().properties().getProperty("object.create.Product.group"));
+     		this.version = new Version(Util.Config.instance().properties().getProperty("object.create.Product.version"));
   	}
+
+  	public Order(String orderNumber, String businessKey, String byDate) {
+        this.orderNumber = orderNumber;
+        this.businessKey = businessKey;
+        this.date = Util.Time.timestamp();
+        this.byDate = Util.Time.timestamp(byDate);
+        if(this.byDate < Util.Time.timestamp(Util.Time.nowPlus(10, Util.Time.formatDateTime))) {
+        	this.byDate = Util.Time.timestamp(Util.Time.nowPlus(10, Util.Time.formatDateTime));
+        }
+     		this.businessKey = Util.Config.instance().properties().getProperty("object.create.Product.businessKey");
+     		this.group = new Group(Util.Config.instance().properties().getProperty("object.create.Product.group"));
+     		this.version = new Version(Util.Config.instance().properties().getProperty("object.create.Product.version"));
+  	}
+
 		@Override
 		public String businessKey() {
 			return this.businessKey;
@@ -115,12 +144,14 @@ public class Order implements OrderInterface {
 		public ProcessList processInstances() {
 			return processInstances;
 		}
+
 		@Override
 		public void addProcess(Process<Order> process) {
 			process.states().modify();
 			processInstances.add(process);
 			states.modify();
 		}
+
 		@Override
 		public void addProcesses(ProcessList processes) {
 			for(Process<?> p: processes) {
@@ -129,6 +160,7 @@ public class Order implements OrderInterface {
 			processInstances.addAll(processes);
 			this.states.modify();
 		}
+
 		@Override
 		public Process<Order> deleteProcess(String instanceId) {
 			int count = 0;
@@ -441,4 +473,25 @@ public class Order implements OrderInterface {
 			return new Request<Order>(this,principal,type);
 		}
 		
+		public Order clone() {
+			String json = this.toJson();
+			if(!Util._IN_PRODUCTION){String msg = "----[JSON: ("+json+")]----";LOG.info(String.format(fmt, "clone",msg));}
+			return OrderInterface._fromJson(json);
+		}
+		
+		public void mirror(Order object) {
+	  	this.id= object.id();
+	  	this.orderNumber = object.onlyBusinessId();
+	  	this.businessKey = object.businessKey();
+	  	this.date = object.date();
+	  	this.byDate = object.byDate();
+	  	this.status = (Status)object.status();
+	  	this.previousStatus = (Status)object.previousStatus();
+	  	this.processInstances = object.processes();
+	  	this.orderPositions = object.orderPositions();
+	  	this.group = object.group();
+	  	this.version = object.version();
+	  	this.states = object.states();
+	  	this.history = object.history();
+		}
 }

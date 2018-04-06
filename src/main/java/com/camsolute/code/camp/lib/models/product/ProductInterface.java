@@ -25,6 +25,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
+import com.camsolute.code.camp.lib.contract.Clonable;
 import com.camsolute.code.camp.lib.contract.HasAttributes;
 import com.camsolute.code.camp.lib.contract.HasDate;
 import com.camsolute.code.camp.lib.contract.HasModel;
@@ -42,7 +43,7 @@ import com.camsolute.code.camp.lib.models.process.ProcessList;
 import com.camsolute.code.camp.lib.models.process.ProductProcess;
 import com.camsolute.code.camp.lib.utilities.Util;
 
-public interface ProductInterface extends HasProcess<Product>, HasAttributes, HasModel ,HasDate, IsObjectInstance<Product>{
+public interface ProductInterface extends Clonable<Product>, HasProcess<Product>, HasAttributes, HasModel ,HasDate, IsObjectInstance<Product>{
 	public static final Logger LOG = LogManager.getLogger(ProductInterface.class);
 	public static String fmt = "[%15s] [%s]";
 	
@@ -55,20 +56,20 @@ public interface ProductInterface extends HasProcess<Product>, HasAttributes, Ha
 	
 	public static String _toInnerJson(Product p) {
 		String json = "";
-		json += "\"id\":"+p.id()+",";
-		json += "\"name\":\""+p.name()+"\",";
-		json += "\"businesskey\":\""+p.businessKey()+"\",";
-		json += "\"modelId\":"+p.modelId()+",";
-		json += "\"models\":"+((p.models() != null && p.models().size() > 0)?p.models().toJson():"[]")+",";
-		json += "\"group\":\""+p.group().name()+"\",";
-		json += "\"version\":\""+p.version().value()+"\",";
-		json += "\"date\":\""+p.date().toString()+"\",";
-		json += "\"status\":\""+p.status().name()+"\",";
-		json += "\"previousStatus\":\""+p.previousStatus().name()+"\",";
-		json += "\"states\":"+p.states().toJson()+",";
-		json += "\"history\":"+p.history().toJson()+",";
-		json += "\"attributes\":"+((p.attributes() != null && p.attributes().size() > 0)?p.attributes().toJson():"{}")+",";
-		json += "\"processes\":"+((p.processes() != null && p.processes().size() >0)?p.processes().toJson():"[]");
+		json += "\"id\":"+p.id();
+		json += ",\"name\":\""+p.name()+"\"";
+		json += ",\"businesskey\":\""+p.businessKey()+"\"";
+		json += ",\"modelId\":"+p.modelId();
+		json += ((p.models() != null && !p.models().isEmpty())?",\"models\":"+p.models().toJson():"");
+		json += ",\"group\":\""+p.group().name()+"\"";
+		json += ",\"version\":\""+p.version().value()+"\"";
+		json += ",\"date\":\""+p.date().toString()+"\"";
+		json += ",\"status\":\""+p.status().name()+"\"";
+		json += ",\"previousStatus\":\""+p.previousStatus().name()+"\"";
+		json += ",\"states\":"+p.states().toJson();
+		json += ",\"history\":"+p.history().toJson();
+		json += ((p.attributes() != null && p.attributes().size() > 0)?",\"attributes\":"+p.attributes().toJson():"");
+		json += ((p.processes() != null && p.processes().size() >0)?",\"processes\":"+p.processes().toJson():"");
 		return json;
 	}
 	
@@ -88,14 +89,8 @@ public interface ProductInterface extends HasProcess<Product>, HasAttributes, Ha
 		int modelId = jo.getInt("modelId");
 		String businesskey = jo.getString("businesskey");
 		ModelList models = new ModelList();
-		try {
-			if(jo.has("models")){
-				models = ModelList._fromJSONArray(jo.getJSONArray("models"));
-			}
-			
-		} catch (Exception e) {
-			if(!Util._IN_PRODUCTION){String msg = "----[JSON Error! Model list is empty.]----";LOG.info(String.format(fmt, "_fromJSONObject",msg));}
-			e.printStackTrace();
+		if(jo.has("models")){
+			models = ModelList._fromJSONObject(jo.getJSONObject("models"));
 		}
 		Group group = new Group(jo.getString("group"));
 		Version version = new Version(jo.getString("version"));
@@ -105,18 +100,12 @@ public interface ProductInterface extends HasProcess<Product>, HasAttributes, Ha
 		CampStates states = CampStatesInterface._fromJSONObject(jo.getJSONObject("states"));
 		CampInstance history = CampInstanceInterface._fromJSONObject(jo.getJSONObject("history"));
 		AttributeMap attributes = new AttributeMap();
-		try {
+		if(jo.has("attributes")) {
 			attributes = AttributeMap._fromJSONObject(jo.getJSONObject("attributes"));
-		} catch (Exception e) {
-			if(!Util._IN_PRODUCTION){String msg = "----[JSON Error! Product attributes missing. ]----";LOG.info(String.format(fmt, "_fromJSONObject",msg));}
-			e.printStackTrace();
 		}
 		ProcessList processes = new ProcessList();
-		try {
+		if(jo.has("processes")) {
 			processes = ProcessList._fromJSONArray(jo.getJSONArray("processes"));
-		} catch (Exception e) {
-			if(!Util._IN_PRODUCTION){String msg = "----[JSON Error. Process list is empty.]----";LOG.info(String.format(fmt, "_fromJSONObject",msg));}
-			e.printStackTrace();			
 		}
 		Product p = new Product(id, name, businesskey, group, version, date);
 		p.setStatus(status);

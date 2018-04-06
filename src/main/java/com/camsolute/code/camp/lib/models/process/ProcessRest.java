@@ -127,6 +127,31 @@ public class ProcessRest implements ProcessRestInterface{
 	}
 
 	@Override
+	public ProcessList loadList(boolean log) {
+	return loadList(serverUrl,log);
+	}
+	public ProcessList loadList(String serverUrl,boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[loadList]";
+			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		String prefix = CampRest.Process.Prefix;		
+		String serviceUri = CampRest.DaoService.callRequest(prefix,CampRest.DaoService.Request.LOAD_LIST);
+		String uri = serverUrl+domainUri+serviceUri;
+		String result = RestInterface.resultGET(uri, log);
+		ProcessList pl = ProcessList._fromJson(result);
+		
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[loadListByKey completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return pl;
+	}
+
+	@Override
 	public ProcessList loadListByKey(String businessKey, boolean log) {
 	return loadListByKey(serverUrl,businessKey, log);
 	}

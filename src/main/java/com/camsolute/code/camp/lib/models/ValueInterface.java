@@ -63,6 +63,13 @@ public interface ValueInterface<T> extends HasId, HasStates, HasGroup, HasCoordi
     
     public static String _toJson(Value<?> v) {
         String json ="{";
+        json += _toInnerJson(v);
+        json += "}";
+        return json;
+    }
+    
+    public static String _toInnerJson(Value<?> v) {
+    	String json = "";
         json += "\"id\":"+v.id()+",";
         json += "\"type\":\""+v.type().name()+"\",";
         json += "\"group\":\""+v.group().name()+"\",";
@@ -70,9 +77,9 @@ public interface ValueInterface<T> extends HasId, HasStates, HasGroup, HasCoordi
         json += "\"position\":"+v.position().toJson()+",";
         json += "\"states\":"+v.states().toJson()+",";
         json += "\"value\":"+_valueToJson(v);
-        json += "}";
         return json;
     }
+
 
 	public static String _valueToJson(Value<?> v) {
         String str = "";
@@ -136,7 +143,7 @@ public interface ValueInterface<T> extends HasId, HasStates, HasGroup, HasCoordi
 	        } else {
 	            start = false;
 	        }
-            json += "\""+group+"\":"+AttributeInterface._toJson(h.get(group))+",";
+            json += "\""+group+"\":"+AttributeInterface._toJson(h.get(group));
         }
         json += "}";
         return json;
@@ -214,7 +221,7 @@ public interface ValueInterface<T> extends HasId, HasStates, HasGroup, HasCoordi
     	if(jo.has("id")) {id = jo.getInt("id");}
     	String group = jo.getString("group");
     	boolean selected = jo.getBoolean("selected");
-    	AttributeType type = AttributeType.valueOf(jo.getString("type"));
+    	AttributeType type = AttributeType.valueOf(AttributeType.class,jo.getString("type"));
     	Coordinate position = CoordinateInterface._fromJSONObject(jo.getJSONObject("position"));
     	CampStates states = CampStatesInterface._fromJSONObject(jo.getJSONObject("states"));
     	
@@ -447,4 +454,11 @@ public interface ValueInterface<T> extends HasId, HasStates, HasGroup, HasCoordi
 			}
 			return value;
     }
+
+		public Value<T> clone();
+		
+		public static Value<?> clone(Value<?> value) {
+			String json = value.toJson();
+			return ValueInterface._fromJson(json);
+		}
 }

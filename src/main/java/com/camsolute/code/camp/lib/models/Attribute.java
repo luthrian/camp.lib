@@ -807,7 +807,9 @@ public abstract  class Attribute<U extends Value<?>> implements AttributeInterfa
     return attributeMatrix.get(type)[1];
   }
 
-
+  public Attribute<? extends Value<?>> clone() {
+  	return AttributeInterface.clone(this);
+  }
 
 
 	@Override

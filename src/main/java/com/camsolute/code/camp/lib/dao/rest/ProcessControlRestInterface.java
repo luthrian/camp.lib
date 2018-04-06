@@ -47,6 +47,8 @@ public interface ProcessControlRestInterface {
 	
 	public void delegateTask(String taskId, String userId, boolean log);
 	
+	public <T extends HasProcess<?>> void completeTask(String processInstanceId, String principal, T object, boolean log);
+	
 	public void completeTask(String taskId, Variables variables, boolean log);
 	
 	public Task getTask(String taskId, boolean log);

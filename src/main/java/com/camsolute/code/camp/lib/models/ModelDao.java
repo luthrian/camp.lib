@@ -164,6 +164,61 @@ public class ModelDao implements ModelDaoInterface {
 		return m;
 	}
 
+	@Override
+	public ModelList loadList(boolean log) {
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[loadList]";
+			msg = "====[ load all persisted model object instances ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		
+		ModelList ml = new ModelList();
+		Connection conn = null;
+		ResultSet rs = null;
+		Statement dbs = null;
+		int retVal = 0;
+		try{
+			conn = Util.DB.__conn(log);
+			
+			String SQL = "SELECT * FROM "+table+" AS t, "+CampInstanceDao.table+" AS ti WHERE "
+					+ " t.`model_group`=ti.`_group_name`"
+					+ " AND ti.`_instance_id`=ti.`_current_instance_id`"
+					+ " AND t.`"+tabledef[0][0]+"`=ti.`_object_id`"
+					+ " ORDER BY t.`model_group`, ti.`_object_business_id`";
+			
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
+			
+			dbs = conn.createStatement();
+			
+			rs = dbs.executeQuery(SQL);		
+			
+			while (rs.next()) {
+				Model m = rsToI(rs,log);
+				m.setHistory(CampInstanceDao.instance().rsToI(rs, log));
+				m.states().ioAction(IOAction.LOAD);
+				ml.add(m);
+			} 
+			if(log && !Util._IN_PRODUCTION) {retVal = ml.size();msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
+			
+		} catch(SQLException e) {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
+			e.printStackTrace();
+		} finally {
+			if(log && !Util._IN_PRODUCTION){msg = "----[ releasing connection]----";LOG.info(String.format(fmt, _f,msg));}
+			Util.DB.__release(conn,log);
+			Util.DB._releaseRS(rs, log);
+			Util.DB._releaseStatement(dbs, log);
+		}
+		
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[loadList completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return ml;
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public ModelList loadListByBusinessKey(String businessKey, boolean log) {

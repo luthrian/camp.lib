@@ -76,6 +76,7 @@ public class CampRest {
 			CREATE_PRODUCT, 
 			CREATE_ATTRIBUTE, 
 			CREATE_MODEL, 
+			CREATE_DESCRIPTION, 
 			SAVE,
 			SAVE_LIST,
 			UPDATE,
@@ -110,6 +111,7 @@ public class CampRest {
 		public static final String CREATE_PRODUCT = "/create";
 		public static final String CREATE_ATTRIBUTE = "/create";
 		public static final String CREATE_MODEL = "/create";
+		public static final String CREATE_DESCRIPTION = "/create";
 		public static final String SAVE = "/save";
 		public static final String SAVE_LIST = "/s/save";
 		public static final String UPDATE = "/update";
@@ -147,6 +149,7 @@ public class CampRest {
 			Call.put(Request.CREATE_PRODUCT, new String[] {"/create","/create?businessId=%s&businessKey=%s&date=%s&endOfLife=%s&group=%s&version=%s","GET"});
 			Call.put(Request.CREATE_ATTRIBUTE, new String[] {"/create","/create?businessId=%s&businessKey=%s&date=%s&byDate=%s","GET"});
 			Call.put(Request.CREATE_MODEL, new String[] {"/create","/create?businessId=%s&releaseDate=%s&endOfLife=%s&businessKey=%s&group=%s&version=%s","GET"});
+			Call.put(Request.CREATE_DESCRIPTION, new String[] {"/create","/create?title=%s&description=%s&businessId=%s&businessKey=%s&group=%s&version=%s","GET"});
 			Call.put(Request.SAVE, new String[] {"/save","/save","POST"});
 			Call.put(Request.SAVE_LIST, new String[] {"/s/save","/s/save","POST"});
 			Call.put(Request.UPDATE, new String[] {"/update","/update","POST"});
@@ -358,7 +361,7 @@ public class CampRest {
 			CLAIM_TASK,
 			DELEGATE_TASK,
 			COMPLETE_TASK,
-//			COMPLETE_CURRENT_TASK,
+			COMPLETE_CURRENT_TASK,
 			GET_TASK,
 			GET_TASKS,
 			GET_TASKS_KEY,
@@ -374,6 +377,7 @@ public class CampRest {
 			public static final String CLAIM_TASK = "/task/claim";		
 			public static final String DELEGATE_TASK = "/task/delegate";		
 			public static final String COMPLETE_TASK = "/task/complete"; //package = Variables		
+			public static final String COMPLETE_CURRENT_TASK = "/task/current/complete"; //package = object		
 			public static final String GET_TASK = "/task/get";		
 			public static final String GET_TASKS = "/s/task/get";		
 			public static final String GET_TASKS_KEY = "/s/task/key/get";		
@@ -392,6 +396,7 @@ public class CampRest {
 			Call.put(Request.CLAIM_TASK, new String[]{"/task/claim","/task/claim?taskId=%s&userId=%s","GET"});		
 			Call.put(Request.DELEGATE_TASK, new String[]{"/task/delegate","/task/delegate?taskId=%s&userId=%s","GET"});		
 			Call.put(Request.COMPLETE_TASK, new String[]{"/task/complete","/task/complete?taskId=%s","POST"}); //package = Variables		
+			Call.put(Request.COMPLETE_CURRENT_TASK, new String[]{"/task/current/complete","/task/current/complete?processInstanceId=%s&principal=%s","POST"}); //package = object		
 			Call.put(Request.GET_TASK, new String[]{"/task/get","/task/get?taskId=%s","GET"});		
 			Call.put(Request.GET_TASKS, new String[]{"/s/task/get","/s/task/get?processInstanceId=%s","GET"});		
 			Call.put(Request.GET_TASKS_KEY, new String[]{"/s/task/key/get","/s/task/key/get?processInstanceId=%s&businessKey=%s","GET"});		
@@ -409,6 +414,7 @@ public class CampRest {
 
 	public static class ProcessDaoService {
 		public static enum Request {
+			LOAD_LIST,
 			LOAD_BY_ID,
 			LOAD_BY_INSTANCE_ID,
 			LOAD_BY_BUSINESS_ID,
@@ -434,6 +440,7 @@ public class CampRest {
 			public static final String LOAD_BY_ID = "/load/by/id/{id}";
 			public static final String LOAD_BY_INSTANCE_ID = "/load/by/instanceId";
 			public static final String LOAD_BY_BUSINESS_ID = "/load/by/businessId";
+			public static final String LOAD_LIST = "/s/load/all";
 			public static final String LOAD_BY_KEY = "/load/by/key";
 			public static final String CREATE = "/create";
 			public static final String CREATE_EID = "/create/eid";
@@ -459,6 +466,7 @@ public class CampRest {
 			Call.put(Request.LOAD_BY_ID, new String[] {"/load/by/id/{id}","/load/by/id/%s","GET"});
 			Call.put(Request.LOAD_BY_INSTANCE_ID, new String[] {"/load/by/instanceId","/load/by/instanceId?instanceId=%s","GET"});
 			Call.put(Request.LOAD_BY_BUSINESS_ID, new String[] {"/load/by/businessId","/load/by/businessId?businessId=%s","GET"});
+			Call.put(Request.LOAD_LIST, new String[] {"/s/load/all","/s/load/all","GET"});
 			Call.put(Request.LOAD_BY_KEY, new String[] {"/load/by/key","/load/by/key?businessKey=%s","GET"});
 			Call.put(Request.CREATE, new String[] {"/create","/create?businessId=%s&instanceId=%s&businessKey=%s&processName=%s&definitionId=%s&tenantId=%s&caseInstanceId=%s&ended=%s&suspended=%s&type=%s","GET"});
 			Call.put(Request.CREATE_EID, new String[] {"/create/eid","/create/eid?businessId=%s&executionId=%s&instanceId=%s&businessKey=%s&processName=%s&definitionId=%s&tenantId=%s&caseInstanceId=%s&ended=%s&suspended=%s&type=%s","GET"});

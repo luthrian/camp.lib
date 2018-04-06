@@ -69,6 +69,8 @@ public interface ProcessDaoInterface {
 
   public  <T extends Process<?>> T loadByInstanceId(String instanceId, boolean log);
 
+  public  ProcessList loadList(boolean log);
+
   public  <E extends ProcessList> E loadListByKey(String businessKey, boolean log);
 
   public  <E extends ProcessList> E loadListByBusinessId(String businessId, boolean log);
