@@ -547,7 +547,7 @@ public class OrderDao implements OrderDaoInterface {
 			dbs = conn.createStatement();
 			
 			String fSQL = "UPDATE " + table + " SET " + Util.DB._columns(tabledef, Util.DB.dbActionType.UPDATE, log)
-			+ " WHERE `"+tabledef[0][0]+"`=" + o.id();
+			+ " WHERE `"+tabledef[0][0]+"`=%s";
 			String SQL = formatUpdateSQL(fSQL, o, log);
 			
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
@@ -613,11 +613,11 @@ public class OrderDao implements OrderDaoInterface {
 //		o.history().updateInstance();
 			try{
 			
-			CampInstanceDao.instance()._addInstance(o, false, log);
+				CampInstanceDao.instance()._addInstance(o, false, log);
 			
-			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" updated ]----";LOG.info(String.format(fmt,_f,msg));}
+				if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" updated ]----";LOG.info(String.format(fmt,_f,msg));}
 			
-			o.states().ioAction(IOAction.UPDATE);
+				o.states().ioAction(IOAction.UPDATE);
 		} catch(SQLException e) {
 			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
 			e.printStackTrace();
@@ -1279,6 +1279,7 @@ public class OrderDao implements OrderDaoInterface {
 				"'"+o.onlyBusinessId()+"'",
 				"'"+o.businessKey()+"'",
 				"'"+o.date().toString()+"'",
+				"'"+o.byDate().toString()+"'",
 				o.id());
 		return fSQL;
 	}

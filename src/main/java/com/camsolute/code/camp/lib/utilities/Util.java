@@ -65,6 +65,9 @@ import com.camsolute.code.camp.lib.types.CampSet;
 
 public class Util {
 
+	private static final Logger LOG = LogManager.getLogger(Util.class);
+	private static String fmt = "[%15s] [%s]";
+	
     public static final int NEW_ID = 0;
     
     public static final String DEFAULT_GLOBAL_SYSTEM_TARGET = "com.camsolute.code.camp.global.system.target";
@@ -237,24 +240,43 @@ public class Util {
 	}
 
 	public final static Timestamp timestampFromString(String datetime){
+		if(!Util._IN_PRODUCTION){String msg = "----[TIMESTAMPFROMSTRING("+datetime+")]----";LOG.info(String.format(fmt, "timestampFromString",msg));}
 		Timestamp value = null;
         SimpleDateFormat[] FORMATS = {
+    			new SimpleDateFormat("yyyy-MM-dd kk:mm:ss"),
     			new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"),
+    			new SimpleDateFormat("yyyy-MM-dd kk:mm:ss.SSS"),
+    			new SimpleDateFormat("yyyy-MM-dd kk:mm:ss.SSSZ"),
+    			new SimpleDateFormat("yyyy-MM-dd kk:mm:ss.SSSz"),
     			new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS"),
     			new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ"),
     			new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSz"),
+    			new SimpleDateFormat("yyyy-MM-dd'T'kk:mm:ss"),
+    			new SimpleDateFormat("yyyy-MM-dd'T'kk:mm:ss.SSS"),
+    			new SimpleDateFormat("yyyy-MM-dd'T'kk:mm:ss.SSSZ"),
+    			new SimpleDateFormat("yyyy-MM-dd'T'kk:mm:ss.SSSz"),
     			new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"),
     			new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS"),
     			new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ"),
     			new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSz"),
     			new SimpleDateFormat("yyyy-MM-dd"),
     			new SimpleDateFormat("yyyy/MM/dd"),
+    			new SimpleDateFormat("yyyy/MM/dd kk:mm:ss"),
+    			new SimpleDateFormat("yyyy/MM/dd kk:mm:ss.SSS"),
     			new SimpleDateFormat("yyyy/MM/dd HH:mm:ss"),
     			new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS"),
     			new SimpleDateFormat("dd/MM/yyyy"),
+    			new SimpleDateFormat("dd/MM/yyyy kk:mm:ss"),
+    			new SimpleDateFormat("dd/MM/yyyy kk:mm:ss.SSS"),
     			new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"),
     			new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS"),
     			new SimpleDateFormat("dd.MM.yyyy"),
+    			new SimpleDateFormat("dd.MM.yyyy kk:mm:ss"),
+    			new SimpleDateFormat("dd.MM.yyyy kk:mm:ss.SSSZ"),
+    			new SimpleDateFormat("dd.MM.yyyy kk:mm:ss.SSSz"),
+    			new SimpleDateFormat("dd.MM.yyyy kk:mm:ss.SSS"),
+    			new SimpleDateFormat("dd.MM.yyyy kk:mm:ss.SSSZ"),
+    			new SimpleDateFormat("dd.MM.yyyy kk:mm:ss.SSSz"),
     			new SimpleDateFormat("dd.MM.yyyy HH:mm:ss"),
     			new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SSSZ"),
     			new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SSSz"),
@@ -262,6 +284,13 @@ public class Util {
     			new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SSSZ"),
     			new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SSSz"),
     			new SimpleDateFormat("yyyy.MM.dd"),
+    			new SimpleDateFormat("yyyy.MM.dd kk:mm"),
+    			new SimpleDateFormat("yyyy.MM.dd kk:mm:ss"),
+    			new SimpleDateFormat("yyyy.MM.dd kk:mm:ss.SSS"),
+    			new SimpleDateFormat("yyyy.MM.dd kk:mm:ss.SSSZ"),
+    			new SimpleDateFormat("yyyy.MM.dd kk:mm:ss.SSSz"),
+    			new SimpleDateFormat("yyyy/MM/dd kk:mm:ss"),
+    			new SimpleDateFormat("yyyy-MM-dd kk:mm:ss"),
     			new SimpleDateFormat("yyyy.MM.dd HH:mm"),
     			new SimpleDateFormat("yyyy.MM.dd HH:mm:ss"),
     			new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS"),
@@ -269,6 +298,11 @@ public class Util {
     			new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSSz"),
     			new SimpleDateFormat("yyyy/MM/dd HH:mm:ss"),
     			new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"),
+       			new SimpleDateFormat("kk:mm:ss.SSSZ"),
+       			new SimpleDateFormat("kk:mm:ss.SSSz"),
+       			new SimpleDateFormat("kk:mm:ss.SSS"),
+       			new SimpleDateFormat("kk:mm:ss"),
+       			new SimpleDateFormat("kk:mm"),
        			new SimpleDateFormat("HH:mm:ss.SSSZ"),
        			new SimpleDateFormat("HH:mm:ss.SSSz"),
        			new SimpleDateFormat("HH:mm:ss.SSS"),
@@ -277,7 +311,7 @@ public class Util {
 			};
 		for(SimpleDateFormat sdf:FORMATS){
 			try{
-				sdf.setLenient(false);
+				sdf.setLenient(true);
 				value = Timestamp.valueOf(LocalDateTime.fromDateFields(sdf.parse(datetime)).toString());
     			return value;
 			} catch (ParseException e){
@@ -285,6 +319,8 @@ public class Util {
 				continue;
 			}
 		}
+//		value = Timestamp.valueOf(LocalDateTime.parse(datetime).toString());
+    if(!Util._IN_PRODUCTION){String msg = "----[TIMESTAMPFROMSTRING.RETURN("+value.toString()+")]----";LOG.info(String.format(fmt, "timestampFromString",msg));}
 		return value;
 	}
 
@@ -308,7 +344,8 @@ public class Util {
         
         @SuppressWarnings("deprecation")
 				public static LocalDate getLocalDate(Timestamp datetime) {
-        	return LocalDate.of(datetime.getYear(),datetime.getMonth(),datetime.getDate());
+        	return LocalDate.parse(Util.Time.date(datetime));
+//        	return LocalDate.of(datetime.getYear(),datetime.getMonth(),datetime.getDate());
         }
         
         /**

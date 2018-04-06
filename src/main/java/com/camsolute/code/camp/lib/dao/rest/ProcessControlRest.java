@@ -62,29 +62,28 @@ public class ProcessControlRest implements ProcessControlRestInterface {
 		return startProcess(serverUrl, processKey, object, principal, log);
 	}
 	public <T extends HasProcess<T>> Process<?> startProcess(String serverUrl, String processKey, T object, Principal principal, boolean log) {
-long startTime = System.currentTimeMillis();
-String _f = null;
-String msg = null;
-if(log && !Util._IN_PRODUCTION) {
-	_f = "[startProcess]";
-	msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
-}
-Request<T> request = new Request<T>(object, principal, RequestType.START_PRINCIPAL_PROCESS); 
-String json = request.toJson();
-String prefix = CampRest.ProcessControl.Prefix;		
-String serviceUri = CampRest.ProcessControlDaoService.callRequest(prefix,CampRest.ProcessControlDaoService.Request.START_PROCESS);
-String uri = serverUrl+domainUri+String.format(serviceUri,processKey);
-if(log && !Util._IN_PRODUCTION){msg = "----[process control service call: uri("+uri+")]----";LOG.info(String.format(fmt, _f,msg));}
-if(log && !Util._IN_PRODUCTION){msg = "----[process control service call: uri("+uri+")]----";LOG.info(String.format(fmt, _f,msg));}
-String result = RestInterface.resultPost(uri, json, log);
-if(log && !Util._IN_PRODUCTION){msg = "----[process control rest call: result("+result+")]----";LOG.info(String.format(fmt, _f,msg));}
-Process<?> p = ProcessInterface._fromJson(result);
-
-if(log && !Util._IN_PRODUCTION) {
-	String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
-	msg = "====[startProcess completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
-}
-return p;
+		long startTime = System.currentTimeMillis();
+		String _f = null;
+		String msg = null;
+		if(log && !Util._IN_PRODUCTION) {
+			_f = "[startProcess]";
+			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
+		}
+		Request<T> request = new Request<T>(object, principal, RequestType.START_PRINCIPAL_PROCESS); 
+		String json = request.toJson();
+		String prefix = CampRest.ProcessControl.Prefix;		
+		String serviceUri = CampRest.ProcessControlDaoService.callRequest(prefix,CampRest.ProcessControlDaoService.Request.START_PROCESS);
+		String uri = serverUrl+domainUri+String.format(serviceUri,processKey);
+		if(log && !Util._IN_PRODUCTION){msg = "----[process control service call: uri("+uri+")]----";LOG.info(String.format(fmt, _f,msg));}
+		String result = RestInterface.resultPost(uri, json, log);
+		if(log && !Util._IN_PRODUCTION){msg = "----[process control rest call: result("+result+")]----";LOG.info(String.format(fmt, _f,msg));}
+		Process<?> p = ProcessInterface._fromJson(result);
+		
+		if(log && !Util._IN_PRODUCTION) {
+			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+			msg = "====[startProcess completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
+		}
+		return p;
 	}
 
 	@Override

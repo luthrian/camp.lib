@@ -121,15 +121,14 @@ public class Request<T extends HasProcess<T>> implements Serialization<Request<?
 		this.variables = variables;
 	}
 
-
 	public String businessKey() {
 		return businessKey;
 	}
 
-
 	public void setBusinesskey(String businessKey) {
 		this.businessKey = businessKey;
 	}
+
 	public String id() {
 		return id;
 	}

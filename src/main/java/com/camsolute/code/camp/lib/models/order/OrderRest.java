@@ -412,7 +412,7 @@ public class OrderRest implements OrderRestInterface {
 		Order o = null;
 		String prefix = CampRest.Order.Prefix;		
 		String serviceUri = CampRest.DaoService.callRequest(prefix,CampRest.DaoService.Request.UPDATE_ATTRIBUTE);
-		String uri = serverUrl+domainUri+String.format(serviceUri,serverUrl, attributeType.name(), businessId, attributeValue);
+		String uri = serverUrl+domainUri+String.format(serviceUri,attributeType.name(), businessId, attributeValue);
 		String result = RestInterface.resultGET(uri, log);
 		o = OrderInterface._fromJson(result);
 		

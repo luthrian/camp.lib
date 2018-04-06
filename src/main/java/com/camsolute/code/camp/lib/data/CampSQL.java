@@ -544,11 +544,11 @@ public class CampSQL {
 				{"order_date", "TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP"},
 				{"order_by_date", "TIMESTAMP NULL"},
 				{"extra", "PRIMARY KEY (`_order_id_`)"
-						+ ",UNIQUE KEY `_order_id_UNIQUE` (`_order_id_`)"
-						+ ",UNIQUE KEY `order_number_UNIQUE` (`order_number`)"
-						+ ",INDEX `order_date_idx` (`order_date` ASC)"
-						+ ",INDEX `order_by_date_idx` (`order_by_date` ASC)"
-						+ ",KEY `fk_order_customer1_idx` (`order_businesskey`)"}
+					+ ",UNIQUE KEY `_order_id_UNIQUE` (`_order_id_`)"
+//					+ ",UNIQUE KEY `order_number_UNIQUE` (`order_number`)"
+					+ ",INDEX `order_date_idx` (`order_date` ASC)"
+					+ ",INDEX `order_by_date_idx` (`order_by_date` ASC)"
+					+ ",KEY `fk_order_customer1_idx` (`order_businesskey`)"}
 		};
 		public static final String[][] order_position_table_definition = {
 				{"_order_position_id_",  "int(11) NOT NULL AUTO_INCREMENT"},
