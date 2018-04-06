@@ -289,45 +289,77 @@ public class Task implements Serializable, Serialization<Task> {
 		public static Task _fromJSONObject(JSONObject jo) {
         if(!Util._IN_PRODUCTION){String msg = "----[Task.JSON("+jo.toString()+")]----";LOG.info(String.format(fmt, "_fromJson",msg));}
 			Task t = new Task();
-	    String id = jo.getString("id");
-	    t.setId(id);
-	    String name = jo.getString("name");
-	    t.setName(name);
-	    String assignee = jo.getString("assignee");
-	    t.setAssignee(assignee);
-	    if(jo.has("owner")) {
-	    	t.setOwner(jo.getString("owner"));
+			if(jo.has("id") && jo.get("id") != JSONObject.NULL) {
+		    String id = jo.getString("id");
+		    t.setId(id);
+			}
+			if(jo.has("name") && jo.get("name") != JSONObject.NULL) {
+		    String name = jo.getString("name");
+		    t.setName(name);
+			}
+			if(jo.has("assignee") && jo.get("assignee") != JSONObject.NULL) {
+		    String assignee = jo.getString("assignee");
+		    t.setAssignee(assignee);
+			}
+	    if(jo.has("owner") && jo.get("owner") != JSONObject.NULL) {
+	   		t.setOwner(jo.getString("owner"));
 	    }
 	    String created = jo.getString("created");
 	    t.setCreated(created);
-	    String due = jo.getString("due");
-	    t.setDue(due);
-	    String followUp = jo.getString("followUp");
-	    t.setFollowUp(followUp);
-	    String delegationState = jo.getString("delegationState");
-	    t.setDelegationState(delegationState);
-	    String description = jo.getString("description");
-	    t.setDescription(description);
-	    String executionId = jo.getString("executionId");
-	    t.setExecutionId(executionId);
-	    String parentTaskId = jo.getString("parentTaskId");
-	    t.setParentTaskId(parentTaskId);
+	    if(jo.has("due") && jo.get("due") != JSONObject.NULL) {
+	    	String due = jo.getString("due");
+	    	t.setDue(due);
+	    }
+	    if(jo.has("followUp") && jo.get("followUp") != JSONObject.NULL) {
+		    String followUp = jo.getString("followUp");
+		    t.setFollowUp(followUp);
+	    }
+	    if(jo.has("delegationState") && jo.get("delegationState") != JSONObject.NULL) {
+		    String delegationState = jo.getString("delegationState");
+		    t.setDelegationState(delegationState);
+	    }
+	    if(jo.has("description") && jo.get("description") != JSONObject.NULL) {
+		    String description = jo.getString("description");
+		    t.setDescription(description);
+	    }
+	    if(jo.has("executionId") && jo.get("executionId") != JSONObject.NULL) {
+		    String executionId = jo.getString("executionId");
+		    t.setExecutionId(executionId);
+	    }
+	    if(jo.has("parentTaskId") && jo.get("parentTaskId") != JSONObject.NULL) {
+		    String parentTaskId = jo.getString("parentTaskId");
+		    t.setParentTaskId(parentTaskId);
+	    }
 	    int priority = jo.getInt("priority");
 	    t.setPriority(priority);
-	    String processDefinitionId = jo.getString("processDefinitionId");
-	    t.setProcessDefinitionId(processDefinitionId);
-	    String processInstanceId = jo.getString("processInstanceId");
-	    t.setProcessInstanceId(processInstanceId);
-	    String caseExecutionId = jo.getString("caseExecutionId");
-	    t.setCaseExecutionId(caseExecutionId);
-	    String caseDefinitionId = jo.getString("caseDefinitionId");
-	    t.setCaseDefinitionId(caseDefinitionId);
-	    String caseInstanceId = jo.getString("caseInstanceId");
-	    t.setCaseInstanceId(caseInstanceId);
-	    String taskDefinitionKey = jo.getString("taskDefinitionKey");
-	    t.setTaskDefinitionKey(taskDefinitionKey);
-	    String tenantId = jo.getString("tenantId");
-	    t.setTenantId(tenantId);
+	    if(jo.has("processDefinitionId") && jo.get("processDefinitionId") != JSONObject.NULL) {
+		    String processDefinitionId = jo.getString("processDefinitionId");
+		    t.setProcessDefinitionId(processDefinitionId);
+	    }
+	    if(jo.has("processInstanceId") && jo.get("processInstanceId") != JSONObject.NULL) {
+		    String processInstanceId = jo.getString("processInstanceId");
+		    t.setProcessInstanceId(processInstanceId);
+	    }
+	    if(jo.has("caseExecutionId") && jo.get("caseExecutionId") != JSONObject.NULL) {
+		    String caseExecutionId = jo.getString("caseExecutionId");
+		    t.setCaseExecutionId(caseExecutionId);
+	    }
+	    if(jo.has("caseDefinitionId") && jo.get("caseDefinitionId") != JSONObject.NULL) {
+		    String caseDefinitionId = jo.getString("caseDefinitionId");
+		    t.setCaseDefinitionId(caseDefinitionId);
+	    }
+	    if(jo.has("caseInstanceId") && jo.get("caseInstanceId") != JSONObject.NULL) {
+		    String caseInstanceId = jo.getString("caseInstanceId");
+		    t.setCaseInstanceId(caseInstanceId);
+	    }
+	    if(jo.has("taskDefinitionKey") && jo.get("taskDefinitionKey") != JSONObject.NULL) {
+		    String taskDefinitionKey = jo.getString("taskDefinitionKey");
+		    t.setTaskDefinitionKey(taskDefinitionKey);
+	    }
+	    if(jo.has("tenantId") && jo.get("tenantId") != JSONObject.NULL) {
+		    String tenantId = jo.getString("tenantId");
+		    t.setTenantId(tenantId);
+	    }
 			return t;
 		}
 }

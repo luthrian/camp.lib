@@ -48,21 +48,23 @@ public class OrderPositionProcessMessage extends Message{
 		OrderProcess p = (OrderProcess) o.processInstances().get(0);
 		this.tenantId = p.tenantId();
 		this.processInstanceId = p.instanceId();
-		this.correlationKeys.variables().put("objectBusinessId", new VariableValue(o.businessId(),VariableValueType.valueOf("String")));
-		this.correlationKeys.variables().put("objectId", new VariableValue(String.valueOf(o.id()),VariableValueType.valueOf("Integer")));
-		this.processVariables.variables().put("objectBusinessId", new VariableValue(o.businessId(),VariableValueType.valueOf("String")));
-		this.processVariables.variables().put("objectId", new VariableValue(String.valueOf(o.id()),VariableValueType.valueOf("Integer")));
-		this.processVariables.variables().put("objectStatus",new VariableValue(o.status().name(), VariableValueType.valueOf("String")));
+		this.correlationKeys.variables().put("objectBusinessId", new VariableValue(o.onlyBusinessId(),VariableValueType.String));
+		this.correlationKeys.variables().put("objectId", new VariableValue(String.valueOf(o.id()),VariableValueType.String));
+		this.processVariables.variables().put("objectBusinessKey", new VariableValue(o.businessKey(),VariableValueType.String));
+		this.processVariables.variables().put("objectBusinessId", new VariableValue(o.onlyBusinessId(),VariableValueType.String));
+		this.processVariables.variables().put("objectId", new VariableValue(String.valueOf(o.id()),VariableValueType.String));
+		this.processVariables.variables().put("objectStatus",new VariableValue(o.status().name(), VariableValueType.String));
 		
 	}
 	
 	public OrderPositionProcessMessage(OrderPositionMessage messageName, String objectStatus, String objectBusinessId, int objectId, String businessKey) {
 		super(messageName.name(),businessKey);
-		this.correlationKeys.variables().put("objectBusinessId", new VariableValue(objectBusinessId,VariableValueType.valueOf("String")));
-		this.correlationKeys.variables().put("objectId", new VariableValue(String.valueOf(objectId),VariableValueType.valueOf("Integer")));
-		this.processVariables.variables().put("objectBusinessId", new VariableValue(objectBusinessId,VariableValueType.valueOf("String")));
-		this.processVariables.variables().put("objectId", new VariableValue(String.valueOf(objectId),VariableValueType.valueOf("Integer")));
-		this.processVariables.variables().put("objectStatus",new VariableValue(objectStatus, VariableValueType.valueOf("String")));
+		this.correlationKeys.variables().put("objectBusinessId", new VariableValue(objectBusinessId,VariableValueType.String));
+		this.correlationKeys.variables().put("objectId", new VariableValue(String.valueOf(objectId),VariableValueType.String));
+		this.processVariables.variables().put("objectBusinessKey", new VariableValue(businessKey,VariableValueType.String));
+		this.processVariables.variables().put("objectBusinessId", new VariableValue(objectBusinessId,VariableValueType.String));
+		this.processVariables.variables().put("objectId", new VariableValue(String.valueOf(objectId),VariableValueType.String));
+		this.processVariables.variables().put("objectStatus",new VariableValue(objectStatus, VariableValueType.String));
 	}
 	
 	public OrderPositionMessage message() {

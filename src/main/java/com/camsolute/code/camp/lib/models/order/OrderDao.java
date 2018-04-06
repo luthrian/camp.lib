@@ -33,14 +33,10 @@ import com.camsolute.code.camp.lib.data.CampSQL;
 import com.camsolute.code.camp.lib.models.CampInstanceDao;
 import com.camsolute.code.camp.lib.models.CampInstanceDaoInterface.RangeTarget;
 import com.camsolute.code.camp.lib.models.CampStatesInterface.IOAction;
-import com.camsolute.code.camp.lib.models.process.OrderProcess;
 import com.camsolute.code.camp.lib.models.process.OrderProcessList;
 import com.camsolute.code.camp.lib.models.process.Process;
 import com.camsolute.code.camp.lib.models.process.ProcessDao;
 import com.camsolute.code.camp.lib.models.process.ProcessList;
-import com.camsolute.code.camp.lib.models.product.Product;
-import com.camsolute.code.camp.lib.models.product.ProductDao;
-import com.camsolute.code.camp.lib.models.product.ProductList;
 import com.camsolute.code.camp.lib.utilities.Util;
 
 public class OrderDao implements OrderDaoInterface {
@@ -1485,7 +1481,6 @@ public class OrderDao implements OrderDaoInterface {
 		return o;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public ProcessList loadProcessReferences(String orderBusinessId ,boolean log) {
 		long startTime = System.currentTimeMillis();
@@ -1509,20 +1504,20 @@ public class OrderDao implements OrderDaoInterface {
 					+ " o.`_ohp_business_id`='"+orderBusinessId+"' "
 					+ " AND o.`_ohp_process_instance_id`=p.`instance_id` "
 					+ " AND o.`_ohp_businesskey`=p.`businesskey` "
-					+ " ORDER BY p.`process_type`";
+					+ " ORDER BY p.`"+ProcessDao.tabledef[0][0]+"`,p.`process_type`";
 			
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
 			
 			rs = dbs.executeQuery(SQL);		
 			
-			if (rs.next()) {		
-				OrderProcess op = ProcessDao.instance().rsToI(rs, log);
+			while (rs.next()) {		
+				Process<?> op = ProcessDao.instance().rsToI(rs, log);
 				op.states().ioAction(IOAction.LOAD);
 				op.states().setModified(false); // ensure that we don't get re-registered
 				opl.add(op);
 			}
 			retVal = opl.size();
-			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
+			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" loaded ]----";LOG.info(String.format(fmt,_f,msg));}
 			
 		} catch(SQLException e) {
 			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}

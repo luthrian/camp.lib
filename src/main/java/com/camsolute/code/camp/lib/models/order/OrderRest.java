@@ -128,7 +128,7 @@ public class OrderRest implements OrderRestInterface {
 		String serviceUri = CampRest.DaoService.callRequest(prefix, DaoService.Request.LOAD);
 		
 		String uri = serverUrl+domainUri+String.format(serviceUri,businessId);
-		
+		if(log && !Util._IN_PRODUCTION){msg = "----[Rest.URI("+uri+")]----";LOG.info(String.format(fmt, _f,msg));}
 		String result = RestInterface.resultGET(uri, log);
 		
 		o = OrderInterface._fromJson(result);

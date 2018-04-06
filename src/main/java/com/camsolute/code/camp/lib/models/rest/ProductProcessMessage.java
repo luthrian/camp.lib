@@ -53,20 +53,24 @@ public class ProductProcessMessage extends Message{
 		ProductProcess p = (ProductProcess) pd.processInstances().get(0);
 		this.tenantId = p.tenantId();
 		this.processInstanceId = p.instanceId();
-		this.correlationKeys.variables().put("objectId", new VariableValue(String.valueOf(pd.id()), VariableValueType.valueOf("Integer"),false));
-		this.correlationKeys.variables().put("objectBusinessKey", new VariableValue(pd.onlyBusinessId(),VariableValueType.valueOf("String")));
-		this.processVariables.variables().put("objectStatus",new VariableValue(pd.status().name(), VariableValueType.valueOf("String"),false));
-		this.processVariables.variables().put("objectBusinessId", new VariableValue(pd.onlyBusinessId(),VariableValueType.valueOf("String")));
-		this.processVariables.variables().put("objectId", new VariableValue(String.valueOf(pd.id()),VariableValueType.valueOf("Integer")));
+		this.correlationKeys.variables().put("objectBusinessId", new VariableValue(pd.onlyBusinessId(), VariableValueType.String,false));
+		this.correlationKeys.variables().put("objectId", new VariableValue(String.valueOf(pd.id()), VariableValueType.String,false));
+		this.correlationKeys.variables().put("objectBusinessKey", new VariableValue(pd.onlyBusinessId(),VariableValueType.String));
+		this.processVariables.variables().put("objectBusinessKey", new VariableValue(pd.onlyBusinessId(),VariableValueType.String));
+		this.processVariables.variables().put("objectStatus",new VariableValue(pd.status().name(), VariableValueType.String,false));
+		this.processVariables.variables().put("objectBusinessId", new VariableValue(pd.onlyBusinessId(),VariableValueType.String));
+		this.processVariables.variables().put("objectId", new VariableValue(String.valueOf(pd.id()),VariableValueType.String));
 	}
 	
 	public ProductProcessMessage(ProductMessage messageName, String status, String productName, int productId, String businessKey) {
 		super(messageName.name(),businessKey);
-		this.correlationKeys.variables().put("objectBusinessId", new VariableValue(productName,VariableValueType.valueOf("String")));
-		this.correlationKeys.variables().put("objectId", new VariableValue(String.valueOf(productId),VariableValueType.valueOf("Integer")));
-		this.processVariables.variables().put("objectBusinessId", new VariableValue(productName,VariableValueType.valueOf("String")));
-		this.processVariables.variables().put("objectId", new VariableValue(String.valueOf(productId),VariableValueType.valueOf("Integer")));
-		this.processVariables.variables().put("objectStatus",new VariableValue(status, VariableValueType.valueOf("String")));
+		this.correlationKeys.variables().put("objectBusinessId", new VariableValue(productName,VariableValueType.String));
+		this.correlationKeys.variables().put("objectBusinessKey", new VariableValue(businessKey,VariableValueType.String));
+		this.correlationKeys.variables().put("objectId", new VariableValue(String.valueOf(productId),VariableValueType.String));
+		this.processVariables.variables().put("objectBusinessKey", new VariableValue(businessKey,VariableValueType.String));
+		this.processVariables.variables().put("objectBusinessId", new VariableValue(productName,VariableValueType.String));
+		this.processVariables.variables().put("objectId", new VariableValue(String.valueOf(productId),VariableValueType.String));
+		this.processVariables.variables().put("objectStatus",new VariableValue(status, VariableValueType.String));
 	}
 
 	public ProductMessage message() {

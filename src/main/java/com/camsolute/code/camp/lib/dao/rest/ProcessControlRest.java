@@ -298,6 +298,7 @@ public class ProcessControlRest implements ProcessControlRestInterface {
 			msg = "====[  ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		String json = object.toJson();
+		if(log && !Util._IN_PRODUCTION){msg = "----[JSON("+json+")]----";LOG.info(String.format(fmt, _f,msg));}
 		String prefix = CampRest.ProcessControl.Prefix;		
 		String serviceUri = CampRest.ProcessControlDaoService.callRequest(prefix,CampRest.ProcessControlDaoService.Request.COMPLETE_CURRENT_TASK);
 		String uri = serverUrl+domainUri+String.format(serviceUri, processInstanceId, principal);

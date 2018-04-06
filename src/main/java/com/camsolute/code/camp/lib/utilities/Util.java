@@ -1503,7 +1503,8 @@ public class Util {
     	}
     	
     	public String defaultBusinessId(String object) {
-    		return properties.getProperty("object.create."+object+".businessId")+"."+UUID.randomUUID().toString();
+    		return Util.Time.now("yyyyMMddhhmmss");
+//    		return properties.getProperty("object.create."+object+".businessId")+"."+UUID.randomUUID().toString();
     	}
 
     	public String defaultBusinessKey(String object) {
