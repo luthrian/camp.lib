@@ -1507,7 +1507,7 @@ public class OrderDao implements OrderDaoInterface {
 			
 			String SQL = "SELECT * FROM "+ohptable+" AS o, "+ ProcessDao.table+" AS p WHERE "
 					+ " o.`_ohp_business_id`='"+orderBusinessId+"' "
-					+ " AND o.`_ohp_process_instance_id`=p.`process_instance_id` "
+					+ " AND o.`_ohp_process_instance_id`=p.`instance_id` "
 					+ " AND o.`_ohp_businesskey`=p.`businesskey` "
 					+ " ORDER BY p.`process_type`";
 			

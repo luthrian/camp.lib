@@ -21,11 +21,17 @@ package com.camsolute.code.camp.lib.models.rest;
 
 import java.io.Serializable;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
 import com.camsolute.code.camp.lib.contract.Serialization;
+import com.camsolute.code.camp.lib.utilities.Util;
 
 public class Task implements Serializable, Serialization<Task> {
+	private static final Logger LOG = LogManager.getLogger(Task.class);
+	private static String fmt = "[%15s] [%s]";
+	
     /**
 	 * 
 	 */
@@ -277,9 +283,11 @@ public class Task implements Serializable, Serialization<Task> {
 			return _fromJson(json);
 		}
 		public static Task _fromJson(String json) {
+			if(!Util._IN_PRODUCTION){String msg = "----[Task.JSON("+json+")]----";LOG.info(String.format(fmt, "_fromJson",msg));}
 			return _fromJSONObject(new JSONObject(json));
 		}
 		public static Task _fromJSONObject(JSONObject jo) {
+        if(!Util._IN_PRODUCTION){String msg = "----[Task.JSON("+jo.toString()+")]----";LOG.info(String.format(fmt, "_fromJson",msg));}
 			Task t = new Task();
 	    String id = jo.getString("id");
 	    t.setId(id);
@@ -287,8 +295,9 @@ public class Task implements Serializable, Serialization<Task> {
 	    t.setName(name);
 	    String assignee = jo.getString("assignee");
 	    t.setAssignee(assignee);
-	    String owner = jo.getString("owner");
-	    t.setOwner(owner);
+	    if(jo.has("owner")) {
+	    	t.setOwner(jo.getString("owner"));
+	    }
 	    String created = jo.getString("created");
 	    t.setCreated(created);
 	    String due = jo.getString("due");

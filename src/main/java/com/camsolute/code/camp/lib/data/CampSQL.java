@@ -540,7 +540,7 @@ public class CampSQL {
 		public static final String[][] order_table_definition = {
 				{"_order_id_", "INT(11) NOT NULL AUTO_INCREMENT"},
 				{"order_number", "VARCHAR(45) NOT NULL"},
-				{"order_businesskey", "VARCHAR(45) NOT NULL"},
+				{"order_businesskey", "VARCHAR(150) NOT NULL"},
 				{"order_date", "TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP"},
 				{"order_by_date", "TIMESTAMP NULL"},
 				{"extra", "PRIMARY KEY (`_order_id_`)"
@@ -588,7 +588,7 @@ public class CampSQL {
 		public static final String[][] order_has_process_table_definition = {
 				{"_ohp_business_id", "varchar(45) NOT NULL"},
 				{"_ohp_process_instance_id", "varchar(45) NOT NULL"},
-				{"_ohp_businesskey", "varchar(45) NOT NULL"},
+				{"_ohp_businesskey", "varchar(100) NOT NULL"},
 				{"extra", "INDEX `ohp_business_id_idx` (`_ohp_business_id` ASC),"
 						+ "INDEX `ohp_businesskey_idx` (`_ohp_businesskey` ASC),"
 						+ "KEY `fk_ohp_process2_idx` (`_ohp_process_instance_id`),"
@@ -663,7 +663,7 @@ public class CampSQL {
 				{"execution_id", "varchar(45) DEFAULT NULL"},
 				{"instance_id", "varchar(45) NOT NULL"},
 				{"business_id", "VARCHAR(100) NOT NULL"},
-				{"businesskey", "varchar(45) NOT NULL"},
+				{"businesskey", "varchar(100) NOT NULL"},
 				{"process_name","VARCHAR(45) NOT NULL"},
 				{"definition_id", "varchar(45) NOT NULL"},
 				{"tenant_id", "varchar(45) DEFAULT NULL"},
