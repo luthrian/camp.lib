@@ -98,28 +98,53 @@ public class Order implements OrderInterface {
   		this.orderNumber = orderNumber;
   		this.businessKey = Util.Config.instance().properties().getProperty("object.create.Product.businessKey");
   		this.date = Util.Time.timestamp();
-  		this.byDate = Util.Time.timestamp(Util.Time.nowPlus(10, Util.Time.formatDateTime));
+  		this.byDate = Util.Time.timestamp(Util.Time.nowPlus(Util.Config.instance().defaultByDateDays("Order"), Util.Time.formatDateTime));
    		this.group = new Group(Util.Config.instance().properties().getProperty("object.create.Product.group"));
    		this.version = new Version(Util.Config.instance().properties().getProperty("object.create.Product.version"));
+     		this.history.endOfLife(
+     				Util.Time.timestamp(
+	     				Util.Time.nowPlus(
+	     						Util.Config.instance().defaultEndOfLifeDays("Order"),
+	     						Util.Time.formatDateTime)));
   	}
   	
   	public Order(String orderNumber, String businessKey) {
         this.orderNumber = orderNumber;
         this.businessKey = businessKey;
         this.date = Util.Time.timestamp();
-        this.byDate = Util.Time.timestamp(Util.Time.nowPlus(10, Util.Time.formatDateTime));
+        this.byDate = Util.Time.timestamp(Util.Time.nowPlus(Util.Config.instance().defaultByDateDays("Order"), Util.Time.formatDateTime));
      		this.businessKey = Util.Config.instance().properties().getProperty("object.create.Product.businessKey");
      		this.group = new Group(Util.Config.instance().properties().getProperty("object.create.Product.group"));
      		this.version = new Version(Util.Config.instance().properties().getProperty("object.create.Product.version"));
+     		this.history.endOfLife(
+     				Util.Time.timestamp(
+	     				Util.Time.nowPlus(
+	     						Util.Config.instance().defaultEndOfLifeDays("Order"),
+	     						Util.Time.formatDateTime)));
   	}
   	public Order(String orderNumber, String businessKey, Timestamp byDate) {
         this.orderNumber = orderNumber;
         this.businessKey = businessKey;
         this.date = Util.Time.timestamp();
         this.byDate = byDate;
+        if(this.byDate.after(
+        		Util.Time.timestamp(
+        				Util.Time.nowPlus(
+        						Util.Config.instance().defaultByDateDays("Order"), 
+        						Util.Time.formatDateTime)))) {
+        	this.byDate = Util.Time.timestamp(
+        			Util.Time.nowPlus(
+        					Util.Config.instance().defaultByDateDays("Order"),
+        					Util.Time.formatDateTime));
+        }
      		this.businessKey = Util.Config.instance().properties().getProperty("object.create.Product.businessKey");
      		this.group = new Group(Util.Config.instance().properties().getProperty("object.create.Product.group"));
      		this.version = new Version(Util.Config.instance().properties().getProperty("object.create.Product.version"));
+     		this.history.endOfLife(
+     				Util.Time.timestamp(
+	     				Util.Time.nowPlus(
+	     						Util.Config.instance().defaultEndOfLifeDays("Order"),
+	     						Util.Time.formatDateTime)));
   	}
 
   	public Order(String orderNumber, String businessKey, String byDate) {
@@ -127,12 +152,17 @@ public class Order implements OrderInterface {
         this.businessKey = businessKey;
         this.date = Util.Time.timestamp();
         this.byDate = Util.Time.timestamp(byDate);
-        if(this.byDate < Util.Time.timestamp(Util.Time.nowPlus(10, Util.Time.formatDateTime))) {
-        	this.byDate = Util.Time.timestamp(Util.Time.nowPlus(10, Util.Time.formatDateTime));
+        if(this.byDate.after(Util.Time.timestamp(Util.Time.nowPlus(Util.Config.instance().defaultByDateDays("Order"), Util.Time.formatDateTime)))) {
+        	this.byDate = Util.Time.timestamp(Util.Time.nowPlus(Util.Config.instance().defaultByDateDays("Order"), Util.Time.formatDateTime));
         }
      		this.businessKey = Util.Config.instance().properties().getProperty("object.create.Product.businessKey");
      		this.group = new Group(Util.Config.instance().properties().getProperty("object.create.Product.group"));
      		this.version = new Version(Util.Config.instance().properties().getProperty("object.create.Product.version"));
+     		this.history.endOfLife(
+     				Util.Time.timestamp(
+	     				Util.Time.nowPlus(
+	     						Util.Config.instance().defaultEndOfLifeDays("Order"),
+	     						Util.Time.formatDateTime)));
   	}
 
 		@Override

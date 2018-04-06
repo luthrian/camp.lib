@@ -19,17 +19,13 @@
  ******************************************************************************/
 package com.camsolute.code.camp.lib.models.customer;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 
-import org.apache.coyote.RequestGroupInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.camsolute.code.camp.lib.contract.IsObjectInstance;
 import com.camsolute.code.camp.lib.dao.rest.RestInterface;
 import com.camsolute.code.camp.lib.data.CampRest;
-import com.camsolute.code.camp.lib.models.order.OrderPositionRest;
 import com.camsolute.code.camp.lib.models.process.ProcessList;
 import com.camsolute.code.camp.lib.utilities.Util;
 

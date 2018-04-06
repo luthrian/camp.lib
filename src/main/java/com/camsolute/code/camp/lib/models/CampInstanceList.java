@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.camsolute.code.camp.lib.contract.HasListSelection;
 import com.camsolute.code.camp.lib.contract.Serialization;
 
 public class CampInstanceList extends ArrayList<CampInstance> implements Serialization<CampInstanceList>{
@@ -69,5 +70,6 @@ public class CampInstanceList extends ArrayList<CampInstance> implements Seriali
 		}
 		return il;
 	}
+
 
 }

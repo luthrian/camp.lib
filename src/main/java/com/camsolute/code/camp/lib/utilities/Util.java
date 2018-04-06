@@ -1472,6 +1472,14 @@ public class Util {
     		return properties.getProperty("object.create."+object+".businessKey")+"."+UUID.randomUUID().toString();
     	}
 
+    	public int defaultByDateDays(String object) {
+    		return Integer.valueOf(properties.getProperty("object.create."+object+".byDate.days"));
+    	}
+
+    	public int defaultEndOfLifeDays(String object) {
+    		return Integer.valueOf(properties.getProperty("object.create."+object+".endOfLife.days"));
+    	}
+
     	public String defaultGroup(String object) {
     		return properties.getProperty("object.create."+object+".group")+"."+UUID.randomUUID().toString();
     	}

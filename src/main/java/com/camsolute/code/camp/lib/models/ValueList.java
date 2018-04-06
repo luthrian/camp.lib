@@ -20,7 +20,101 @@
 package com.camsolute.code.camp.lib.models;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
-public class ValueList extends ArrayList<Value<?>> {
+import org.json.JSONObject;
+
+import com.camsolute.code.camp.lib.contract.HasListSelection;
+import com.camsolute.code.camp.lib.contract.Serialization;
+
+public class ValueList extends ArrayList<Value<?>> implements Serialization<ValueList>, HasListSelection<Value<?>>{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2125252610616975496L;
+	private int selected = 0;
+	
+	@Override
+	public Value<?> selected() {
+		return get(selected);
+	}
+
+	@Override
+	public int selectionIndex() {
+		return selected;
+	}
+
+	@Override
+	public void setSelectionIndex(int index) {
+		selected = index;
+	}
+
+	@Override
+	public int select(int itemId) {
+		if(itemId == 0){
+			return 0;
+		}
+		int ctr = 0;
+		for(Value<?> v: this) {
+			if(v.id() == itemId) {
+				selected = ctr;
+				break;
+			}
+			ctr++;
+		}
+		return selected;
+	}
+
+	@Override
+	public int select(Value<?> item) {
+		return selected;
+	}
+
+	@Override
+	public String toJson() {
+		return _toJson(this);
+	}
+	
+	public static String _toJson(ValueList vl) {
+		String json = "{";
+		json += "\"selected\":"+vl.selected();
+		json += ",\"isEmpty\":"+vl.isEmpty();
+		json += ",\"list\":[";
+		boolean start = true;
+		for(Value<?> v: vl) {
+			if(!start) {
+				json += ",";
+			} else {
+				start = false;
+			}
+			json += v.toJson();
+		}
+		json += "]}";
+		return json;
+	}
+	
+	@Override
+	public ValueList fromJson(String json) {
+		return _fromJson(json);
+	}
+	
+	public static ValueList _fromJson(String json) {
+		return _fromJSONObject(new JSONObject(json));
+	}
+	
+	public static ValueList _fromJSONObject(JSONObject jo) {
+		ValueList vl = new ValueList();
+		if(jo.getBoolean("isEmpty")) {
+			return vl;
+		}
+		vl.setSelectionIndex(jo.getInt("selected"));
+		Iterator<Object> i = jo.getJSONArray("list").iterator();
+		while(i.hasNext()) {
+			JSONObject j = (JSONObject)i.next();
+			vl.add(ValueInterface._fromJSONObject(j));
+		}
+		return vl;
+	}
 
 }
