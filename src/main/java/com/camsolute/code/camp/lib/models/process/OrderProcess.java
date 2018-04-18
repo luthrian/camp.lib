@@ -50,6 +50,7 @@ public class OrderProcess extends Process<Order> implements OrderProcessInterfac
 	  		this.currentStatus = status;
 	  		this.process = process;
 	  	}
+		 
 	  	public void initRules(Order order) {
 	  		this.nextAllowed = new ArrayList<OrderAction>();
 	  		switch((Order.Status)order.status()) {
@@ -91,6 +92,7 @@ public class OrderProcess extends Process<Order> implements OrderProcessInterfac
 	  	public Order.Status status() {
 	  		return this.currentStatus;
 	  	}
+	  	
 	  	public ArrayList<OrderAction> nextAllowed() {
 	  		return nextAllowed;
 	  	}

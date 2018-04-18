@@ -864,6 +864,7 @@ public class OrderRest implements OrderRestInterface {
 		String serviceUri = CampRest.ProcessReferenceDaoService.callRequest(prefix, CampRest.ProcessReferenceDaoService.Request.LOAD);
 		String uri = serverUrl+domainUri+String.format(serviceUri,businessId);
 		String result = RestInterface.resultGET(uri, log);
+		if(log && !Util._IN_PRODUCTION){msg = "----[REST CALL RESULT:("+result+") ]----";LOG.info(String.format(fmt, _f,msg));}
 		pl = ProcessList._fromJson(result);
 		int retVal = pl.size();
 		if (log && !Util._IN_PRODUCTION) { msg = "----[ '" + retVal + "' entr"+((retVal>1)?"ies":"y")+" loaded ]----"; LOG.info(String.format(fmt, _f, msg)); }

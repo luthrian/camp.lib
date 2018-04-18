@@ -1309,7 +1309,7 @@ public class ProcessDao implements ProcessDaoInterface {
 		try{
 			conn = Util.DB.__conn(log);
 			
-			String SQL = "DELETE FROM "+table()+" WHERE `_instance_id`='"+instanceId+"'";
+			String SQL = "DELETE FROM "+table()+" WHERE `instance_id`='"+instanceId+"'";
 			
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
 			

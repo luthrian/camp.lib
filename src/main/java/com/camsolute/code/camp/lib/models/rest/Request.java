@@ -95,6 +95,8 @@ public class Request<T extends HasProcess<T>> implements Serialization<Request<?
 		updateId(String.valueOf(o.id()));
 		variables().put("objectId", new VariableValue(String.valueOf(o.id()),VariableValueType.valueOf("String"),false));
 		if(!Util._IN_PRODUCTION){String msg = "----[adding variable objectId("+o.id()+")]----";LOG.info(String.format(fmt, "initVariables",msg));}
+		variables().put("objectBusinessKey", new VariableValue(o.businessKey(),VariableValueType.valueOf("String"),false));
+		if(!Util._IN_PRODUCTION){String msg = "----[adding variable objectBusinessKey("+o.businessKey()+")]----";LOG.info(String.format(fmt, "initVariables",msg));}
 		variables().put("objectBusinessId", new VariableValue(o.onlyBusinessId(),VariableValueType.valueOf("String"),false));
 		if(!Util._IN_PRODUCTION){String msg = "----[adding variable objectBusinessId("+o.onlyBusinessId()+")]----";LOG.info(String.format(fmt, "initVariables",msg));}
 		variables().put("objectStatus", new VariableValue(o.status().name(),VariableValueType.valueOf("String"),false));

@@ -87,9 +87,11 @@ public class  ProcessList extends ArrayList<Process<?>> implements Serialization
 	
 	public static ProcessList _fromJSONArray(JSONArray ja) {
 		ProcessList pl = new ProcessList();
-//		Iterator<Object> i = ja.iterator();
-		for(int i = 0; i < ja.length();i++) {
-			pl.add(ProcessInterface._fromJSONObject(ja.getJSONObject(i)));
+		Iterator<Object> i = ja.iterator();
+		while(i.hasNext()){
+//		for(int i = 0; i < ja.length();i++) {
+//			pl.add(ProcessInterface._fromJSONObject(ja.getJSONObject(i)));
+			pl.add(ProcessInterface._fromJSONObject((JSONObject)i.next()));
 		}
 		return pl;
 	}
