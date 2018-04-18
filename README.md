@@ -1,6 +1,8 @@
-# camp.lib
+# camp.lib 
 
+## Goals
 A Java framework geared towards developing "process driven" c2b/b2b applications. 
+
 In its current form it consists of: 
 - business/system entities that allow 
 + the representation and definition of products/services, (external/internal/business/consumer) customer orders and business processes which handle the various end2end business cases 
@@ -20,8 +22,12 @@ The framework roadmap envisions (modular) extensions for
 - product/system/process management UI's
 - and more...
 
-NOTE: This is work in progress...  
 
 ## Configuration
 
-To use the framework in its current form you will need to edit the jars config.properties file to set the database user and password setting. The database user must be able to create/delete schema/database tables. You will also setup/modify the various server urls config settings to reflect your own setup. NOTE: certain PATH prefixes are currently not used
+To use the framework in its current form you will need to edit the jars config.properties file to set the database user and password setting. The database user must be able to create/delete schema/database tables. You will also setup/modify the various server urls config settings to reflect your own setup. NOTE: certain PATH prefixes are currently not used.
+
+## NOTICE
+
+This is work in progress ...  
+ 
