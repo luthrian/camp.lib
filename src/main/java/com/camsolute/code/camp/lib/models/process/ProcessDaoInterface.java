@@ -107,6 +107,8 @@ public interface ProcessDaoInterface {
 
   public int deleteFromUpdates(String instanceId, String businessId, String businessKey, String target, boolean log);
 
+  public int __dP(String instanceId,boolean log);
+  
   public <E extends ProcessList> int deleteFromUpdates(E instanceList, String businessKey, String target, boolean log);
 
 //TODO: just an idea    public int/T _dbExecute(Util.DB.dbActionType action,String SQL, String table, String[][] tabledef, boolean log);
