@@ -1,8 +1,8 @@
 package com.camsolute.code.camp.lib.dao.rest;
 
 public interface LoggerServicePointInterface {
-	public String log(String object);
-	public String logList(String objects); //here below logentrylist
+	public String log(String object, String objectType);
+	public String logList(String objects, String objectType); //here below logentrylist
 	public String loadByType(String objectType);
 	public String loadByTypeGroup(String objectType, String group);
 	public String loadByTypeVersion(String objectType, String version);
