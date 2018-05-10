@@ -36,18 +36,21 @@ public class CampRest {
 	public static final String PRODUCT_API_SERVER_URL = Util.Config.instance().properties().getProperty("rest.product.api.server.url");
 	public static final String CUSTOMER_API_SERVER_URL = Util.Config.instance().properties().getProperty("rest.customer.api.server.url");
 	public static final String PROCESS_CONTROL_API_SERVER_URL = Util.Config.instance().properties().getProperty("rest.process.control.api.server.url");
+	public static final String LOGGING_API_SERVER_URL = Util.Config.instance().properties().getProperty("rest.logging.api.server.url");
 
 //	public static final String ORDER_API_DOMAIN = Util.Config.instance().properties().getProperty("rest.order.api.business.domain");
 //	public static final String PROCESS_API_DOMAIN = Util.Config.instance().properties().getProperty("rest.process.api.business.domain");
 //	public static final String PRODUCT_API_DOMAIN = Util.Config.instance().properties().getProperty("rest.product.api.business.domain");
 //	public static final String CUSTOMER_API_DOMAIN = Util.Config.instance().properties().getProperty("rest.customer.api.business.domain");
 //	public static final String PROCESS_CONTROL_API_DOMAIN = Util.Config.instance().properties().getProperty("rest.process.control.api.business.domain");
+//	public static final String LOGGING_API_DOMAIN = Util.Config.instance().properties().getProperty("rest.logging.api.business.domain");
 //
 	public static final String ORDER_API_DOMAIN = "";
 	public static final String PROCESS_API_DOMAIN = "";
 	public static final String PRODUCT_API_DOMAIN = "";
 	public static final String CUSTOMER_API_DOMAIN = "";
 	public static final String PROCESS_CONTROL_API_DOMAIN = "";
+	public static final String LOGGING_API_DOMAIN = "";
 
 	public static final String ORDER_API_PATH = ORDER_API_DOMAIN + Util.Config.instance().properties().getProperty("rest.order.api.path");
 	public static final String REST_ORDER_API_PATH = ORDER_API_PATH;
@@ -55,6 +58,7 @@ public class CampRest {
 	public static final String PRODUCT_API_PATH = PRODUCT_API_DOMAIN + Util.Config.instance().properties().getProperty("rest.product.api.path");
 	public static final String CUSTOMER_API_PATH = CUSTOMER_API_DOMAIN + Util.Config.instance().properties().getProperty("rest.customer.api.path");
 	public static final String PROCESS_CONTROL_API_PATH = PROCESS_CONTROL_API_DOMAIN + Util.Config.instance().properties().getProperty("rest.process.control.api.path");
+	public static final String LOGGING_API_PATH = LOGGING_API_DOMAIN + Util.Config.instance().properties().getProperty("rest.logging.api.path");
 	
 	public static final String PROCESS_ENGINE_API_SERVER_URL = Util.Config.instance().properties().getProperty("rest.process.engine.api.server.url");
 	public static final String PROCESS_ENGINE_API_DOMAIN = Util.Config.instance().properties().getProperty("rest.process.engine.api.server.domain");
@@ -174,6 +178,76 @@ public class CampRest {
 		}
 		public static String path(String prefix, DaoService.Request request) {
 			return prefix + DaoService.Call.get(request)[0];
+		}
+	}
+	
+	public static class LoggingService {
+		public static enum Request {
+			LOG,
+			LOG_LIST,
+			LOAD_BY_TYPE,
+			LOAD_BY_TYPE_GROUP,
+			LOAD_BY_TYPE_VERSION,
+			LOAD_BY_TYPE_DATE,
+			LOAD_BY_TYPE_END_OF_LIFE,
+			LOAD_BY_TYPE_DATE_RANGE, 
+			LOAD_BY_TYPE_TIMESTAMP, 
+			LOAD_BY_TYPE_LOG_TIMESTAMP, 
+			LOAD_BY_BUSINESS_ID, 
+			LOAD_BY_GROUP,
+			LOAD_BY_VERSION,
+			LOAD_BY_DATE,
+			LOAD_BY_END_OF_LIFE,
+			LOAD_BY_DATE_RANGE, 
+			LOAD_BY_TIMESTAMP, 
+			LOAD_BY_LOG_TIMESTAMP;
+		};
+		public static final String LOG = "/log";
+		public static final String LOG_LIST = "/s/log";
+		public static final String LOAD_BY_TYPE = "/load/by/type";
+		public static final String LOAD_BY_TYPE_GROUP = "/load/by/type/group";
+		public static final String LOAD_BY_TYPE_VERSION = "/load/by/type/version";
+		public static final String LOAD_BY_TYPE_DATE = "/load/by/type/date";
+		public static final String LOAD_BY_TYPE_END_OF_LIFE = "/load/by/type/end/of_life";
+		public static final String LOAD_BY_TYPE_DATE_RANGE = "/load/by/type/date/range";
+		public static final String LOAD_BY_TYPE_TIMESTAMP = "/load/by/type/timestamp";
+		public static final String LOAD_BY_TYPE_LOG_TIMESTAMP = "/load/by/type/log/timestamp";
+		public static final String LOAD_BY_BUSINESS_ID = "/load/by/business/id";
+		public static final String LOAD_BY_GROUP = "/load/by/group";
+		public static final String LOAD_BY_VERSION = "/load/by/version";
+		public static final String LOAD_BY_DATE = "/load/by/date";
+		public static final String LOAD_BY_END_OF_LIFE = "/load/by/end/of/life";
+		public static final String LOAD_BY_DATE_RANGE = "/load/by/date/range";
+		public static final String LOAD_BY_TIMESTAMP = "/load/by/timestamp";
+		public static final String LOAD_BY_LOG_TIMESTAMP = "/load/by/log/timestamp";
+		public static final HashMap<Request,String[]> Call;
+		
+		static {
+			Call = new HashMap<Request,String[]>();
+			Call.put(Request.LOG, new String[] {"/log","/log","POST"});
+			Call.put(Request.LOG_LIST, new String[] {"/s/log","/s/log","POST"});
+			Call.put(Request.LOAD_BY_TYPE, new String[] {"/load/by/type","/load/by/type?objectType=%s","GET"});
+			Call.put(Request.LOAD_BY_TYPE_GROUP, new String[] {"/load/by/type/group","/load/by/type/group?objectType=%s&group=%s","GET"});
+			Call.put(Request.LOAD_BY_TYPE_VERSION, new String[] {"/load/by/type/version","/load/by/type/version?objectType=%s&version=%s","GET"});
+			Call.put(Request.LOAD_BY_TYPE_DATE, new String[] {"/load/by/type/date","/load/by/type/date?objectType=%s&date=%s","GET"});
+			Call.put(Request.LOAD_BY_TYPE_END_OF_LIFE, new String[] {"/load/by/type/end/of_life","/load/by/type/end/of_life?objectType=%s&endOfLife=%s","GET"});
+			Call.put(Request.LOAD_BY_TYPE_DATE_RANGE, new String[] {"/load/by/type/date/range","/load/by/type/date/range?objectType=%s&startDate=%s&endDate=%s&target=%s","GET"});
+			Call.put(Request.LOAD_BY_TYPE_TIMESTAMP, new String[] {"/load/by/type/timestamp","/load/by/type/timestamp?objectType=%s&timestamp=%s","GET"});
+			Call.put(Request.LOAD_BY_TYPE_LOG_TIMESTAMP, new String[] {"/load/by/type/log/timestamp","/load/by/type/log/timestamp?objectType=%s&timestampe=%s","GET"});
+			Call.put(Request.LOAD_BY_BUSINESS_ID, new String[] {"/load/by/business/id","/load/by/business/id?businessId=%s","GET"});
+			Call.put(Request.LOAD_BY_GROUP, new String[] {"/load/by/group","/load/by/group?businessId=%s&group=%s","GET"});
+			Call.put(Request.LOAD_BY_VERSION, new String[] {"/load/by/version","/load/by/version?businessId=%s&version=%s","GET"});
+			Call.put(Request.LOAD_BY_DATE, new String[] {"/load/by/date","/load/by/date?businessId=%s&date=%s","GET"});
+			Call.put(Request.LOAD_BY_END_OF_LIFE, new String[] {"/load/by/end/of/life","/load/by/end/of/life?objectType=%s&endOfLife=%s","GET"});
+			Call.put(Request.LOAD_BY_DATE_RANGE, new String[] {"/load/by/date/range","/load/by/date/range?businessId=%s&startDate=%s&endDate=%s&target=%s","GET"});
+			Call.put(Request.LOAD_BY_TIMESTAMP, new String[] {"/load/by/timestamp","/load/by/timestamp?businessId=%s&timestamp=%s","GET"});
+			Call.put(Request.LOAD_BY_LOG_TIMESTAMP, new String[] {"/load/by/log/timestamp","/load/by/log/timestamp?businessId=%s&timestamp=%s","GET"});
+		}
+		public static String callRequest(String prefix, LoggingService.Request request) {
+			return prefix + LoggingService.Call.get(request)[1];
+		}
+		public static String path(String prefix, LoggingService.Request request) {
+			return prefix + LoggingService.Call.get(request)[0];
 		}
 	}
 	
@@ -825,6 +899,9 @@ public class CampRest {
 	}
 	public static class ProcessEngine {
 		public static final String Prefix="";
+	}
+	public static class Logging {
+		public static final String Prefix="/logging";
 	}
 	//TODO
 //	public static void initAuthentication(HttpMethod httpMethod, HttpClient client) {

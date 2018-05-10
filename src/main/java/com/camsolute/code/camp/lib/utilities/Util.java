@@ -69,9 +69,13 @@ public class Util {
 	private static final Logger LOG = LogManager.getLogger(Util.class);
 	private static String fmt = "[%15s] [%s]";
 	
-    public static final int NEW_ID = 0;
-    
-    public static final String DEFAULT_GLOBAL_SYSTEM_TARGET = "com.camsolute.code.camp.global.system.target";
+  public static int NEW_ID = 0;
+  public static String DEFAULT_GLOBAL_SYSTEM_TARGET = "com.camsolute.code.camp.global.system.target";
+  static {
+  	NEW_ID = Integer.valueOf(Util.Config.instance().properties().getProperty("system.default.newId"));
+  	DEFAULT_GLOBAL_SYSTEM_TARGET = Util.Config.instance().properties().getProperty("system.default.global.update.target"); 
+  }
+
 
 	public static boolean _IN_PRODUCTION =  Boolean.getBoolean(Util.Config.instance().properties().getProperty("system.in.production"));
 
@@ -505,11 +509,12 @@ public class Util {
 
     	public static final String _NO_DB_TABLE = "_no_db_table_";
     	
-    	public static final String _ORDER_TABLE_PA_PREFIX = "pa";
-    	
-    	public static final String _NS = "_";
-    	
-    	public static final String _VS = ":";
+    	public static String _NS = "_";
+    	public static String _VS = ":";
+      static {
+      	_NS = Util.Config.instance().properties().getProperty("system.default.name.separator");
+      	_VS = Util.Config.instance().properties().getProperty("system.default.value.separator");
+      }
     	
     	public static String pTable = 
     			CampSQL.database[CampSQL._PRODUCT_DB_INDEX]

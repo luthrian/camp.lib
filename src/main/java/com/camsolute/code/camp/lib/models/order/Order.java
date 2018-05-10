@@ -86,9 +86,9 @@ public class Order implements OrderInterface {
   		
   	private OrderPositionList  orderPositions = new OrderPositionList();
 
-  	private Group group;
+  	private Group group =  new Group(Util.Config.instance().properties().getProperty("object.create.Order.group"));
   	
-  	private Version version;
+  	private Version version = new Version(Util.Config.instance().properties().getProperty("object.create.Order.version"));
   	
   	private CampStates states = new CampStates();
   	
@@ -96,16 +96,14 @@ public class Order implements OrderInterface {
 
   	public Order(String orderNumber) {
   		this.orderNumber = orderNumber;
-  		this.businessKey = Util.Config.instance().properties().getProperty("object.create.Product.businessKey");
+  		this.businessKey = Util.Config.instance().properties().getProperty("object.create.order.business.key");
   		this.date = Util.Time.timestamp();
   		this.byDate = Util.Time.timestamp(Util.Time.nowPlus(Util.Config.instance().defaultByDateDays("Order"), Util.Time.formatDateTime));
-   		this.group = new Group(Util.Config.instance().properties().getProperty("object.create.Product.group"));
-   		this.version = new Version(Util.Config.instance().properties().getProperty("object.create.Product.version"));
-     		this.history.endOfLife(
-     				Util.Time.timestamp(
-	     				Util.Time.nowPlus(
-	     						Util.Config.instance().defaultEndOfLifeDays("Order"),
-	     						Util.Time.formatDateTime)));
+   		this.history.endOfLife(
+   				Util.Time.timestamp(
+     				Util.Time.nowPlus(
+     						Util.Config.instance().defaultEndOfLifeDays("Order"),
+     						Util.Time.formatDateTime)));
   	}
   	
   	public Order(String orderNumber, String businessKey) {
@@ -113,9 +111,6 @@ public class Order implements OrderInterface {
         this.businessKey = businessKey;
         this.date = Util.Time.timestamp();
         this.byDate = Util.Time.timestamp(Util.Time.nowPlus(Util.Config.instance().defaultByDateDays("Order"), Util.Time.formatDateTime));
-     		this.businessKey = Util.Config.instance().properties().getProperty("object.create.Product.businessKey");
-     		this.group = new Group(Util.Config.instance().properties().getProperty("object.create.Product.group"));
-     		this.version = new Version(Util.Config.instance().properties().getProperty("object.create.Product.version"));
      		this.history.endOfLife(
      				Util.Time.timestamp(
 	     				Util.Time.nowPlus(
@@ -138,9 +133,6 @@ public class Order implements OrderInterface {
         					Util.Config.instance().defaultByDateDays("Order"),
         					Util.Time.formatDateTime));
         }
-     		this.businessKey = Util.Config.instance().properties().getProperty("object.create.Product.businessKey");
-     		this.group = new Group(Util.Config.instance().properties().getProperty("object.create.Product.group"));
-     		this.version = new Version(Util.Config.instance().properties().getProperty("object.create.Product.version"));
      		this.history.endOfLife(
      				Util.Time.timestamp(
 	     				Util.Time.nowPlus(
@@ -156,9 +148,6 @@ public class Order implements OrderInterface {
         if(this.byDate.after(Util.Time.timestamp(Util.Time.nowPlus(Util.Config.instance().defaultByDateDays("Order"), Util.Time.formatDateTime)))) {
         	this.byDate = Util.Time.timestamp(Util.Time.nowPlus(Util.Config.instance().defaultByDateDays("Order"), Util.Time.formatDateTime));
         }
-     		this.businessKey = Util.Config.instance().properties().getProperty("object.create.Product.businessKey");
-     		this.group = new Group(Util.Config.instance().properties().getProperty("object.create.Product.group"));
-     		this.version = new Version(Util.Config.instance().properties().getProperty("object.create.Product.version"));
      		this.history.endOfLife(
      				Util.Time.timestamp(
 	     				Util.Time.nowPlus(

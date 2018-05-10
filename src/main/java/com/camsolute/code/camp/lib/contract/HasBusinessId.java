@@ -21,12 +21,12 @@ package com.camsolute.code.camp.lib.contract;
 
 public interface HasBusinessId {
 	/**
-	 * This delivers the initial business Id of a business object instance. 
-	 * A business Id is a unique identifier relevant in a business context such as a business process. 
+	 * This delivers the initial business Id of a business object instance.
+	 * The business Id is a unique identifier relevant to the business context of the order process. 
 	 * The business Id may not be unique in a technical context such as the database table 
 	 * used to persist the business object.
 	 * 
-	 * @return String value of the business Id + DBU._NS + initial technical Id (NEW_ID constant).
+	 * @return String value of the business Id + Util.DB._NS + initial technical Id (NEW_ID constant).
 	 */
 	public String initialBusinessId();
 

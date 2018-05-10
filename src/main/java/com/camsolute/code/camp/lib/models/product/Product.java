@@ -73,7 +73,7 @@ public class Product implements ProductInterface {
 	public Product(String name) {
 		this.name = name;
 		this.history.date(this.date);
-		this.businessKey = Util.Config.instance().properties().getProperty("object.create.Product.businessKey");
+		this.businessKey = Util.Config.instance().properties().getProperty("object.create.Product.business.key");
 		this.group = new Group(Util.Config.instance().properties().getProperty("object.create.Product.group"));
 		this.version = new Version(Util.Config.instance().properties().getProperty("object.create.Product.version"));
 	}

@@ -22,6 +22,7 @@ package com.camsolute.code.camp.lib.dao;
 import java.util.ArrayList;
 
 import com.camsolute.code.camp.lib.contract.IsObjectInstance;
+import com.camsolute.code.camp.lib.dao.database.DBDaoInterface;
 import com.camsolute.code.camp.lib.utilities.LogEntry;
 import com.camsolute.code.camp.lib.utilities.LogEntryList;
 
@@ -32,8 +33,8 @@ public interface LoggerDaoInterface {
 		OBJECT_DATE,
 		OBJECT_END_OF_LIFE;
 	};
-	public <T extends IsObjectInstance<T>> LogEntry<T> log(T object, boolean log);
-	public <T extends IsObjectInstance<T>, E extends ArrayList<T>> LogEntryList log(E objects, boolean log);
+	public <T extends IsObjectInstance<T>> LogEntry<T> log(IsObjectInstance<?> object, boolean log);
+	public <T extends IsObjectInstance<?>, E extends ArrayList<T>> LogEntryList log(E objects, boolean log);
 	public LogEntryList loadByType(String objectType, boolean log);
 	public LogEntryList loadByTypeGroup(String objectType, String group, boolean log);
 	public LogEntryList loadByTypeVersion(String objectType, String version, boolean log);

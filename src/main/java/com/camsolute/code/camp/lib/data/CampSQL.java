@@ -96,9 +96,9 @@ public class CampSQL {
 				{"_end_of_life", "timestamp NOT NULL"},
 				{"_object_json", "LONGTEXT NULL"},
 				{"extra",  "PRIMARY KEY (`_log_id_`)"
-					+ "UNIQUE KEY `_i_instance_id_UNIQUE` (`_instance_id`), "
-					+ "INDEX `_i_object_business_id_idx` (`_object_business_id` ASC),"
-					+ "INDEX `_i_instance_id_idx` (`_instance_id` ASC)"}
+					+ ",UNIQUE KEY `_i_instance_id_UNIQUE` (`_instance_id`) "
+					+ ",INDEX `_i_object_business_id_idx` (`_object_business_id` ASC)"
+					+ ",INDEX `_i_instance_id_idx` (`_instance_id` ASC)"}
 		};
 
 

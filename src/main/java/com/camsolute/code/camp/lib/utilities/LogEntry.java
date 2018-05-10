@@ -52,6 +52,33 @@ public class LogEntry<T extends IsObjectInstance<T>> implements LogEntryInterfac
 	}
 
 	@SuppressWarnings("unchecked")
+	public LogEntry(T object) throws ClassNotFoundException {
+		this.objectId = object.id();
+		this.objectType = (Class<T>) object.getClass();
+		this.objectBusinessId = object.businessId();
+		this.objectBusinessKey = object.businessKey();
+		this.group = object.group();
+		this.version = object.version();
+		this.timestamp = Util.Time.timestamp();
+		this.history = object.history();
+		this.objectJson = object.toJson();
+	}
+
+	@SuppressWarnings("unchecked")
+	public LogEntry(int id, T object) throws ClassNotFoundException {
+		this.id = id;
+		this.objectId = object.id();
+		this.objectType = (Class<T>) object.getClass();
+		this.objectBusinessId = object.businessId();
+		this.objectBusinessKey = object.businessKey();
+		this.group = object.group();
+		this.version = object.version();
+		this.timestamp = Util.Time.timestamp();
+		this.history = object.history();
+		this.objectJson = object.toJson();
+	}
+
+	@SuppressWarnings("unchecked")
 	public LogEntry(int id, int objectId, String objectType, String objectBusinessId, String objectBusinessKey, Group group, Version version, CampInstance history, Timestamp timestamp, String objectJson) throws ClassNotFoundException {
 		this.id = id;
 		this.objectId = objectId;

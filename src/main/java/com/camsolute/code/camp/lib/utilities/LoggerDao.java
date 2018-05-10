@@ -63,6 +63,19 @@ public class LoggerDao implements LoggerDaoInterface {
 	public static String loadByEndOfLifeSQL = "SELECT * FROM " + table + " WHERE `_object_type`='%s' AND `_end_of_life`='%s'";
 	public static String loadByTimestampSQL = "SELECT * FROM " + table + " WHERE `_object_type`='%s' AND `_timestamp`='%s'";
 	public static String loadByLogTimestampSQL = "SELECT * FROM " + table + " WHERE `_object_type`='%s' AND `_log_timestamp` LIKE '%s%%'";
+	
+	private static LoggerDao instance = null;
+	
+	private LoggerDao(){
+	}
+	
+	public static LoggerDao instance(){
+		if(instance == null) {
+			instance = new LoggerDao();
+		}
+		return instance;
+	}
+	
 	/**
   * Returns the database scheme name.
   *
@@ -91,8 +104,9 @@ public class LoggerDao implements LoggerDaoInterface {
 	 return tabledef;
  }
 	
+	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends IsObjectInstance<T>> LogEntry<T> log(T object, boolean log) {
+	public <T extends IsObjectInstance<T>> LogEntry<T> log(IsObjectInstance<?> object, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -117,14 +131,19 @@ public class LoggerDao implements LoggerDaoInterface {
 			
 			retVal = dbs.executeUpdate(SQL, Statement.RETURN_GENERATED_KEYS);		
 			rs = dbs.getGeneratedKeys();						
+			int id = 0;
 			if (rs.next()) {		
-				le = rsToI(rs,log);
+				id = rs.getInt(tabledef[0][0]);
 			}
+			le = new LogEntry<T>(id,(T)object);
 			
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ '"+retVal+"' entr"+((retVal!=1)?"ies":"y")+" modified ]----";LOG.info(String.format(fmt,_f,msg));}
 			
 		} catch(SQLException e) {
 			if(log && !Util._IN_PRODUCTION){msg = "----[ SQLException! database transaction failed.]----";LOG.info(String.format(fmt, _f,msg));}
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			if(log && !Util._IN_PRODUCTION){msg = "----[ releasing connection]----";LOG.info(String.format(fmt, _f,msg));}
@@ -140,7 +159,7 @@ public class LoggerDao implements LoggerDaoInterface {
 	}
 
 	@Override
-	public <T extends IsObjectInstance<T>, E extends ArrayList<T>> LogEntryList log(E objects, boolean log) {
+	public <T extends IsObjectInstance<?>, E extends ArrayList<T>> LogEntryList log(E objects, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -900,10 +919,10 @@ public class LoggerDao implements LoggerDaoInterface {
 		return lel;
 	}
 
-	public <T extends IsObjectInstance<T>,E extends ArrayList<T>> String insertValues(E ol, boolean log) {
+	public <T extends IsObjectInstance<?>,E extends ArrayList<T>> String insertValues(E ol, boolean log) {
 		boolean start = true;
 		String values = "";
-		for(T o:ol){
+		for(IsObjectInstance<?> o:ol){
 			if(!start) {
 				values += ",";
 			}else{
@@ -913,11 +932,11 @@ public class LoggerDao implements LoggerDaoInterface {
 		}
 		return values;
 	}
-	public <T extends IsObjectInstance<T>> String insertValues(T o, boolean log) {
+	public <T extends IsObjectInstance<T>> String insertValues(IsObjectInstance<?> o, boolean log) {
 		String values = 
 				 "'"+o.id()+"'"
 				+",'"+o.getClass().getSimpleName()+"'"
-				+",'"+o.onlyBusinessId()+"'"
+				+",'"+o.businessId()+"'"
 				+",'"+o.businessKey()+"'"
 				+",'"+o.history().id().id()+"'"
 				+",'"+o.history().currentId().id()+"'"
