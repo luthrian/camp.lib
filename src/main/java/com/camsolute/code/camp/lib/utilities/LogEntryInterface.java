@@ -33,6 +33,12 @@ import com.camsolute.code.camp.lib.models.Version;
 
 public interface LogEntryInterface<T extends IsObjectInstance<T>> extends Serialization<LogEntry<T>> {
 
+	public static enum LogObjects {
+		Order, 
+		Product,
+		Customer;
+	}
+	
 	public static <I extends IsObjectInstance<I>> String _toJson(LogEntry<I> entry) {
 		String json = "{";
 		json += _toInnerJson(entry);

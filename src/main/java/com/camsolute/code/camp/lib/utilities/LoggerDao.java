@@ -37,6 +37,7 @@ import com.camsolute.code.camp.lib.models.CampInstanceDao;
 import com.camsolute.code.camp.lib.models.Group;
 import com.camsolute.code.camp.lib.models.InstanceId;
 import com.camsolute.code.camp.lib.models.Version;
+import com.camsolute.code.camp.lib.utilities.LogEntryInterface.LogObjects;
 
 public class LoggerDao implements LoggerDaoInterface {
 
@@ -106,7 +107,7 @@ public class LoggerDao implements LoggerDaoInterface {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends IsObjectInstance<T>> LogEntry<T> log(IsObjectInstance<?> object, boolean log) {
+	public <T extends IsObjectInstance<T>> LogEntry<T> log(IsObjectInstance<?> object, LogObjects type, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -125,7 +126,7 @@ public class LoggerDao implements LoggerDaoInterface {
 			dbs = conn.createStatement();
 			
 			String SQL = "INSERT INTO " + table + "( " + Util.DB._columns(tabledef, Util.DB.dbActionType.INSERT, log)
-			+ " ) VALUES ( " + insertValues(object,log) + " )";;
+			+ " ) VALUES ( " + insertValues(object, type.name(), log) + " )";;
 			
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
 			
@@ -159,7 +160,7 @@ public class LoggerDao implements LoggerDaoInterface {
 	}
 
 	@Override
-	public <T extends IsObjectInstance<?>, E extends ArrayList<T>> LogEntryList log(E objects, boolean log) {
+	public <T extends IsObjectInstance<?>, E extends ArrayList<T>> LogEntryList log(E objects, LogObjects type, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -178,7 +179,7 @@ public class LoggerDao implements LoggerDaoInterface {
 			dbs = conn.createStatement();
 			
 			String SQL = "INSERT INTO " + table + "( " + Util.DB._columns(tabledef, Util.DB.dbActionType.INSERT, log)
-			+ " ) VALUES " + insertValues(objects,log);
+			+ " ) VALUES " + insertValues(objects, type.name(), log);
 			
 			if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+SQL+"]----";LOG.info(String.format(fmt,_f,msg));}
 			
@@ -919,7 +920,7 @@ public class LoggerDao implements LoggerDaoInterface {
 		return lel;
 	}
 
-	public <T extends IsObjectInstance<?>,E extends ArrayList<T>> String insertValues(E ol, boolean log) {
+	public <T extends IsObjectInstance<?>,E extends ArrayList<T>> String insertValues(E ol, String type, boolean log) {
 		boolean start = true;
 		String values = "";
 		for(IsObjectInstance<?> o:ol){
@@ -928,14 +929,14 @@ public class LoggerDao implements LoggerDaoInterface {
 			}else{
 				start = false;
 			}
-			values += "("+insertValues(o,log)+")";
+			values += "("+insertValues(o, type, log)+")";
 		}
 		return values;
 	}
-	public <T extends IsObjectInstance<T>> String insertValues(IsObjectInstance<?> o, boolean log) {
+	public <T extends IsObjectInstance<T>> String insertValues(IsObjectInstance<?> o, String type, boolean log) {
 		String values = 
 				 "'"+o.id()+"'"
-				+",'"+o.getClass().getSimpleName()+"'"
+				+",'"+type+"'"
 				+",'"+o.businessId()+"'"
 				+",'"+o.businessKey()+"'"
 				+",'"+o.history().id().id()+"'"
@@ -952,7 +953,7 @@ public class LoggerDao implements LoggerDaoInterface {
 		return values;
 	}
 
-	public <T extends IsObjectInstance<T>,E extends ArrayList<T>> String insertListValues(E ol, boolean log) {
+	public <T extends IsObjectInstance<T>,E extends ArrayList<T>> String insertListValues(E ol, String type, boolean log) {
 		String values = "";
 		boolean start = true;
 		for(T o:ol) {
@@ -961,7 +962,7 @@ public class LoggerDao implements LoggerDaoInterface {
 			} else {
 				start = false;
 			}
-			values += "(" + insertValues(o,log)+")";
+			values += "(" + insertValues(o, type, log)+")";
 		}
 		return values;
 	}

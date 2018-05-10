@@ -16,6 +16,7 @@ import com.camsolute.code.camp.lib.contract.Serialization;
 import com.camsolute.code.camp.lib.dao.LoggerDaoInterface;
 import com.camsolute.code.camp.lib.dao.rest.RestInterface;
 import com.camsolute.code.camp.lib.data.CampRest;
+import com.camsolute.code.camp.lib.utilities.LogEntryInterface.LogObjects;
 
 public class LoggerRest implements LoggerDaoInterface {
 
@@ -39,7 +40,7 @@ public class LoggerRest implements LoggerDaoInterface {
 	
 	
 	@Override
-	public <T extends IsObjectInstance<T>> LogEntry<T> log(IsObjectInstance<?> object, boolean log) {
+	public <T extends IsObjectInstance<T>> LogEntry<T> log(IsObjectInstance<?> object, LogObjects type, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -50,7 +51,7 @@ public class LoggerRest implements LoggerDaoInterface {
 		String json = object.toJson();
 		String prefix = CampRest.Logging.Prefix;		
 		String serviceUri = CampRest.LoggingService.callRequest(prefix,CampRest.LoggingService.Request.LOG);
-		String uri = serverUrl+domainUri+serviceUri;
+		String uri = serverUrl+domainUri+String.format(serviceUri,type.name());
 		String result = RestInterface.resultPost(uri, json, log);
 		LogEntry<T> a = LogEntryInterface._fromJson(result);
 		if(log && !Util._IN_PRODUCTION) {
@@ -61,7 +62,7 @@ public class LoggerRest implements LoggerDaoInterface {
 	}
 
 	@Override
-	public <T extends IsObjectInstance<?>, E extends ArrayList<T>> LogEntryList log(E objects, boolean log) {
+	public <T extends IsObjectInstance<?>, E extends ArrayList<T>> LogEntryList log(E objects, LogObjects type, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -72,7 +73,7 @@ public class LoggerRest implements LoggerDaoInterface {
 		String json = ((LogEntryList)objects).toJson();
 		String prefix = CampRest.Logging.Prefix;		
 		String serviceUri = CampRest.LoggingService.callRequest(prefix,CampRest.LoggingService.Request.LOG_LIST);
-		String uri = serverUrl+domainUri+serviceUri;
+		String uri = serverUrl+domainUri+String.format(serviceUri,type.name());
 		String result = RestInterface.resultPost(uri, json, log);
 		LogEntryList al = LogEntryList._fromJson(result);
 		if(log && !Util._IN_PRODUCTION) {

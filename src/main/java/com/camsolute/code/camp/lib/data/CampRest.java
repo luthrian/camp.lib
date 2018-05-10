@@ -224,8 +224,8 @@ public class CampRest {
 		
 		static {
 			Call = new HashMap<Request,String[]>();
-			Call.put(Request.LOG, new String[] {"/log","/log","POST"});
-			Call.put(Request.LOG_LIST, new String[] {"/s/log","/s/log","POST"});
+			Call.put(Request.LOG, new String[] {"/log","/log?objectType=%s","POST"});
+			Call.put(Request.LOG_LIST, new String[] {"/s/log","/s/log?objectType=%s","POST"});
 			Call.put(Request.LOAD_BY_TYPE, new String[] {"/load/by/type","/load/by/type?objectType=%s","GET"});
 			Call.put(Request.LOAD_BY_TYPE_GROUP, new String[] {"/load/by/type/group","/load/by/type/group?objectType=%s&group=%s","GET"});
 			Call.put(Request.LOAD_BY_TYPE_VERSION, new String[] {"/load/by/type/version","/load/by/type/version?objectType=%s&version=%s","GET"});
