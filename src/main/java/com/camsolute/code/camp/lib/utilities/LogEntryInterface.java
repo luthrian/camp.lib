@@ -48,16 +48,16 @@ public interface LogEntryInterface<T extends IsObjectInstance<T>> extends Serial
 	
 	public static <I extends IsObjectInstance<I>> String _toInnerJson(LogEntry<I> entry) {
 		String json = "";
-		json += "\"id\":"+entry.id()+",";	
-		json += "\"objectId\":"+entry.objectId()+",";	
-		json += "\"objectType\":\""+entry.objectType()+"\",";	
-		json += "\"objectBusinessId\":\""+entry.objectBusinessId()+"\",";	
-		json += "\"objectBusinessKey\":\""+entry.objectBusinessKey()+"\",";	
-		json += "\"group\":\""+entry.group().name()+"\",";	
-		json += "\"version\":\""+entry.version().value()+"\",";	
-		json += "\"history\":"+entry.history().toJson()+",";	
-		json += "\"timestamp\":\""+entry.timestamp().toString()+"\",";	
-		json += "\"objectJson\":\""+JSONObject.quote(entry.objectJson())+"\"";
+		json += "\"id\":"+entry.id();	
+		json += ",\"objectId\":"+entry.objectId();	
+		json += ",\"objectType\":\""+entry.objectType()+"\"";	
+		json += ",\"objectBusinessId\":\""+entry.objectBusinessId()+"\"";	
+		json += ",\"objectBusinessKey\":\""+entry.objectBusinessKey()+"\"";	
+		json += ",\"group\":\""+entry.group().name()+"\"";	
+		json += ",\"version\":\""+entry.version().value()+"\"";	
+		json += ",\"history\":"+entry.history().toJson();	
+		json += ",\"timestamp\":\""+entry.timestamp().toString()+"\"";	
+		json += ",\"objectJson\":"+JSONObject.quote(entry.objectJson());
 		return json;
 	}
 	
