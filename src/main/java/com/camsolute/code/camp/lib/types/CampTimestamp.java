@@ -21,9 +21,9 @@ package com.camsolute.code.camp.lib.types;
 
 import java.sql.Timestamp;
 
+import com.camsolute.code.camp.lib.contract.core.Value;
 import com.camsolute.code.camp.lib.models.Attribute;
 import com.camsolute.code.camp.lib.models.AttributeInterface;
-import com.camsolute.code.camp.lib.models.Value;
 import com.camsolute.code.camp.lib.utilities.Util;
 import com.camsolute.code.camp.lib.utilities.Util.Time;
 

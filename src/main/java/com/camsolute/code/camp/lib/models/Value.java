@@ -33,6 +33,12 @@ import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
 
 import com.camsolute.code.camp.lib.data.CampSQL;
+import com.camsolute.code.camp.lib.models.Attribute;
+import com.camsolute.code.camp.lib.models.AttributeDao;
+import com.camsolute.code.camp.lib.models.CampStates;
+import com.camsolute.code.camp.lib.models.Group;
+import com.camsolute.code.camp.lib.models.ValueInterface;
+import com.camsolute.code.camp.lib.models.ValueList;
 import com.camsolute.code.camp.lib.models.Attribute.AttributeType;
 import com.camsolute.code.camp.lib.models.CampStatesInterface.IOAction;
 import com.camsolute.code.camp.lib.types.*;
@@ -226,66 +232,6 @@ public class Value<T> implements ValueInterface<T> {
 
 	public Value<?> fromJson(String json) {
 		return ValueInterface._fromJson(json);
-	}
-
-	public static class Coordinate {
-
-		public Coordinate() {
-		}
-
-		public Coordinate(int x, int y, int z) {
-			this.posX = x;
-			this.posY = y;
-			this.posZ = z;
-		}
-
-		private int posX = 0;
-		private int posY = 0;
-		private int posZ = 0;
-
-		public int[] toArray() {
-			return new int[] { posX, posY, posZ };
-		}
-
-		public String toString() {
-			return CoordinateInterface._toJson(this);
-		}
-
-		public Coordinate fromString(String jsonString) {
-			return CoordinateInterface._fromJson(jsonString);
-		}
-
-		public String toJson() {
-			return CoordinateInterface._toJson(this);
-		}
-
-		public static Coordinate fromJson(String json) {
-			return CoordinateInterface._fromJson(json);
-		}
-
-		public int posX() {
-			return this.posX;
-		}
-
-		public int posY() {
-			return this.posY;
-		}
-
-		public int posZ() {
-			return this.posZ;
-		}
-
-		public void posX(int x) {
-			this.posX = x;
-		}
-
-		public void posY(int y) {
-			this.posY = y;
-		}
-
-		public void posZ(int z) {
-			this.posZ = z;
-		}
 	}
 	
  	public static class ValueDao {

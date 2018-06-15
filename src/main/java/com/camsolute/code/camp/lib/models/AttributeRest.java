@@ -25,6 +25,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jboss.resteasy.spi.ResteasyDeployment;
 
+import com.camsolute.code.camp.lib.contract.core.Value;
 import com.camsolute.code.camp.lib.dao.rest.RestInterface;
 import com.camsolute.code.camp.lib.data.CampRest;
 import com.camsolute.code.camp.lib.models.Attribute.AttributeType;

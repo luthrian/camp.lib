@@ -84,6 +84,9 @@ public class CampFormats {
 			return value;
 		}
 		
-	
+	public static final String defaultProductName() {
+		final String name = System.getProperty("java.vm.name");
+		return name;
+	}
 
 }

@@ -30,15 +30,16 @@ import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.camsolute.code.camp.lib.contract.HasCoordinate;
 import com.camsolute.code.camp.lib.contract.HasGroup;
 import com.camsolute.code.camp.lib.contract.HasId;
 import com.camsolute.code.camp.lib.contract.HasStates;
 import com.camsolute.code.camp.lib.contract.HasValue;
 import com.camsolute.code.camp.lib.contract.IsSelectable;
 import com.camsolute.code.camp.lib.contract.Serialization;
+import com.camsolute.code.camp.lib.contract.core.Coordinate;
+import com.camsolute.code.camp.lib.contract.core.HasCoordinate;
+import com.camsolute.code.camp.lib.contract.core.Value;
 import com.camsolute.code.camp.lib.models.Attribute.AttributeType;
-import com.camsolute.code.camp.lib.models.Value.Coordinate;
 import com.camsolute.code.camp.lib.types.BooleanValue;
 import com.camsolute.code.camp.lib.types.CampList;
 import com.camsolute.code.camp.lib.types.CampListInterface;
@@ -81,7 +82,7 @@ public interface ValueInterface<T> extends HasId, HasStates, HasGroup, HasCoordi
     }
 
 
-	public static String _valueToJson(Value<?> v) {
+  public static String _valueToJson(Value<?> v) {
         String str = "";
         AttributeType type = v.type();
         switch(type) {
@@ -222,7 +223,7 @@ public interface ValueInterface<T> extends HasId, HasStates, HasGroup, HasCoordi
     	String group = jo.getString("group");
     	boolean selected = jo.getBoolean("selected");
     	AttributeType type = AttributeType.valueOf(AttributeType.class,jo.getString("type"));
-    	Coordinate position = CoordinateInterface._fromJSONObject(jo.getJSONObject("position"));
+    	Coordinate position = Coordinate._fromJSONObject(jo.getJSONObject("position"));
     	CampStates states = CampStatesInterface._fromJSONObject(jo.getJSONObject("states"));
     	
     	switch(type) {

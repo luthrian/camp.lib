@@ -37,27 +37,26 @@
  */
 package com.camsolute.code.camp.lib.contract;
 
-import com.camsolute.code.camp.lib.models.CampInstance;
-import com.camsolute.code.camp.lib.models.CampStates;
-
 /**
- * The has number interface indicates that the implementing element has an association with an order
- * or is and order. It therefore extends has history, has customer and has order number interfaces,
- * etc. interfaces.
+ * This contract indicates that the honoring business object has an association to a value aspect
+ * or is itself a value aspect. 
  *
  * @author Christopher Campbell
  */
 public interface HasValueId {
 
 	/**
-	 * ask for the value aspect id of the attribute type
+	 * Request the value aspect id. The value aspect id is the technical identifier generated when the value aspect is persisted to storage.
+	 *  
 	 * @return value id
 	 */
 	public int valueId();
+	
 	/**
-	 * ask to set the value aspect id of the attribute type and return the value id previously set or 0 of no value id was previously set.
+	 * Request to set the value aspect id. Return the previous value aspect id.
+	 * 
 	 * @param valueId new value id
-	 * @return previous value
+	 * @return previous value aspect id
 	 */
 	public int valueId(int valueId);
 }

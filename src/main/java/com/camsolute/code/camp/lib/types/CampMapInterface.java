@@ -29,9 +29,9 @@ import java.util.Set;
 
 import org.json.JSONObject;
 
+import com.camsolute.code.camp.lib.contract.core.Value;
 import com.camsolute.code.camp.lib.models.Attribute;
 import com.camsolute.code.camp.lib.models.AttributeInterface;
-import com.camsolute.code.camp.lib.models.Value;
 import com.camsolute.code.camp.lib.models.ValueInterface;
 import com.camsolute.code.camp.lib.utilities.Util;
 import static com.camsolute.code.camp.lib.utilities.Util.*;

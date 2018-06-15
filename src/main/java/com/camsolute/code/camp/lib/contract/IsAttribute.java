@@ -19,8 +19,8 @@
  ******************************************************************************/
 package com.camsolute.code.camp.lib.contract;
 
+import com.camsolute.code.camp.lib.contract.core.Value;
 import com.camsolute.code.camp.lib.models.AttributeInterface;
-import com.camsolute.code.camp.lib.models.Value;
 
 
 public interface IsAttribute<U extends Value<?>> extends AttributeInterface<U> {

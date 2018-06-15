@@ -21,8 +21,9 @@ package com.camsolute.code.camp.lib.types;
 
 import java.util.HashMap;
 
+import com.camsolute.code.camp.lib.contract.core.Value;
+import com.camsolute.code.camp.lib.contract.core.Coordinate;
 import com.camsolute.code.camp.lib.models.Attribute;
-import com.camsolute.code.camp.lib.models.Value;
 import com.camsolute.code.camp.lib.models.Attribute.AttributeType;
 
 public class MapValue extends Value<HashMap<String,Attribute<?>>> {

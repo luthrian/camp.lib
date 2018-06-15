@@ -1,0 +1,10 @@
+package com.camsolute.code.camp.lib.contract.display;
+
+public interface DisplayHandler {
+
+  public void process(Display display);
+
+  public class DefaultDisplayHandler implements DisplayHandler {
+    public void process(Display display) {}
+  }
+}

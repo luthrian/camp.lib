@@ -17,12 +17,12 @@
  * Contributors:
  * 	Christopher Campbell - all code prior and post initial release
  ******************************************************************************/
-package com.camsolute.code.camp.lib.contract;
+package com.camsolute.code.camp.lib.contract.core;
 
-import com.camsolute.code.camp.lib.models.Value.Coordinate;
+import com.camsolute.code.camp.lib.models.Version;
 
-public interface HasCoordinate {
-
-  public Coordinate position();
-
+public interface HasVersion {
+	public Version version();
+	public void updateVersion(String version, boolean registerUpdate);
+	public void updateVersion(Version version, boolean registerUpdate);
 }

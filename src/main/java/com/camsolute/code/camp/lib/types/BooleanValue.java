@@ -19,8 +19,10 @@
  ******************************************************************************/
 package com.camsolute.code.camp.lib.types;
 
-import com.camsolute.code.camp.lib.models.Value;
+import com.camsolute.code.camp.lib.contract.core.Value;
+import com.camsolute.code.camp.lib.contract.core.Coordinate;
 import com.camsolute.code.camp.lib.models.Attribute.AttributeType;
+
 
 public class BooleanValue extends Value<Boolean> {
     public BooleanValue(Boolean value){

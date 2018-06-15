@@ -19,7 +19,7 @@
  ******************************************************************************/
 package com.camsolute.code.camp.lib.models;
 
-import com.camsolute.code.camp.lib.models.Value;
+import com.camsolute.code.camp.lib.contract.core.Value;
 import com.camsolute.code.camp.lib.dao.DaoInterface;
 import com.camsolute.code.camp.lib.dao.HasProcessReference;
 import com.camsolute.code.camp.lib.models.Attribute.AttributeType;

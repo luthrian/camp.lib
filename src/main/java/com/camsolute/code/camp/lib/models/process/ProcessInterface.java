@@ -29,9 +29,9 @@ import com.camsolute.code.camp.lib.contract.HasStates;
 import com.camsolute.code.camp.lib.contract.IsObserver;
 import com.camsolute.code.camp.lib.contract.IsProcess;
 import com.camsolute.code.camp.lib.contract.Serialization;
+import com.camsolute.code.camp.lib.contract.core.Value;
 import com.camsolute.code.camp.lib.models.CampStates;
 import com.camsolute.code.camp.lib.models.CampStatesInterface;
-import com.camsolute.code.camp.lib.models.Value;
 import com.camsolute.code.camp.lib.models.process.Process.ProcessType;
 import com.camsolute.code.camp.lib.utilities.Util;
 

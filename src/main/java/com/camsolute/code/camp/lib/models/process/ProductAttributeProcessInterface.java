@@ -20,8 +20,8 @@
 package com.camsolute.code.camp.lib.models.process;
 
 import com.camsolute.code.camp.lib.contract.IsObserver;
+import com.camsolute.code.camp.lib.contract.core.Value;
 import com.camsolute.code.camp.lib.models.Attribute;
-import com.camsolute.code.camp.lib.models.Value;
 
 public interface ProductAttributeProcessInterface<U extends Value<?>> extends IsObserver<Attribute<U>>{
 

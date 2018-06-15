@@ -28,6 +28,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.camsolute.code.camp.lib.contract.Serialization;
+import com.camsolute.code.camp.lib.contract.core.Value;
 import com.camsolute.code.camp.lib.models.Attribute.AttributeType;
 import com.camsolute.code.camp.lib.types.BooleanValue;
 import com.camsolute.code.camp.lib.types.ComplexValue;

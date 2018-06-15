@@ -50,6 +50,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 */
 import com.camsolute.code.camp.lib.types.*;
 import com.camsolute.code.camp.lib.contract.IsObjectInstance;
+import com.camsolute.code.camp.lib.contract.core.Value;
 import com.camsolute.code.camp.lib.models.Attribute;
 import com.camsolute.code.camp.lib.models.order.Order;
 import com.camsolute.code.camp.lib.models.process.Process.ProcessType;
@@ -481,7 +482,7 @@ public abstract  class Attribute<U extends Value<?>> implements AttributeInterfa
 	}
 
 	@Override
-	public Enum<?> updateStatus(Enum<?> status) {
+ 	public Enum<?> updateStatus(Enum<?> status) {
 		Enum<?> prev = this.status;
 		this.status = (AttributeStatus) status;
 		this.states.modify();
@@ -522,7 +523,7 @@ public abstract  class Attribute<U extends Value<?>> implements AttributeInterfa
 	}
 
 	@Override
-	public <T extends IsObjectInstance<T>> void cleanStatus(T object) {
+ 	public <T extends IsObjectInstance<T>> void cleanStatus(T object) {
 		if(!object.previousStatus().equals(AttributeStatus.CLEAN)) {
 			object.setStatus(object.previousStatus());
 			object.setPreviousStatus(AttributeStatus.CLEAN);

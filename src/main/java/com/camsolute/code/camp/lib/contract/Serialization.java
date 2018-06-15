@@ -19,10 +19,12 @@
  ******************************************************************************/
 package com.camsolute.code.camp.lib.contract;
 
+import com.camsolute.code.camp.lib.contract.core.DataMismatchException;
+
 public interface Serialization<T> {
 
 	public String toJson();
 
-	public T fromJson(String json);
+	public T fromJson(String json) throws DataMismatchException;
 
 }

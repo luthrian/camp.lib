@@ -20,8 +20,8 @@
 package com.camsolute.code.camp.lib.models.rest;
 
 
+import com.camsolute.code.camp.lib.contract.core.Value;
 import com.camsolute.code.camp.lib.models.Attribute;
-import com.camsolute.code.camp.lib.models.Value;
 import com.camsolute.code.camp.lib.models.process.ProductAttributeProcess;
 import com.camsolute.code.camp.lib.models.rest.VariableValue.VariableValueType;
 

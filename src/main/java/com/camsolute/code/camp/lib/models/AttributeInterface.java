@@ -33,6 +33,7 @@ import com.camsolute.code.camp.lib.contract.HasValueHistory;
 import com.camsolute.code.camp.lib.contract.HasValueId;
 import com.camsolute.code.camp.lib.contract.HasValueStates;
 import com.camsolute.code.camp.lib.contract.IsObjectInstance;
+import com.camsolute.code.camp.lib.contract.core.Value;
 import com.camsolute.code.camp.lib.models.Attribute;
 import com.camsolute.code.camp.lib.models.Attribute.AttributeType;
 import com.camsolute.code.camp.lib.models.process.ProcessList;
@@ -44,7 +45,9 @@ import com.camsolute.code.camp.lib.utilities.Util;
 
 
 public interface AttributeInterface<U extends Value<?>> extends HasValue<U>, HasValueId, HasValueHistory, HasValueStates, HasDefaultValue, HasPosition, HasProcess<Attribute<U>>, IsObjectInstance<Attribute<U>>, AttributeSerialization<Attribute<U>> {
+	
 	public static final Logger LOG = LogManager.getLogger(AttributeInterface.class);
+	
 	public static String fmt = "[%15s] [%s]";
 	
 	/**

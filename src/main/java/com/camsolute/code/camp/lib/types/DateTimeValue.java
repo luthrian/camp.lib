@@ -21,7 +21,8 @@ package com.camsolute.code.camp.lib.types;
 
 import org.joda.time.DateTime;
 
-import com.camsolute.code.camp.lib.models.Value;
+import com.camsolute.code.camp.lib.contract.core.Value;
+import com.camsolute.code.camp.lib.contract.core.Coordinate;
 import com.camsolute.code.camp.lib.models.Attribute.AttributeType;
 
 public class DateTimeValue extends Value<DateTime> {

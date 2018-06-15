@@ -19,8 +19,8 @@
  ******************************************************************************/
 package com.camsolute.code.camp.lib.models.process;
 
+import com.camsolute.code.camp.lib.contract.core.Value;
 import com.camsolute.code.camp.lib.models.Attribute;
-import com.camsolute.code.camp.lib.models.Value;
 
 //public class ProductAttributeProcess<U extends Value<?>> extends Process<Attribute<U>,ProductAttributeProcess<U>> implements ProductAttributeProcessInterface<U>{
 public class ProductAttributeProcess<U extends Value<?>> extends Process<Attribute<U>>{

@@ -40,7 +40,7 @@ import com.camsolute.code.camp.lib.models.process.ProcessList;
 import com.camsolute.code.camp.lib.utilities.Util;
 
 public class OrderDao implements OrderDaoInterface {
-
+	
 	private static final Logger LOG = LogManager.getLogger(OrderDao.class);
 	private static String fmt = "[%15s] [%s]";
 	
@@ -107,6 +107,11 @@ public class OrderDao implements OrderDaoInterface {
 		return updatestabledef;
 	}
 
+	public Order newLoadById(int id, boolean log) {
+		Order o = new Order();
+		o.persistance().loadById(id);	
+		return o;
+	}
 	@Override
 	public Order loadById(int id, boolean log) {
 		long startTime = System.currentTimeMillis();

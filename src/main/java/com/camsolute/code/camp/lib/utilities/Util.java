@@ -61,11 +61,53 @@ import org.joda.time.LocalDateTime;
 import com.camsolute.code.camp.lib.data.CampSQL;
 import com.camsolute.code.camp.lib.models.Attribute;
 import com.camsolute.code.camp.lib.models.Attribute.AttributeType;
+import com.camsolute.code.camp.lib.models.order.OrderDao;
 import com.camsolute.code.camp.lib.types.CampEnum;
 import com.camsolute.code.camp.lib.types.CampSet;
 
 public class Util {
 
+	public static class Log {
+
+		public static final String fmt = "[%15s] [%s]";
+		
+		public static Logger LOG(Class<?> cl) { 
+			return LogManager.getLogger(cl); 
+		}
+		
+		public static void logEnter(String tag, String msg,Class<?> cl) {
+  		logEnter(tag,msg,cl,!Util._IN_PRODUCTION);
+		}
+
+		public static void logEnter(String tag,String msg, Class<?> cl, boolean log) {
+  		if(log) {
+  			LOG(cl).info(String.format(fmt,(tag	+">>>>>>>>>").toUpperCase(),"====[ "+msg+" ]===="));
+  		}
+		}
+		
+		public static void log(String tag, String msg,Class<?> cl) {
+  		log(tag,msg,cl,!Util._IN_PRODUCTION);
+		}
+		
+		public static void log(String tag,String msg, Class<?> cl, boolean log) {
+  		if(log) {
+  			LOG(cl).info(String.format(fmt,tag,"----[ "+msg+" ]----"));
+  		}
+		}
+	
+		public static void logExit(String tag, String msg,long startTime, Class<?> cl) {
+  		logExit(tag,msg,startTime,cl,!Util._IN_PRODUCTION);
+		}
+
+		public static void logExit(String tag,String msg, long startTime, Class<?> cl, boolean log) {
+  		if(log) {
+  			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
+  			LOG(cl).info(String.format(fmt,("<<<<<<<<<"+tag).toUpperCase(),"====[ "+msg+" ]===="+time));
+  		}
+		}
+	}
+
+	
 	private static final Logger LOG = LogManager.getLogger(Util.class);
 	private static String fmt = "[%15s] [%s]";
 	
@@ -443,6 +485,25 @@ public class Util {
             return date.toString("yyyy-MM-dd");
         }
 
+        /**
+         *  Returns the string value of a <code>DateTime</code> with format "HH:mm:ss".
+         *
+         *  @param date <code>DateTime date</code>: the input <code>DateTime</code>
+         *
+         *  @return <code>String</code> the output string value of DateTime with the aforementioned formatting.
+         * 
+         *  @author Christopher Campbell
+         * 
+         *  @see org.joda.time.DateTime
+         *
+         */
+        public static String getTime(DateTime date) { 
+            // TODO Auto-generated method stub
+            return date.toString("HH:mm:ss");
+        }
+
+        /**
+ 
         /**
          *  Returns the string value of the current date/time in the requested format.
          *
@@ -1126,6 +1187,9 @@ public class Util {
     		return false;
     	}
 
+    	public static Connection __conn() {
+    		return __conn(!_IN_PRODUCTION);
+    	}
     	public static Connection __conn(boolean log){
     		log = false;
     		instance();
@@ -1172,6 +1236,9 @@ public class Util {
     		}
     	}
 
+    	public static void release(Connection connection) {
+    		__release(connection,!_IN_PRODUCTION);
+    	}
     	public static void __release(Connection connection,boolean log) {
     		log = false;
     		long startTime = System.currentTimeMillis();
@@ -1466,7 +1533,8 @@ public class Util {
 
     public static class Config {
 
-        private static Properties properties = null;
+    	private static String lang = "en";
+      private static Properties properties = null;
 
     	private static Config instance = null;
     	
@@ -1480,6 +1548,8 @@ public class Util {
                 input = getClass().getResourceAsStream("/" +"config.properties");
 
                 properties.load(input);
+                
+                lang = properties.getProperty("system.language");
                 
             } catch (IOException ex) {
             	
@@ -1506,7 +1576,10 @@ public class Util {
     	public Properties properties() {
     		return properties;
     	}
-    	
+    
+    	public final String description(String target) {
+    		return properties.getProperty("description."+lang+"."+target);
+    	}
     	public String defaultBusinessId(String object) {
     		return Util.Time.now("yyyyMMddhhmmss");
 //    		return properties.getProperty("object.create."+object+".businessId")+"."+UUID.randomUUID().toString();
@@ -1525,7 +1598,11 @@ public class Util {
     	}
 
     	public String defaultGroup(String object) {
-    		return properties.getProperty("object.create."+object+".group")+"."+UUID.randomUUID().toString();
+    		String group = object + "."+UUID.randomUUID().toString();
+    		if(properties.containsKey("object.create."+object+".group")) {
+    			group = properties.getProperty("object.create."+object+".group");
+    		}
+    		return group;
     	}
 
     	public String defaultVersion(String object) {

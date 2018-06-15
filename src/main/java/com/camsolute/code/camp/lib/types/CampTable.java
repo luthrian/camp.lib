@@ -27,8 +27,8 @@ import org.apache.logging.log4j.Logger;
 import com.camsolute.code.camp.lib.utilities.Util;
 import com.camsolute.code.camp.lib.exceptions.CampTableRowOutOfBoundsException;
 import com.camsolute.code.camp.lib.models.Attribute;
-import com.camsolute.code.camp.lib.models.Value;
 import com.camsolute.code.camp.lib.models.ValueInterface;
+import com.camsolute.code.camp.lib.contract.core.Value;
 import com.camsolute.code.camp.lib.exceptions.CampTableColumnOutOfBoundsException;
 
 

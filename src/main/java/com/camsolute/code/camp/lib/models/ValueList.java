@@ -26,6 +26,7 @@ import org.json.JSONObject;
 
 import com.camsolute.code.camp.lib.contract.HasListSelection;
 import com.camsolute.code.camp.lib.contract.Serialization;
+import com.camsolute.code.camp.lib.contract.core.Value;
 
 public class ValueList extends ArrayList<Value<?>> implements Serialization<ValueList>, HasListSelection<Value<?>>{
 

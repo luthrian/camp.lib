@@ -20,13 +20,15 @@
 package com.camsolute.code.camp.lib.models;
 
 import com.camsolute.code.camp.lib.data.CampFormats;
+import com.camsolute.code.camp.lib.utilities.Util;
 
 public class Group {
 
 	private final String name;
 	
 	public Group(){
-		this.name = CampFormats.defaultGroupName;
+//		this.name = CampFormats.defaultGroupName;
+		this.name = Util.Config.instance().defaultGroup(getClass().getSimpleName());
 	}
 	
 	public Group(String name){
