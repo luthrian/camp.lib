@@ -6,8 +6,12 @@ import org.json.JSONObject;
 
 import com.camsolute.code.camp.lib.contract.attribute.Attribute;
 import com.camsolute.code.camp.lib.contract.attribute.JSONAttributeHandler;
+import com.camsolute.code.camp.lib.contract.core.CampException.DataMismatchException;
 import com.camsolute.code.camp.lib.contract.core.CampList.AttributeList;
 import com.camsolute.code.camp.lib.contract.core.CampList.ValueList;
+import com.camsolute.code.camp.lib.contract.core.CampList.ProcessList;
+import com.camsolute.code.camp.lib.contract.process.JSONProcessHandler;
+import com.camsolute.code.camp.lib.contract.process.Process;
 import com.camsolute.code.camp.lib.contract.value.JSONValueHandler;
 import com.camsolute.code.camp.lib.contract.value.Value;
 
@@ -43,7 +47,7 @@ public interface JSONListHandler<T extends Serialization<T>,Q extends CampList<T
 
 	}
 	
-	public class JSONValueListHandler extends JSONAbstractListHandler<Value,ValueList> {//implements JSONListHandler<Value,ValueList> {
+	public class JSONValueListHandler extends JSONAbstractListHandler<Value<?,?>,ValueList> {//implements JSONListHandler<Value,ValueList> {
 		
 		public ValueList fromJSONObject(JSONObject jo) throws DataMismatchException {
 			return _fromJSONObject(jo);
@@ -82,6 +86,29 @@ public interface JSONListHandler<T extends Serialization<T>,Q extends CampList<T
 				al.add(JSONAttributeHandler._fromJSONObject(j));
 			}
 			return al;
+		}
+
+
+	}
+
+	public class JSONProcessListHandler extends JSONAbstractListHandler<Process,ProcessList> {
+
+		public ProcessList fromJSONObject(JSONObject jo) throws DataMismatchException {
+			return _fromJSONObject(jo);
+		}
+
+		public static ProcessList _fromJSONObject(JSONObject jo) throws DataMismatchException {
+			ProcessList pl = new ProcessList();
+			if(jo.getBoolean("isEmpty")) {
+				return pl;
+			}
+			pl.setSelectionIndex(jo.getInt("selected"));
+			Iterator<Object> i = jo.getJSONArray("list").iterator();
+			while(i.hasNext()) {
+				JSONObject j = (JSONObject)i.next();
+				pl.add(JSONProcessHandler._fromJSONObject(j));
+			}
+			return pl;
 		}
 
 

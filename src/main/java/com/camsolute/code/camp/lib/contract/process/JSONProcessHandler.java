@@ -2,7 +2,7 @@ package com.camsolute.code.camp.lib.contract.process;
 
 import org.json.JSONObject;
 
-import com.camsolute.code.camp.lib.contract.core.DataMismatchException;
+import com.camsolute.code.camp.lib.contract.core.CampException.DataMismatchException;
 import com.camsolute.code.camp.lib.contract.core.SerializationHandler;
 import com.camsolute.code.camp.lib.contract.process.Process;
 

@@ -37,6 +37,10 @@ public interface ProcessHandler {
 
 	public void notifyProcess(ProcessList processList, Enum<?> event);
 
+	public void notifyProcess(Process processList);
+
+	public void notifyProcess(Process processList, Enum<?> event);
+
 	public class DefaultProcessHandler implements ProcessHandler {
 		
 		public Message prepareMessage(String insanceId, Enum<?> message) {
@@ -56,6 +60,14 @@ public interface ProcessHandler {
 		}
 
 		public void notifyProcess(ProcessList processList, Enum<?> event) {
+			//TODO:
+		}
+		
+		public void notifyProcess(Process process) {
+			//TODO:
+		}
+
+		public void notifyProcess(Process process, Enum<?> event) {
 			//TODO:
 		}
 		

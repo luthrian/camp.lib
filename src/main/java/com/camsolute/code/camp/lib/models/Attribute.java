@@ -51,6 +51,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.camsolute.code.camp.lib.types.*;
 import com.camsolute.code.camp.lib.contract.IsObjectInstance;
 import com.camsolute.code.camp.lib.contract.core.Value;
+import com.camsolute.code.camp.lib.contract.core.CampStates;
+import com.camsolute.code.camp.lib.contract.core.CampStates.CampStatesImpl;
 import com.camsolute.code.camp.lib.models.Attribute;
 import com.camsolute.code.camp.lib.models.order.Order;
 import com.camsolute.code.camp.lib.models.process.Process.ProcessType;
@@ -71,7 +73,7 @@ import com.camsolute.code.camp.lib.models.rest.ProductAttributeProcessMessage;
 import com.camsolute.code.camp.lib.models.rest.ProductAttributeProcessMessage.ProductAttributeMessage;
 import com.camsolute.code.camp.lib.utilities.Util;
 
-public abstract  class Attribute<U extends Value<?>> implements AttributeInterface<U> {
+public abstract  class Attribute<U extends Value<?,?>> implements AttributeInterface<U> {
 
 	/*
 	 * Attribute definition Id
@@ -98,10 +100,10 @@ public abstract  class Attribute<U extends Value<?>> implements AttributeInterfa
   private boolean hasParent = false;
   private int parentId = 0;
   private int attributeParentId = 0;
-  private Attribute<? extends Value<?>> parent = null;
+  private Attribute<? extends Value<?,?>> parent = null;
 
-  private CampStates states = new CampStates();
-  private CampStates valueStates = new CampStates();
+  private CampStates states = new CampStatesImpl();
+  private CampStates valueStates = new CampStatesImpl();
   private CampInstance history = new CampInstance();
   private CampInstance valueHistory = new CampInstance(); 
 
@@ -459,12 +461,12 @@ public abstract  class Attribute<U extends Value<?>> implements AttributeInterfa
 
   @SuppressWarnings("unchecked")
 	@Override
-  public <X extends Value<?>> Attribute<X> parent() {
+  public <X extends Value<?,?>> Attribute<X> parent() {
     return (Attribute<X>) this.parent;
   }
 
   @Override
-  public <X extends Value<?>> Attribute<X> parent(Attribute<X> parent) {
+  public <X extends Value<?,?>> Attribute<X> parent(Attribute<X> parent) {
     @SuppressWarnings("unchecked")
 		Attribute<X> prev = (Attribute<X>) this.parent;
     this.parent = parent;
@@ -754,7 +756,7 @@ public abstract  class Attribute<U extends Value<?>> implements AttributeInterfa
    * @return newly created and persisted attribute
    */
   @SuppressWarnings("unchecked")
-	public static <U extends Value<?>,X extends Attribute<U>> X createAttribute(String name, AttributeType type, String defaultValue) {
+	public static <U extends Value<?,?>,X extends Attribute<U>> X createAttribute(String name, AttributeType type, String defaultValue) {
     switch (type) {
       case _integer:
         return  (X) new CampInteger(name, defaultValue);
@@ -808,7 +810,7 @@ public abstract  class Attribute<U extends Value<?>> implements AttributeInterfa
     return attributeMatrix.get(type)[1];
   }
 
-  public Attribute<? extends Value<?>> clone() {
+  public Attribute<? extends Value<?,?>> clone() {
   	return AttributeInterface.clone(this);
   }
 

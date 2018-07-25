@@ -901,7 +901,7 @@ public class CampInstanceDao implements CampInstanceDaoInterface,HasResultSetToI
 			}
 			String colDef = Util.DB._columns(tabledef, action, log);
 			String SQL = "CREATE TABLE IF NOT EXISTS " + table + " " + " ( " + colDef
-					+ ") ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
+					+ ") ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
 			if (log && !Util._IN_PRODUCTION) {
 				msg = "----[SQL : " + SQL + "]----";
 				LOG.info(String.format(fmt, _f, msg));

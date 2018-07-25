@@ -28,7 +28,7 @@ import com.camsolute.code.camp.lib.contract.HasListSelection;
 import com.camsolute.code.camp.lib.contract.Serialization;
 import com.camsolute.code.camp.lib.contract.core.Value;
 
-public class ValueList extends ArrayList<Value<?>> implements Serialization<ValueList>, HasListSelection<Value<?>>{
+public class ValueList extends ArrayList<Value<?,?>> implements Serialization<ValueList>, HasListSelection<Value<?,?>>{
 
 	/**
 	 * 
@@ -37,7 +37,7 @@ public class ValueList extends ArrayList<Value<?>> implements Serialization<Valu
 	private int selected = 0;
 	
 	@Override
-	public Value<?> selected() {
+	public Value<?,?> selected() {
 		return get(selected);
 	}
 
@@ -57,7 +57,7 @@ public class ValueList extends ArrayList<Value<?>> implements Serialization<Valu
 			return 0;
 		}
 		int ctr = 0;
-		for(Value<?> v: this) {
+		for(Value<?,?> v: this) {
 			if(v.id() == itemId) {
 				selected = ctr;
 				break;
@@ -68,7 +68,7 @@ public class ValueList extends ArrayList<Value<?>> implements Serialization<Valu
 	}
 
 	@Override
-	public int select(Value<?> item) {
+	public int select(Value<?,?> item) {
 		return selected;
 	}
 
@@ -83,7 +83,7 @@ public class ValueList extends ArrayList<Value<?>> implements Serialization<Valu
 		json += ",\"isEmpty\":"+vl.isEmpty();
 		json += ",\"list\":[";
 		boolean start = true;
-		for(Value<?> v: vl) {
+		for(Value<?,?> v: vl) {
 			if(!start) {
 				json += ",";
 			} else {

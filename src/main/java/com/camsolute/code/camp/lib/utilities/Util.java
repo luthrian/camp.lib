@@ -189,6 +189,20 @@ public class Util {
 			return joined;
 		}
 
+		public static String join(String[] ar,String sep, String wrap){
+			String joined = "";
+			boolean start = true;
+			for(String s:ar){
+				if(!start) {
+					joined += sep;
+				} else {
+					start = false;
+				}
+				joined += wrap+s+wrap;
+			}
+			return joined;
+		}
+
 		public static String tag(AttributeType type){
 			return Attribute.attributeMatrix.get(type)[1];
 		}
@@ -609,6 +623,7 @@ public class Util {
 //					}
     		if(dataSource ==null) {
           PoolProperties p = new PoolProperties();
+          p.setConnectionProperties("useUnicode=true&characterEncoding=UTF-8;rewriteBatchedStatements=true");
           p.setName("CAMPDBPOOL");
           p.setUrl(CampSQL._DBLINK);
           p.setDriverClassName("org.mariadb.jdbc.Driver");
@@ -1238,6 +1253,9 @@ public class Util {
 
     	public static void release(Connection connection) {
     		__release(connection,!_IN_PRODUCTION);
+    	}
+    	public static void __release(Connection connection) {
+    		__release(connection,false);
     	}
     	public static void __release(Connection connection,boolean log) {
     		log = false;

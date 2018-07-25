@@ -26,32 +26,32 @@ import com.camsolute.code.camp.lib.contract.core.Coordinate;
 import com.camsolute.code.camp.lib.models.Attribute;
 import com.camsolute.code.camp.lib.models.Attribute.AttributeType;
 
-public class MapValue extends Value<HashMap<String,Attribute<?>>> {
-    public MapValue(HashMap<String,Attribute<?>> value){
+public class MapValue extends Value<HashMap<String,Attribute<? extends Value<?,?>>>,MapValue> {
+    public MapValue(HashMap<String,Attribute<? extends Value<?,?>>> value){
         super(AttributeType._map,value);
     }
 
-    public MapValue(HashMap<String,Attribute<?>> value, int x, int y, int z){
+    public MapValue(HashMap<String,Attribute<? extends Value<?,?>>> value, int x, int y, int z){
         super(AttributeType._map,value, x, y, z);
     }
 
-    public MapValue(HashMap<String,Attribute<?>> value, String group, int x, int y, int z){
+    public MapValue(HashMap<String,Attribute<? extends Value<?,?>>> value, String group, int x, int y, int z){
         super(AttributeType._map,value, group, x, y, z);
     }
 
-    public MapValue(HashMap<String,Attribute<?>> value, String group, int x, int y, int z, boolean selected){
+    public MapValue(HashMap<String,Attribute<? extends Value<?,?>>> value, String group, int x, int y, int z, boolean selected){
         super(AttributeType._map,value, group, x, y, z, selected);
     }
 
-    public MapValue(int id, HashMap<String,Attribute<?>> value, String group, int x, int y, int z, boolean selected){
+    public MapValue(int id, HashMap<String,Attribute<? extends Value<?,?>>> value, String group, int x, int y, int z, boolean selected){
         super(id, AttributeType._map,value, group, x, y, z, selected);
     }
 
-    public MapValue(int id, HashMap<String,Attribute<?>> value, String group, Coordinate position){
+    public MapValue(int id, HashMap<String,Attribute<? extends Value<?,?>>> value, String group, Coordinate position){
         super(id, AttributeType._map,value, group, position);
     }
 
-    public MapValue(int id, HashMap<String,Attribute<?>> value, String group, Coordinate position, boolean selected){
+    public MapValue(int id, HashMap<String,Attribute<? extends Value<?,?>>> value, String group, Coordinate position, boolean selected){
         super(id, AttributeType._map,value, group, position, selected);
     }
 

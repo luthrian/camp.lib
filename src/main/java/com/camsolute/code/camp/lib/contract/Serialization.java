@@ -19,7 +19,7 @@
  ******************************************************************************/
 package com.camsolute.code.camp.lib.contract;
 
-import com.camsolute.code.camp.lib.contract.core.DataMismatchException;
+import com.camsolute.code.camp.lib.contract.core.CampException.DataMismatchException;
 
 public interface Serialization<T> {
 

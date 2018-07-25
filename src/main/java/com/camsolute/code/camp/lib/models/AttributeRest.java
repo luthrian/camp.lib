@@ -54,7 +54,7 @@ public class AttributeRest implements AttributeRestInterface {
 	}
 	
 	@Override
-	public Attribute<? extends Value<?>> loadById(int id, boolean log) {
+	public Attribute<? extends Value<?,?>> loadById(int id, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -67,7 +67,7 @@ public class AttributeRest implements AttributeRestInterface {
 		String serviceUri = CampRest.AttributeDefinitionDaoService.callRequest(prefix,CampRest.AttributeDefinitionDaoService.Request.LOAD_BY_ID);
 		String uri = serverUrl+domainUri+String.format(serviceUri,id);
 		String result = RestInterface.resultGET(uri, log);
-		Attribute<? extends Value<?>> a = AttributeInterface._fromJson(result);
+		Attribute<? extends Value<?,?>> a = AttributeInterface._fromJson(result);
 		if(log && !Util._IN_PRODUCTION) {
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[loadById completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
@@ -76,7 +76,7 @@ public class AttributeRest implements AttributeRestInterface {
 	}
 
 	@Override
-	public Attribute<? extends Value<?>> loadByBusinessId(String businessId, boolean log) {
+	public Attribute<? extends Value<?,?>> loadByBusinessId(String businessId, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -89,7 +89,7 @@ public class AttributeRest implements AttributeRestInterface {
 		String serviceUri = CampRest.AttributeDefinitionDaoService.callRequest(prefix,CampRest.AttributeDefinitionDaoService.Request.LOAD_BY_BUSINESS_ID);
 		String uri = serverUrl+domainUri+String.format(serviceUri,businessId);
 		String result = RestInterface.resultGET(uri, log);
-		Attribute<? extends Value<?>> a = AttributeInterface._fromJson(result);
+		Attribute<? extends Value<?,?>> a = AttributeInterface._fromJson(result);
 		if(log && !Util._IN_PRODUCTION) {
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[loadByBusinessId completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
@@ -167,7 +167,7 @@ public class AttributeRest implements AttributeRestInterface {
 	}
 
 	@Override
-	public Attribute<? extends Value<?>> save(Attribute<? extends Value<?>> instance, boolean log) {
+	public Attribute<? extends Value<?,?>> save(Attribute<? extends Value<?,?>> instance, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -180,7 +180,7 @@ public class AttributeRest implements AttributeRestInterface {
 		String serviceUri = CampRest.AttributeDefinitionDaoService.callRequest(prefix,CampRest.AttributeDefinitionDaoService.Request.SAVE);
 		String uri = serverUrl+domainUri+serviceUri;
 		String result = RestInterface.resultPost(uri, json, log);
-		Attribute<? extends Value<?>> a = AttributeInterface._fromJson(result);
+		Attribute<? extends Value<?,?>> a = AttributeInterface._fromJson(result);
 		if(log && !Util._IN_PRODUCTION) {
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[save completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
@@ -190,7 +190,7 @@ public class AttributeRest implements AttributeRestInterface {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <E extends ArrayList<Attribute<? extends Value<?>>>> E saveList(E instanceList, boolean log) {
+	public <E extends ArrayList<Attribute<? extends Value<?,?>>>> E saveList(E instanceList, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -212,7 +212,7 @@ public class AttributeRest implements AttributeRestInterface {
 	}
 
 	@Override
-	public Attribute<? extends Value<?>> update(Attribute<? extends Value<?>> instance, boolean log) {
+	public Attribute<? extends Value<?,?>> update(Attribute<? extends Value<?,?>> instance, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -225,7 +225,7 @@ public class AttributeRest implements AttributeRestInterface {
 		String serviceUri = CampRest.AttributeDefinitionDaoService.callRequest(prefix,CampRest.AttributeDefinitionDaoService.Request.UPDATE);
 		String uri = serverUrl+domainUri+serviceUri;
 		String result = RestInterface.resultPost(uri, json, log);
-		Attribute<? extends Value<?>> a = AttributeInterface._fromJson(result);
+		Attribute<? extends Value<?,?>> a = AttributeInterface._fromJson(result);
 		if(log && !Util._IN_PRODUCTION) {
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[update completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
@@ -235,7 +235,7 @@ public class AttributeRest implements AttributeRestInterface {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <E extends ArrayList<Attribute<? extends Value<?>>>> E updateList(E instanceList, boolean log) {
+	public <E extends ArrayList<Attribute<? extends Value<?,?>>>> E updateList(E instanceList, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -326,7 +326,7 @@ public class AttributeRest implements AttributeRestInterface {
 	}
 
 	@Override
-	public Attribute<? extends Value<?>> loadUpdate(Attribute<? extends Value<?>> instance, String businessKey, String target, boolean log) {
+	public Attribute<? extends Value<?,?>> loadUpdate(Attribute<? extends Value<?,?>> instance, String businessKey, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -339,7 +339,7 @@ public class AttributeRest implements AttributeRestInterface {
 		String serviceUri = CampRest.AttributeValueDaoService.callRequest(prefix,CampRest.AttributeValueDaoService.Request.LOAD_UPDATE);
 		String uri = serverUrl+domainUri+String.format(serviceUri,instance.attributeId(), instance.getObjectId(), businessKey, target);
 		String result = RestInterface.resultGET(uri, log);
-		Attribute<? extends Value<?>> a = AttributeInterface._fromJson(result);
+		Attribute<? extends Value<?,?>> a = AttributeInterface._fromJson(result);
 		if(log && !Util._IN_PRODUCTION) {
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[loadUpdate completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
@@ -348,7 +348,7 @@ public class AttributeRest implements AttributeRestInterface {
 	}
 
 	@Override
-	public int addToUpdates(Attribute<? extends Value<?>> instance, String businessKey, String target, boolean log) {
+	public int addToUpdates(Attribute<? extends Value<?,?>> instance, String businessKey, String target, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -372,7 +372,7 @@ public class AttributeRest implements AttributeRestInterface {
 	}
 
 	@Override
-	public <E extends ArrayList<Attribute<? extends Value<?>>>> int addToUpdates(E instanceList, String businessKey, String target,
+	public <E extends ArrayList<Attribute<? extends Value<?,?>>>> int addToUpdates(E instanceList, String businessKey, String target,
 			boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
@@ -499,7 +499,7 @@ public class AttributeRest implements AttributeRestInterface {
 	}
 
 	@Override
-	public <E extends ArrayList<Attribute<? extends Value<?>>>> int deleteFromUpdates(E instanceList, String businessKey, String target,
+	public <E extends ArrayList<Attribute<? extends Value<?,?>>>> int deleteFromUpdates(E instanceList, String businessKey, String target,
 			boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
@@ -726,7 +726,7 @@ public class AttributeRest implements AttributeRestInterface {
 	}
 
 	@Override
-	public Attribute<? extends Value<?>> save(int objectId, Attribute<? extends Value<?>> attribute, boolean log) {
+	public Attribute<? extends Value<?,?>> save(int objectId, Attribute<? extends Value<?,?>> attribute, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -739,7 +739,7 @@ public class AttributeRest implements AttributeRestInterface {
 		String serviceUri = CampRest.AttributeValueDaoService.callRequest(prefix,CampRest.AttributeValueDaoService.Request.SAVE);
 		String uri = serverUrl+domainUri+String.format(serviceUri,objectId);
 		String result = RestInterface.resultPost(uri, json, log);
-		Attribute<? extends Value<?>> a = AttributeInterface._fromJson(result);
+		Attribute<? extends Value<?,?>> a = AttributeInterface._fromJson(result);
 		if(log && !Util._IN_PRODUCTION) {
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[save completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));
@@ -770,7 +770,7 @@ public class AttributeRest implements AttributeRestInterface {
 	}
 
 	@Override
-	public int update(int objectId, Attribute<? extends Value<?>> attribute, boolean log) {
+	public int update(int objectId, Attribute<? extends Value<?,?>> attribute, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -840,7 +840,7 @@ public class AttributeRest implements AttributeRestInterface {
 	}
 
 	@Override
-	public int delete(int objectId, Attribute<? extends Value<?>> attribute, boolean log) {
+	public int delete(int objectId, Attribute<? extends Value<?,?>> attribute, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -887,7 +887,7 @@ public class AttributeRest implements AttributeRestInterface {
 }
 
 	@Override
-	public Attribute<? extends Value<?>> load(int objectId, Attribute<? extends Value<?>> attribute, boolean log) {
+	public Attribute<? extends Value<?,?>> load(int objectId, Attribute<? extends Value<?,?>> attribute, boolean log) {
 		long startTime = System.currentTimeMillis();
 		String _f = null;
 		String msg = null;
@@ -900,7 +900,7 @@ public class AttributeRest implements AttributeRestInterface {
 		String serviceUri = CampRest.AttributeValueDaoService.callRequest(prefix,CampRest.AttributeValueDaoService.Request.LOAD);
 		String uri = serverUrl+domainUri+String.format(serviceUri,objectId);
 		String result = RestInterface.resultPost(uri, json, log);
-		Attribute<? extends Value<?>> a = AttributeInterface._fromJson(result);
+		Attribute<? extends Value<?,?>> a = AttributeInterface._fromJson(result);
 		if(log && !Util._IN_PRODUCTION) {
 			String time = "[ExecutionTime:"+(System.currentTimeMillis()-startTime)+")]====";
 			msg = "====[load completed.]====";LOG.info(String.format(fmt,("<<<<<<<<<"+_f).toUpperCase(),msg+time));

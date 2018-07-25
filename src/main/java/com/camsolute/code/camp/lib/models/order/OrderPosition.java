@@ -21,9 +21,10 @@ package com.camsolute.code.camp.lib.models.order;
 
 import java.sql.Timestamp;
 
+import com.camsolute.code.camp.lib.contract.core.CampStates;
+import com.camsolute.code.camp.lib.contract.core.CampStates.CampStatesImpl;
 import com.camsolute.code.camp.lib.contract.IsObjectInstance;
 import com.camsolute.code.camp.lib.models.CampInstance;
-import com.camsolute.code.camp.lib.models.CampStates;
 import com.camsolute.code.camp.lib.models.Group;
 import com.camsolute.code.camp.lib.models.Version;
 import com.camsolute.code.camp.lib.models.process.OrderPositionProcess;
@@ -56,7 +57,7 @@ public class OrderPosition implements OrderPositionInterface {
 	private Timestamp date = Util.Time.timestamp();
 	private Group group;
 	private Version version;
-	private CampStates states = new CampStates();
+	private CampStates states = new CampStatesImpl();
 	private CampInstance history = new CampInstance();
 	private Status status = Status.CREATED;
 	private Status previousStatus = Status.CLEAN;

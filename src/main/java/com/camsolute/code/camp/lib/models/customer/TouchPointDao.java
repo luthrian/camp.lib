@@ -31,7 +31,8 @@ import org.apache.logging.log4j.Logger;
 import com.camsolute.code.camp.lib.data.CampSQL;
 import com.camsolute.code.camp.lib.models.CampInstanceDao;
 import com.camsolute.code.camp.lib.models.CampInstanceDaoInterface.RangeTarget;
-import com.camsolute.code.camp.lib.models.CampStatesInterface.IOAction;
+import com.camsolute.code.camp.lib.contract.core.CampStates;
+import com.camsolute.code.camp.lib.contract.core.CampStates.IOAction;
 import com.camsolute.code.camp.lib.models.Group;
 import com.camsolute.code.camp.lib.models.Version;
 import com.camsolute.code.camp.lib.utilities.Util;
@@ -406,7 +407,7 @@ public class TouchPointDao implements TouchPointDaoInterface {
 			msg = "====[ touch point dao call: ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 // we only save objects that are ready to save
-		if(p.states().notReadyToSave(p)) {
+		if(p.states().isLoaded() || (!p.history().isCurrent() && (!p.states().isModified() || !p.states().isNew()))) {
 			return p; // skip this entry if not ready to save
 		}
 		
@@ -478,7 +479,7 @@ public class TouchPointDao implements TouchPointDaoInterface {
 // we only save objects that are ready to save
 		TouchPointList rpl = new TouchPointList();
 		for(TouchPoint p: pl) {
-			if(p.states().notReadyToSave(p)) continue;
+			if(p.states().isLoaded() || (!p.history().isCurrent() && (!p.states().isModified() || !p.states().isNew()))) continue;
 			rpl.add(p);
 		}
 		
@@ -1609,17 +1610,17 @@ public class TouchPointDao implements TouchPointDaoInterface {
 		}
 		String colDef = Util.DB._columns(tabledef, action, log);
 		String SQL = "CREATE TABLE IF NOT EXISTS " + table + " " + " ( " + colDef
-				+ ") ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
+				+ ") ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
 		if (log && !Util._IN_PRODUCTION) { msg = "----[SQL : " + SQL + "]----"; LOG.info(String.format(fmt, _f, msg)); }
 		
 		String ucolDef = Util.DB._columns(updatestabledef, action, log);
 		String uSQL = "CREATE TABLE IF NOT EXISTS " + updatestable + " " + " ( " + ucolDef
-				+ ") ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
+				+ ") ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
 		if (log && !Util._IN_PRODUCTION) { msg = "----[UPDATES SQL : " + uSQL + "]----"; LOG.info(String.format(fmt, _f, msg)); }
 		
 		String refcolDef = Util.DB._columns(reftabledef, action, log);
 		String refSQL = "CREATE TABLE IF NOT EXISTS " + reftable + " " + " ( " + refcolDef
-				+ ") ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
+				+ ") ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
 		if (log && !Util._IN_PRODUCTION) { msg = "----[SQL : " + refSQL + "]----"; LOG.info(String.format(fmt, _f, msg)); }
 		
 		Connection conn = null;

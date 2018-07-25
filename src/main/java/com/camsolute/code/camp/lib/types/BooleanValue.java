@@ -24,7 +24,7 @@ import com.camsolute.code.camp.lib.contract.core.Coordinate;
 import com.camsolute.code.camp.lib.models.Attribute.AttributeType;
 
 
-public class BooleanValue extends Value<Boolean> {
+public class BooleanValue extends Value<Boolean,BooleanValue> {
     public BooleanValue(Boolean value){
         super(AttributeType._boolean, value);
     }

@@ -2,8 +2,8 @@ package com.camsolute.code.camp.lib.contract.process;
 
 public interface HasJSONProcessVariableValueHandler {
 
-	public JSONProcessVariableValueHandler jsonProcessVariableValueHandler();
+	public JSONProcessVariableValueHandler jsonHandler();
 	
-	public void jsonProcessVariableValueHandler(JSONProcessVariableValueHandler jsonProcessVariableValueHandler);
+	public void jsonHandler(JSONProcessVariableValueHandler jsonProcessVariableValueHandler);
 	
 }

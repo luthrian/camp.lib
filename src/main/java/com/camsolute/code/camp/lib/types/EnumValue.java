@@ -23,7 +23,7 @@ import com.camsolute.code.camp.lib.contract.core.Value;
 import com.camsolute.code.camp.lib.contract.core.Coordinate;
 import com.camsolute.code.camp.lib.models.Attribute.AttributeType;
 
-public class EnumValue extends Value<String> {
+public class EnumValue extends Value<String,EnumValue> {
     public EnumValue(String value){
         super(AttributeType._enum,value);
     }

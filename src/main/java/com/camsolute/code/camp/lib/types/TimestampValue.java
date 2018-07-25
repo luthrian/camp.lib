@@ -25,7 +25,7 @@ import com.camsolute.code.camp.lib.contract.core.Value;
 import com.camsolute.code.camp.lib.contract.core.Coordinate;
 import com.camsolute.code.camp.lib.models.Attribute.AttributeType;
 
-public class TimestampValue extends Value<Timestamp> {
+public class TimestampValue extends Value<Timestamp,TimestampValue> {
     public TimestampValue(Timestamp value){
         super(AttributeType._timestamp,value);
     }

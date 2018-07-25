@@ -21,12 +21,13 @@ package com.camsolute.code.camp.lib.models.order;
 
 import java.sql.Timestamp;
 
+import com.camsolute.code.camp.lib.contract.core.CampStates;
+import com.camsolute.code.camp.lib.contract.core.CampStates.CampStatesImpl;
 import com.camsolute.code.camp.lib.contract.IsObjectInstance;
 import com.camsolute.code.camp.lib.contract.persistance.PersistanceHandler;
-import com.camsolute.code.camp.lib.contract.persistance.PersistanceHandler.OrderPersistanceHandler;
+//import com.camsolute.code.camp.lib.contract.persistance.PersistanceHandler.OrderPersistanceHandler;
 
 import com.camsolute.code.camp.lib.models.CampInstance;
-import com.camsolute.code.camp.lib.models.CampStates;
 import com.camsolute.code.camp.lib.models.Group;
 import com.camsolute.code.camp.lib.models.Version;
 import com.camsolute.code.camp.lib.models.process.OrderProcess;
@@ -93,11 +94,11 @@ public class Order implements OrderInterface {
   	
   	private Version version = new Version(Util.Config.instance().properties().getProperty("object.create.Order.version"));
   	
-  	private CampStates states = new CampStates();
+  	private CampStates states = new CampStatesImpl();
   	
   	private CampInstance history = new CampInstance();
 
-  	private PersistanceHandler persistanceHandler = new OrderPersistanceHandler(this);
+//  	private PersistanceHandler persistanceHandler = new OrderPersistanceHandler(this);
   	
    	public Order() {
   		this.orderNumber = "";
@@ -533,7 +534,7 @@ public class Order implements OrderInterface {
 	  	this.history = object.history();
 		}
 
-		public PersistanceHandler persistance() {
-			return persistanceHandler;
-		}
+//		public PersistanceHandler persistance() {
+//			return persistanceHandler;
+//		}
 }

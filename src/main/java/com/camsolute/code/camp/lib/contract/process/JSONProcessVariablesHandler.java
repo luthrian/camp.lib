@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import org.json.JSONObject;
 
-import com.camsolute.code.camp.lib.contract.core.DataMismatchException;
+import com.camsolute.code.camp.lib.contract.core.CampException.DataMismatchException;
 import com.camsolute.code.camp.lib.contract.process.JSONProcessVariableValueHandler.JSONCamundaProcessVariableValueHandler;
 import com.camsolute.code.camp.lib.contract.process.ProcessVariables.CamundaProcessVariables;
 
@@ -35,6 +35,10 @@ public interface JSONProcessVariablesHandler {
 		}
 		
 		public ProcessVariables fromJSONObject(JSONObject jo)  throws DataMismatchException {
+			return _fromJSONObject(jo);
+		}
+		
+		public static ProcessVariables _fromJSONObject(JSONObject jo)  throws DataMismatchException {
 			HashMap<String,ProcessVariableValue> variables = new HashMap<String,ProcessVariableValue>();
 			for(String key:jo.keySet()) {
 				variables.put(key,(new JSONCamundaProcessVariableValueHandler()).fromJSONObject(jo.getJSONObject(key)));

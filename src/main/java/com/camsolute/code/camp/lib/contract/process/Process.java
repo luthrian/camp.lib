@@ -19,9 +19,15 @@
  ******************************************************************************/
 package com.camsolute.code.camp.lib.contract.process;
 
-import com.camsolute.code.camp.lib.contract.core.HasId;
+import org.json.JSONObject;
 
-public interface Process extends HasId, HasJSONProcessHandler, HasSQLProcessHandler {
+import com.camsolute.code.camp.lib.contract.core.CampException.DataMismatchException;
+import com.camsolute.code.camp.lib.contract.core.HasId;
+import com.camsolute.code.camp.lib.contract.core.Serialization;
+
+import com.camsolute.code.camp.lib.contract.process.JSONProcessHandler.CamundaJSONProcessHandler;; 
+
+public interface Process extends HasId, HasJSONProcessHandler, HasSQLProcessHandler, Serialization<Process> {
 
     public static enum ProcessType {
         ORDER_PROCESS,
@@ -73,6 +79,8 @@ public interface Process extends HasId, HasJSONProcessHandler, HasSQLProcessHand
 	
     public class DefaultProcessImpl implements Process {
 
+    	private String id = HasId.newId();
+    	
 			private String instanceId;
 			
 			private String businessKey;
@@ -149,16 +157,37 @@ public interface Process extends HasId, HasJSONProcessHandler, HasSQLProcessHand
 
 
 
-			public int id() {
-				// TODO Auto-generated method stub
-				return 0;
+			public String id() {
+				return id;
 			}
 
 
 
-			public void id(int id) {
+			public String updateId(String newId) {
+				String prev = this.id;
+				this.id = newId;
+				return prev;
+			}
+
+
+			@Override
+			public String toJson() {
 				// TODO Auto-generated method stub
-				
+				return null;
+			}
+
+
+			@Override
+			public Process fromJson(String json) throws DataMismatchException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+
+			@Override
+			public Process fromJSONObject(JSONObject jo) throws DataMismatchException {
+				// TODO Auto-generated method stub
+				return null;
 			}
         
     }
@@ -166,6 +195,8 @@ public interface Process extends HasId, HasJSONProcessHandler, HasSQLProcessHand
     public class CamundaProcessImpl implements Process {
 
 
+    	private String id = HasId.newId();
+    	
 			private String instanceId;
 			
 			private String businessKey;
@@ -174,7 +205,7 @@ public interface Process extends HasId, HasJSONProcessHandler, HasSQLProcessHand
 			
 			private String target;
 			
-			private JSONProcessHandler jsonHandler;
+			private JSONProcessHandler jsonHandler = new CamundaJSONProcessHandler();
 			
 			private SQLProcessHandler sqlHandler;
 			
@@ -241,16 +272,37 @@ public interface Process extends HasId, HasJSONProcessHandler, HasSQLProcessHand
 
 
 
-			public int id() {
-				// TODO Auto-generated method stub
-				return 0;
+			public String id() {
+				return this.id;
 			}
 
 
 
-			public void id(int id) {
+			public String updateId(String newId) {
+				String prev = this.id;
+				this.id = newId;
+				return prev;
+			}
+
+
+			@Override
+			public String toJson() {
 				// TODO Auto-generated method stub
-				
+				return null;
+			}
+
+
+			@Override
+			public Process fromJson(String json) throws DataMismatchException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+
+			@Override
+			public Process fromJSONObject(JSONObject jo) throws DataMismatchException {
+				// TODO Auto-generated method stub
+				return null;
 			}
         
     }

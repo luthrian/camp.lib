@@ -19,8 +19,6 @@
  ******************************************************************************/
 package com.camsolute.code.camp.lib.contract.core;
 
-import com.camsolute.code.camp.lib.models.CampStates;
-
 public interface HasStates {
 	public CampStates states();
 }

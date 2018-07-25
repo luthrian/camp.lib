@@ -19,6 +19,8 @@
  ******************************************************************************/
 package com.camsolute.code.camp.lib.contract;
 
+import com.camsolute.code.camp.lib.contract.core.HasStates;
+
 //TODO: HasName and HasBusinessId are equivalent in this context so HasName will be removed from IsObjectInstance
 public interface IsObjectInstance<T> extends HasId, HasName, HasVersion, HasGroup, HasBusinessId, HasBusinessKey, HasHistory, HasStates, HasStatus, Serialization<T> {
 

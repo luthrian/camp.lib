@@ -39,7 +39,7 @@ import com.camsolute.code.camp.lib.contract.IsObjectInstance;
 import com.camsolute.code.camp.lib.contract.Serialization;
 import com.camsolute.code.camp.lib.models.CampInstance;
 import com.camsolute.code.camp.lib.models.CampInstanceInterface;
-import com.camsolute.code.camp.lib.models.CampStates;
+import com.camsolute.code.camp.lib.contract.core.CampStates;
 import com.camsolute.code.camp.lib.models.CampStatesInterface;
 import com.camsolute.code.camp.lib.models.order.OrderPosition.Status;
 import com.camsolute.code.camp.lib.models.process.OrderPositionProcess;
@@ -96,7 +96,7 @@ public interface OrderPositionInterface extends HasDate, HasRefId, HasRefBusines
 		String  refBusinessKey = jo.getString("refBusinessKey");
 		int position = jo.getInt("position");
 		int quantity = jo.getInt("quantity");
-		CampStates states = CampStatesInterface._fromJSONObject(jo.getJSONObject("states"));
+		CampStates states = CampStates._fromJSONObject(jo.getJSONObject("states"));
 		CampInstance history = CampInstanceInterface._fromJSONObject(jo.getJSONObject("history"));
 		Status status = Status.valueOf(jo.getString("status"));
 		Status previousStatus = Status.valueOf(jo.getString("previousStatus"));

@@ -50,9 +50,12 @@ import org.apache.logging.log4j.Logger;
 
 import com.camsolute.code.camp.lib.contract.HasModelLifeCycle;
 import com.camsolute.code.camp.lib.contract.IsObjectInstance;
+import com.camsolute.code.camp.lib.contract.core.CampStates;
+import com.camsolute.code.camp.lib.contract.core.CampStates.CampStatesImpl;
+import com.camsolute.code.camp.lib.contract.core.CampStates.IOAction;
 import com.camsolute.code.camp.lib.data.CampSQL;
 import com.camsolute.code.camp.lib.models.CampInstance.Status;
-import com.camsolute.code.camp.lib.models.CampStatesInterface.IOAction;
+//import com.camsolute.code.camp.lib.models.CampStatesInterface.IOAction;
 import com.camsolute.code.camp.lib.models.product.Product;
 import com.camsolute.code.camp.lib.utilities.Util;
 import com.camsolute.code.camp.lib.utilities.Util.DB.dbActionType;
@@ -95,7 +98,7 @@ public class Model implements ModelInterface {
 	
   private CampInstance history = new CampInstance();
   
-  private CampStates states = new CampStates();
+  private CampStates states = new CampStatesImpl();
 
   private Product product;
 

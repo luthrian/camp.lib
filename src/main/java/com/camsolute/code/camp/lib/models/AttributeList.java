@@ -44,7 +44,7 @@ import com.camsolute.code.camp.lib.types.TimeValue;
 import com.camsolute.code.camp.lib.types.TimestampValue;
 import com.camsolute.code.camp.lib.utilities.Util;
 
-public class AttributeList extends ArrayList<Attribute<? extends Value<?>>> implements Serialization<AttributeList>{
+public class AttributeList extends ArrayList<Attribute<? extends Value<?,?>>> implements Serialization<AttributeList>{
 
 	/**
 	 * 
@@ -70,7 +70,7 @@ public class AttributeList extends ArrayList<Attribute<? extends Value<?>>> impl
 	public static String _toJson(AttributeList al) {
 		String json = "[";
 		boolean start = true;
-		for(Attribute<? extends Value<?>> a:al) {
+		for(Attribute<? extends Value<?,?>> a:al) {
 			if(!start) {
 				json += ",";
 			} else {

@@ -10,6 +10,7 @@ import com.camsolute.code.camp.lib.contract.core.CampComplex.AttributeComplex;
 import com.camsolute.code.camp.lib.contract.core.CampComplex.AttributeListComplex;
 import com.camsolute.code.camp.lib.contract.core.CampComplex.ValueComplex;
 import com.camsolute.code.camp.lib.contract.core.CampComplex.ValueListComplex;
+import com.camsolute.code.camp.lib.contract.core.CampException.DataMismatchException;
 import com.camsolute.code.camp.lib.contract.core.CampList.AttributeList;
 import com.camsolute.code.camp.lib.contract.core.CampList.ValueList;
 import com.camsolute.code.camp.lib.contract.value.JSONValueHandler;
@@ -25,7 +26,7 @@ public interface JSONComplexHandler<T extends Serialization<T>,Q extends CampCom
 			json += "\"map\":{";
 			boolean start = true;
 			for(String key:complex.keySet()) {
-				if(start) {
+				if(!start) {
 					json += ",";
 				} else {
 					start = false;
@@ -41,7 +42,7 @@ public interface JSONComplexHandler<T extends Serialization<T>,Q extends CampCom
 		}
 
 	}
-	public class JSONValueComplexHandler extends AbstractJSONComplexHandler<Value,ValueComplex> {
+	public class JSONValueComplexHandler extends AbstractJSONComplexHandler<Value<?,?>,ValueComplex> {
 
 		public ValueComplex fromJSONObject(JSONObject jo) throws DataMismatchException {
 			return _fromJSONObject(jo);

@@ -1,5 +1,7 @@
 package com.camsolute.code.camp.lib.models;
 
+import com.camsolute.code.camp.lib.contract.core.CampStates;
+import com.camsolute.code.camp.lib.contract.core.CampStates.CampStatesImpl;
 import com.camsolute.code.camp.lib.contract.IsObjectInstance;
 import com.camsolute.code.camp.lib.models.product.Product;
 import com.camsolute.code.camp.lib.utilities.Util;
@@ -30,7 +32,7 @@ public class Description implements DescriptionInterface {
 	private String businessKey;
 	private Group group;
 	private Version version;
-	private CampStates states = new CampStates();
+	private CampStates states = new CampStatesImpl();
 	private CampInstance history = new CampInstance();
 	private Status status = Status.CREATED;
 	private Status previousStatus = Status.CLEAN;

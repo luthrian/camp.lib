@@ -25,6 +25,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
+import com.camsolute.code.camp.lib.contract.core.CampStates;
 import com.camsolute.code.camp.lib.contract.Clonable;
 import com.camsolute.code.camp.lib.contract.HasByDate;
 import com.camsolute.code.camp.lib.contract.HasDate;
@@ -34,8 +35,8 @@ import com.camsolute.code.camp.lib.contract.HasStatus;
 import com.camsolute.code.camp.lib.contract.IsObjectInstance;
 import com.camsolute.code.camp.lib.models.CampInstance;
 import com.camsolute.code.camp.lib.models.CampInstanceInterface;
-import com.camsolute.code.camp.lib.models.CampStates;
-import com.camsolute.code.camp.lib.models.CampStatesInterface;
+//import com.camsolute.code.camp.lib.models.CampStates;
+//import com.camsolute.code.camp.lib.models.CampStatesInterface;
 import com.camsolute.code.camp.lib.models.order.Order.Status;
 import com.camsolute.code.camp.lib.models.process.OrderProcess;
 import com.camsolute.code.camp.lib.models.process.OrderProcessList;
@@ -83,7 +84,7 @@ public interface OrderInterface extends Clonable<Order>, HasOrderPositionList , 
 		Timestamp byDate = Util.Time.timestamp(jo.getString("byDate"));
 		Order.Status status = Order.Status.valueOf(Status.class ,jo.getString("status"));
 		Order.Status previousStatus = Order.Status.valueOf(Status.class,jo.getString("previousStatus"));
-		CampStates states = CampStatesInterface._fromJSONObject(jo.getJSONObject("states"));
+		CampStates states = CampStates._fromJSONObject(jo.getJSONObject("states"));
 		CampInstance history = CampInstanceInterface._fromJSONObject(jo.getJSONObject("history"));
 		String group = jo.getString("group");
 		String version = jo.getString("version");

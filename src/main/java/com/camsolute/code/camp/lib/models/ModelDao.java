@@ -31,7 +31,9 @@ import org.apache.logging.log4j.Logger;
 
 import com.camsolute.code.camp.lib.data.CampSQL;
 import com.camsolute.code.camp.lib.models.CampInstanceDaoInterface.RangeTarget;
-import com.camsolute.code.camp.lib.models.CampStatesInterface.IOAction;
+import com.camsolute.code.camp.lib.contract.core.CampStates;
+import com.camsolute.code.camp.lib.contract.core.CampStates.IOAction;
+//import com.camsolute.code.camp.lib.models.CampStatesInterface.IOAction;
 import com.camsolute.code.camp.lib.utilities.Util;
 
 public class ModelDao implements ModelDaoInterface {
@@ -419,7 +421,7 @@ public class ModelDao implements ModelDaoInterface {
 			_f = "[save]";
 			msg = "====[ persist a model object instance '"+m.name()+"' to the database ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
-		if(m.states().notReadyToSave(m)) {
+		if(m.states().isLoaded() || (!m.history().isCurrent() && (!m.states().isModified() || !m.states().isNew()))) {
 			if(log && !Util._IN_PRODUCTION){msg = "----[ERROR! Attempt to save non-new and unmodified model object instance. ]----";LOG.info(String.format(fmt, _f,msg));}
 		}
 		Connection conn = null;
@@ -487,7 +489,7 @@ public class ModelDao implements ModelDaoInterface {
 		// we only save model object that are ready to save
 		ModelList rml = new ModelList();
 		for(Model m: ml) {
-			if(m.states().notReadyToSave(m)) continue; // skip this entry if not ready to save
+			if(m.states().isLoaded() || (!m.history().isCurrent() && (!m.states().isModified() || !m.states().isNew()))) continue; // skip this entry if not ready to save
 			rml.add(m);
 		}
 		Connection conn = null;
@@ -1312,12 +1314,12 @@ public class ModelDao implements ModelDaoInterface {
 		}
 		String colDef = Util.DB._columns(tabledef, action, log);
 		String SQL = "CREATE TABLE IF NOT EXISTS " + table + " " + " ( " + colDef
-				+ ") ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
+				+ ") ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
 		if (log && !Util._IN_PRODUCTION) { msg = "----[SQL : " + SQL + "]----"; LOG.info(String.format(fmt, _f, msg)); }
 
 		String ucolDef = Util.DB._columns(updatestabledef, action, log);
 		String uSQL = "CREATE TABLE IF NOT EXISTS " + updatestable + " " + " ( " + ucolDef
-				+ ") ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
+				+ ") ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
 		if (log && !Util._IN_PRODUCTION) { msg = "----[UPDATES SQL : " + uSQL + "]----"; LOG.info(String.format(fmt, _f, msg)); }
 
 		Connection conn = null;

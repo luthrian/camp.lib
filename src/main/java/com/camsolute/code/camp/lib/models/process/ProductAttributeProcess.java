@@ -22,8 +22,8 @@ package com.camsolute.code.camp.lib.models.process;
 import com.camsolute.code.camp.lib.contract.core.Value;
 import com.camsolute.code.camp.lib.models.Attribute;
 
-//public class ProductAttributeProcess<U extends Value<?>> extends Process<Attribute<U>,ProductAttributeProcess<U>> implements ProductAttributeProcessInterface<U>{
-public class ProductAttributeProcess<U extends Value<?>> extends Process<Attribute<U>>{
+//public class ProductAttributeProcess<U extends Value<?,?>> extends Process<Attribute<U>,ProductAttributeProcess<U>> implements ProductAttributeProcessInterface<U>{
+public class ProductAttributeProcess<U extends Value<?,?>> extends Process<Attribute<U>>{
 	public ProductAttributeProcess(String instanceId, String businessKey, String processName, String definitionId, String tenantId, String caseInstanceId, boolean ended, boolean suspended, ProcessType type) {
 		super(instanceId, businessKey, processName, definitionId, tenantId, caseInstanceId, ended, suspended, type);
 	}

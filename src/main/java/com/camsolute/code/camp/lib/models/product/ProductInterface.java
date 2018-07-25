@@ -34,7 +34,7 @@ import com.camsolute.code.camp.lib.contract.IsObjectInstance;
 import com.camsolute.code.camp.lib.models.AttributeMap;
 import com.camsolute.code.camp.lib.models.CampInstance;
 import com.camsolute.code.camp.lib.models.CampInstanceInterface;
-import com.camsolute.code.camp.lib.models.CampStates;
+import com.camsolute.code.camp.lib.contract.core.CampStates;
 import com.camsolute.code.camp.lib.models.CampStatesInterface;
 import com.camsolute.code.camp.lib.models.Group;
 import com.camsolute.code.camp.lib.models.ModelList;
@@ -97,7 +97,7 @@ public interface ProductInterface extends Clonable<Product>, HasProcess<Product>
 		Timestamp date = Util.Time.timestamp(jo.getString("date"));
 		String status = jo.getString("status");
 		String previousStatus = jo.getString("previousStatus");
-		CampStates states = CampStatesInterface._fromJSONObject(jo.getJSONObject("states"));
+		CampStates states = CampStates._fromJSONObject(jo.getJSONObject("states"));
 		CampInstance history = CampInstanceInterface._fromJSONObject(jo.getJSONObject("history"));
 		AttributeMap attributes = new AttributeMap();
 		if(jo.has("attributes")) {

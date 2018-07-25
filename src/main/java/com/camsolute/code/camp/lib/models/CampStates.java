@@ -19,8 +19,9 @@
  ******************************************************************************/
 package com.camsolute.code.camp.lib.models;
 
-import com.camsolute.code.camp.lib.contract.HasStates;
+import com.camsolute.code.camp.lib.contract.core.CampStates.IOAction;
 import com.camsolute.code.camp.lib.contract.IsObjectInstance;
+import com.camsolute.code.camp.lib.contract.core.IsBusinessObject;
 import com.camsolute.code.camp.lib.models.CampStatesInterface.PersistType;
 
 /**
@@ -39,7 +40,8 @@ import com.camsolute.code.camp.lib.models.CampStatesInterface.PersistType;
 public class CampStates implements CampStatesInterface {
 
 	private IOAction lastIO = IOAction.NONE;
-
+	private IOAction prevIO = IOAction.NONE;
+	
 	private PersistType todo = PersistType.SAVE;
 	
 	protected boolean dirty = false;
@@ -47,11 +49,11 @@ public class CampStates implements CampStatesInterface {
 	private boolean modified = false;
 
 	public void update(CampStates states) {
-  	if(states.isDeleted())ioAction(CampStatesInterface.IOAction.DELETE);
-  	if(states.isLoaded())ioAction(CampStatesInterface.IOAction.LOAD);
-  	if(states.isSaved())ioAction(CampStatesInterface.IOAction.SAVE);
-  	if(states.isUpdated())ioAction(CampStatesInterface.IOAction.UPDATE);
-  	if(states.isNew())ioAction(CampStatesInterface.IOAction.NONE);
+  	if(states.isDeleted())ioAction(IOAction.DELETE);
+  	if(states.isLoaded())ioAction(IOAction.LOAD);
+  	if(states.isSaved())ioAction(IOAction.SAVE);
+  	if(states.isUpdated())ioAction(IOAction.UPDATE);
+  	if(states.isNew())ioAction(IOAction.NONE);
   	if(states.isDirty())dirty();
   	setModified(states.isModified());
 	}
@@ -72,6 +74,7 @@ public class CampStates implements CampStatesInterface {
 
 	@Override
 	public void ioAction(IOAction action) {
+		prevIO = lastIO;
 		lastIO = action;
 	}
 
@@ -100,7 +103,10 @@ public class CampStates implements CampStatesInterface {
 		return this.lastIO.equals(IOAction.NONE);
 	}
 
-	@Override
+	public boolean hasNewId() {
+		return this.lastIO.equals(IOAction.NEWID);
+	}
+
 	public boolean isModified() {
 		return modified;
 	}
@@ -135,6 +141,15 @@ public class CampStates implements CampStatesInterface {
 		}
 	}
 
+	public IOAction prevIO() {
+		return prevIO;
+	}
+	public void prevIO(IOAction action) {
+		prevIO = action;
+	}
+	public void revertIOAction() {
+		lastIO = prevIO;
+	}
 	/**
 	 * {@inheritDoc}
 	 */
@@ -168,11 +183,11 @@ public class CampStates implements CampStatesInterface {
 		return (isModified() || isNew());
 	}
 	
-  public <T extends IsObjectInstance> boolean updateBeforeSave(T instance) {
+  public <T extends IsBusinessObject> boolean updateBeforeSave(T instance) {
     return (isLoaded() || (!isNew() && (isModified() || instance.history().isFirst())));
   }
 
-  public <T extends IsObjectInstance> boolean notReadyToSave(T instance) {
+  public <T extends IsBusinessObject> boolean notReadyToSave(T instance) {
     return (isLoaded() || (!instance.history().isCurrent() && (!isModified() || !isNew())));
   }
 

@@ -19,7 +19,9 @@
  ******************************************************************************/
 package com.camsolute.code.camp.lib.contract.process;
 
+import com.camsolute.code.camp.lib.contract.core.CampException.ElementNotInListException;
 import com.camsolute.code.camp.lib.contract.process.Process.ProcessType;
+import com.camsolute.code.camp.lib.contract.core.CampList.ProcessList;
 
 // This is Observer Pattern 
 //TODO: will make this more generic (ie. change to HasObservers)
@@ -27,8 +29,8 @@ public interface HasObserverProcesses {
 	
 	public void addObserverProcess(Process observerProcess);
 	public ProcessList removeObserverProcesses();
-  public Process removeObserverProcess(String processInstanceId);
-  public ProcessList removeObserverProcesses(ProcessType group);
+  public Process removeObserverProcess(String processInstanceId) throws ElementNotInListException;
+  public ProcessList removeObserverProcesses(ProcessType group) throws ElementNotInListException;
 
 	public void notifyObserverProcess(String processInstanceId);
 	public void notifyObserverProcess(String processInstanceId, Enum<?> event);

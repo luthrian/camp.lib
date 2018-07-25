@@ -31,7 +31,7 @@ import org.apache.logging.log4j.Logger;
 import com.camsolute.code.camp.lib.data.CampSQL;
 import com.camsolute.code.camp.lib.models.CampInstanceDao;
 import com.camsolute.code.camp.lib.models.CampInstanceDaoInterface.RangeTarget;
-import com.camsolute.code.camp.lib.models.CampStatesInterface.IOAction;
+import com.camsolute.code.camp.lib.contract.core.CampStates.IOAction;
 import com.camsolute.code.camp.lib.utilities.Util;
 
 public class AddressDao implements AddressDaoInterface {
@@ -1334,12 +1334,12 @@ public class AddressDao implements AddressDaoInterface {
 		}
 		String colDef = Util.DB._columns(tabledef, action, log);
 		String SQL = "CREATE TABLE IF NOT EXISTS " + table + " " + " ( " + colDef
-				+ ") ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
+				+ ") ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
 		if (log && !Util._IN_PRODUCTION) { msg = "----[SQL : " + SQL + "]----"; LOG.info(String.format(fmt, _f, msg)); }
 
 		String ucolDef = Util.DB._columns(updatestabledef, action, log);
 		String uSQL = "CREATE TABLE IF NOT EXISTS " + updatestable + " " + " ( " + ucolDef
-				+ ") ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
+				+ ") ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
 		if (log && !Util._IN_PRODUCTION) { msg = "----[UPDATES SQL : " + uSQL + "]----"; LOG.info(String.format(fmt, _f, msg)); }
 
 		Connection conn = null;

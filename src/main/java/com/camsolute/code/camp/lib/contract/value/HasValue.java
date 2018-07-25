@@ -57,7 +57,7 @@ public interface HasValue {
 	 * the main business process associated with the business object instance.
 	 * @return the value aspect of a business object instance.
 	 */
-  public Value value();
+  public Value<?,?> value();
 
 	/**
 	 * Request to update the value of a business object instance. The value aspect of a business object instance must generally 
@@ -65,11 +65,11 @@ public interface HasValue {
 	 * persisted to storage to ensure this availability. Persisting the value aspect to storage after the request has been made
 	 * may not always be required; this can be controlled by setting the <code>registerStateModified</parameter> to false.
 	 * An update does not necessarily require the notification of associated processes.
-	 * @param newValue new value
+	 * @param newValue<?,?> new value
 	 * @param registerStateModified if true then call Value.states().modify() 
 	 * @return previous value
 	 */
-  public Value updateValue(Value newValue, boolean registerUpdate);
+  public Value<?,?> updateValue(Value<?,?> newValue, boolean registerUpdate);
 
 
 }

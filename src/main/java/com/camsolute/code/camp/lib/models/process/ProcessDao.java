@@ -29,7 +29,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.camsolute.code.camp.lib.data.CampSQL;
 import com.camsolute.code.camp.lib.models.CampInstanceDao;
-import com.camsolute.code.camp.lib.models.CampStatesInterface.IOAction;
+import com.camsolute.code.camp.lib.contract.core.CampStates.IOAction;
 import com.camsolute.code.camp.lib.models.process.Process.ProcessType;
 import com.camsolute.code.camp.lib.utilities.Util;
 
@@ -1441,52 +1441,52 @@ public class ProcessDao implements ProcessDaoInterface {
 		}
 		String colDef = Util.DB._columns(tabledef, action, log);
 		String SQL = "CREATE TABLE IF NOT EXISTS " + table + " " + " ( " + colDef
-				+ ") ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
+				+ ") ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
 		if (log && !Util._IN_PRODUCTION) { msg = "----[SQL : " + SQL + "]----"; LOG.info(String.format(fmt, _f, msg)); }
 
 		String ucolDef = Util.DB._columns(updatestabledef, action, log);
 		String uSQL = "CREATE TABLE IF NOT EXISTS " + updatestable + " " + " ( " + ucolDef
-				+ ") ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
+				+ ") ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
 		if (log && !Util._IN_PRODUCTION) { msg = "----[UPDATES SQL : " + uSQL + "]----"; LOG.info(String.format(fmt, _f, msg)); }
 
 		String pcolDef = Util.DB._columns(ptabledef, action, log);
 		String pSQL = "CREATE TABLE IF NOT EXISTS " + ptable + " " + " ( " + pcolDef
-				+ ") ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
+				+ ") ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
 		if (log && !Util._IN_PRODUCTION) { msg = "----[SQL : " + pSQL + "]----"; LOG.info(String.format(fmt, _f, msg)); }
 
 		String pucolDef = Util.DB._columns(pupdatestabledef, action, log);
 		String puSQL = "CREATE TABLE IF NOT EXISTS " + pupdatestable + " " + " ( " + pucolDef
-				+ ") ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
+				+ ") ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
 		if (log && !Util._IN_PRODUCTION) { msg = "----[UPDATES SQL : " + puSQL + "]----"; LOG.info(String.format(fmt, _f, msg)); }
 
 		String ccolDef = Util.DB._columns(ctabledef, action, log);
 		String cSQL = "CREATE TABLE IF NOT EXISTS " + ctable + " " + " ( " + ccolDef
-				+ ") ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
+				+ ") ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
 		if (log && !Util._IN_PRODUCTION) { msg = "----[SQL : " + cSQL + "]----"; LOG.info(String.format(fmt, _f, msg)); }
 
 		String cucolDef = Util.DB._columns(cupdatestabledef, action, log);
 		String cuSQL = "CREATE TABLE IF NOT EXISTS " + cupdatestable + " " + " ( " + cucolDef
-				+ ") ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
+				+ ") ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
 		if (log && !Util._IN_PRODUCTION) { msg = "----[UPDATES SQL : " + cuSQL + "]----"; LOG.info(String.format(fmt, _f, msg)); }
 
 		String pdcolDef = Util.DB._columns(pdtabledef, action, log);
 		String pdSQL = "CREATE TABLE IF NOT EXISTS " + pdtable + " " + " ( " + pdcolDef
-				+ ") ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
+				+ ") ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
 		if (log && !Util._IN_PRODUCTION) { msg = "----[SQL : " + pdSQL + "]----"; LOG.info(String.format(fmt, _f, msg)); }
 
 		String pducolDef = Util.DB._columns(pdupdatestabledef, action, log);
 		String pduSQL = "CREATE TABLE IF NOT EXISTS " + pdupdatestable + " " + " ( " + pducolDef
-				+ ") ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
+				+ ") ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
 		if (log && !Util._IN_PRODUCTION) { msg = "----[UPDATES SQL : " + pduSQL + "]----"; LOG.info(String.format(fmt, _f, msg)); }
 
 		String ocolDef = Util.DB._columns(otabledef, action, log);
 		String oSQL = "CREATE TABLE IF NOT EXISTS " + otable + " " + " ( " + ocolDef
-				+ ") ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
+				+ ") ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
 		if (log && !Util._IN_PRODUCTION) { msg = "----[SQL : " + oSQL + "]----"; LOG.info(String.format(fmt, _f, msg)); }
 
 		String oucolDef = Util.DB._columns(oupdatestabledef, action, log);
 		String ouSQL = "CREATE TABLE IF NOT EXISTS " + oupdatestable + " " + " ( " + oucolDef
-				+ ") ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
+				+ ") ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
 		if (log && !Util._IN_PRODUCTION) { msg = "----[UPDATES SQL : " + ouSQL + "]----"; LOG.info(String.format(fmt, _f, msg)); }
 
 		Connection conn = null;

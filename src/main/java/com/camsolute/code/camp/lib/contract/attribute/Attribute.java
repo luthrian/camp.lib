@@ -5,55 +5,49 @@ import com.camsolute.code.camp.lib.contract.core.HasPosition;
 
 import org.json.JSONObject;
 
-import com.camsolute.code.camp.lib.contract.core.CampData;
 import com.camsolute.code.camp.lib.contract.core.CampStatus;
-import com.camsolute.code.camp.lib.contract.core.DataMismatchException;
+import com.camsolute.code.camp.lib.contract.core.CampStates;
+import com.camsolute.code.camp.lib.contract.core.CampStates.CampStatesImpl;
+import com.camsolute.code.camp.lib.contract.core.HasAttributes;
+import com.camsolute.code.camp.lib.contract.core.HasId;
+import com.camsolute.code.camp.lib.contract.core.HasParent;
+import com.camsolute.code.camp.lib.contract.core.CampException.DataMismatchException;
+import com.camsolute.code.camp.lib.contract.core.CampException.ElementNotInListException;
+import com.camsolute.code.camp.lib.contract.core.CampException.StatusDirtyException;
+import com.camsolute.code.camp.lib.contract.core.CampException.StatusMismatchException;
+import com.camsolute.code.camp.lib.contract.core.CampList.AttributeList;
 import com.camsolute.code.camp.lib.contract.core.IsBusinessObject;
 import com.camsolute.code.camp.lib.contract.core.Serialization;
 import com.camsolute.code.camp.lib.contract.history.HistoryMarker;
 import com.camsolute.code.camp.lib.contract.value.HasValue;
 import com.camsolute.code.camp.lib.contract.value.HasValueId;
 import com.camsolute.code.camp.lib.contract.value.Value;
-import com.camsolute.code.camp.lib.models.CampStates;
 import com.camsolute.code.camp.lib.models.Group;
 import com.camsolute.code.camp.lib.models.Version;
-import com.camsolute.code.camp.lib.contract.process.HasObserverProcesses;
+import com.camsolute.code.camp.lib.utilities.Util;
 import com.camsolute.code.camp.lib.contract.process.Process;
 import com.camsolute.code.camp.lib.contract.process.ProcessHandler;
-import com.camsolute.code.camp.lib.contract.process.ProcessList;
-import com.camsolute.code.camp.lib.contract.process.ProcessList.ProcessListImpl;
+import com.camsolute.code.camp.lib.contract.core.CampList.ProcessList;
 import com.camsolute.code.camp.lib.contract.process.Process.ProcessType;
 
-public interface Attribute extends HasValue, HasValueId, HasDefaultValue, HasPosition, IsBusinessObject, HasJSONAttributeHandler, HasSQLAttributeHandler, Serialization<Attribute> {
+public interface Attribute extends HasValue, HasValueId, HasParent<Attribute>, HasAttributes, HasDefaultValue, HasPosition, IsBusinessObject, HasJSONAttributeHandler, HasSQLAttributeHandler, Serialization<Attribute> {
 	
-	public boolean hasValueParent();
-
-	public void hasValueParent(boolean hasValueParent);
-
-	public int valueParentId();
-
-	public void valueParentId(int id);	
-
-	public Value valueParent();
-
-	public void valueParent(Value parent);
-    
   public Attribute clone();
   
   public static Attribute clone(Attribute attribute) throws DataMismatchException {
-    return attribute.jsonAttributeHandler().fromJson(attribute.jsonAttributeHandler().toJson(attribute));
+    return attribute.jsonHandler().fromJson(attribute.jsonHandler().toJson(attribute));
   }
 
     public class DefaultAttribute implements Attribute {
 
-    	private int id = CampData.NEW_ID;
+    	private String id = HasId.newId();
     	private int position = 0;
 
     	private String businessId;
     	private String businessKey;
 
-    	private Value value;
-    	private int valueId = CampData.NEW_ID;
+    	private Value<?,?> value;
+    	private String valueId = "";
     	private String defaultValue;
     	
     	private CampStatus status;
@@ -61,38 +55,40 @@ public interface Attribute extends HasValue, HasValueId, HasDefaultValue, HasPos
     	private Group group;
     	private Version version;
     	
-    	private Value parent;
-    	private boolean hasValueParent = false;
-    	private int valueParentId = CampData.NEW_ID;
+    	private Attribute parent;
+    	private boolean hasParent = false;
+    	private String parentId = "";
 
-    	private HistoryMarker history = new HistoryMarker.DefaultHistoryMarker();
-    	private CampStates states = new CampStates();
+    	private AttributeList attributes;
     	
-    	private ProcessList oberverProcesses = new ProcessListImpl();
+    	private HistoryMarker history = new HistoryMarker.DefaultHistoryMarker();
+    	private CampStates states = new CampStatesImpl();
+    	
+    	private ProcessList observerProcesses = new ProcessList();
     	private ProcessHandler processHandler;
     	
     	private JSONAttributeHandler jsonHandler;
     	private SQLAttributeHandler sqlHandler;
     	
-			public Value value() {
+			public Value<?,?> value() {
 				return value;
 			}
 
-			public Value updateValue(Value newValue, boolean registerUpdate) {
-				Value previousValue = value;
+			public Value<?,?> updateValue(Value<?,?> newValue, boolean registerUpdate) {
+				Value<?,?> previousValue = value;
 				value = newValue;
 				if(registerUpdate) {
 					states.modify();
 				}
-				return null;
+				return previousValue;
 			}
 
-			public int valueId() {
+			public String valueId() {
 				return valueId;
 			}
 
-			public int valueId(int newValueId) {
-				int previousId = this.valueId;
+			public String valueId(String newValueId) {
+				String previousId = this.valueId;
 				this.valueId = newValueId;
 				return previousId;
 			}
@@ -102,51 +98,75 @@ public interface Attribute extends HasValue, HasValueId, HasDefaultValue, HasPos
 			}
 
 
-			public String updateDefaultValue(String value, boolean registerUpdate) {
-				// TODO Auto-generated method stub
-				return null;
+			public String updateDefaultValue(String newValue, boolean registerUpdate) {
+				String prev = this.defaultValue;
+				this.defaultValue = newValue;
+				if(registerUpdate) {
+					states.modify();
+				}
+				return prev;
 			}
 
 
 			public int position() {
-				// TODO Auto-generated method stub
-				return 0;
+				return position;
 			}
 
 
-			public int updatePosition(int id, boolean registerUpdate) {
-				// TODO Auto-generated method stub
-				return 0;
+			public int updatePosition(int newPosition, boolean registerUpdate) {
+				int prev = this.position;
+				this.position = newPosition;
+				if(registerUpdate) {
+					states.modify();
+				}
+				return this.position;
 			}
 
 
 			public void addObserverProcess(Process observerProcess) {
-				// TODO Auto-generated method stub
-				
+				this.observerProcesses.add(observerProcess);
 			}
 
 
 			public ProcessList removeObserverProcesses() {
-				// TODO Auto-generated method stub
-				return null;
+				ProcessList pl = this.observerProcesses;
+				this.observerProcesses = new ProcessList();
+				return pl;
+			}
+
+//TODO: change HasObserverProcess to add exception if the list doesnt contain a process with that instanceId
+			public Process removeObserverProcess(String processInstanceId) throws ElementNotInListException{
+				Process p = null;
+				int index = 0;
+				for(Process pl: this.observerProcesses) {
+					if(pl.instanceId().equals(processInstanceId)){
+						p = this.observerProcesses.remove(index);
+					}
+					index++;
+				}
+				if(p == null) {
+					throw new ElementNotInListException("No obeserver processes with process instance Id("+processInstanceId+") registered");
+				}
+				return p;
 			}
 
 
-			public Process removeObserverProcess(String processInstanceId) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-
-			public ProcessList removeObserverProcesses(ProcessType group) {
-				// TODO Auto-generated method stub
-				return null;
+			public ProcessList removeObserverProcesses(ProcessType group) throws ElementNotInListException{
+				ProcessList pl = new ProcessList();
+				for(Process p: this.observerProcesses) {
+					if(p.type().equals(group)){
+						pl.add(p);
+					}
+				}
+				if(pl.size()==0) {
+					throw new ElementNotInListException("No obeserver processes of ProcessType("+group.name()+") registered");
+				}
+				return pl;
 			}
 
 
 			public void notifyObserverProcess(String processInstanceId) {
-				// TODO Auto-generated method stub
-				
+				processHandler().notifyProcess(this.observerProcesses.findInstanceOf(processInstanceId));
 			}
 
 
@@ -198,105 +218,110 @@ public interface Attribute extends HasValue, HasValueId, HasDefaultValue, HasPos
 			}
 
 
-			public int id() {
-				// TODO Auto-generated method stub
-				return 0;
+			public String id() {
+				return id;
 			}
 
 
-			public void id(int id) {
-				// TODO Auto-generated method stub
-				
+			public String updateId(String id) {
+				String prev = this.id;
+				this.id = id;
+				return prev;
 			}
 
 
 			public Version version() {
-				// TODO Auto-generated method stub
-				return null;
+				return version;
 			}
 
 
 			public void updateVersion(String version, boolean registerUpdate) {
-				// TODO Auto-generated method stub
-				
+				this.version = new Version(version);
+				if(registerUpdate) {
+					states.modify();
+				}
 			}
 
 
 			public void updateVersion(Version version, boolean registerUpdate) {
-				// TODO Auto-generated method stub
-				
+				this.version = version;
+				if(registerUpdate) {
+					states.modify();
+				}
 			}
 
 
 			public Group group() {
-				// TODO Auto-generated method stub
-				return null;
+				return group;
 			}
 
 
 			public void updateGroup(Group group, boolean registerUpdate) {
-				// TODO Auto-generated method stub
-				
+				this.group = group;
+				if(registerUpdate) {
+					states.modify();
+				}
 			}
 
 
 			public void updateGroup(String group, boolean registerUpdate) {
-				// TODO Auto-generated method stub
-				
+				this.group = new Group(group);
+				if(registerUpdate) {
+					states.modify();
+				}
 			}
 
 
 			public String initialBusinessId() {
-				// TODO Auto-generated method stub
-				return null;
+				return this.businessId;
 			}
 
 
 			public String businessId() {
-				// TODO Auto-generated method stub
-				return null;
+				return this.id+Util.DB._VS+this.businessId;
 			}
 
 
 			public String updateBusinessId(String newId, boolean registerUpdate) {
-				// TODO Auto-generated method stub
-				return null;
+				String prev = businessId;
+				businessId = newId;
+				if(registerUpdate) {
+					states.modify();
+				}
+				return prev;
 			}
 
 
 			public String onlyBusinessId() {
-				// TODO Auto-generated method stub
-				return null;
+				return businessId;
 			}
 
 
 			public String businessKey() {
-				// TODO Auto-generated method stub
-				return null;
+				return businessKey;
 			}
 
 
 			public void updateBusinessKey(String businessKey, boolean registerUpdate) {
-				// TODO Auto-generated method stub
-				
+				this.businessKey = businessKey;
+				if(registerUpdate) {
+					states.modify();
+				}
 			}
 
 
 			public HistoryMarker history() {
-				// TODO Auto-generated method stub
-				return null;
+				return history;
 			}
 
 
 			public void setHistory(HistoryMarker instance) {
-				// TODO Auto-generated method stub
-				
+				history = instance;
 			}
 
 
 			public CampStates states() {
-				// TODO Auto-generated method stub
-				return null;
+				return states;
 			}
 
 
@@ -305,49 +330,42 @@ public interface Attribute extends HasValue, HasValueId, HasDefaultValue, HasPos
 			}
 
 
-			public Enum<?> updateStatus(Enum<?> status, boolean registerUpdate) {
-				// TODO Auto-generated method stub
-				return null;
+			public Enum<?> updateStatus(Enum<?> status, boolean registerUpdate) throws StatusMismatchException, StatusDirtyException {
+				return this.status.statusHandler().updateStatus(this, status, registerUpdate);
 			}
 
 
-			public Enum<?> updateStatus(String status, boolean registerUpdate) {
-				// TODO Auto-generated method stub
-				return null;
+			public Enum<?> updateStatus(String status, boolean registerUpdate) throws StatusMismatchException, StatusDirtyException {
+				return this.status.statusHandler().updateStatus(this, status, registerUpdate);
 			}
 
 
 			public Enum<?> previousStatus() {
+				return status.statusHandler().previousStatus();
+			}
+
+
+			public void setPreviousStatus(Enum<?> status) throws StatusMismatchException, StatusDirtyException {
+				this.status.statusHandler().setPreviousStatus(status);
+			}
+
+			public void setPreviousStatus(String status) throws StatusMismatchException, StatusDirtyException {
+				this.status.statusHandler().setPreviousStatus(status);
+			}
+
+
+			public void cleanStatus(IsBusinessObject object) throws StatusMismatchException, StatusDirtyException {
+				status.statusHandler().cleanStatus(object);
+			}
+
+
+			public JSONAttributeHandler jsonHandler() {
 				// TODO Auto-generated method stub
 				return null;
 			}
 
 
-			public void setPreviousStatus(Enum<?> status) {
-				// TODO Auto-generated method stub
-				
-			}
-
-
-			public void setPreviousStatus(String status) {
-				// TODO Auto-generated method stub
-				
-			}
-
-
-			public void cleanStatus(IsBusinessObject object) {
-				// TODO Auto-generated method stub
-				
-			}
-
-
-			public JSONAttributeHandler jsonAttributeHandler() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-
-			public void jsonAttributeHandler(JSONAttributeHandler jsonAttributeHandler) {
+			public void jsonHandler(JSONAttributeHandler jsonAttributeHandler) {
 				// TODO Auto-generated method stub
 				
 			}
@@ -385,12 +403,18 @@ public interface Attribute extends HasValue, HasValueId, HasDefaultValue, HasPos
 
 			public Group updateValueGroup(Group group, boolean registerUpdate) {
 				// TODO Auto-generated method stub
+				if(registerUpdate) {
+					states.modify();
+				}
 				return null;
 			}
 
 
 			public Group updateValueGroup(String group, boolean registerUpdate) {
 				// TODO Auto-generated method stub
+				if(registerUpdate) {
+					states.modify();
+				}
 				return null;
 			}
 
@@ -403,6 +427,9 @@ public interface Attribute extends HasValue, HasValueId, HasDefaultValue, HasPos
 
 			public int updateAttributePosition(int position, boolean registerUpdate) {
 				// TODO Auto-generated method stub
+				if(registerUpdate) {
+					states.modify();
+				}
 				return 0;
 			}
 
@@ -415,75 +442,63 @@ public interface Attribute extends HasValue, HasValueId, HasDefaultValue, HasPos
 
 			public String updateAttributeBusinessKey(String id, boolean registerUpdate) {
 				// TODO Auto-generated method stub
+				if(registerUpdate) {
+					states.modify();
+				}
 				return null;
 			}
 
 
-			public boolean hasValueParent() {
-				// TODO Auto-generated method stub
-				return false;
+			public boolean hasParent() {
+				return hasParent;
 			}
 
 
-			public void hasValueParent(boolean hasValueParent) {
-				// TODO Auto-generated method stub
-				
+			public void hasParent(boolean hasParent) {
+				this.hasParent = hasParent;
 			}
 
 
-			public int valueParentId() {
-				// TODO Auto-generated method stub
-				return 0;
+			public String parentId() {
+				return parentId;
 			}
 
 
-			public void valueParentId(int id) {
-				// TODO Auto-generated method stub
-				
+			public void parentId(String id,boolean registerUpdate) {
+				this.parentId = id;
+				if(registerUpdate) {
+					states.modify();
+				}
 			}
-
-
-			public int valueParentAttributeId() {
-				// TODO Auto-generated method stub
-				return 0;
-			}
-
-
-			public void valueParentAttributeId(int id) {
-				// TODO Auto-generated method stub
-				
-			}
-
 
 			public Attribute parent() {
-				// TODO Auto-generated method stub
-				return null;
+				return parent;
 			}
 
 
-			public void parent(Attribute parent) {
-				// TODO Auto-generated method stub
-				
+			public void parent(Attribute parent, boolean registerUpdate) {
+				this.parent = parent;
+				parentId(parent.id(),registerUpdate);
 			}
 
 
-			public Attribute clone() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			@Override
-			public Value valueParent() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			@Override
-			public void valueParent(Value parent) {
-				// TODO Auto-generated method stub
-				
+			public AttributeList attributes() {
+				return this.attributes;
 			}
 			
+			public void attributes(AttributeList list) {
+				this.attributes = list;
+			}
+			
+			public Attribute clone() {
+				try {
+					return jsonHandler.fromJson(jsonHandler.toJson(this));
+				} catch( DataMismatchException e) {
+					e.printStackTrace();
+				}
+				return null;
+			}
+
 			public String toJson() {
 				return jsonHandler.toJson(this);
 			}
@@ -494,6 +509,11 @@ public interface Attribute extends HasValue, HasValueId, HasDefaultValue, HasPos
 			
 			public Attribute fromJSONObject(JSONObject jo) throws DataMismatchException {
 				return jsonHandler.fromJSONObject(jo);
+			}
+
+			public void parent(Attribute parent) {
+				 this.parent = parent;
+				 this.parentId = parent.id();
 			}
 			
     }

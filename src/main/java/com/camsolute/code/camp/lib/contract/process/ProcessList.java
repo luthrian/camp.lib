@@ -6,14 +6,14 @@ import java.util.Iterator;
 
 import org.json.JSONObject;
 
-import com.camsolute.code.camp.lib.contract.core.DataMismatchException;
-import com.camsolute.code.camp.lib.contract.HasListSelection;
+import com.camsolute.code.camp.lib.contract.core.CampException.DataMismatchException;
+import com.camsolute.code.camp.lib.contract.core.HasListSelection;
 
 import com.camsolute.code.camp.lib.contract.process.Process;
 
 public interface ProcessList extends List<Process>,  HasListSelection<Process> {
 
-    public int find(int itemId);
+  public int find(String itemId);
 
   public String toJson();
 
@@ -79,7 +79,7 @@ public interface ProcessList extends List<Process>,  HasListSelection<Process> {
 			selected = index;
 		}
 
-		public int select(int itemId) {
+		public int select(String itemId) {
       int i = find(itemId);
       if(i!=-1) {
           selected = i;
@@ -95,18 +95,17 @@ public interface ProcessList extends List<Process>,  HasListSelection<Process> {
         return i;
 		}
       
-      public int find(int itemId) {
+      public int find(String itemId) {
           int indexCounter = 0;
-          boolean indexChanged = false;
+          boolean itemNotFound = true;
           for(Process p: this) {
-              if(p.id() == itemId) {
-                  selected = indexCounter;
-                  indexChanged = true;
+              if(p.id().equals(itemId)) {
+                  itemNotFound = false;
                   break;
               }
               indexCounter++;
           }
-          if(indexCounter >= this.size()){
+          if(itemNotFound){
               return -1;
           }
           return indexCounter;

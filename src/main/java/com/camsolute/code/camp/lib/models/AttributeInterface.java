@@ -25,13 +25,16 @@ import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
 import com.camsolute.code.camp.lib.contract.AttributeSerialization;
+import com.camsolute.code.camp.lib.contract.core.CampStates;
+import com.camsolute.code.camp.lib.contract.core.CampStates.CampStatesImpl;
+import com.camsolute.code.camp.lib.contract.core.HasValueStates;
 import com.camsolute.code.camp.lib.contract.HasDefaultValue;
 import com.camsolute.code.camp.lib.contract.HasPosition;
 import com.camsolute.code.camp.lib.contract.HasProcess;
 import com.camsolute.code.camp.lib.contract.HasValue;
 import com.camsolute.code.camp.lib.contract.HasValueHistory;
 import com.camsolute.code.camp.lib.contract.HasValueId;
-import com.camsolute.code.camp.lib.contract.HasValueStates;
+//import com.camsolute.code.camp.lib.contract.HasValueStates;
 import com.camsolute.code.camp.lib.contract.IsObjectInstance;
 import com.camsolute.code.camp.lib.contract.core.Value;
 import com.camsolute.code.camp.lib.models.Attribute;
@@ -44,7 +47,7 @@ import com.camsolute.code.camp.lib.utilities.Util;
 
 
 
-public interface AttributeInterface<U extends Value<?>> extends HasValue<U>, HasValueId, HasValueHistory, HasValueStates, HasDefaultValue, HasPosition, HasProcess<Attribute<U>>, IsObjectInstance<Attribute<U>>, AttributeSerialization<Attribute<U>> {
+public interface AttributeInterface<U extends Value<?,?>> extends HasValue<U>, HasValueId, HasValueHistory, HasValueStates, HasDefaultValue, HasPosition, HasProcess<Attribute<U>>, IsObjectInstance<Attribute<U>>, AttributeSerialization<Attribute<U>> {
 	
 	public static final Logger LOG = LogManager.getLogger(AttributeInterface.class);
 	
@@ -199,31 +202,31 @@ public interface AttributeInterface<U extends Value<?>> extends HasValue<U>, Has
 	 * @param <X> the value aspect of the attribute. Extends the <code>Value</code> 
 	 * @return <code>Attribute&lt;X&gt;</code> 
 	 */
-	public <X extends Value<?>> Attribute<X> parent();
+	public <X extends Value<?,?>> Attribute<X> parent();
 	/**
 	 * set attribute type parent reference
 	 * @param parent the parent attribute
 	 * @param <X> extends <code>Value</code>. Encapsulates the value aspect of the attribute.  
 	 * @return <code>Attribute&lt;X&gt;</code> previous parent attribute
 	 */
-	public <X extends Value<?>> Attribute<X> parent(Attribute<X> parent);
+	public <X extends Value<?,?>> Attribute<X> parent(Attribute<X> parent);
 
 	public U valueFromString(String value);
 
-    public static String _toString(Attribute<? extends Value<?>> a){
+    public static String _toString(Attribute<? extends Value<?,?>> a){
         return _toJson(a);
     }
 
-    public static Attribute<? extends Value<?>> _fromString(String jsonString){
+    public static Attribute<? extends Value<?,?>> _fromString(String jsonString){
         return AttributeInterface._fromJson(jsonString);
     }
 
-    public static Attribute<? extends Value<?>> _fromJson(String json){
+    public static Attribute<? extends Value<?,?>> _fromJson(String json){
     	return _fromJSONObject(new JSONObject(json));
     }
     
-	public static  Attribute<? extends Value<?>> _fromJSONObject(JSONObject jo){
-        Attribute<? extends Value<?>> a = null;
+	public static  Attribute<? extends Value<?,?>> _fromJSONObject(JSONObject jo){
+        Attribute<? extends Value<?,?>> a = null;
     		int id = 0;
     		if(jo.has("id")) id = jo.getInt("id");
         int attributeId = jo.getInt("attributeId");
@@ -231,7 +234,7 @@ public interface AttributeInterface<U extends Value<?>> extends HasValue<U>, Has
         AttributeType type = AttributeType.valueOf(AttributeType.class,jo.getString("type"));
         String defaultValue = jo.getString("defaultValue");
         int valueId = jo.getInt("valueId");
-        Value<?> value = ValueInterface._fromJSONObject(jo.getJSONObject("value"));
+        Value<?,?> value = ValueInterface._fromJSONObject(jo.getJSONObject("value"));
         String businessKey = jo.getString("businessKey");
         String group = jo.getString("group");
         String version = jo.getString("version");
@@ -239,8 +242,8 @@ public interface AttributeInterface<U extends Value<?>> extends HasValue<U>, Has
         String attributeGroup = jo.getString("attributeGroup");
         int attributePosition = jo.getInt("attributePosition");
         String attributeBusinessKey = jo.getString("attributeBusinessKey");
-        CampStates states = CampStatesInterface._fromJSONObject(jo.getJSONObject("states"));
-        CampStates valueStates = CampStatesInterface._fromJSONObject(jo.getJSONObject("valueStates"));
+        CampStates states = CampStates._fromJSONObject(jo.getJSONObject("states"));
+        CampStates valueStates = CampStates._fromJSONObject(jo.getJSONObject("valueStates"));
         boolean hasParent = jo.getBoolean("hasParent");
         int parentId = jo.getInt("parentId");
         int attributeParentId = jo.getInt("attributeParentId");
@@ -323,13 +326,13 @@ public interface AttributeInterface<U extends Value<?>> extends HasValue<U>, Has
         return a;
     }
 
-    public static String _toJson(Attribute<? extends Value<?>> a) {
+    public static String _toJson(Attribute<? extends Value<?,?>> a) {
         String json = "{";
         json += _toInnerJson(a);
         json += "}";
         return json;
     }
-    public static String _toInnerJson(Attribute<? extends Value<?>> a) {
+    public static String _toInnerJson(Attribute<? extends Value<?,?>> a) {
         String json = "";
         json += "\"id\":"+a.id();
         json += ",\"attributeId\":"+a.id();
@@ -356,9 +359,9 @@ public interface AttributeInterface<U extends Value<?>> extends HasValue<U>, Has
         return json;
     }
     
-    public Attribute<? extends Value<?>> clone();
+    public Attribute<? extends Value<?,?>> clone();
     
-    public static Attribute<? extends Value<?>> clone(Attribute<? extends Value<?>> attribute) {
+    public static Attribute<? extends Value<?,?>> clone(Attribute<? extends Value<?,?>> attribute) {
       return _fromJson(attribute.toJson());
     }
 }

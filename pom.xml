@@ -4,7 +4,7 @@
 
   <groupId>com.camsolute.code</groupId>
   <artifactId>camp.lib</artifactId>
-  <version>0.7.0</version>
+  <version>0.7.1</version>
   <packaging>jar</packaging>
   <name>Camsolute Process Management Framework - CAMP</name>
   <description>Camsolute PMF Libraries - GPLv3 core Java library for the Camsolute Process Management Framework.

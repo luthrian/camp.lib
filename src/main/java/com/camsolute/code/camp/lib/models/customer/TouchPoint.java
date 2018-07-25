@@ -21,9 +21,10 @@ package com.camsolute.code.camp.lib.models.customer;
 
 import java.sql.Timestamp;
 
+import com.camsolute.code.camp.lib.contract.core.CampStates;
+import com.camsolute.code.camp.lib.contract.core.CampStates.CampStatesImpl;
 import com.camsolute.code.camp.lib.contract.IsObjectInstance;
 import com.camsolute.code.camp.lib.models.CampInstance;
-import com.camsolute.code.camp.lib.models.CampStates;
 import com.camsolute.code.camp.lib.models.Group;
 import com.camsolute.code.camp.lib.models.Version;
 import com.camsolute.code.camp.lib.utilities.Util;
@@ -65,7 +66,7 @@ public class TouchPoint implements TouchPointInterface{
 	private String topic; 
 	private String minutes; //ref
 	private CampInstance history = new CampInstance();
-	private CampStates states = new CampStates();
+	private CampStates states = new CampStatesImpl();
 	private Status status;
 	private Status previousStatus;
 	private Group group;

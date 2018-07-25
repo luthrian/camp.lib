@@ -4,12 +4,14 @@ import java.util.HashMap;
 
 import org.json.JSONObject;
 
+import com.camsolute.code.camp.lib.contract.core.CampException.DataMismatchException;
+import com.camsolute.code.camp.lib.contract.core.Serialization;
 import com.camsolute.code.camp.lib.contract.process.JSONProcessVariablesHandler.JSONCamundaProcessVariablesHandler;
 import com.camsolute.code.camp.lib.contract.process.ProcessVariableValue;
 import com.camsolute.code.camp.lib.contract.process.ProcessVariableValue.CamundaProcessVariableValue;
 import com.camsolute.code.camp.lib.contract.process.ProcessVariableValue.ProcessVariableValueType;
 
-public interface ProcessVariables extends HasJSONProcessVariableHandler {
+public interface ProcessVariables extends HasJSONProcessVariableHandler, Serialization<ProcessVariables> {
 
 	public HashMap<String,ProcessVariableValue> variables();
 	public void variables(HashMap<String,ProcessVariableValue> variables);
@@ -65,12 +67,31 @@ public interface ProcessVariables extends HasJSONProcessVariableHandler {
 			return variables.get(name);
 		}
 
-		public JSONProcessVariablesHandler jsonProcessVariableHandler() {
+		public JSONProcessVariablesHandler jsonHandler() {
 			return jsonHandler;
 		}
 
-		public void jsonProcessVariableHandler(JSONProcessVariablesHandler jsonProcessVariableHandler) {
+		public void jsonHandler(JSONProcessVariablesHandler jsonProcessVariableHandler) {
 			jsonHandler = jsonProcessVariableHandler;
 		}
-}
+
+		
+		public String toJson() {
+			return jsonHandler.toJson(this);
+		}
+
+		
+		public ProcessVariables fromJson(String json) throws DataMismatchException {
+			return jsonHandler.fromJson(json);
+		}
+
+		
+		public ProcessVariables fromJSONObject(JSONObject jo) throws DataMismatchException {
+			return jsonHandler.fromJSONObject(jo);
+		}
+		
+		public static ProcessVariables _fromJSONObject(JSONObject jo) throws DataMismatchException {
+			return JSONCamundaProcessVariablesHandler._fromJSONObject(jo);
+		}
+	}
 }

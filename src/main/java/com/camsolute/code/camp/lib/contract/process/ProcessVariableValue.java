@@ -2,9 +2,11 @@ package com.camsolute.code.camp.lib.contract.process;
 
 import org.json.JSONObject;
 
+import com.camsolute.code.camp.lib.contract.core.CampException.DataMismatchException;
+import com.camsolute.code.camp.lib.contract.core.Serialization;
 import com.camsolute.code.camp.lib.contract.process.JSONProcessVariableValueHandler.JSONCamundaProcessVariableValueHandler;
 
-public interface ProcessVariableValue extends HasJSONProcessVariableValueHandler {
+public interface ProcessVariableValue extends HasJSONProcessVariableValueHandler, Serialization<ProcessVariableValue> {
 
 	public static enum ProcessVariableValueType {
 		String, Integer, Short, Long, Double, Date, Boolean, Object, File;
@@ -55,12 +57,28 @@ public interface ProcessVariableValue extends HasJSONProcessVariableValueHandler
 			this.local = b;
 		}
 	
-		public JSONProcessVariableValueHandler jsonProcessVariableValueHandler() {
+		public JSONProcessVariableValueHandler jsonHandler() {
 			return jsonHandler;
 		}
 		
-		public void jsonProcessVariableValueHandler(JSONProcessVariableValueHandler jsonProcessVariableValueHandler) {
+		public void jsonHandler(JSONProcessVariableValueHandler jsonProcessVariableValueHandler) {
 			this.jsonHandler = (JSONCamundaProcessVariableValueHandler) jsonProcessVariableValueHandler;
+		}
+
+		public String toJson() {
+			return jsonHandler.toJson(this);
+		}
+
+		public ProcessVariableValue fromJson(String json) throws DataMismatchException {
+			return jsonHandler.fromJson(json);
+		}
+
+		public ProcessVariableValue fromJSONObject(JSONObject jo) throws DataMismatchException {
+			return jsonHandler.fromJSONObject(jo);
+		}
+
+		public static ProcessVariableValue _fromJSONObject(JSONObject jo) throws DataMismatchException {
+			return JSONCamundaProcessVariableValueHandler._fromJSONObject(jo);
 		}
 	}
 }

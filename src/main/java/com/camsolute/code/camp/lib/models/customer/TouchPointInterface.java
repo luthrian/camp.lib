@@ -25,6 +25,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.json.JSONObject;
 
+import com.camsolute.code.camp.lib.contract.core.CampStates;
 import com.camsolute.code.camp.lib.contract.HasCustomer;
 import com.camsolute.code.camp.lib.contract.HasDate;
 import com.camsolute.code.camp.lib.contract.HasRefBusinessId;
@@ -33,7 +34,6 @@ import com.camsolute.code.camp.lib.contract.HasRefId;
 import com.camsolute.code.camp.lib.contract.IsObjectInstance;
 import com.camsolute.code.camp.lib.models.CampInstance;
 import com.camsolute.code.camp.lib.models.CampInstanceInterface;
-import com.camsolute.code.camp.lib.models.CampStates;
 import com.camsolute.code.camp.lib.models.CampStatesInterface;
 import com.camsolute.code.camp.lib.models.Group;
 import com.camsolute.code.camp.lib.models.Version;
@@ -130,7 +130,7 @@ public interface TouchPointInterface extends HasCustomer, HasDate, HasRefBusines
 		String topic = jo.getString("topic");
 		String minutes = jo.getString("minutes");
 		CampInstance history = CampInstanceInterface._fromJSONObject(jo.getJSONObject("history"));
-		CampStates states = CampStatesInterface._fromJSONObject(jo.getJSONObject("states"));
+		CampStates states = CampStates._fromJSONObject(jo.getJSONObject("states"));
 		Status status = Status.valueOf(jo.getString("status"));
 		Status previousStatus = Status.valueOf(jo.getString("previousStatus"));
 		String group = jo.getString("group");

@@ -40,7 +40,7 @@ import com.camsolute.code.camp.lib.models.Model;
 import com.camsolute.code.camp.lib.models.ModelDao;
 import com.camsolute.code.camp.lib.models.ModelList;
 import com.camsolute.code.camp.lib.models.Version;
-import com.camsolute.code.camp.lib.models.CampStatesInterface.IOAction;
+import com.camsolute.code.camp.lib.contract.core.CampStates.IOAction;
 import com.camsolute.code.camp.lib.models.CampStatesInterface.PersistType;
 import com.camsolute.code.camp.lib.models.process.Process;
 import com.camsolute.code.camp.lib.models.process.ProcessDao;
@@ -1432,7 +1432,7 @@ public class ProductDao implements ProductDaoInterface {
 		}
 		String colDef = Util.DB._columns(tabledef, action, log);
 		String SQL = "CREATE TABLE IF NOT EXISTS " + table + " " + " ( " + colDef
-				+ ") ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
+				+ ") ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
 		if (log && !Util._IN_PRODUCTION) {
 			msg = "----[SQL : " + SQL + "]----";
 			LOG.info(String.format(fmt, _f, msg));
@@ -1440,7 +1440,7 @@ public class ProductDao implements ProductDaoInterface {
 
 		String ucolDef = Util.DB._columns(updatestabledef, action, log);
 		String uSQL = "CREATE TABLE IF NOT EXISTS " + updatestable + " " + " ( " + ucolDef
-				+ ") ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
+				+ ") ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
 		if (log && !Util._IN_PRODUCTION) {
 			msg = "----[UPDATES SQL : " + uSQL + "]----";
 			LOG.info(String.format(fmt, _f, msg));
@@ -1448,7 +1448,7 @@ public class ProductDao implements ProductDaoInterface {
 
 		String pcolDef = Util.DB._columns(paupdatestabledef, action, log);
 		String pSQL = "CREATE TABLE IF NOT EXISTS " + paupdatestable + " " + " ( " + pcolDef
-				+ ") ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
+				+ ") ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
 		if (log && !Util._IN_PRODUCTION) {
 			msg = "----[SQL : " + pSQL + "]----";
 			LOG.info(String.format(fmt, _f, msg));
@@ -1456,7 +1456,7 @@ public class ProductDao implements ProductDaoInterface {
 
 		String phpcolDef = Util.DB._columns(phptabledef, action, log);
 		String phpSQL = "CREATE TABLE IF NOT EXISTS " + phptable + " " + " ( " + phpcolDef
-				+ ") ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
+				+ ") ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
 		if (log && !Util._IN_PRODUCTION) {
 			msg = "----[SQL : " + phpSQL + "]----";
 			LOG.info(String.format(fmt, _f, msg));
@@ -1464,7 +1464,7 @@ public class ProductDao implements ProductDaoInterface {
 
 		String phmcolDef = Util.DB._columns(phmtabledef, action, log);
 		String phmSQL = "CREATE TABLE IF NOT EXISTS " + phmtable + " " + " ( " + phmcolDef
-				+ ") ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
+				+ ") ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
 		if (log && !Util._IN_PRODUCTION) {
 			msg = "----[SQL : " + phmSQL + "]----";
 			LOG.info(String.format(fmt, _f, msg));

@@ -27,37 +27,37 @@ import com.camsolute.code.camp.lib.contract.core.Coordinate;
 import com.camsolute.code.camp.lib.models.Attribute;
 import com.camsolute.code.camp.lib.models.Attribute.AttributeType;
 
-public class ComplexValue extends Value<HashMap<String,ArrayList<Attribute<?>>>> {//ArrayList<Attribute<?>>
+public class ComplexValue extends Value<HashMap<String,ArrayList<Attribute<? extends Value<?,?>>>>,ComplexValue> {//ArrayList<Attribute<? extends Value<?,?>>>
 	
-    public ComplexValue(HashMap<String,ArrayList<Attribute<?>>> value){
+    public ComplexValue(HashMap<String,ArrayList<Attribute<? extends Value<?,?>>>> value){
         super(AttributeType._complex,value);
     }
 
-    public ComplexValue(HashMap<String,ArrayList<Attribute<?>>> value, Coordinate position){
+    public ComplexValue(HashMap<String,ArrayList<Attribute<? extends Value<?,?>>>> value, Coordinate position){
         super(AttributeType._complex,value, position);
     }
 
-    public ComplexValue(HashMap<String,ArrayList<Attribute<?>>> value, int x, int y, int z){
+    public ComplexValue(HashMap<String,ArrayList<Attribute<? extends Value<?,?>>>> value, int x, int y, int z){
         super(AttributeType._complex,value, x, y, z);
     }
 
-    public ComplexValue(HashMap<String,ArrayList<Attribute<?>>> value, String group, int x, int y, int z){
+    public ComplexValue(HashMap<String,ArrayList<Attribute<? extends Value<?,?>>>> value, String group, int x, int y, int z){
         super(AttributeType._complex,value, group, x, y, z);
     }
 
-    public ComplexValue(HashMap<String,ArrayList<Attribute<?>>> value, String group, int x, int y, int z, boolean selected){
+    public ComplexValue(HashMap<String,ArrayList<Attribute<? extends Value<?,?>>>> value, String group, int x, int y, int z, boolean selected){
         super(AttributeType._complex,value, group, x, y, z, selected);
     }
 
-    public ComplexValue(int id, HashMap<String,ArrayList<Attribute<?>>> value, String group, int x, int y, int z, boolean selected){
+    public ComplexValue(int id, HashMap<String,ArrayList<Attribute<? extends Value<?,?>>>> value, String group, int x, int y, int z, boolean selected){
         super(id, AttributeType._complex,value, group, x, y, z, selected);
     }
 
-    public ComplexValue(int id, HashMap<String,ArrayList<Attribute<?>>> value, String group, Coordinate position){
+    public ComplexValue(int id, HashMap<String,ArrayList<Attribute<? extends Value<?,?>>>> value, String group, Coordinate position){
         super(id, AttributeType._complex,value, group, position);
     }
 
-    public ComplexValue(int id, HashMap<String,ArrayList<Attribute<?>>> value, String group, Coordinate position, boolean selected){
+    public ComplexValue(int id, HashMap<String,ArrayList<Attribute<? extends Value<?,?>>>> value, String group, Coordinate position, boolean selected){
         super(id, AttributeType._complex,value, group, position, selected);
     }
 

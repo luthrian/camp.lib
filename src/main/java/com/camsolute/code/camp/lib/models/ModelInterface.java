@@ -50,6 +50,7 @@ import com.camsolute.code.camp.lib.contract.HasStatus;
 import com.camsolute.code.camp.lib.contract.HasStatusChange;
 import com.camsolute.code.camp.lib.contract.HasVersion;
 import com.camsolute.code.camp.lib.contract.Clonable;
+import com.camsolute.code.camp.lib.contract.core.CampStates;
 import com.camsolute.code.camp.lib.contract.HasHistory;
 import com.camsolute.code.camp.lib.contract.IsDisplayable;
 import com.camsolute.code.camp.lib.contract.IsObjectInstance;
@@ -98,7 +99,7 @@ public interface ModelInterface extends Clonable<Model>, HasModelLifeCycle, HasP
   	if(jo.has("releaseDate")) m.setReleaseDate(Util.Time.timestamp(jo.getString("releaseDate")));
   	if(jo.has("endOfLife")) m.setEndOfLife(Util.Time.timestamp(jo.getString("endOfLife")));
   	if(jo.has("history")) m.setHistory(CampInstanceInterface._fromJSONObject(jo.getJSONObject("history")));
-  	if(jo.has("states")) m.states().update(CampStatesInterface._fromJSONObject(jo.getJSONObject("states")));
+  	if(jo.has("states")) m.states().update(CampStates._fromJSONObject(jo.getJSONObject("states")));
   	if(jo.has("status"))  m.setStatus(Enum.valueOf(Model.Status.class, jo.getString("status")));
   	if(jo.has("previousStatus")) m.setPreviousStatus(Enum.valueOf(Model.Status.class, jo.getString("previousStatus")));
   	if(jo.has("businessKey")) m.setBusinessKey(jo.getString("businessKey"));

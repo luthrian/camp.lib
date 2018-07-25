@@ -28,11 +28,14 @@ import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+
+import com.camsolute.code.camp.lib.contract.core.CampStates;
+import com.camsolute.code.camp.lib.contract.core.CampStates.IOAction;
+import com.camsolute.code.camp.lib.contract.core.CampStates.CampStatesImpl;
 import com.camsolute.code.camp.lib.data.CampSQL;
 import com.camsolute.code.camp.lib.models.CampInstanceDao;
 import com.camsolute.code.camp.lib.models.Model;
 import com.camsolute.code.camp.lib.models.CampInstanceDaoInterface.RangeTarget;
-import com.camsolute.code.camp.lib.models.CampStatesInterface.IOAction;
 import com.camsolute.code.camp.lib.models.process.Process;
 import com.camsolute.code.camp.lib.models.process.ProcessDao;
 import com.camsolute.code.camp.lib.models.process.ProcessList;
@@ -414,7 +417,7 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 			msg = "====[ persist an order position object instance to the database ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 		// we only save order position object that are ready to save
-		if(op.states().notReadyToSave(op)) {
+		if(op.states().isLoaded() || (!op.history().isCurrent() && (!op.states().isModified() || !op.states().isNew()))) {
 			return op; // skip this entry if not ready to save
 		}
 		
@@ -489,7 +492,7 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 		// we only save order position object that are ready to save
 		OrderPositionList rpl = new OrderPositionList();
 		for(OrderPosition op: pl) {
-			if(op.states().notReadyToSave(op)) continue; // skip this entry if not ready to save
+			if(op.states().isLoaded() || (!op.history().isCurrent() && (!op.states().isModified() || !op.states().isNew()))) continue; // skip this entry if not ready to save
 			rpl.add(op);
 		}
 		Connection conn = null;
@@ -1664,22 +1667,22 @@ public class OrderPositionDao implements OrderPositionDaoInterface{
 		}
 		String colDef = Util.DB._columns(tabledef, action, log);
 		String SQL = "CREATE TABLE IF NOT EXISTS " + table + " " + " ( " + colDef
-				+ ") ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
+				+ ") ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
 		if (log && !Util._IN_PRODUCTION) { msg = "----[SQL : " + SQL + "]----"; LOG.info(String.format(fmt, _f, msg)); }
 
 		String ucolDef = Util.DB._columns(updatestabledef, action, log);
 		String uSQL = "CREATE TABLE IF NOT EXISTS " + updatestable + " " + " ( " + ucolDef
-				+ ") ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
+				+ ") ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
 		if (log && !Util._IN_PRODUCTION) { msg = "----[UPDATES SQL : " + uSQL + "]----"; LOG.info(String.format(fmt, _f, msg)); }
 
 		String rcolDef = Util.DB._columns(reftabledef, action, log);
 		String rSQL = "CREATE TABLE IF NOT EXISTS " + reftable + " " + " ( " + rcolDef
-				+ ") ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
+				+ ") ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
 		if (log && !Util._IN_PRODUCTION) { msg = "----[SQL : " + rSQL + "]----"; LOG.info(String.format(fmt, _f, msg)); }
 
 		String pcolDef = Util.DB._columns(ohptabledef, action, log);
 		String pSQL = "CREATE TABLE IF NOT EXISTS " + ohptable + " " + " ( " + pcolDef
-				+ ") ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
+				+ ") ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
 		if (log && !Util._IN_PRODUCTION) { msg = "----[SQL : " + rSQL + "]----"; LOG.info(String.format(fmt, _f, msg)); }
 
 

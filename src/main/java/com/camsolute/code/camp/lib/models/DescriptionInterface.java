@@ -2,6 +2,7 @@ package com.camsolute.code.camp.lib.models;
 
 import org.json.JSONObject;
 
+import com.camsolute.code.camp.lib.contract.core.CampStates;
 import com.camsolute.code.camp.lib.contract.HasDescription;
 import com.camsolute.code.camp.lib.contract.HasProduct;
 import com.camsolute.code.camp.lib.contract.HasTitle;
@@ -44,7 +45,7 @@ public interface DescriptionInterface extends IsObjectInstance<Description>, Has
 		String businessKey = jo.getString("businessKey");
 		String group = jo.getString("group");
 		String version = jo.getString("version");
-		CampStates states = CampStatesInterface._fromJSONObject(jo.getJSONObject("states"));
+		CampStates states = CampStates._fromJSONObject(jo.getJSONObject("states"));
 		CampInstance history = CampInstanceInterface._fromJSONObject(jo.getJSONObject("history"));
 		Status status = Description.Status.valueOf(jo.getString("status"));
 		Status previousStatus = Description.Status.valueOf(jo.getString("previousStatus"));

@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import com.camsolute.code.camp.lib.contract.value.Value;
 import com.camsolute.code.camp.lib.contract.attribute.Attribute;
 import com.camsolute.code.camp.lib.contract.core.CampComplex.AttributeComplex;
+import com.camsolute.code.camp.lib.contract.core.CampException.*;
 import com.camsolute.code.camp.lib.contract.core.CampList.AttributeList;
 import com.camsolute.code.camp.lib.contract.core.CampList.ValueList;
 
@@ -44,7 +45,7 @@ public interface CampComplex<T extends Serialization<T>,Q extends CampComplex<T,
 		}
 	}
 
-	public class ValueComplex extends AbstractCampComplex<Value,ValueComplex> {
+	public class ValueComplex extends AbstractCampComplex<Value<?,?>,ValueComplex> {
 
 		private static final long serialVersionUID = -5794565922521837515L;
 
@@ -56,11 +57,11 @@ public interface CampComplex<T extends Serialization<T>,Q extends CampComplex<T,
 			jsonHandler = new JSONValueComplexHandler();
 		}
 		
-		public JSONComplexHandler<Value,ValueComplex> jsonHandler() {
+		public JSONComplexHandler<Value<?,?>,ValueComplex> jsonHandler() {
 			return jsonHandler;
 		}
 
-		public void jsonHandler(JSONComplexHandler<Value,ValueComplex> jsonComplexHandler) {
+		public void jsonHandler(JSONComplexHandler<Value<?,?>,ValueComplex> jsonComplexHandler) {
 			jsonHandler = jsonComplexHandler;
 		}
 		

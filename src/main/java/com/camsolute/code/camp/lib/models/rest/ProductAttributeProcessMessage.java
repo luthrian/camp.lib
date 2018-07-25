@@ -44,7 +44,7 @@ public class ProductAttributeProcessMessage extends Message{
 	 * @param a The {@link com.camsolute.code.camp.lib.models.Attribute} object type instance being managed by the process.
 	 * @param attributeBusinessKey The business entity identifier aspect currently responsible for managing the Attribute object type instance.
 	 */
-	public ProductAttributeProcessMessage(ProductAttributeMessage message, Attribute<? extends Value<?>> a, String attributeBusinessKey) {
+	public ProductAttributeProcessMessage(ProductAttributeMessage message, Attribute<? extends Value<?,?>> a, String attributeBusinessKey) {
 		super(message.name(),a.processInstances().get(0).businessKey());
 		ProductAttributeProcess<?> p = (ProductAttributeProcess<?>) a.processInstances().get(0);
 		this.tenantId = p.tenantId();

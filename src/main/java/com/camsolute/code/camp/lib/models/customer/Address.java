@@ -21,10 +21,12 @@ package com.camsolute.code.camp.lib.models.customer;
 
 import org.json.JSONObject;
 
+import com.camsolute.code.camp.lib.contract.core.CampStates;
+import com.camsolute.code.camp.lib.contract.core.CampStates.CampStatesImpl;
 import com.camsolute.code.camp.lib.contract.IsObjectInstance;
 import com.camsolute.code.camp.lib.models.CampInstance;
 import com.camsolute.code.camp.lib.models.CampInstanceInterface;
-import com.camsolute.code.camp.lib.models.CampStates;
+//import com.camsolute.code.camp.lib.models.CampStates;
 import com.camsolute.code.camp.lib.models.CampStatesInterface;
 import com.camsolute.code.camp.lib.models.Group;
 import com.camsolute.code.camp.lib.models.Version;
@@ -73,7 +75,7 @@ public class Address implements IsObjectInstance<Address> {
 	private Status status = Status.CREATED;
 	private Status previousStatus = Status.CLEAN;
 	private CampInstance history = new CampInstance();
-	private CampStates states = new CampStates();
+	private CampStates states = new CampStatesImpl();
 	
 	public Address(int id, String country, String state, String postCode, String city, String street, String streetNumber, String floor, String roomNumber) {
 		this.id = id;

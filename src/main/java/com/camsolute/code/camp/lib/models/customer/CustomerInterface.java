@@ -24,6 +24,8 @@ import org.apache.logging.log4j.LogManager;
 
 import org.json.JSONObject;
 
+import com.camsolute.code.camp.lib.contract.core.CampStates;
+import com.camsolute.code.camp.lib.contract.core.CampStates.CampStatesImpl;
 import com.camsolute.code.camp.lib.contract.HasAddress;
 import com.camsolute.code.camp.lib.contract.HasContactDetails;
 import com.camsolute.code.camp.lib.contract.HasProcess;
@@ -36,7 +38,7 @@ import com.camsolute.code.camp.lib.models.process.ProcessList;
 import com.camsolute.code.camp.lib.utilities.Util;
 import com.camsolute.code.camp.lib.models.CampInstance;
 import com.camsolute.code.camp.lib.models.CampInstanceInterface;
-import com.camsolute.code.camp.lib.models.CampStates;
+//import com.camsolute.code.camp.lib.models.CampStates;
 import com.camsolute.code.camp.lib.models.CampStatesInterface;
 import com.camsolute.code.camp.lib.models.customer.Customer.Status;
 import com.camsolute.code.camp.lib.models.customer.Customer.Type;
@@ -102,7 +104,7 @@ public interface CustomerInterface extends IsObjectInstance<Customer> , HasRefId
 		Status status = Status.valueOf(jo.getString("status"));
 		Status previousStatus = Status.valueOf(jo.getString("previousStatus"));
 		CampInstance history = CampInstanceInterface._fromJSONObject(jo.getJSONObject("history"));
-		CampStates states = CampStatesInterface._fromJSONObject(jo.getJSONObject("states"));
+		CampStates states = CampStates._fromJSONObject(jo.getJSONObject("states"));
 		ContactDetails contact = null;
 		AddressList addressList = null;
 		ProcessList processes = null;

@@ -23,7 +23,8 @@ import org.json.JSONObject;
 
 import com.camsolute.code.camp.lib.contract.IsObjectInstance;
 import com.camsolute.code.camp.lib.models.CampInstance;
-import com.camsolute.code.camp.lib.models.CampStates;
+import com.camsolute.code.camp.lib.contract.core.CampStates;
+import com.camsolute.code.camp.lib.contract.core.CampStates.CampStatesImpl;
 import com.camsolute.code.camp.lib.models.Group;
 import com.camsolute.code.camp.lib.models.Version;
 import com.camsolute.code.camp.lib.models.process.CustomerProcess;
@@ -106,7 +107,7 @@ public class Customer implements CustomerInterface {
 	private Status status = Status.CREATED;
 	private Status previousStatus = Status.CLEAN;
 	private CampInstance history = new CampInstance();
-	private CampStates states = new CampStates();
+	private CampStates states = new CampStatesImpl();
 	private ContactDetails contact = null;
 	private AddressList addressList = new AddressList();//
 	private ProcessList processes = new ProcessList();

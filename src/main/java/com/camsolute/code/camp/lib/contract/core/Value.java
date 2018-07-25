@@ -32,21 +32,24 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
 
+import com.camsolute.code.camp.lib.contract.core.CampStates;
+import com.camsolute.code.camp.lib.contract.core.CampStates.CampStatesImpl;
+import com.camsolute.code.camp.lib.contract.core.CampStates.IOAction;
 import com.camsolute.code.camp.lib.contract.core.Coordinate;
 import com.camsolute.code.camp.lib.contract.core.Coordinate.CoordinateImpl;
 import com.camsolute.code.camp.lib.data.CampSQL;
 import com.camsolute.code.camp.lib.models.Attribute;
 import com.camsolute.code.camp.lib.models.AttributeDao;
-import com.camsolute.code.camp.lib.models.CampStates;
+//import com.camsolute.code.camp.lib.models.CampStates;
 import com.camsolute.code.camp.lib.models.Group;
 import com.camsolute.code.camp.lib.models.ValueInterface;
 import com.camsolute.code.camp.lib.models.ValueList;
 import com.camsolute.code.camp.lib.models.Attribute.AttributeType;
-import com.camsolute.code.camp.lib.models.CampStatesInterface.IOAction;
+//import com.camsolute.code.camp.lib.models.CampStatesInterface.IOAction;
 import com.camsolute.code.camp.lib.types.*;
 import com.camsolute.code.camp.lib.utilities.Util;
 
-public class Value<T> implements ValueInterface<T> {
+public class Value<T,Q extends Value<T,Q>> implements ValueInterface<T,Q> {
 
 	private int id = 0;
 
@@ -60,7 +63,7 @@ public class Value<T> implements ValueInterface<T> {
 
 	private boolean selected = false;
 	
-	private CampStates states = new CampStates();
+	private CampStates states = new CampStatesImpl();
 	
 	public int id() {
 		return this.id;
@@ -119,7 +122,7 @@ public class Value<T> implements ValueInterface<T> {
 		this.value = value;
 		this.type = type;
 		this.group = new Group(group);
-		this.position = new Coordinate(x, y, z);
+		this.position = new CoordinateImpl(x, y, z);
 	}
 
 	public Value(int id, AttributeType type, T value, String group, Coordinate position) {
@@ -224,7 +227,7 @@ public class Value<T> implements ValueInterface<T> {
 		return ValueInterface._toJson(this);
 	}
 
-	public Value<?> fromString(String jsonString) {
+	public Value<?,?> fromString(String jsonString) {
 		return ValueInterface._fromJson(jsonString);
 	}
 
@@ -232,8 +235,8 @@ public class Value<T> implements ValueInterface<T> {
 		return ValueInterface._toJson(this);
 	}
 
-	public Value<?> fromJson(String json) {
-		return ValueInterface._fromJson(json);
+	public Value<T,Q> fromJson(String json) {
+		return (Value<T, Q>) ValueInterface._fromJson(json);
 	}
 	
  	public static class ValueDao {
@@ -269,7 +272,7 @@ public class Value<T> implements ValueInterface<T> {
 		public static String[][] blobtabledef = CampSQL.System._blob_value_table_definition;
 
 		@SuppressWarnings("unchecked")
-		public static <T extends Value<?>> T create(int objectId, AttributeType type, String valueGroup, Object value,
+		public static <T extends Value<?,?>> T create(int objectId, AttributeType type, String valueGroup, Object value,
 				int posX, int posY, int posZ, boolean selected, boolean log) {
 			long startTime = System.currentTimeMillis();
 			String _f = null;
@@ -303,13 +306,13 @@ public class Value<T> implements ValueInterface<T> {
 			case _set:
 				return (T) save(objectId,new SetValue((String) value, valueGroup, posX, posY, posZ, selected),log);
 			case _complex:
-				return (T) save(objectId,new ComplexValue((HashMap<String,ArrayList<Attribute<? extends Value<?>>>>) value, valueGroup, posX, posY, posZ, selected),log);
+				return (T) save(objectId,new ComplexValue((HashMap<String,ArrayList<Attribute<? extends Value<?,?>>>>) value, valueGroup, posX, posY, posZ, selected),log);
 			case _table:
-				return (T) save(objectId,new TableValue((ArrayList<ArrayList<Attribute<? extends Value<?>>>>) value, valueGroup, posX, posY, posZ, selected),log);
+				return (T) save(objectId,new TableValue((ArrayList<ArrayList<Attribute<? extends Value<?,?>>>>) value, valueGroup, posX, posY, posZ, selected),log);
 			case _map:
-				return (T) save(objectId,new MapValue((HashMap<String,Attribute<? extends Value<?>>>) value, valueGroup, posX, posY, posZ, selected),log);
+				return (T) save(objectId,new MapValue((HashMap<String,Attribute<? extends Value<?,?>>>) value, valueGroup, posX, posY, posZ, selected),log);
 			case _list:
-				return (T) save(objectId,new ListValue((ArrayList<Attribute<? extends Value<?>>>) value, valueGroup, posX, posY, posZ, selected),log);
+				return (T) save(objectId,new ListValue((ArrayList<Attribute<? extends Value<?,?>>>) value, valueGroup, posX, posY, posZ, selected),log);
 			default:
 				return null;
 			}
@@ -325,7 +328,7 @@ public class Value<T> implements ValueInterface<T> {
 			return null;
 		}
 		
-		public static Value<?> save(int objectId, Value<?> v, boolean log) {
+		public static Value<?,?> save(int objectId, Value<?,?> v, boolean log) {
 			long startTime = System.currentTimeMillis();
 			String _f = null;
 			String msg = null;
@@ -443,7 +446,7 @@ public class Value<T> implements ValueInterface<T> {
 				for(String table:dbpmap.keySet()) {
 					boolean start = true;
 					String sql = dbpmap.get(table);
-					for (Value<?> v : vl) {
+					for (Value<?,?> v : vl) {
 						if(CampSQL.System.attribute_value_tables.get(v.type()).equals(table)) {
 							sql += ((start)?"":",")+ "("+insertValues(objectId, v.type(), v,log)+")";
 							start =false;
@@ -458,7 +461,7 @@ public class Value<T> implements ValueInterface<T> {
 					dbs = conn.createStatement();
 					retVal += dbs.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
 					rs = dbs.getGeneratedKeys();
-					for (Value<?> v : vl) {
+					for (Value<?,?> v : vl) {
 						if(CampSQL.System.attribute_value_tables.get(v.type()).equals(table)) {
 							if(rs.next()) {
 								v.id(rs.getInt("_value_id_"));
@@ -493,7 +496,7 @@ public class Value<T> implements ValueInterface<T> {
 			return vl;
 		}
 
-		public static int update(int objectId, Value<?> v, boolean log) {
+		public static int update(int objectId, Value<?,?> v, boolean log) {
 			long startTime = System.currentTimeMillis();
 			String _f = null;
 			String msg = null;
@@ -592,7 +595,7 @@ public class Value<T> implements ValueInterface<T> {
 						+" WHERE `"+CampSQL.System.attribute_value_table_def.get(AttributeType._integer)[0][0]+"`=%s";
 				
 				dbs = conn.createStatement();
-				for (Value<?> v : vl) {
+				for (Value<?,?> v : vl) {
 					String table = CampSQL.System.attribute_value_tables.get(v.type());
 					String eSQL = String.format(SQL, 
 							table,
@@ -614,7 +617,7 @@ public class Value<T> implements ValueInterface<T> {
 				}
 				retVal += Util.Math.addArray(dbs.executeBatch());
 
-				for(Value<?> v: vl){
+				for(Value<?,?> v: vl){
 					v.states().ioAction(IOAction.UPDATE);
 				}
 					
@@ -695,7 +698,7 @@ public class Value<T> implements ValueInterface<T> {
 			
 		}
 
-		public static int delete(Value<?> v, boolean log) {
+		public static int delete(Value<?,?> v, boolean log) {
 			long startTime = System.currentTimeMillis();
 			String _f = null;
 			String msg = null;
@@ -766,7 +769,7 @@ public class Value<T> implements ValueInterface<T> {
 
 				String fSQL = " DELETE FROM %s WHERE `_value_id_`=%s";
 
-				for(Value<?> v: vl) {
+				for(Value<?,?> v: vl) {
 					String SQL = String.format(fSQL, CampSQL.System.attribute_value_tables.get(v.type()), v.id());
 					dbs.addBatch(SQL);
 				}
@@ -775,7 +778,7 @@ public class Value<T> implements ValueInterface<T> {
 				
 				if (log && !Util._IN_PRODUCTION) { msg = "----[ '" + retVal + "' entr"+((retVal>1)?"ies":"y")+" deleted ]----"; LOG.info(String.format(fmt, _f, msg)); }
 
-				for(Value<?> v:vl){
+				for(Value<?,?> v:vl){
 					v.states().ioAction(IOAction.DELETE);
 				}
 			} catch (Exception e) {
@@ -896,7 +899,7 @@ public class Value<T> implements ValueInterface<T> {
 					LOG.info(String.format(fmt, _f, msg));
 				}
 
-				for(Value<?> v:vl){
+				for(Value<?,?> v:vl){
 					v.states().ioAction(IOAction.LOAD);
 				}
 			} catch (Exception e) {
@@ -983,7 +986,7 @@ public class Value<T> implements ValueInterface<T> {
 					LOG.info(String.format(fmt, _f, msg));
 				}
 
-				for(Value<?> v:vl){
+				for(Value<?,?> v:vl){
 					v.states().ioAction(IOAction.LOAD);
 				}
 			} catch (Exception e) {
@@ -1009,7 +1012,7 @@ public class Value<T> implements ValueInterface<T> {
 			return vl;
 		}
 
-		public static Value<?> loadById(int attributeId, int objectId, int valueId, AttributeType type, boolean log) {
+		public static Value<?,?> loadById(int attributeId, int objectId, int valueId, AttributeType type, boolean log) {
 			long startTime = System.currentTimeMillis();
 			String _f = null;
 			String msg = null;
@@ -1019,7 +1022,7 @@ public class Value<T> implements ValueInterface<T> {
 				LOG.info(String.format(fmt, _f, msg));
 			}
 
-			Value<?> v = null;
+			Value<?,?> v = null;
 			int retVal = 0;
 			Connection conn = null;
 			ResultSet rs = null;
@@ -1074,7 +1077,7 @@ public class Value<T> implements ValueInterface<T> {
 				_f = "[loadComplexValue]";
 				msg = "====[ load a complex value and its child attribute elements ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 			}
-			ComplexValue c = new ComplexValue(new HashMap<String,ArrayList<Attribute<? extends Value<?>>>>());
+			ComplexValue c = new ComplexValue(new HashMap<String,ArrayList<Attribute<? extends Value<?,?>>>>());
 			Connection conn = null;
 			ResultSet rs = null;
 			Statement dbs = null;
@@ -1103,13 +1106,13 @@ public class Value<T> implements ValueInterface<T> {
 					if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+fSQL+"]----";LOG.info(String.format(fmt,_f,msg));}
 					rs = dbs.executeQuery(fSQL);		
 					while(rs.next()) {
-						Attribute<? extends Value<?>> a = AttributeDao._rsToA(rs);
+						Attribute<? extends Value<?,?>> a = AttributeDao._rsToA(rs);
 						a = AttributeDao._rsToAV(a, rs);
-						Value<?> v = Value.ValueDao.rsToV(rs, log);
+						Value<?,?> v = Value.ValueDao.rsToV(rs, log);
 						v.states().ioAction(IOAction.LOAD);
 						a = AttributeDao.setValue(a, v);
 						if(!c.value().containsKey(a.group().name())) {
-							c.value().put(a.group().name(), new ArrayList<Attribute<? extends Value<?>>>());
+							c.value().put(a.group().name(), new ArrayList<Attribute<? extends Value<?,?>>>());
 						}
 						c.value().get(a.group().name()).add(a);
 						retVal++;
@@ -1148,7 +1151,7 @@ public class Value<T> implements ValueInterface<T> {
 				_f = "[loadTableValue]";
 				msg = "====[ load a table value child attribute elements ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 			}
-			TableValue t = new TableValue(new ArrayList<ArrayList<Attribute<? extends Value<?>>>>());
+			TableValue t = new TableValue(new ArrayList<ArrayList<Attribute<? extends Value<?,?>>>>());
 //			TODO: TableValue t = new TableValue(new ArrayList<CampList>());
 			Connection conn = null;
 			ResultSet rs = null;
@@ -1175,19 +1178,19 @@ public class Value<T> implements ValueInterface<T> {
 				dbs = conn.createStatement();
 //				AttributeList al = new AttributeList();
 				
-				HashMap<Integer,HashMap<Integer,Attribute<? extends Value<?>>>> rowMap = new HashMap<Integer,HashMap<Integer,Attribute<? extends Value<?>>>>();
+				HashMap<Integer,HashMap<Integer,Attribute<? extends Value<?,?>>>> rowMap = new HashMap<Integer,HashMap<Integer,Attribute<? extends Value<?,?>>>>();
 				for(String f:vSQL) {
 					String fSQL = String.format(SQL, f,attributeId,objectId);
 					if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+fSQL+"]----";LOG.info(String.format(fmt,_f,msg));}
 					rs = dbs.executeQuery(fSQL);		
 					while(rs.next()) {
-						Attribute<? extends Value<?>> a = AttributeDao._rsToA(rs);
+						Attribute<? extends Value<?,?>> a = AttributeDao._rsToA(rs);
 						a = AttributeDao._rsToAV(a, rs);
-						Value<?> v = Value.ValueDao.rsToV(rs, log);
+						Value<?,?> v = Value.ValueDao.rsToV(rs, log);
 						v.states().ioAction(IOAction.LOAD);
 						a = AttributeDao.setValue(a, v);
 						if(!rowMap.containsKey(a.value().position().posY())) {
-							rowMap.put(a.value().position().posY(), new HashMap<Integer,Attribute<? extends Value<?>>>());
+							rowMap.put(a.value().position().posY(), new HashMap<Integer,Attribute<? extends Value<?,?>>>());
 						}
 						rowMap.get(a.value().position().posY()).put(a.value().position().posX(), a);
 //						al.add(a);
@@ -1198,7 +1201,7 @@ public class Value<T> implements ValueInterface<T> {
 				for(int y = 0;y<rowMap.size();y++ ) {
 					for(int x = 0;x<rowMap.get(y).size();x++) {
 						if(t.value().get(y)==null) {
-							t.value().add(y, new ArrayList<Attribute<? extends Value<?>>>());
+							t.value().add(y, new ArrayList<Attribute<? extends Value<?,?>>>());
 						}
 						t.value().get(y).add(x,rowMap.get(y+1).get(x+1));
 					}
@@ -1236,7 +1239,7 @@ public class Value<T> implements ValueInterface<T> {
 				_f = "[loadComplexValue]";
 				msg = "====[ load a map value with child attribute elements ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 			}
-			MapValue m = new MapValue(new HashMap<String,Attribute<? extends Value<?>>>());
+			MapValue m = new MapValue(new HashMap<String,Attribute<? extends Value<?,?>>>());
 			Connection conn = null;
 			ResultSet rs = null;
 			Statement dbs = null;
@@ -1265,9 +1268,9 @@ public class Value<T> implements ValueInterface<T> {
 					if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+fSQL+"]----";LOG.info(String.format(fmt,_f,msg));}
 					rs = dbs.executeQuery(fSQL);		
 					while(rs.next()) {
-						Attribute<? extends Value<?>> a = AttributeDao._rsToA(rs);
+						Attribute<? extends Value<?,?>> a = AttributeDao._rsToA(rs);
 						a = AttributeDao._rsToAV(a, rs);
-						Value<?> v = Value.ValueDao.rsToV(rs, log);
+						Value<?,?> v = Value.ValueDao.rsToV(rs, log);
 						v.states().ioAction(IOAction.LOAD);
 						a = AttributeDao.setValue(a, v);
 						m.value().put(a.group().name(),a);
@@ -1307,7 +1310,7 @@ public class Value<T> implements ValueInterface<T> {
 				_f = "[loadListValue]";
 				msg = "====[ load a list value child attribute elements ]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 			}
-			ListValue l = new ListValue(new ArrayList<Attribute<? extends Value<?>>>());
+			ListValue l = new ListValue(new ArrayList<Attribute<? extends Value<?,?>>>());
 			Connection conn = null;
 			ResultSet rs = null;
 			Statement dbs = null;
@@ -1338,9 +1341,9 @@ public class Value<T> implements ValueInterface<T> {
 					if(log && !Util._IN_PRODUCTION) {msg = "----[ SQL: "+fSQL+"]----";LOG.info(String.format(fmt,_f,msg));}
 					rs = dbs.executeQuery(fSQL);		
 					while(rs.next()) {
-						Attribute<? extends Value<?>> a = AttributeDao._rsToA(rs);
+						Attribute<? extends Value<?,?>> a = AttributeDao._rsToA(rs);
 						a = AttributeDao._rsToAV(a, rs);
-						Value<?> v = Value.ValueDao.rsToV(rs, log);
+						Value<?,?> v = Value.ValueDao.rsToV(rs, log);
 						v.states().ioAction(IOAction.LOAD);
 						a = AttributeDao.setValue(a, v);
 						l.value().add(a);
@@ -1371,18 +1374,18 @@ public class Value<T> implements ValueInterface<T> {
 			return l;
 		}
 				
-		public static String saveMapValue(int objectId, int parentId, HashMap<String,Attribute<? extends Value<?>>> value,boolean log) {
+		public static String saveMapValue(int objectId, int parentId, HashMap<String,Attribute<? extends Value<?,?>>> value,boolean log) {
 			String idList = "NULL";
 			boolean start = true;
 			for(String group: value.keySet() ) {
-				Attribute<? extends Value<?>> a = value.get(group);
+				Attribute<? extends Value<?,?>> a = value.get(group);
 				if(a.id()==0) {
 					a.parentId(parentId);
 //					AttributeDao.instance();
 					a.updateId(AttributeDao._save(a,log).id());
 				}
 //AttributeDao.instance();
-				//				Value<?> v = Value.Dao.save(objectId, a.id(), a.value(), log);
+				//				Value<?,?> v = Value.Dao.save(objectId, a.id(), a.value(), log);
 //				a.valueId(v.id());
 //				a.value().id(v.id());
 //				a = AttributeDao.instance()._save(objectId, a,log); 
@@ -1398,15 +1401,15 @@ public class Value<T> implements ValueInterface<T> {
 			return idList;
 		}
 
-		public static String saveListValue(int objectId, int parentId, ArrayList<Attribute<? extends Value<?>>> value,boolean log) {
+		public static String saveListValue(int objectId, int parentId, ArrayList<Attribute<? extends Value<?,?>>> value,boolean log) {
 			String idList = "NULL";
 			boolean start = true;
-			for(Attribute<? extends Value<?>> a: value ) {
+			for(Attribute<? extends Value<?,?>> a: value ) {
 				if(a.id()==0) {
 					a.parentId(parentId);
 					a = AttributeDao._save(a,log);
 				}
-//				Value<?> v = Value.Dao.save(objectId, a.id(), a.value(), log);
+//				Value<?,?> v = Value.Dao.save(objectId, a.id(), a.value(), log);
 //				a.valueId(v.id());
 //				a.value().id(v.id());
 				a = AttributeDao._save(objectId, a,log); 
@@ -1421,16 +1424,16 @@ public class Value<T> implements ValueInterface<T> {
 			return idList;
 		}
 
-		public static String saveTableValue(int objectId, int parentId, ArrayList<ArrayList<Attribute<? extends Value<?>>>> value,boolean log) {
+		public static String saveTableValue(int objectId, int parentId, ArrayList<ArrayList<Attribute<? extends Value<?,?>>>> value,boolean log) {
 			String idList = "NULL";
 			boolean start = true;
-			for(ArrayList<Attribute<? extends Value<?>>> al: value ) {
-				for(Attribute<? extends Value<?>>a:al) {
+			for(ArrayList<Attribute<? extends Value<?,?>>> al: value ) {
+				for(Attribute<? extends Value<?,?>>a:al) {
 					if(a.id()==0) {
 						a.parentId(parentId);
 						a.updateId(AttributeDao._save(a, log).id());
 					}
-//				Value<?> v = Value.Dao.save(objectId, a.id(), a.value(), log);
+//				Value<?,?> v = Value.Dao.save(objectId, a.id(), a.value(), log);
 //				a.valueId(v.id());
 //				a.value().id(v.id());
 					a = AttributeDao._save(objectId,a, log);
@@ -1446,12 +1449,12 @@ public class Value<T> implements ValueInterface<T> {
 			return idList;
 		}
 
-		public static String saveComplexValue(int objectId, int parentId, HashMap<String,ArrayList<Attribute<? extends Value<?>>>> value,boolean log) {
+		public static String saveComplexValue(int objectId, int parentId, HashMap<String,ArrayList<Attribute<? extends Value<?,?>>>> value,boolean log) {
 			String idList = "NULL";
 			boolean start = true;
 			for(String group: value.keySet() ) {
-				ArrayList<Attribute<? extends Value<?>>> al = value.get(group);
-				for(Attribute<? extends Value<?>>a:al) {
+				ArrayList<Attribute<? extends Value<?,?>>> al = value.get(group);
+				for(Attribute<? extends Value<?,?>>a:al) {
 					if(a.id()==0) {
 						a.parentId(parentId);
 						a.updateId(AttributeDao._save(a, log).id());
@@ -1469,41 +1472,42 @@ public class Value<T> implements ValueInterface<T> {
 			return idList;
 		}
 
-		public static <T extends Value<?>> String insertValues(int objectId, AttributeType type, T v,boolean log) {
+		@SuppressWarnings("unchecked")
+		public static <T extends Value<?,?>> String insertValues(int objectId, AttributeType type, T v,boolean log) {
 			String values = "";
 //			String idList = "";
 			values += objectId + ",'" + type.name() + "','" + v.group().name() + "'" + "," + v.selected() + "," + v.position().posX()
 					+ "," + v.position().posY() + "," + v.position().posZ();
 			switch (type) {
 			case _integer:
-				values += "," + ((Value<Integer>) v).value();
+				values += "," + ((Value<Integer,IntegerValue>) v).value();
 				break;
 			case _string:
-				values += ",'" + ((Value<String>) v).value() + "'";
+				values += ",'" + ((Value<String,StringValue>) v).value() + "'";
 				break;
 			case _text:
-				values += ",'" + ((Value<String>) v).value() + "'";
+				values += ",'" + ((Value<String,TextValue>) v).value() + "'";
 				break;
 			case _boolean:
-				values += "," + ((Value<Boolean>) v).value();
+				values += "," + ((Value<Boolean,BooleanValue>) v).value();
 				break;
 			case _timestamp:
-				values += ",'" + ((Value<Timestamp>) v).value().toString() + "'";
+				values += ",'" + ((Value<Timestamp,TimestampValue>) v).value().toString() + "'";
 				break;
 			case _datetime:
-				values += ",'" + ((Value<DateTime>) v).value().toString() + "'";
+				values += ",'" + ((Value<DateTime,DateTimeValue>) v).value().toString() + "'";
 				break;
 			case _date:
-				values += ",'" + ((Value<DateTime>) v).value().toString() + "'";
+				values += ",'" + ((Value<DateTime,DateValue>) v).value().toString() + "'";
 				break;
 			case _time:
-				values += ",'" + ((Value<DateTime>) v).value().toString() + "'";
+				values += ",'" + ((Value<DateTime,TimeValue>) v).value().toString() + "'";
 				break;
 			case _set:
-				values += ",'" + ((Value<String>) v).value() + "'";
+				values += ",'" + ((Value<String,SetValue>) v).value() + "'";
 				break;
 			case _enum:
-				values += ",'" + ((Value<String>) v).value() + "'";
+				values += ",'" + ((Value<String,EnumValue>) v).value() + "'";
 				break;
 			case _map:
 				values += ",'NULL'";
@@ -1532,7 +1536,7 @@ public class Value<T> implements ValueInterface<T> {
 			return values;
 		}
 
-		public static PreparedStatement updateValues(PreparedStatement dbp, int objectId, int parentId, Value<?> v, boolean log) throws SQLException {
+		public static PreparedStatement updateValues(PreparedStatement dbp, int objectId, int parentId, Value<?,?> v, boolean log) throws SQLException {
 			dbp.setInt(1,objectId);
 			dbp.setString(2,v.type().name());
 			dbp.setString(3,v.group().name());
@@ -1591,30 +1595,40 @@ public class Value<T> implements ValueInterface<T> {
 		}
 
 		@SuppressWarnings("unchecked")
-		public static String valueForSQL(int objectId, Value<?> v, boolean log) {
+		public static String valueForSQL(int objectId, Value<?,?> v, boolean log) {
 			String val = "";
 //			String idList = "";
 			
 			switch(v.type()) {
 			case _integer:
-				val = ""+ ((Value<Integer>)v).value();
+				val = ""+ ((Value<Integer,IntegerValue>)v).value();
 				break;
 			case _boolean:
-				val = ((Value<Boolean>)v).value().toString();
+				val = ((Value<Boolean,BooleanValue>)v).value().toString();
 				break;
 			case _timestamp:
-				val = "'"+((Value<Timestamp>)v).value().toString()+"'";
+				val = "'"+((Value<Timestamp,TimestampValue>)v).value().toString()+"'";
 				break;
 			case _datetime:
+				val = "'"+((Value<DateTime,DateTimeValue>)v).value().toString()+"'";
+				break;
 			case _date:
+				val = "'"+((Value<DateTime,DateValue>)v).value().toString()+"'";
+				break;
 			case _time:
-				val = "'"+((Value<DateTime>)v).value().toString()+"'";
+				val = "'"+((Value<DateTime,TimeValue>)v).value().toString()+"'";
 				break;
 			case _string:
+				val = "'"+((Value<String,StringValue>)v).value()+"'";
+				break;
 			case _text:
+				val = "'"+((Value<String,TextValue>)v).value()+"'";
+				break;
 			case _enum:
+				val = "'"+((Value<String,EnumValue>)v).value()+"'";
+				break;
 			case _set:
-				val = "'"+((Value<String>)v).value()+"'";
+				val = "'"+((Value<String,SetValue>)v).value()+"'";
 				break;
 			case _map:
 				val += "'NULL'";
@@ -1772,7 +1786,7 @@ public class Value<T> implements ValueInterface<T> {
 
 			String colDef3 = Util.DB._columns(integertabledef, action, log);
 			String SQL3 = "CREATE TABLE IF NOT EXISTS " + integertable + " " + " ( " + colDef3
-					+ ") ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
+					+ ") ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
 			if (log && Util._IN_PRODUCTION) {
 				msg = "----[SQL : " + SQL3 + "]----";
 				LOG.info(String.format(fmt, _f, msg));
@@ -1780,7 +1794,7 @@ public class Value<T> implements ValueInterface<T> {
 
 			String colDef4 = Util.DB._columns(stringtabledef, action, log);
 			String SQL4 = "CREATE TABLE IF NOT EXISTS " + stringtable + " " + " ( " + colDef4
-					+ ") ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
+					+ ") ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
 			if (log && Util._IN_PRODUCTION) {
 				msg = "----[SQL : " + SQL4 + "]----";
 				LOG.info(String.format(fmt, _f, msg));
@@ -1788,7 +1802,7 @@ public class Value<T> implements ValueInterface<T> {
 
 			String colDef5 = Util.DB._columns(texttabledef, action, log);
 			String SQL5 = "CREATE TABLE IF NOT EXISTS " + texttable + " " + " ( " + colDef5
-					+ ") ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
+					+ ") ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
 			if (log && Util._IN_PRODUCTION) {
 				msg = "----[SQL : " + SQL5 + "]----";
 				LOG.info(String.format(fmt, _f, msg));
@@ -1796,7 +1810,7 @@ public class Value<T> implements ValueInterface<T> {
 
 			String colDef6 = Util.DB._columns(booleantabledef, action, log);
 			String SQL6 = "CREATE TABLE IF NOT EXISTS " + booleantable + " " + " ( " + colDef6
-					+ ") ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
+					+ ") ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
 			if (log && Util._IN_PRODUCTION) {
 				msg = "----[SQL : " + SQL6 + "]----";
 				LOG.info(String.format(fmt, _f, msg));
@@ -1804,7 +1818,7 @@ public class Value<T> implements ValueInterface<T> {
 
 			String colDef7 = Util.DB._columns(complextabledef, action, log);
 			String SQL7 = "CREATE TABLE IF NOT EXISTS " + complextable + " " + " ( " + colDef7
-					+ ") ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
+					+ ") ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
 			if (log && Util._IN_PRODUCTION) {
 				msg = "----[SQL : " + SQL7 + "]----";
 				LOG.info(String.format(fmt, _f, msg));
@@ -1812,7 +1826,7 @@ public class Value<T> implements ValueInterface<T> {
 
 			String colDef8 = Util.DB._columns(blobtabledef, action, log);
 			String SQL8 = "CREATE TABLE IF NOT EXISTS " + blobtable + " " + " ( " + colDef8
-					+ ") ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
+					+ ") ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
 			if (log && Util._IN_PRODUCTION) {
 				msg = "----[SQL : " + SQL8 + "]----";
 				LOG.info(String.format(fmt, _f, msg));
@@ -1820,7 +1834,7 @@ public class Value<T> implements ValueInterface<T> {
 
 			String colDef9 = Util.DB._columns(timestamptabledef, action, log);
 			String SQL9 = "CREATE TABLE IF NOT EXISTS " + timestamptable + " " + " ( " + colDef9
-					+ ") ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
+					+ ") ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
 			if (log && Util._IN_PRODUCTION) {
 				msg = "----[SQL : " + SQL9 + "]----";
 				LOG.info(String.format(fmt, _f, msg));
@@ -1865,10 +1879,10 @@ public class Value<T> implements ValueInterface<T> {
 			return retVal;
 		}
 
-		public static Value<?> rsToV(ResultSet rs, boolean log) throws SQLException {
+		public static Value<?,?> rsToV(ResultSet rs, boolean log) throws SQLException {
 			return rsToV(0,0,rs,log);
 		}
-		public static Value<?> rsToV(int aid, int oid, ResultSet rs, boolean log) throws SQLException {
+		public static Value<?,?> rsToV(int aid, int oid, ResultSet rs, boolean log) throws SQLException {
 
 			AttributeType type = AttributeType.valueOf(AttributeType.class,rs.getString("attribute_type"));
 
@@ -1918,7 +1932,7 @@ public class Value<T> implements ValueInterface<T> {
 				c.position().posZ(z);
 				c.setSelected(selected);
 				return c;
-//				return new ComplexValue(id, new HashMap<String,ArrayList<Attribute<? extends Value<?>>>>(), group, position, selected);
+//				return new ComplexValue(id, new HashMap<String,ArrayList<Attribute<? extends Value<?,?>>>>(), group, position, selected);
 //				return new ComplexValue(id, rs.getString("value"), group, position, selected);
 			case _table:
 				TableValue t = loadTableValue(aid,oid,id,log);
@@ -1929,7 +1943,7 @@ public class Value<T> implements ValueInterface<T> {
 				t.position().posY(y);
 				t.position().posZ(z);
 				return t;
-//				return new TableValue(id, new ArrayList<ArrayList<Attribute<? extends Value<?>>>>(), group, position, selected);
+//				return new TableValue(id, new ArrayList<ArrayList<Attribute<? extends Value<?,?>>>>(), group, position, selected);
 //				return new TableValue(id, rs.getString("value"), group, position, selected);
 			case _map:
 				MapValue m = loadMapValue(aid,oid,id,log);
@@ -1940,7 +1954,7 @@ public class Value<T> implements ValueInterface<T> {
 				m.position().posY(y);
 				m.position().posZ(z);
 				return m;
-//				return new MapValue(id, new HashMap<String,Attribute<? extends Value<?>>>(), group, position, selected);
+//				return new MapValue(id, new HashMap<String,Attribute<? extends Value<?,?>>>(), group, position, selected);
 //				return new MapValue(id, rs.getString("value"), group, position, selected);
 			case _list:
 				ListValue l = loadListValue(aid,oid,id,log);
@@ -1951,7 +1965,7 @@ public class Value<T> implements ValueInterface<T> {
 				l.position().posY(y);
 				l.position().posZ(z);
 				return l;
-//				return new ListValue(id, new ArrayList<Attribute<? extends Value<?>>>(), group, position, selected);
+//				return new ListValue(id, new ArrayList<Attribute<? extends Value<?,?>>>(), group, position, selected);
 //				return new ListValue(id, rs.getString("value"), group, position, selected);
 			default:
 				return null;
@@ -1963,7 +1977,7 @@ public class Value<T> implements ValueInterface<T> {
 
  	@SuppressWarnings("unchecked")
  	@Override
-	public Value<T> clone() {
- 		return (Value<T>) ValueInterface.clone(this);
+	public Value<T,Q> clone() {
+ 		return (Value<T,Q>) ValueInterface.clone(this);
  	}
 }

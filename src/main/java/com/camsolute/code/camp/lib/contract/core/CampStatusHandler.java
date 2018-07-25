@@ -1,5 +1,7 @@
 package com.camsolute.code.camp.lib.contract.core;
 
+import com.camsolute.code.camp.lib.contract.core.CampException.StatusDirtyException;
+import com.camsolute.code.camp.lib.contract.core.CampException.StatusMismatchException;
 import com.camsolute.code.camp.lib.contract.core.CampStatus.OrderLifeCycle;
 
 public interface CampStatusHandler {

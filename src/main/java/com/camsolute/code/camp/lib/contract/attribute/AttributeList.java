@@ -6,12 +6,14 @@ import java.util.Iterator;
 
 import org.json.JSONObject;
 
-import com.camsolute.code.camp.lib.contract.core.DataMismatchException;
-import com.camsolute.code.camp.lib.contract.HasListSelection;
+import com.camsolute.code.camp.lib.contract.core.CampException.DataMismatchException;
+import com.camsolute.code.camp.lib.contract.core.HasListSelection;
+
+import com.camsolute.code.camp.lib.contract.attribute.Attribute;
 
 public interface AttributeList extends List<Attribute>,  HasListSelection<Attribute> {
 
-    public int find(int itemId);
+  public int find(String itemId);
 
   public String toJson();
 
@@ -76,7 +78,7 @@ public interface AttributeList extends List<Attribute>,  HasListSelection<Attrib
 			selected = index;
 		}
 
-		public int select(int itemId) {
+		public int select(String itemId) {
       int i = find(itemId);
       if(i!=-1) {
           selected = i;
@@ -91,19 +93,20 @@ public interface AttributeList extends List<Attribute>,  HasListSelection<Attrib
         }
         return i;
 		}
-      
-      private int find(int itemId) {
+
+		
+    public int find(String itemId) {
           int indexCounter = 0;
           boolean indexChanged = false;
           for(Attribute a: this) {
-              if(a.id() == itemId) {
+              if(a.id().equals(itemId)) {
                   selected = indexCounter;
                   indexChanged = true;
                   break;
               }
               indexCounter++;
           }
-          if(indexCounter >= this.size()){
+          if(!indexChanged){
               return -1;
           }
           return indexCounter;

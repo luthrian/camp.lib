@@ -23,6 +23,6 @@ import com.camsolute.code.camp.lib.contract.IsObserver;
 import com.camsolute.code.camp.lib.contract.core.Value;
 import com.camsolute.code.camp.lib.models.Attribute;
 
-public interface ProductAttributeProcessInterface<U extends Value<?>> extends IsObserver<Attribute<U>>{
+public interface ProductAttributeProcessInterface<U extends Value<?,?>> extends IsObserver<Attribute<U>>{
 
 }

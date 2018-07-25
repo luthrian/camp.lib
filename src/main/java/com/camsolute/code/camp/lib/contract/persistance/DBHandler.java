@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 import com.camsolute.code.camp.lib.data.CampSQL;
 import com.camsolute.code.camp.lib.models.CampInstanceDao;
-import com.camsolute.code.camp.lib.models.CampStatesInterface.IOAction;
+import com.camsolute.code.camp.lib.contract.core.CampStates.IOAction;
 import com.camsolute.code.camp.lib.models.order.Order;
 import com.camsolute.code.camp.lib.utilities.Util;
 

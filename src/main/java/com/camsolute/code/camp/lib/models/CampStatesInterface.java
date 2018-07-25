@@ -21,9 +21,10 @@ package com.camsolute.code.camp.lib.models;
 
 import org.json.JSONObject;
 
+import com.camsolute.code.camp.lib.contract.core.CampStates.IOAction;
 import com.camsolute.code.camp.lib.contract.HasStatusChange;
 import com.camsolute.code.camp.lib.contract.IsDisplayable;
-import com.camsolute.code.camp.lib.contract.IsStorable;
+import com.camsolute.code.camp.lib.contract.core.IsStorable;
 import com.camsolute.code.camp.lib.contract.Serialization;
 
 /**
@@ -36,9 +37,9 @@ import com.camsolute.code.camp.lib.contract.Serialization;
 public interface CampStatesInterface
 		extends IsStorable, IsDisplayable, HasStatusChange, Serialization<CampStatesInterface> {
 
-	public static enum IOAction {
-		NONE, LOAD, SAVE, UPDATE, DELETE;
-	}
+//	public static enum IOAction {
+//		NONE, NEWID, LOAD, SAVE, UPDATE, DELETE;
+//	}
 
 	public static enum PersistType {
 		UPDATE, SAVE;
@@ -46,6 +47,11 @@ public interface CampStatesInterface
 	
 	public void ioAction(IOAction action);
 
+	public void revertIOAction();
+	
+	public void prevIO(IOAction action);
+	public IOAction prevIO();
+	
 	public void update(CampStates states);
 	/**
 	 * generates a JSON string representation of the CampStates object instance of
@@ -116,13 +122,14 @@ public interface CampStatesInterface
 	 */
 	public static String _toJson(CampStates cs) {
 		String json = "{";
-		json += "\"loaded\":" + cs.isLoaded() + ",";
-		json += "\"saved\":" + cs.isSaved() + ",";
-		json += "\"updated\":" + cs.isUpdated() + ",";
-		json += "\"deleted\":" + cs.isDeleted() + ",";
-		json += "\"isNew\":" + cs.isNew() + ",";
-		json += "\"dirty\":" + cs.isDirty() + ",";
-		json += "\"modified\":" + cs.isModified() ;
+		json += "\"loaded\":" + cs.isLoaded();
+		json += ",\"saved\":" + cs.isSaved();
+		json += ",\"updated\":" + cs.isUpdated();
+		json += ",\"deleted\":" + cs.isDeleted();
+		json += ",\"isNew\":" + cs.isNew();
+		json += ",\"dirty\":" + cs.isDirty();
+		json += ",\"modified\":" + cs.isModified() ;
+		json += ",\"prevIO\":\"" + cs.prevIO().name() + "\"" ;
 		json += "}";
 		return json;
 	}
@@ -167,6 +174,9 @@ public interface CampStatesInterface
 		}
 		if (jo.getBoolean("modified")) {
 			cs.modify();
+		}
+		if (jo.has("prevIO")) {
+			cs.prevIO(IOAction.valueOf(jo.getString("prevIO")));
 		}
 		return cs;
 	}

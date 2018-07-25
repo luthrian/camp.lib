@@ -21,10 +21,12 @@ package com.camsolute.code.camp.lib.models.customer;
 
 import org.json.JSONObject;
 
+import com.camsolute.code.camp.lib.contract.core.CampStates;
+import com.camsolute.code.camp.lib.contract.core.CampStates.CampStatesImpl;
 import com.camsolute.code.camp.lib.contract.IsObjectInstance;
 import com.camsolute.code.camp.lib.models.CampInstance;
 import com.camsolute.code.camp.lib.models.CampInstanceInterface;
-import com.camsolute.code.camp.lib.models.CampStates;
+//import com.camsolute.code.camp.lib.models.CampStates;
 import com.camsolute.code.camp.lib.models.CampStatesInterface;
 import com.camsolute.code.camp.lib.models.Group;
 import com.camsolute.code.camp.lib.models.Version;
@@ -100,7 +102,7 @@ public interface AddressInterface extends IsObjectInstance<AddressInterface> {
 		Status status = Status.valueOf(jo.getString("status"));
 		Status previousStatus = Status.valueOf(jo.getString("previousStatus"));
 		CampInstance history = CampInstanceInterface._fromJSONObject(jo.getJSONObject("history"));
-		CampStates states = CampStatesInterface._fromJSONObject(jo.getJSONObject("states"));
+		CampStates states = CampStates._fromJSONObject(jo.getJSONObject("states"));
 		Address a = new Address(id,country,state,postCode,city,street,streetNumber,floor,roomNumber);
 		a.setBusinessKey(businessKey);
 		a.setGroup(group);

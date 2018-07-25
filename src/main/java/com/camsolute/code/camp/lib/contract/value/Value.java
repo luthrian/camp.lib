@@ -1,28 +1,33 @@
 package com.camsolute.code.camp.lib.contract.value;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 import org.joda.time.DateTime;
 import org.json.JSONObject;
 
 import com.camsolute.code.camp.lib.contract.HasGroup;
-import com.camsolute.code.camp.lib.contract.HasId;
-import com.camsolute.code.camp.lib.contract.HasStates;
+import com.camsolute.code.camp.lib.contract.core.HasId;
+import com.camsolute.code.camp.lib.contract.core.HasValueParent;
+import com.camsolute.code.camp.lib.contract.core.HasStates;
 import com.camsolute.code.camp.lib.contract.IsSelectable;
 import com.camsolute.code.camp.lib.contract.core.Serialization;
-import com.camsolute.code.camp.lib.contract.core.CampData;
 import com.camsolute.code.camp.lib.contract.core.CampTable.ValueTable;
 import com.camsolute.code.camp.lib.contract.core.HasCoordinate;
 import com.camsolute.code.camp.lib.contract.core.Coordinate;
-import com.camsolute.code.camp.lib.contract.core.DataMismatchException;
+import com.camsolute.code.camp.lib.contract.core.CampException.AlreadyContainsElementException;
+import com.camsolute.code.camp.lib.contract.core.CampException.DataMismatchException;
+import com.camsolute.code.camp.lib.contract.core.CampException.TableDimensionsException;
+import com.camsolute.code.camp.lib.contract.core.CampBinary.Binary;
 import com.camsolute.code.camp.lib.contract.core.CampComplex.ValueComplex;
 import com.camsolute.code.camp.lib.contract.core.CampComplex.ValueListComplex;
 import com.camsolute.code.camp.lib.contract.core.CampList.ValueList;
-import com.camsolute.code.camp.lib.models.CampStates;
+import com.camsolute.code.camp.lib.contract.core.CampStates;
+import com.camsolute.code.camp.lib.contract.core.CampStates.CampStatesImpl;
 import com.camsolute.code.camp.lib.models.Group;
 import com.camsolute.code.camp.lib.utilities.Util;
 
-public interface Value extends HasId, HasStates, HasGroup, HasCoordinate, IsSelectable, Serialization<Value>, HasJSONValueHandler, HasSQLValueHandler {
+public interface Value<T,Q extends Value<T,Q>> extends HasId, HasValueParent, HasStates, HasGroup, HasCoordinate, IsSelectable, Serialization<Value<?,?>>, HasJSONValueHandler<T,Q>, HasSQLValueHandler<T,Q>, HasRestValueHandler<T,Q>{
 
 	public static enum ValueType {
 		_boolean
@@ -39,9 +44,10 @@ public interface Value extends HasId, HasStates, HasGroup, HasCoordinate, IsSele
 		,_text
 		,_time
 		,_timestamp		
+		,_binary
 	}
 
-	public void updateValue(Value newValue,boolean registerStateChange) throws ValueTypeMismatchException;
+	public void updateValue(Q newValue,boolean registerStateChange) throws ValueTypeMismatchException;
 	
 	public void updateData(Object data, boolean registerStateChange) throws DataMismatchException;
 	
@@ -52,7 +58,7 @@ public interface Value extends HasId, HasStates, HasGroup, HasCoordinate, IsSele
 	public String toValueString();
 	
 	public static class ValueFactory {
-		public static Value generateValue(ValueType type) { 
+		public static Value<?,?> generateValue(ValueType type) { 
 			switch(type) {
 			case _boolean:
 				return new BooleanValue();
@@ -82,11 +88,14 @@ public interface Value extends HasId, HasStates, HasGroup, HasCoordinate, IsSele
 				return new TimeValue();
 			case _timestamp:
 				return new TimestampValue();
-				
+			case _binary:
+				return new BinaryValue();
+			default://never reached
+				break;
 			}
 			return null;
 		}
-		public static Value generateValue(ValueType type,Object data) {
+		public static Value<?,?> generateValue(ValueType type,Object data) {
 			switch(type) {
 			case _boolean:
 				return new BooleanValue((Boolean)data);
@@ -116,16 +125,19 @@ public interface Value extends HasId, HasStates, HasGroup, HasCoordinate, IsSele
 				return new TimeValue((DateTime)data);
 			case _timestamp:
 				return new TimestampValue((Timestamp)data);
-				
+			case _binary:
+				return new BinaryValue((Binary)data);
+			default://never reached
+				break;
 			}
 			return null;
 		}
 		
 	}
 	
-	public abstract class AbstractValue implements Value {
+	public abstract class AbstractValue<T,Q extends Value<T,Q>> implements Value<T,Q> {
 		
-		private int id = CampData.NEW_ID;
+		private String id = HasId.newId();
 	
 		private Group group = new Group(Util.Config.instance().defaultGroup("Value"));
 		
@@ -133,18 +145,25 @@ public interface Value extends HasId, HasStates, HasGroup, HasCoordinate, IsSele
 
 		private boolean selected = false;
 
-		private CampStates states = new CampStates();
+		private CampStates states = new CampStatesImpl();
 
-		private SQLValueHandler sqlHandler;
+		private String parentId = "";
+		
+		private Value<?,?> parent = null;
+		
+//		protected SQLValueHandler<T,Q> sqlHandler;
+		protected ValuePersistHandler<T,Q> sqlHandler;
 
-		private JSONValueHandler jsonHandler;
+		protected JSONValueHandler<T,Q>  jsonHandler;
 
-		public int id() {
+		protected RestValueHandler<T,Q> restHandler;
+		
+ 		public String id() {
 			return this.id;
 		}
 		
-		public int updateId(int id) {
-			int r = this.id;
+		public String updateId(String id) {
+			String r = this.id;
 			this.id = id;
 			return r;
 		}
@@ -192,7 +211,7 @@ public interface Value extends HasId, HasStates, HasGroup, HasCoordinate, IsSele
 			this.selected = false;
 		}
 		
-		public void updateValue(Value newValue, boolean registerStateChange) throws ValueTypeMismatchException {
+		public void updateValue(Q newValue, boolean registerStateChange) throws ValueTypeMismatchException {
 			if(!newValue.type().name().equals(this.type().name())) {
 				throw new ValueTypeMismatchException("Expected ValueType("+this.type().name()+") but new Value had ValueType("+newValue.type().name()+")");
 			}
@@ -202,56 +221,81 @@ public interface Value extends HasId, HasStates, HasGroup, HasCoordinate, IsSele
 			this.selected = newValue.selected();
 			this.position = newValue.position();
 			this.jsonHandler = newValue.jsonHandler();
-			this.sqlHandler = newValue.sqlValueHandler();
+			this.sqlHandler = newValue.sqlHandler();
 			if(registerStateChange) {
 				this.states.modify();
 			}
 		}
 		
-		public void setSQLValueHandler(SQLValueHandler sqlValueHandler) {
-			this.sqlHandler = sqlValueHandler;
-		}
-
-		public void sqlValueHandler(SQLValueHandler sqlValueHandler) {
-			this.sqlHandler = sqlValueHandler;
+		public String parentId() {
+			return parentId;
 		}
 		
-		public SQLValueHandler sqlValueHandler() {
-			return this.sqlHandler;
+		public void parentId(String id, boolean registerUpdate) {
+			parentId = id;
+			if(registerUpdate) {
+				states().modify();
+			}
 		}
-		public void jsonHandler(JSONValueHandler jsonHandler) {
+		
+		@SuppressWarnings("unchecked")
+		public <X,Y extends Value<X,Y>> Y parent() {
+			return (Y) parent;
+		}
+		
+		public <X,Y extends Value<X,Y>> void parent(Y parent) {
+			this.parent = parent;
+			parentId(parent.id(), true);
+		}
+		
+ 		public <S extends ValuePersistHandler<T,Q>> void sqlHandler(S sqlValueHandler) {
+			this.sqlHandler = sqlValueHandler;
+		}
+		@SuppressWarnings("unchecked")
+		public <S extends ValuePersistHandler<T,Q>> S sqlHandler() {
+			return (S) this.sqlHandler;
+		}
+		
+		public <R extends JSONValueHandler<T,Q>> void jsonHandler(R jsonHandler) {
 			this.jsonHandler = jsonHandler;
 		}
-		
-		public JSONValueHandler jsonHandler() {
-			return this.jsonHandler;
+		@SuppressWarnings("unchecked")
+		public <R extends JSONValueHandler<T,Q>> R jsonHandler() {
+			return (R) this.jsonHandler;
+		}
+
+		public <U extends RestValueHandler<T,Q>> void restHandler(U restValueHandler) {
+			restHandler = restValueHandler;
 		}
 		
-		public Value fromJson(String json) throws DataMismatchException {
+		@SuppressWarnings("unchecked")
+		public <U extends RestValueHandler<T,Q>> U restHandler() {
+			return (U) restHandler;
+		}
+		
+ 		public Q fromJson(String json) throws DataMismatchException {
 			return fromJSONObject(new JSONObject(json));
 		}
 		
-		public String toJson() {
-			return jsonHandler.toJson(this);
-		}
-		
-		public Value fromJSONObject(JSONObject jo) throws DataMismatchException {
+		public Q fromJSONObject(JSONObject jo) throws DataMismatchException {
 			return jsonHandler().fromJSONObject(jo);
 		}
 	}
 	
-	public class BooleanValue extends AbstractValue {
+	public class BooleanValue extends AbstractValue<Boolean,BooleanValue> {
 		
 		private boolean myValue = false;
 		
+		public Boolean data() { return myValue; }
+		
 		protected BooleanValue() {
-			sqlValueHandler(new SQLValueHandler.BooleanSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.BooleanSQLValueHandler());
 			jsonHandler(new JSONValueHandler.BooleanJSONValueHandler());
 		}
 		
 		protected BooleanValue(Boolean value) {
 			this.myValue = value;
-			sqlValueHandler(new SQLValueHandler.BooleanSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.BooleanSQLValueHandler());
 			jsonHandler(new JSONValueHandler.BooleanJSONValueHandler());
 		}
 		public ValueType type() {
@@ -267,27 +311,32 @@ public interface Value extends HasId, HasStates, HasGroup, HasCoordinate, IsSele
 		}
 		
  		public void updateData(Object data, boolean registerStateChange) throws DataMismatchException {
-			myValue = (Boolean) data;
+			myValue = (Boolean)data;
 			if(registerStateChange) {
 				states().modify();
 			}
 		}
 
-
+		public String toJson() {
+			return jsonHandler().toJson(this);
+		}
+		
 	}
 
-	public class ComplexValue extends AbstractValue {
+	public class ComplexValue extends AbstractValue<ValueListComplex,ComplexValue> {
 		
 		ValueListComplex myValue = new ValueListComplex();
+		
+		public ValueListComplex data() { return myValue; }
 	
 		protected ComplexValue() {
-			sqlValueHandler(new SQLValueHandler.ComplexSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.ComplexSQLValueHandler());
 			jsonHandler(new JSONValueHandler.ComplexJSONValueHandler());
 		}
 		
 		protected ComplexValue(ValueListComplex value) {
 			this.myValue = value;
-			sqlValueHandler(new SQLValueHandler.ComplexSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.ComplexSQLValueHandler());
 			jsonHandler(new JSONValueHandler.ComplexJSONValueHandler());
 		}
 
@@ -300,7 +349,7 @@ public interface Value extends HasId, HasStates, HasGroup, HasCoordinate, IsSele
 		}
 
 		public String toValueString() {
-			return "NULL";
+			return toString();
 		}
 		
 		public void updateData(Object data, boolean registerStateChange) throws DataMismatchException {
@@ -310,20 +359,73 @@ public interface Value extends HasId, HasStates, HasGroup, HasCoordinate, IsSele
 			}
 		}
 		
+		public String toJson() {
+			return jsonHandler().toJson(this);
+		}
+		
+		public ValueList dataToValueList() {
+			ValueList vl = new ValueList();
+			for(String key: myValue.keySet()) {
+				for(Value<?,?> v: myValue.get(key)) {
+					vl.add(v);
+				}
+			}
+			return vl;
+		}
+
+		public void add(String group, Value<?,?> value) {
+			if(!myValue.containsKey(group)) {
+				myValue.put(group,new ValueList());
+			}
+			myValue.get(group).add(value);
+		}
+		
+		public void add(Group group, Value<?,?> value) {
+			add(group.name(),value);
+		}
+
+		public void add(String group, ValueList list) {
+			if(!myValue.containsKey(group)) {
+				myValue.put(group,new ValueList());
+			}
+			myValue.get(group).addAll(list);
+		}
+		
+		public void add(Group group, ValueList list) {
+			add(group.name(),list);
+		}
+
+		public ValueList get(String group) {
+			return myValue.get(group);
+		}
+		
+		public ValueList get(Group group) {
+			return get(group.name());
+		}
+		
+		public boolean contains(String group) {
+			return myValue.containsKey(group);
+		}
+		
+		public boolean contains(Group group) {
+			return contains(group.name());
+		}
 	}
 	
-	public class DateValue extends AbstractValue {
+	public class DateValue extends AbstractValue<DateTime,DateValue> {
 		
 		private DateTime myValue;
 		
+		public DateTime data() { return myValue; }
+		
 		protected DateValue() {
-			sqlValueHandler(new SQLValueHandler.DateTimeSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.DateSQLValueHandler());
 			jsonHandler(new JSONValueHandler.DateJSONValueHandler());
 		}
 		
 		protected DateValue(DateTime value) {
 			this.myValue = value;
-			sqlValueHandler(new SQLValueHandler.DateTimeSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.DateSQLValueHandler());
 			jsonHandler(new JSONValueHandler.DateJSONValueHandler());
 		}
 
@@ -346,21 +448,26 @@ public interface Value extends HasId, HasStates, HasGroup, HasCoordinate, IsSele
 			}
 		}
 
-
+		public String toJson() {
+			return jsonHandler().toJson(this);
+		}
+		
 	}
 	
-	public class DateTimeValue extends AbstractValue {
+	public class DateTimeValue extends AbstractValue<DateTime,DateTimeValue> {
 		
 		private DateTime myValue;
 		
+		public DateTime data() { return myValue; }
+		
 		protected DateTimeValue() {
-			sqlValueHandler(new SQLValueHandler.DateTimeSQLValueHandler());
-			jsonHandler(new JSONValueHandler.DateJSONValueHandler());
+			sqlHandler(new ValuePersistHandler.DateTimeSQLValueHandler());
+			jsonHandler(new JSONValueHandler.DateTimeJSONValueHandler());
 		}
 		
 		protected DateTimeValue(DateTime value) {
 			this.myValue = value;
-			sqlValueHandler(new SQLValueHandler.DateTimeSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.DateTimeSQLValueHandler());
 			jsonHandler(new JSONValueHandler.DateTimeJSONValueHandler());
 		}
 
@@ -383,21 +490,27 @@ public interface Value extends HasId, HasStates, HasGroup, HasCoordinate, IsSele
 			}
 		}
 
+		public String toJson() {
+			return jsonHandler().toJson(this);
+		}
+		
 
 	}
 	
- public class EnumValue extends AbstractValue {
+ public class EnumValue extends AbstractValue<String,EnumValue> {
 	 
 	 private String myValue;
+	 
+	 public String data() { return myValue; }
 
 	 protected EnumValue() {
-			sqlValueHandler(new SQLValueHandler.TextSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.EnumSQLValueHandler());
 			jsonHandler(new JSONValueHandler.EnumJSONValueHandler());
 		}
 		
 		protected EnumValue(String value) {
 			this.myValue = value;
-			sqlValueHandler(new SQLValueHandler.TextSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.EnumSQLValueHandler());
 			jsonHandler(new JSONValueHandler.EnumJSONValueHandler());
 		}
 
@@ -420,21 +533,27 @@ public interface Value extends HasId, HasStates, HasGroup, HasCoordinate, IsSele
 			}
 		}
 
+		public String toJson() {
+			return jsonHandler().toJson(this);
+		}
+		
 
  }
 
- public class IntegerValue extends AbstractValue {
+ public class IntegerValue extends AbstractValue<Integer,IntegerValue> {
 	 
 	 private int myValue;
+	 
+	 public Integer data() { return myValue; }
 
 	 protected IntegerValue() {
-			sqlValueHandler(new SQLValueHandler.IntegerSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.IntegerSQLValueHandler());
 			jsonHandler(new JSONValueHandler.IntegerJSONValueHandler());
 		}
 		
 		protected IntegerValue(int value) {
 			this.myValue = value;
-			sqlValueHandler(new SQLValueHandler.IntegerSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.IntegerSQLValueHandler());
 			jsonHandler(new JSONValueHandler.IntegerJSONValueHandler());
 		}
 
@@ -457,21 +576,27 @@ public interface Value extends HasId, HasStates, HasGroup, HasCoordinate, IsSele
 			}
 		}
 
+		public String toJson() {
+			return jsonHandler().toJson(this);
+		}
+		
 
  }
 
- public class ListValue extends AbstractValue {
+ public class ListValue extends AbstractValue<ValueList,ListValue> {
 	 
 	 private ValueList myValue = new ValueList();
+	 
+	 public ValueList data() { return myValue; }
 
 	 protected ListValue() {
-			sqlValueHandler(new SQLValueHandler.TextSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.ListSQLValueHandler());
 			jsonHandler(new JSONValueHandler.ListJSONValueHandler());
 		}
 		
 		protected ListValue(ValueList value) {
 			this.myValue = value;
-			sqlValueHandler(new SQLValueHandler.TextSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.ListSQLValueHandler());
 			jsonHandler(new JSONValueHandler.ListJSONValueHandler());
 		}
 
@@ -488,26 +613,62 @@ public interface Value extends HasId, HasStates, HasGroup, HasCoordinate, IsSele
 		}
 		
 		public void updateData(Object data, boolean registerStateChange) throws DataMismatchException {
-			myValue = (ValueList) data;
+			myValue = (ValueList)data;
 			if(registerStateChange) {
 				states().modify();
 			}
 		}
 
+		public String toJson() {
+			return jsonHandler().toJson(this);
+		}
+		
+		public ValueList dataToValueList() {
+			return myValue;
+		}
+ 
+		public int size() {
+			return myValue.size();
+		}
+		
+		public int selectionValueIndex() {
+			return myValue.selectionIndex();
+		}
+		
+		public Value<?,?> selectedValue() {
+			return myValue.selected();
+		}
+		
+		public int selectValue(String valueId) {
+			return myValue.select(valueId);
+		}
+		
+		public int selectValue(Value<?,?> value) {
+			return myValue.select(value);
+		}
+		public Value<?,?> remove(int index) {
+			return myValue.remove(index);
+		}
+		public void add(Value<?,?> value) {
+			myValue.add(value);
+		}
+					
  }
 
- public class MapValue extends AbstractValue {
+ public class MapValue extends AbstractValue<ValueComplex,MapValue> {
 	 
 	 private ValueComplex myValue = new ValueComplex();
+	 
+	 public ValueComplex data() { return myValue; }
 
 	 protected MapValue() {
-			sqlValueHandler(new SQLValueHandler.ComplexSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.MapSQLValueHandler());
 			jsonHandler(new JSONValueHandler.MapJSONValueHandler());
 		}
 		
 		protected MapValue(ValueComplex value) {
 			this.myValue = value;
-			sqlValueHandler(new SQLValueHandler.ComplexSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.MapSQLValueHandler());
 			jsonHandler(new JSONValueHandler.MapJSONValueHandler());
 		}
 
@@ -524,24 +685,73 @@ public interface Value extends HasId, HasStates, HasGroup, HasCoordinate, IsSele
 		}
 		
 		public void updateData(Object data, boolean registerStateChange) throws DataMismatchException {
-			myValue = (ValueComplex) data;
+			myValue =  (ValueComplex) data;
 		}
 
+		public String toJson() {
+			return jsonHandler().toJson(this);
+		}
+		
+		public ValueList dataToValueList() {
+			ValueList vl = new ValueList();
+			for(String key: myValue.keySet()) {
+				vl.add(myValue.get(key));
+			}
+			return vl;
+		}
+
+		public void add(String group, Value<?,?> value) throws AlreadyContainsElementException {
+			if(!myValue.containsKey(group)) {
+				myValue.put(group,value);
+			}else {
+				throw new AlreadyContainsElementException("Value already present in MapValue!!!");
+			}
+		}
+		
+		public void add(Group group, Value<?,?> value) throws AlreadyContainsElementException{
+			add(group.name(),value);
+		}
+
+		public void set(String group, Value<?,?> value) {
+			myValue.put(group,value);
+		}
+		
+		public void set(Group group, Value<?,?> value) {
+			set(group.name(),value);
+		}
+
+		public Value<?,?> get(String group) {
+			return myValue.get(group);
+		}
+		
+		public Value<?,?> get(Group group) {
+			return get(group.name());
+		}
+		
+		public boolean contains(String group) {
+			return myValue.containsKey(group);
+		}
+		
+		public boolean contains(Group group) {
+			return contains(group.name());
+		}
 
  }
 
- public class SetValue extends AbstractValue {
+ public class SetValue extends AbstractValue<String,SetValue> {
 	 
 	 private String myValue;
+	 
+	 public String data() { return myValue; }
 
 	 protected SetValue() {
-			sqlValueHandler(new SQLValueHandler.TextSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.SetSQLValueHandler());
 			jsonHandler(new JSONValueHandler.SetJSONValueHandler());
 		}
 		
 		protected SetValue(String value) {
 			this.myValue = value;
-			sqlValueHandler(new SQLValueHandler.TextSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.SetSQLValueHandler());
 			jsonHandler(new JSONValueHandler.SetJSONValueHandler());
 		}
 
@@ -557,6 +767,10 @@ public interface Value extends HasId, HasStates, HasGroup, HasCoordinate, IsSele
 			return toString();
 		}
 		
+		public String toJson() {
+			return jsonHandler().toJson(this);
+		}
+		
 		public void updateData(Object data, boolean registerStateChange) throws DataMismatchException {
 			myValue = (String) data;
 			if(registerStateChange) {
@@ -566,18 +780,20 @@ public interface Value extends HasId, HasStates, HasGroup, HasCoordinate, IsSele
 
  }
 
- public class StringValue extends AbstractValue {
+ public class StringValue extends AbstractValue<String,StringValue> {
 	 
 	 private String myValue;
+	 
+	 public String data() { return myValue; }
 
 	 protected StringValue() {
-			sqlValueHandler(new SQLValueHandler.StringSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.StringSQLValueHandler());
 			jsonHandler(new JSONValueHandler.StringJSONValueHandler());
 		}
 		
 		protected StringValue(String value) {
 			this.myValue = value;
-			sqlValueHandler(new SQLValueHandler.StringSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.StringSQLValueHandler());
 			jsonHandler(new JSONValueHandler.StringJSONValueHandler());
 		}
 
@@ -593,6 +809,10 @@ public interface Value extends HasId, HasStates, HasGroup, HasCoordinate, IsSele
 			return toString();
 		}
 		
+		public String toJson() {
+			return jsonHandler().toJson(this);
+		}
+		
 		public void updateData(Object data, boolean registerStateChange) throws DataMismatchException {
 			myValue = (String) data;
 			if(registerStateChange) {
@@ -603,18 +823,20 @@ public interface Value extends HasId, HasStates, HasGroup, HasCoordinate, IsSele
 
  }
 
- public class TableValue extends AbstractValue {
+ public class TableValue extends AbstractValue<ValueTable,TableValue> {
 	 
 	 private ValueTable myValue = new ValueTable();
+	 
+	 public ValueTable data() { return myValue; }
 
 	 protected TableValue() {
-			sqlValueHandler(new SQLValueHandler.TableSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.TableSQLValueHandler());
 			jsonHandler(new JSONValueHandler.TableJSONValueHandler());
 		}
 		
 		protected TableValue(ValueTable value) {
 			this.myValue = value;
-			sqlValueHandler(new SQLValueHandler.TableSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.TableSQLValueHandler());
 			jsonHandler(new JSONValueHandler.TableJSONValueHandler());
 		}
 
@@ -631,25 +853,95 @@ public interface Value extends HasId, HasStates, HasGroup, HasCoordinate, IsSele
 		}
 		
 		public void updateData(Object data, boolean registerStateChange) throws DataMismatchException {
-			myValue = (ValueTable) data;
+			this.myValue = (ValueTable) data;
 			if(registerStateChange) {
 				states().modify();
 			}
 		}
+		
+		public String toJson() {
+			return jsonHandler().toJson(this);
+		}
+		
+		public ValueList dataToValueList() {
+			ValueList vl = new ValueList();
+			for(ArrayList<Value<?,?>> l: myValue.tableColumns()) {
+				vl.addAll(l);
+			}
+			return vl;
+		}
+
+		public void addColumn(ArrayList<Value<?,?>> column) throws TableDimensionsException {
+			myValue.addColumn(column);
+		}
+		
+		public void addRow(ArrayList<Value<?,?>> row) throws TableDimensionsException {
+			myValue.addRow(row);
+		}
+		
+		public void set(Value<?,?> element) throws TableDimensionsException {
+			myValue.setCell(element.position(), element);
+		}
+		
+		public void set(Value<?,?> element,Coordinate coord) throws TableDimensionsException {
+			myValue.setCell(coord, element);
+		}
+		
+		public void set(Value<?,?> element, int row, int column) throws TableDimensionsException {
+			myValue.setCell(row,column,element);
+		}
+		
+		public Value<?,?> get(Coordinate coord) throws TableDimensionsException {
+			return myValue.cell(coord);
+		}
+		
+		public Value<?,?> get(int row, int column) throws TableDimensionsException {
+			return myValue.cell(row, column);
+		}
+		
+		public ArrayList<Value<?,?>> getRow(int index) {
+			return myValue.row(index);
+		}
+		
+		public ArrayList<Value<?,?>> getColumn(int index) {
+			return myValue.column(index);
+		}
+		
+		public void insertRow(ArrayList<Value<?,?>> row, int index, boolean after) throws TableDimensionsException {
+			myValue.insertRow(index, after, row);
+		}
+		
+		public void insertColumn(ArrayList<Value<?,?>> column, int index, boolean after) throws TableDimensionsException {
+			myValue.insertColumn(index, after, column);
+		}
+		
+		public ArrayList<ArrayList<Value<?,?>>> columns() {
+			return myValue.tableColumns();
+		}
+		
+		public ArrayList<ArrayList<Value<?,?>>> rows() {
+			return myValue.tableRows();
+		}
+		
+		public void organize(ValueList valueList) {
+			myValue.organize(valueList.toArrayList());
+		}
  }
 
- public class TextValue extends AbstractValue {
+ public class TextValue extends AbstractValue<String,TextValue> {
 	 
 	 private String myValue;
+	 
+	 public String data() { return myValue; }
 
 	 protected TextValue() {
-			sqlValueHandler(new SQLValueHandler.TextSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.TextSQLValueHandler());
 			jsonHandler(new JSONValueHandler.TextJSONValueHandler());
 		}
 		
 		protected TextValue(String value) {
 			this.myValue = value;
-			sqlValueHandler(new SQLValueHandler.TextSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.TextSQLValueHandler());
 			jsonHandler(new JSONValueHandler.TextJSONValueHandler());
 		}
 
@@ -666,25 +958,33 @@ public interface Value extends HasId, HasStates, HasGroup, HasCoordinate, IsSele
 		}
 		
 		public void updateData(Object data, boolean registerStateChange) throws DataMismatchException {
-			myValue = (String) data;
+			myValue = (String)data;
 			if(registerStateChange) {
 				states().modify();
 			}
+			
 		}
+		
+		public String toJson() {
+			return jsonHandler().toJson(this);
+		}
+		
  }
 
-	public class TimeValue extends AbstractValue {
+	public class TimeValue extends AbstractValue<DateTime,TimeValue> {
 		
 		private DateTime myValue;
 		
+		public DateTime data() { return myValue; }
+		
 		protected TimeValue() {
-			sqlValueHandler(new SQLValueHandler.DateTimeSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.TimeSQLValueHandler());
 			jsonHandler(new JSONValueHandler.TimeJSONValueHandler());
 		}
 		
 		protected TimeValue(DateTime value) {
 			this.myValue = value;
-			sqlValueHandler(new SQLValueHandler.DateTimeSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.TimeSQLValueHandler());
 			jsonHandler(new JSONValueHandler.TimeJSONValueHandler());
 		}
 
@@ -701,24 +1001,32 @@ public interface Value extends HasId, HasStates, HasGroup, HasCoordinate, IsSele
 		}
 		
 		public void updateData(Object data, boolean registerStateChange) throws DataMismatchException {
-			myValue = (DateTime) data;
+			myValue = (DateTime)data;
 			if(registerStateChange) {
 				states().modify();
 			}
 		}
+		
+		public String toJson() {
+			return jsonHandler().toJson(this);
+		}
+		
 	}
-	public class TimestampValue extends AbstractValue {
+
+	public class TimestampValue extends AbstractValue<Timestamp,TimestampValue> {
 		
 		private Timestamp myValue;
 		
+		public Timestamp data() { return myValue; }
+		
 		protected TimestampValue() {
-			sqlValueHandler(new SQLValueHandler.TimestampSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.TimestampSQLValueHandler());
 			jsonHandler(new JSONValueHandler.TimestampJSONValueHandler());
 		}
 		
 		protected TimestampValue(Timestamp value) {
 			this.myValue = value;
-			sqlValueHandler(new SQLValueHandler.TimestampSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.TimestampSQLValueHandler());
 			jsonHandler(new JSONValueHandler.TimestampJSONValueHandler());
 		}
 
@@ -735,11 +1043,60 @@ public interface Value extends HasId, HasStates, HasGroup, HasCoordinate, IsSele
 		}
 		
 		public void updateData(Object data, boolean registerStateChange) throws DataMismatchException {
-			myValue = (Timestamp) data;
+			myValue = (Timestamp)data;
 			if(registerStateChange) {
 				states().modify();
 			}
 		}
+		public String toJson() {
+			return jsonHandler().toJson(this);
+		}
+	
 	}
 	
+	public class BinaryValue extends AbstractValue<Binary,BinaryValue> {
+		
+		private Binary myValue;
+		
+		public Binary data() { return myValue; }
+		
+		protected BinaryValue() {
+			sqlHandler(new ValuePersistHandler.BinarySQLValueHandler());
+			jsonHandler(new JSONValueHandler.BinaryJSONValueHandler());
+		}
+		
+		protected BinaryValue(Binary value) {
+			this.myValue = value;
+			sqlHandler(new ValuePersistHandler.BinarySQLValueHandler());
+			jsonHandler(new JSONValueHandler.BinaryJSONValueHandler());
+		}
+		public ValueType type() {
+			return  ValueType._binary;
+		}
+
+		public String toString() {
+			return myValue.toString();
+		}
+
+		public String toValueString() {
+			return toString();
+		}
+		
+		public byte[] valueAsBytes() {
+			return myValue.data();
+		}
+ 		public void updateData(Object data, boolean registerStateChange) throws DataMismatchException {
+			myValue = (Binary)data;
+			if(registerStateChange) {
+				states().modify();
+			}
+		}
+
+		public String toJson() {
+			return jsonHandler().toJson(this);
+		}
+		
+	}
+
+
 }

@@ -19,7 +19,7 @@
  ******************************************************************************/
 package com.camsolute.code.camp.lib.contract;
 
-import static com.camsolute.code.camp.lib.models.CampStatesInterface.IOAction;
+import static com.camsolute.code.camp.lib.contract.core.CampStates.IOAction;
 
 import com.camsolute.code.camp.lib.models.CampStatesInterface.PersistType;
 
@@ -53,9 +53,9 @@ public interface IsStorable {
 
     public boolean readyToSave();
     
-    public <T extends IsObjectInstance> boolean updateBeforeSave(T instance);
+    public <T extends IsObjectInstance<T>> boolean updateBeforeSave(T instance);
     
-    public <T extends IsObjectInstance> boolean notReadyToSave(T instance);
+    public <T extends IsObjectInstance<T>> boolean notReadyToSave(T instance);
 }
 
 

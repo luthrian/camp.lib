@@ -30,7 +30,8 @@ import org.apache.logging.log4j.Logger;
 
 import com.camsolute.code.camp.lib.data.CampSQL;
 import com.camsolute.code.camp.lib.models.CampInstanceDao;
-import com.camsolute.code.camp.lib.models.CampStatesInterface.IOAction;
+import com.camsolute.code.camp.lib.contract.core.CampStates;
+import com.camsolute.code.camp.lib.contract.core.CampStates.IOAction;
 import com.camsolute.code.camp.lib.models.Group;
 import com.camsolute.code.camp.lib.models.Version;
 import com.camsolute.code.camp.lib.models.CampInstanceDaoInterface.RangeTarget;
@@ -356,7 +357,7 @@ public class CustomerDao implements CustomerDaoInterface {
 			msg = "====[ customer dao call: persiste customer object instance to database]====";LOG.traceEntry(String.format(fmt,(_f+">>>>>>>>>").toUpperCase(),msg));
 		}
 // we only save objects that are ready to save
-		if(c.states().notReadyToSave(c)) {
+		if(c.states().isLoaded() || (!c.history().isCurrent() && (!c.states().isModified() || !c.states().isNew()))) {
 			return c; // skip this entry if not ready to save
 		}
 		
@@ -427,7 +428,7 @@ public class CustomerDao implements CustomerDaoInterface {
 		// we only save objects that are ready to save
 		CustomerList rcl = new CustomerList();
 		for(Customer c: cl) {
-			if(c.states().notReadyToSave(c)) continue; // skip this entry if not ready to save
+			if(c.states().isLoaded() || (!c.history().isCurrent() && (!c.states().isModified() || !c.states().isNew()))) continue; // skip this entry if not ready to save
 			rcl.add(c);
 		}
 		Connection conn = null;
@@ -1466,22 +1467,22 @@ public class CustomerDao implements CustomerDaoInterface {
 		}
 		String colDef = Util.DB._columns(tabledef, action, log);
 		String SQL = "CREATE TABLE IF NOT EXISTS " + table + " " + " ( " + colDef
-				+ ") ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
+				+ ") ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
 		if (log && !Util._IN_PRODUCTION) { msg = "----[SQL : " + SQL + "]----"; LOG.info(String.format(fmt, _f, msg)); }
 
 		String ucolDef = Util.DB._columns(updatestabledef, action, log);
 		String uSQL = "CREATE TABLE IF NOT EXISTS " + updatestable + " " + " ( " + ucolDef
-				+ ") ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
+				+ ") ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
 		if (log && !Util._IN_PRODUCTION) { msg = "----[UPDATES SQL : " + uSQL + "]----"; LOG.info(String.format(fmt, _f, msg)); }
 
 		String rcolDef = Util.DB._columns(reftabledef, action, log);
 		String rSQL = "CREATE TABLE IF NOT EXISTS " + reftable + " " + " ( " + rcolDef
-				+ ") ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
+				+ ") ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
 		if (log && !Util._IN_PRODUCTION) { msg = "----[SQL : " + rSQL + "]----"; LOG.info(String.format(fmt, _f, msg)); }
 
 		String pcolDef = Util.DB._columns(chptabledef, action, log);
 		String pSQL = "CREATE TABLE IF NOT EXISTS " + chptable + " " + " ( " + pcolDef
-				+ ") ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
+				+ ") ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
 		if (log && !Util._IN_PRODUCTION) { msg = "----[SQL : " + rSQL + "]----"; LOG.info(String.format(fmt, _f, msg)); }
 
 

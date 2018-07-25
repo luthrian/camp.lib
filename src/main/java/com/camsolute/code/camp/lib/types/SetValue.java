@@ -23,7 +23,7 @@ import com.camsolute.code.camp.lib.contract.core.Value;
 import com.camsolute.code.camp.lib.contract.core.Coordinate;
 import com.camsolute.code.camp.lib.models.Attribute.AttributeType;
 
-public class SetValue extends Value<String> {
+public class SetValue extends Value<String,SetValue> {
     public SetValue(String value){
         super(AttributeType._set,value);
     }

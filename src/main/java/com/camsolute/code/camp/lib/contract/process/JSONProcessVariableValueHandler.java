@@ -2,7 +2,7 @@ package com.camsolute.code.camp.lib.contract.process;
 
 import org.json.JSONObject;
 
-import com.camsolute.code.camp.lib.contract.core.DataMismatchException;
+import com.camsolute.code.camp.lib.contract.core.CampException.DataMismatchException;
 import com.camsolute.code.camp.lib.contract.process.ProcessVariableValue.ProcessVariableValueType;
 import com.camsolute.code.camp.lib.contract.process.ProcessVariableValue.CamundaProcessVariableValue;
 
@@ -28,6 +28,10 @@ public interface JSONProcessVariableValueHandler {
 		}
 		
 		public ProcessVariableValue fromJSONObject(JSONObject jo) throws DataMismatchException {
+			return _fromJSONObject(jo);
+		}
+		
+		public static ProcessVariableValue _fromJSONObject(JSONObject jo) throws DataMismatchException {
 			String value = jo.getString("value");
 			ProcessVariableValueType type = ProcessVariableValueType.valueOf(jo.getString("type"));
 			boolean local = jo.getBoolean("local");

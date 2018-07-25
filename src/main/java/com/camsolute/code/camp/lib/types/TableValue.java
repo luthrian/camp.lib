@@ -26,32 +26,32 @@ import com.camsolute.code.camp.lib.contract.core.Coordinate;
 import com.camsolute.code.camp.lib.models.Attribute;
 import com.camsolute.code.camp.lib.models.Attribute.AttributeType;
 
-public class TableValue extends Value<ArrayList<ArrayList<Attribute<?>>>> {
-    public TableValue(ArrayList<ArrayList<Attribute<?>>> value){
+public class TableValue extends Value<ArrayList<ArrayList<Attribute<? extends Value<?,?>>>>,TableValue> {
+    public TableValue(ArrayList<ArrayList<Attribute<? extends Value<?,?>>>> value){
         super(AttributeType._table,value);
     }
 
-    public TableValue(ArrayList<ArrayList<Attribute<?>>> value, int x, int y, int z){
+    public TableValue(ArrayList<ArrayList<Attribute<? extends Value<?,?>>>> value, int x, int y, int z){
         super(AttributeType._table,value, x, y, z);
     }
 
-    public TableValue(ArrayList<ArrayList<Attribute<?>>> value, String group, int x, int y, int z){
+    public TableValue(ArrayList<ArrayList<Attribute<? extends Value<?,?>>>> value, String group, int x, int y, int z){
         super(AttributeType._table,value, group, x, y, z);
     }
 
-    public TableValue(ArrayList<ArrayList<Attribute<?>>> value, String group, int x, int y, int z, boolean selected){
+    public TableValue(ArrayList<ArrayList<Attribute<? extends Value<?,?>>>> value, String group, int x, int y, int z, boolean selected){
         super(AttributeType._table,value, group, x, y, z, selected);
     }
 
-    public TableValue(int id, ArrayList<ArrayList<Attribute<?>>> value,String group, int x, int y, int z, boolean selected){
+    public TableValue(int id, ArrayList<ArrayList<Attribute<? extends Value<?,?>>>> value,String group, int x, int y, int z, boolean selected){
         super(id, AttributeType._table,value, group, x, y, z, selected);
     }
 
-    public TableValue(int id, ArrayList<ArrayList<Attribute<?>>> value, String group, Coordinate position){
+    public TableValue(int id, ArrayList<ArrayList<Attribute<? extends Value<?,?>>>> value, String group, Coordinate position){
         super(id, AttributeType._table,value, group, position);
     }
 
-    public TableValue(int id, ArrayList<ArrayList<Attribute<?>>> value, String group, Coordinate position, boolean selected){
+    public TableValue(int id, ArrayList<ArrayList<Attribute<? extends Value<?,?>>>> value, String group, Coordinate position, boolean selected){
         super(id, AttributeType._table,value, group, position, selected);
     }
 

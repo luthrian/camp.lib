@@ -44,7 +44,7 @@ import com.camsolute.code.camp.lib.dao.InstanceDaoInterface;
 import com.camsolute.code.camp.lib.models.Attribute;
 import com.camsolute.code.camp.lib.models.Attribute.AttributeType;
 
-public interface AttributeDaoInterface extends HasProcessReference, DaoInterface<Attribute<? extends Value<?>>>, InstanceDaoInterface<Attribute<? extends Value<?>>>{
+public interface AttributeDaoInterface extends HasProcessReference, DaoInterface<Attribute<? extends Value<?,?>>>, InstanceDaoInterface<Attribute<? extends Value<?,?>>>{
 	//DEFINITION ASPECTS
 	
   /**
@@ -63,7 +63,7 @@ public interface AttributeDaoInterface extends HasProcessReference, DaoInterface
    * @param defaultValue default value
    * @return the newly instantiated and persisted <code>Attribute</code> object.
    */
-    public Attribute<? extends Value<?>> create(int parentId, String name, AttributeType type, String businessId, String businessKey, String group, String version, String defaultValue);
+    public Attribute<? extends Value<?,?>> create(int parentId, String name, AttributeType type, String businessId, String businessKey, String group, String version, String defaultValue);
 
   /**
    * request to delete the definition aspect of an attribute by its id. 
@@ -90,7 +90,7 @@ public interface AttributeDaoInterface extends HasProcessReference, DaoInterface
    * @param attribute the <code>Attribute</code> who's definition aspects should be deleted
    * @return an Integer representing the number of <code>Attribute</code> objects deleted [0,1]
    */
-    public int delete(Attribute<? extends Value<?>> attribute);
+    public int delete(Attribute<? extends Value<?,?>> attribute);
 
   /**
    * request to delete the definition aspects of a list of attributes.
@@ -164,7 +164,7 @@ public interface AttributeDaoInterface extends HasProcessReference, DaoInterface
      * @param value value
      * @return attribute
      */
-    public Attribute<? extends Value<?>> create(int objectId, int parentId, String name, AttributeType type, String businessId, String businessKey, String attributeBusinessId, String group, String attributeGroup, String version, String defaultValue, Value<?> value);
+    public Attribute<? extends Value<?,?>> create(int objectId, int parentId, String name, AttributeType type, String businessId, String businessKey, String attributeBusinessId, String group, String attributeGroup, String version, String defaultValue, Value<?,?> value);
 
   /**
    * request to persist the value aspects of an attribute.
@@ -174,7 +174,7 @@ public interface AttributeDaoInterface extends HasProcessReference, DaoInterface
    * @param attribute attribute
    * @return attribute saved
    */
-    public Attribute<? extends Value<?>> save(int objectId, Attribute<? extends Value<?>> attribute);
+    public Attribute<? extends Value<?,?>> save(int objectId, Attribute<? extends Value<?,?>> attribute);
 
   /**
    * request to persist the value aspects of a list of attributes.
@@ -194,7 +194,7 @@ public interface AttributeDaoInterface extends HasProcessReference, DaoInterface
    * @param attribute the attribute to be updated
    * @return number updated
    */
-    public int update(int objectId, Attribute<? extends Value<?>> attribute);
+    public int update(int objectId, Attribute<? extends Value<?,?>> attribute);
 
   /**
    * request to update the value aspects of a list of attributes that has been persisted.
@@ -228,7 +228,7 @@ public interface AttributeDaoInterface extends HasProcessReference, DaoInterface
    * @param attribute attribute to be deleted
    * @return number of attributes deleted (is 1 or 0)
    */
-    public int delete(int objectId, Attribute<? extends Value<?>> attribute);
+    public int delete(int objectId, Attribute<? extends Value<?,?>> attribute);
 
   /**
    * delete a list of attributes
@@ -246,7 +246,7 @@ public interface AttributeDaoInterface extends HasProcessReference, DaoInterface
    * @param attribute definition aspects of attribute 
    * @return object loaded
    */
-    public Attribute<? extends Value<?>> load(int objectId, Attribute<? extends Value<?>> attribute);
+    public Attribute<? extends Value<?,?>> load(int objectId, Attribute<? extends Value<?,?>> attribute);
 
     public AttributeList loadByObjectId(AttributeList attributeList, int objectId);
 
@@ -258,11 +258,11 @@ public interface AttributeDaoInterface extends HasProcessReference, DaoInterface
 
     public AttributeList loadRange(AttributeList attributeList, int objectId, int startPosition, int endPosition);
 
-    public Attribute<? extends Value<?>> loadFirst(String businessId);
+    public Attribute<? extends Value<?,?>> loadFirst(String businessId);
 
-    public Attribute<? extends Value<?>> loadPrevious(Attribute<? extends Value<?>> attribute);
+    public Attribute<? extends Value<?,?>> loadPrevious(Attribute<? extends Value<?,?>> attribute);
 
-    public Attribute<? extends Value<?>> loadNext(Attribute<? extends Value<?>> attribute);
+    public Attribute<? extends Value<?,?>> loadNext(Attribute<? extends Value<?,?>> attribute);
    
     public AttributeList loadDate(String businessId, String date);
     

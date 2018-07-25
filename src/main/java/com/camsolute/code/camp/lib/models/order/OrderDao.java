@@ -29,10 +29,12 @@ import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.camsolute.code.camp.lib.contract.core.CampStates;
+import com.camsolute.code.camp.lib.contract.core.CampStates.CampStatesImpl;
+import com.camsolute.code.camp.lib.contract.core.CampStates.IOAction;
 import com.camsolute.code.camp.lib.data.CampSQL;
 import com.camsolute.code.camp.lib.models.CampInstanceDao;
 import com.camsolute.code.camp.lib.models.CampInstanceDaoInterface.RangeTarget;
-import com.camsolute.code.camp.lib.models.CampStatesInterface.IOAction;
 import com.camsolute.code.camp.lib.models.process.OrderProcessList;
 import com.camsolute.code.camp.lib.models.process.Process;
 import com.camsolute.code.camp.lib.models.process.ProcessDao;
@@ -109,7 +111,7 @@ public class OrderDao implements OrderDaoInterface {
 
 	public Order newLoadById(int id, boolean log) {
 		Order o = new Order();
-		o.persistance().loadById(id);	
+		o = loadById(id,log);	
 		return o;
 	}
 	@Override
@@ -1336,27 +1338,27 @@ public class OrderDao implements OrderDaoInterface {
 		}
 		String colDef = Util.DB._columns(tabledef, action, log);
 		String SQL = "CREATE TABLE IF NOT EXISTS " + table + " " + " ( " + colDef
-				+ ") ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
+				+ ") ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
 		if (log && !Util._IN_PRODUCTION) { msg = "----[SQL : " + SQL + "]----"; LOG.info(String.format(fmt, _f, msg)); }
 
 		String ucolDef = Util.DB._columns(updatestabledef, action, log);
 		String uSQL = "CREATE TABLE IF NOT EXISTS " + updatestable + " " + " ( " + ucolDef
-				+ ") ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
+				+ ") ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
 		if (log && !Util._IN_PRODUCTION) { msg = "----[UPDATES SQL : " + uSQL + "]----"; LOG.info(String.format(fmt, _f, msg)); }
 
 		String ohpcolDef = Util.DB._columns(ohptabledef, action, log);
 		String ohpSQL = "CREATE TABLE IF NOT EXISTS " + ohptable + " " + " ( " + ohpcolDef
-				+ ") ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
+				+ ") ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
 		if (log && !Util._IN_PRODUCTION) { msg = "----[SQL : " + ohpSQL + "]----"; LOG.info(String.format(fmt, _f, msg)); }
 
 		String ohocolDef = Util.DB._columns(ohotabledef, action, log);
 		String ohoSQL = "CREATE TABLE IF NOT EXISTS " + ohotable + " " + " ( " + ohocolDef
-				+ ") ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
+				+ ") ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
 		if (log && !Util._IN_PRODUCTION) { msg = "----[SQL : " + ohoSQL + "]----"; LOG.info(String.format(fmt, _f, msg)); }
 
 		String ohopcolDef = Util.DB._columns(ohoptabledef, action, log);
 		String ohopSQL = "CREATE TABLE IF NOT EXISTS " + ohoptable + " " + " ( " + ohopcolDef
-				+ ") ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
+				+ ") ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ";
 		if (log && !Util._IN_PRODUCTION) { msg = "----[SQL : " + ohopSQL + "]----"; LOG.info(String.format(fmt, _f, msg)); }
 
 		Connection conn = null;

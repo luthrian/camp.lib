@@ -69,7 +69,7 @@ public interface ProcessInterface<T>  extends IsProcess<T>, IsObserver<T>, HasId
 		return _fromJSONObject(new JSONObject(json));
 	}
 	
-	public static <U extends Value<?>> Process<?> _fromJSONObject(JSONObject jo) {
+	public static <U extends Value<?,?>> Process<?> _fromJSONObject(JSONObject jo) {
 		int id = 0;
 		if(jo.has("id")) {
 			if(!Util._IN_PRODUCTION){String msg = "----[jo.get.id("+jo.get("id")+")]----";LOG.info(String.format(fmt, "_fromJSONObject",msg));}
@@ -131,7 +131,7 @@ public interface ProcessInterface<T>  extends IsProcess<T>, IsObserver<T>, HasId
 	
 	}
 	
-	public static <U extends Value<?>> Process<?> _process(String businessId, String executionId, String instanceId, String businessKey, String processName, String definitionId, String tenantId, String caseInstanceId, boolean ended, boolean suspended, ProcessType type){
+	public static <U extends Value<?,?>> Process<?> _process(String businessId, String executionId, String instanceId, String businessKey, String processName, String definitionId, String tenantId, String caseInstanceId, boolean ended, boolean suspended, ProcessType type){
 		switch(type){//TODO add the other process types
 		case customer_process:
 		case customer_management_process:
@@ -168,7 +168,7 @@ public interface ProcessInterface<T>  extends IsProcess<T>, IsObserver<T>, HasId
 		}
 		return null;
 	}
-	public static <U extends Value<?>> Process<?> _process(String businessId, String instanceId, String businessKey, String processName, String definitionId, String tenantId, String caseInstanceId, boolean ended, boolean suspended, ProcessType type){
+	public static <U extends Value<?,?>> Process<?> _process(String businessId, String instanceId, String businessKey, String processName, String definitionId, String tenantId, String caseInstanceId, boolean ended, boolean suspended, ProcessType type){
 		switch(type){//TODO add the other process types
 		case customer_process:
 		case customer_management_process:
