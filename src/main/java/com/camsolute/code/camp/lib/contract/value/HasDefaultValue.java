@@ -32,6 +32,7 @@ public interface HasDefaultValue {
 	 * Request to set the default value of an object instance that encapsulates a value aspect.
 	 *  
 	 * @param value the default value of an object instance that encapsulates a value aspect
+	 * @param registerUpdate boolean value that toggles whether the update will be registered as a change which must be persisted
 	 * @return JSON String representation of the default value prior the request. This value is NULL if no default
 	 * value was previously set.
 	 */

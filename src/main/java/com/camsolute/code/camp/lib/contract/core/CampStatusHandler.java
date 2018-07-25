@@ -14,7 +14,8 @@ public interface CampStatusHandler {
 	 * @param newStatus the new process relevant status aspect value.
 	 * @param registerUpdate a boolean flag indicating if the update should be registered in the states aspect via the <code>IsBusinessObject</code> contract. 
 	 * @return the value of the previous process relevant status aspect.
-	 * @throws StatusMismatchException exception thrown if the <codE>newStatus<code> parameter value declaring class differs from the CampStatus handlers status aspect
+	 * @throws StatusMismatchException exception thrown if the <code>newStatus</code> parameter value declaring class differs from the CampStatus handlers status aspect
+	 * @throws StatusDirtyException exception thrown if the status aspect has previously been updated but the business object concerned not yet persisted
 	 */
   public Enum<?> updateStatus(IsBusinessObject bo, Enum<?> newStatus, boolean registerUpdate) throws StatusMismatchException, StatusDirtyException;
 

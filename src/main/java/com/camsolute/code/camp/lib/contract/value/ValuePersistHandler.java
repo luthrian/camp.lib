@@ -141,6 +141,7 @@ public interface ValuePersistHandler<T,Q extends Value<T,Q>> { //extends SQLRead
 
   /**
    * Returns the String representation of the value data formated for SQL.
+   * @param value the String value SQL representation of the value aspects value data 
    * @return SQL String representation of value data.
    */
   public String sqlValue(Value<?,?> value);
@@ -163,6 +164,9 @@ public interface ValuePersistHandler<T,Q extends Value<T,Q>> { //extends SQLRead
 
   public int deleteByObjectId(String objectId) throws PersistanceException;
 
+  public int createTables() throws SQLException;
+  
+  public int clearTables() throws SQLException;
 //  public static String _updateValuePSQL() {
 //    return valueSQL.updatePSQL(" `"+valueSQL.id+"`=?");
 //  }
@@ -250,7 +254,7 @@ public interface ValuePersistHandler<T,Q extends Value<T,Q>> { //extends SQLRead
     return dbs;
   }
 
-  public abstract class AbstractSQLValueHandler<T,Q extends Value<T,Q>> implements ValuePersistHandler<T,Q> {
+  public abstract class AbstractValuePersistHandler<T,Q extends Value<T,Q>> implements ValuePersistHandler<T,Q> {
 
     public Q create(String objectId, ValueType type, String valueGroup, T value, int posX, int posY, int posZ, boolean selected) throws PersistanceException {
       @SuppressWarnings("unchecked")
@@ -521,6 +525,42 @@ public interface ValuePersistHandler<T,Q extends Value<T,Q>> { //extends SQLRead
       return vl;
     }
 
+    public int createTables() throws SQLException {
+      Connection conn = null;
+      Statement dbs = null;
+      int retVal = 0;
+      try {
+        // get a connection TODO: need to setup connection pool
+        conn = Util.DB.__conn();
+        dbs = conn.createStatement();
+        retVal = dbs.executeUpdate(valueSQL.createSQL());
+     } catch (SQLException e) {
+        throw e;
+      } finally {
+        Util.DB.__release(conn);
+        Util.DB.releaseStatement(dbs);
+      }
+      return retVal;
+    }
+
+    public int clearTables() throws SQLException {
+      Connection conn = null;
+      Statement dbs = null;
+      int retVal = 0;
+      try {
+        // get a connection TODO: need to setup connection pool
+        conn = Util.DB.__conn();
+        dbs = conn.createStatement();
+        retVal = dbs.executeUpdate(valueSQL.clearSQL());
+     } catch (SQLException e) {
+        throw e;
+      } finally {
+        Util.DB.__release(conn);
+        Util.DB.releaseStatement(dbs);
+      }
+      return retVal;
+    }
+
     public Value<?,?> toValue(ResultSet rs) throws SQLException {
       Value<?,?> value = Value.ValueFactory.generateValue(ValueType.valueOf(rs.getString(valueSQL.valueType.columnName())));
       value.parentId(rs.getString(valueSQL.parentId.columnName()), false);
@@ -567,7 +607,7 @@ public interface ValuePersistHandler<T,Q extends Value<T,Q>> { //extends SQLRead
 
   }
 
-  public class BooleanSQLValueHandler extends AbstractSQLValueHandler<Boolean,BooleanValue> {
+  public class BooleanValuePersistHandler extends AbstractValuePersistHandler<Boolean,BooleanValue> {
 
     public String sqlValue(Value<?, ?> value) {
       return "'"+value.toValueString()+"'";
@@ -586,7 +626,7 @@ public interface ValuePersistHandler<T,Q extends Value<T,Q>> { //extends SQLRead
 
   }
 
-  public class ComplexSQLValueHandler extends AbstractSQLValueHandler<ValueListComplex,ComplexValue> {
+  public class ComplexValuePersistHandler extends AbstractValuePersistHandler<ValueListComplex,ComplexValue> {
 
     public String sqlValue(Value<?, ?> value) {
       return "NULL";
@@ -599,7 +639,7 @@ public interface ValuePersistHandler<T,Q extends Value<T,Q>> { //extends SQLRead
     }
   }
 
-  public class MapSQLValueHandler extends AbstractSQLValueHandler<ValueComplex,MapValue> {
+  public class MapValuePersistHandler extends AbstractValuePersistHandler<ValueComplex,MapValue> {
 
     public String sqlValue(Value<?, ?> value) {
       return "NULL";
@@ -612,7 +652,7 @@ public interface ValuePersistHandler<T,Q extends Value<T,Q>> { //extends SQLRead
     }
   }
 
-  public class ListSQLValueHandler extends AbstractSQLValueHandler<ValueList,ListValue> {
+  public class ListValuePersistHandler extends AbstractValuePersistHandler<ValueList,ListValue> {
 
     public String sqlValue(Value<?, ?> value) {
       return "NULL";
@@ -625,7 +665,7 @@ public interface ValuePersistHandler<T,Q extends Value<T,Q>> { //extends SQLRead
     }
   }
 
-  public class DateTimeSQLValueHandler extends AbstractSQLValueHandler<DateTime,DateTimeValue> {
+  public class DateTimeValuePersistHandler extends AbstractValuePersistHandler<DateTime,DateTimeValue> {
     public String sqlValue(Value<?, ?> value) {
       return "'"+value.toValueString()+"'";
     }
@@ -643,7 +683,7 @@ public interface ValuePersistHandler<T,Q extends Value<T,Q>> { //extends SQLRead
 
   }
 
-  public class DateSQLValueHandler extends AbstractSQLValueHandler<DateTime,DateValue> {
+  public class DateValuePersistHandler extends AbstractValuePersistHandler<DateTime,DateValue> {
     public String sqlValue(Value<?, ?> value) {
       return "'"+value.toValueString()+"'";
     }
@@ -661,7 +701,7 @@ public interface ValuePersistHandler<T,Q extends Value<T,Q>> { //extends SQLRead
 
   }
 
-  public class TimeSQLValueHandler extends AbstractSQLValueHandler<DateTime,TimeValue> {
+  public class TimeValuePersistHandler extends AbstractValuePersistHandler<DateTime,TimeValue> {
     public String sqlValue(Value<?, ?> value) {
       return "'"+value.toValueString()+"'";
     }
@@ -678,7 +718,7 @@ public interface ValuePersistHandler<T,Q extends Value<T,Q>> { //extends SQLRead
 
   }
 
-  public class IntegerSQLValueHandler extends AbstractSQLValueHandler<Integer,IntegerValue> {
+  public class IntegerValuePersistHandler extends AbstractValuePersistHandler<Integer,IntegerValue> {
     public String sqlValue(Value<?, ?> value) {
       return "'"+value.toValueString()+"'";
     }
@@ -696,7 +736,7 @@ public interface ValuePersistHandler<T,Q extends Value<T,Q>> { //extends SQLRead
 
   }
 
-  public class StringSQLValueHandler extends AbstractSQLValueHandler<String,StringValue> {
+  public class StringValuePersistHandler extends AbstractValuePersistHandler<String,StringValue> {
     public String sqlValue(Value<?, ?> value) {
       return "'"+value.toValueString()+"'";
     }
@@ -713,7 +753,7 @@ public interface ValuePersistHandler<T,Q extends Value<T,Q>> { //extends SQLRead
 
   }
 
-  public class TableSQLValueHandler extends AbstractSQLValueHandler<ValueTable,TableValue> {
+  public class TableValuePersistHandler extends AbstractValuePersistHandler<ValueTable,TableValue> {
     public String sqlValue(Value<?, ?> value) {
       return "NULL";
     }
@@ -724,7 +764,7 @@ public interface ValuePersistHandler<T,Q extends Value<T,Q>> { //extends SQLRead
   }
 
   // TODO: do we need?
-  public class BinarySQLValueHandler extends AbstractSQLValueHandler<Binary,BinaryValue> {
+  public class BinaryValuePersistHandler extends AbstractValuePersistHandler<Binary,BinaryValue> {
     public String sqlValue(Value<?, ?> value) {
       return "'"+value.toValueString()+"'";
     }
@@ -742,7 +782,7 @@ public interface ValuePersistHandler<T,Q extends Value<T,Q>> { //extends SQLRead
 
   }
 
-  public class TextSQLValueHandler extends AbstractSQLValueHandler<String, TextValue> {
+  public class TextValuePersistHandler extends AbstractValuePersistHandler<String, TextValue> {
     public String sqlValue(Value<?, ?> value) {
       return "'"+value.toValueString()+"'";
     }
@@ -758,7 +798,7 @@ public interface ValuePersistHandler<T,Q extends Value<T,Q>> { //extends SQLRead
     }
   }
 
-  public class EnumSQLValueHandler extends AbstractSQLValueHandler<String, EnumValue> {
+  public class EnumValuePersistHandler extends AbstractValuePersistHandler<String, EnumValue> {
     public String sqlValue(Value<?, ?> value) {
       return "'"+value.toValueString()+"'";
     }
@@ -774,7 +814,7 @@ public interface ValuePersistHandler<T,Q extends Value<T,Q>> { //extends SQLRead
     }
   }
 
-  public class SetSQLValueHandler extends AbstractSQLValueHandler<String, SetValue> {
+  public class SetValuePersistHandler extends AbstractValuePersistHandler<String, SetValue> {
     public String sqlValue(Value<?, ?> value) {
       return "'"+value.toValueString()+"'";
     }
@@ -791,7 +831,7 @@ public interface ValuePersistHandler<T,Q extends Value<T,Q>> { //extends SQLRead
   }
 
 
-  public class TimestampSQLValueHandler extends AbstractSQLValueHandler<Timestamp, TimestampValue> {
+  public class TimestampValuePersistHandler extends AbstractValuePersistHandler<Timestamp, TimestampValue> {
     public String sqlValue(Value<?, ?> value) {
       return "'"+value.toValueString()+"'";
     }

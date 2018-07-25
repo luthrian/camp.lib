@@ -289,13 +289,13 @@ public interface Value<T,Q extends Value<T,Q>> extends HasId, HasValueParent, Ha
 		public Boolean data() { return myValue; }
 		
 		protected BooleanValue() {
-			sqlHandler(new ValuePersistHandler.BooleanSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.BooleanValuePersistHandler());
 			jsonHandler(new JSONValueHandler.BooleanJSONValueHandler());
 		}
 		
 		protected BooleanValue(Boolean value) {
 			this.myValue = value;
-			sqlHandler(new ValuePersistHandler.BooleanSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.BooleanValuePersistHandler());
 			jsonHandler(new JSONValueHandler.BooleanJSONValueHandler());
 		}
 		public ValueType type() {
@@ -330,13 +330,13 @@ public interface Value<T,Q extends Value<T,Q>> extends HasId, HasValueParent, Ha
 		public ValueListComplex data() { return myValue; }
 	
 		protected ComplexValue() {
-			sqlHandler(new ValuePersistHandler.ComplexSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.ComplexValuePersistHandler());
 			jsonHandler(new JSONValueHandler.ComplexJSONValueHandler());
 		}
 		
 		protected ComplexValue(ValueListComplex value) {
 			this.myValue = value;
-			sqlHandler(new ValuePersistHandler.ComplexSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.ComplexValuePersistHandler());
 			jsonHandler(new JSONValueHandler.ComplexJSONValueHandler());
 		}
 
@@ -419,13 +419,13 @@ public interface Value<T,Q extends Value<T,Q>> extends HasId, HasValueParent, Ha
 		public DateTime data() { return myValue; }
 		
 		protected DateValue() {
-			sqlHandler(new ValuePersistHandler.DateSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.DateValuePersistHandler());
 			jsonHandler(new JSONValueHandler.DateJSONValueHandler());
 		}
 		
 		protected DateValue(DateTime value) {
 			this.myValue = value;
-			sqlHandler(new ValuePersistHandler.DateSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.DateValuePersistHandler());
 			jsonHandler(new JSONValueHandler.DateJSONValueHandler());
 		}
 
@@ -461,13 +461,13 @@ public interface Value<T,Q extends Value<T,Q>> extends HasId, HasValueParent, Ha
 		public DateTime data() { return myValue; }
 		
 		protected DateTimeValue() {
-			sqlHandler(new ValuePersistHandler.DateTimeSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.DateTimeValuePersistHandler());
 			jsonHandler(new JSONValueHandler.DateTimeJSONValueHandler());
 		}
 		
 		protected DateTimeValue(DateTime value) {
 			this.myValue = value;
-			sqlHandler(new ValuePersistHandler.DateTimeSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.DateTimeValuePersistHandler());
 			jsonHandler(new JSONValueHandler.DateTimeJSONValueHandler());
 		}
 
@@ -504,13 +504,13 @@ public interface Value<T,Q extends Value<T,Q>> extends HasId, HasValueParent, Ha
 	 public String data() { return myValue; }
 
 	 protected EnumValue() {
-			sqlHandler(new ValuePersistHandler.EnumSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.EnumValuePersistHandler());
 			jsonHandler(new JSONValueHandler.EnumJSONValueHandler());
 		}
 		
 		protected EnumValue(String value) {
 			this.myValue = value;
-			sqlHandler(new ValuePersistHandler.EnumSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.EnumValuePersistHandler());
 			jsonHandler(new JSONValueHandler.EnumJSONValueHandler());
 		}
 
@@ -547,13 +547,13 @@ public interface Value<T,Q extends Value<T,Q>> extends HasId, HasValueParent, Ha
 	 public Integer data() { return myValue; }
 
 	 protected IntegerValue() {
-			sqlHandler(new ValuePersistHandler.IntegerSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.IntegerValuePersistHandler());
 			jsonHandler(new JSONValueHandler.IntegerJSONValueHandler());
 		}
 		
 		protected IntegerValue(int value) {
 			this.myValue = value;
-			sqlHandler(new ValuePersistHandler.IntegerSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.IntegerValuePersistHandler());
 			jsonHandler(new JSONValueHandler.IntegerJSONValueHandler());
 		}
 
@@ -590,13 +590,13 @@ public interface Value<T,Q extends Value<T,Q>> extends HasId, HasValueParent, Ha
 	 public ValueList data() { return myValue; }
 
 	 protected ListValue() {
-			sqlHandler(new ValuePersistHandler.ListSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.ListValuePersistHandler());
 			jsonHandler(new JSONValueHandler.ListJSONValueHandler());
 		}
 		
 		protected ListValue(ValueList value) {
 			this.myValue = value;
-			sqlHandler(new ValuePersistHandler.ListSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.ListValuePersistHandler());
 			jsonHandler(new JSONValueHandler.ListJSONValueHandler());
 		}
 
@@ -662,13 +662,13 @@ public interface Value<T,Q extends Value<T,Q>> extends HasId, HasValueParent, Ha
 	 public ValueComplex data() { return myValue; }
 
 	 protected MapValue() {
-			sqlHandler(new ValuePersistHandler.MapSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.MapValuePersistHandler());
 			jsonHandler(new JSONValueHandler.MapJSONValueHandler());
 		}
 		
 		protected MapValue(ValueComplex value) {
 			this.myValue = value;
-			sqlHandler(new ValuePersistHandler.MapSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.MapValuePersistHandler());
 			jsonHandler(new JSONValueHandler.MapJSONValueHandler());
 		}
 
@@ -745,13 +745,13 @@ public interface Value<T,Q extends Value<T,Q>> extends HasId, HasValueParent, Ha
 	 public String data() { return myValue; }
 
 	 protected SetValue() {
-			sqlHandler(new ValuePersistHandler.SetSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.SetValuePersistHandler());
 			jsonHandler(new JSONValueHandler.SetJSONValueHandler());
 		}
 		
 		protected SetValue(String value) {
 			this.myValue = value;
-			sqlHandler(new ValuePersistHandler.SetSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.SetValuePersistHandler());
 			jsonHandler(new JSONValueHandler.SetJSONValueHandler());
 		}
 
@@ -787,13 +787,13 @@ public interface Value<T,Q extends Value<T,Q>> extends HasId, HasValueParent, Ha
 	 public String data() { return myValue; }
 
 	 protected StringValue() {
-			sqlHandler(new ValuePersistHandler.StringSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.StringValuePersistHandler());
 			jsonHandler(new JSONValueHandler.StringJSONValueHandler());
 		}
 		
 		protected StringValue(String value) {
 			this.myValue = value;
-			sqlHandler(new ValuePersistHandler.StringSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.StringValuePersistHandler());
 			jsonHandler(new JSONValueHandler.StringJSONValueHandler());
 		}
 
@@ -830,13 +830,13 @@ public interface Value<T,Q extends Value<T,Q>> extends HasId, HasValueParent, Ha
 	 public ValueTable data() { return myValue; }
 
 	 protected TableValue() {
-			sqlHandler(new ValuePersistHandler.TableSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.TableValuePersistHandler());
 			jsonHandler(new JSONValueHandler.TableJSONValueHandler());
 		}
 		
 		protected TableValue(ValueTable value) {
 			this.myValue = value;
-			sqlHandler(new ValuePersistHandler.TableSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.TableValuePersistHandler());
 			jsonHandler(new JSONValueHandler.TableJSONValueHandler());
 		}
 
@@ -935,13 +935,13 @@ public interface Value<T,Q extends Value<T,Q>> extends HasId, HasValueParent, Ha
 	 public String data() { return myValue; }
 
 	 protected TextValue() {
-			sqlHandler(new ValuePersistHandler.TextSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.TextValuePersistHandler());
 			jsonHandler(new JSONValueHandler.TextJSONValueHandler());
 		}
 		
 		protected TextValue(String value) {
 			this.myValue = value;
-			sqlHandler(new ValuePersistHandler.TextSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.TextValuePersistHandler());
 			jsonHandler(new JSONValueHandler.TextJSONValueHandler());
 		}
 
@@ -978,13 +978,13 @@ public interface Value<T,Q extends Value<T,Q>> extends HasId, HasValueParent, Ha
 		public DateTime data() { return myValue; }
 		
 		protected TimeValue() {
-			sqlHandler(new ValuePersistHandler.TimeSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.TimeValuePersistHandler());
 			jsonHandler(new JSONValueHandler.TimeJSONValueHandler());
 		}
 		
 		protected TimeValue(DateTime value) {
 			this.myValue = value;
-			sqlHandler(new ValuePersistHandler.TimeSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.TimeValuePersistHandler());
 			jsonHandler(new JSONValueHandler.TimeJSONValueHandler());
 		}
 
@@ -1020,13 +1020,13 @@ public interface Value<T,Q extends Value<T,Q>> extends HasId, HasValueParent, Ha
 		public Timestamp data() { return myValue; }
 		
 		protected TimestampValue() {
-			sqlHandler(new ValuePersistHandler.TimestampSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.TimestampValuePersistHandler());
 			jsonHandler(new JSONValueHandler.TimestampJSONValueHandler());
 		}
 		
 		protected TimestampValue(Timestamp value) {
 			this.myValue = value;
-			sqlHandler(new ValuePersistHandler.TimestampSQLValueHandler());
+			sqlHandler(new ValuePersistHandler.TimestampValuePersistHandler());
 			jsonHandler(new JSONValueHandler.TimestampJSONValueHandler());
 		}
 
@@ -1061,13 +1061,13 @@ public interface Value<T,Q extends Value<T,Q>> extends HasId, HasValueParent, Ha
 		public Binary data() { return myValue; }
 		
 		protected BinaryValue() {
-			sqlHandler(new ValuePersistHandler.BinarySQLValueHandler());
+			sqlHandler(new ValuePersistHandler.BinaryValuePersistHandler());
 			jsonHandler(new JSONValueHandler.BinaryJSONValueHandler());
 		}
 		
 		protected BinaryValue(Binary value) {
 			this.myValue = value;
-			sqlHandler(new ValuePersistHandler.BinarySQLValueHandler());
+			sqlHandler(new ValuePersistHandler.BinaryValuePersistHandler());
 			jsonHandler(new JSONValueHandler.BinaryJSONValueHandler());
 		}
 		public ValueType type() {

@@ -218,7 +218,7 @@ public interface RestValueHandler<T, Q extends Value<T, Q>> extends RestHandler{
 
     	public RestBooleanValueHandler() {
     		this.jsonHandler = new BooleanJSONValueHandler();
-    		this.sqlHandler = new BooleanSQLValueHandler();
+    		this.sqlHandler = new BooleanValuePersistHandler();
     	}
     	
 			@Override
@@ -236,7 +236,7 @@ public interface RestValueHandler<T, Q extends Value<T, Q>> extends RestHandler{
 
     	public RestComplexValueHandler() {
     		this.jsonHandler = new ComplexJSONValueHandler();
-    		this.sqlHandler = new ComplexSQLValueHandler();
+    		this.sqlHandler = new ComplexValuePersistHandler();
     	}
     	
 			@Override
@@ -254,7 +254,7 @@ public interface RestValueHandler<T, Q extends Value<T, Q>> extends RestHandler{
 
     	public RestBinaryValueHandler() {
     		this.jsonHandler = new BinaryJSONValueHandler();
-    		this.sqlHandler = new BinarySQLValueHandler();
+    		this.sqlHandler = new BinaryValuePersistHandler();
     	}
     	
 			@Override
@@ -272,7 +272,7 @@ public interface RestValueHandler<T, Q extends Value<T, Q>> extends RestHandler{
 
     	public RestDateValueHandler() {
     		this.jsonHandler = new DateJSONValueHandler();
-    		this.sqlHandler = new DateSQLValueHandler();
+    		this.sqlHandler = new DateValuePersistHandler();
     	}
     	
 			@Override
@@ -290,7 +290,7 @@ public interface RestValueHandler<T, Q extends Value<T, Q>> extends RestHandler{
 
     	public RestDateTimeValueHandler() {
     		this.jsonHandler = new DateTimeJSONValueHandler();
-    		this.sqlHandler = new DateTimeSQLValueHandler();
+    		this.sqlHandler = new DateTimeValuePersistHandler();
     	}
     	
 			@Override
@@ -308,7 +308,7 @@ public interface RestValueHandler<T, Q extends Value<T, Q>> extends RestHandler{
 
     	public RestEnumValueHandler() {
     		this.jsonHandler = new EnumJSONValueHandler();
-    		this.sqlHandler = new EnumSQLValueHandler();
+    		this.sqlHandler = new EnumValuePersistHandler();
     	}
     	
 			@Override
@@ -326,7 +326,7 @@ public interface RestValueHandler<T, Q extends Value<T, Q>> extends RestHandler{
 
     	public RestIntegerValueHandler() {
     		this.jsonHandler = new IntegerJSONValueHandler();
-    		this.sqlHandler = new IntegerSQLValueHandler();
+    		this.sqlHandler = new IntegerValuePersistHandler();
     	}
     	
 			@Override
@@ -344,7 +344,7 @@ public interface RestValueHandler<T, Q extends Value<T, Q>> extends RestHandler{
 
     	public RestListValueHandler() {
     		this.jsonHandler = new ListJSONValueHandler();
-    		this.sqlHandler = new ListSQLValueHandler();
+    		this.sqlHandler = new ListValuePersistHandler();
     	}
     	
 			@Override
@@ -362,7 +362,7 @@ public interface RestValueHandler<T, Q extends Value<T, Q>> extends RestHandler{
 
     	public RestMapValueHandler() {
     		this.jsonHandler = new MapJSONValueHandler();
-    		this.sqlHandler = new MapSQLValueHandler();
+    		this.sqlHandler = new MapValuePersistHandler();
     	}
     	
 			@Override
@@ -380,7 +380,7 @@ public interface RestValueHandler<T, Q extends Value<T, Q>> extends RestHandler{
 
     	public RestSetValueHandler() {
     		this.jsonHandler = new SetJSONValueHandler();
-    		this.sqlHandler = new SetSQLValueHandler();
+    		this.sqlHandler = new SetValuePersistHandler();
     	}
     	
 			@Override
@@ -398,7 +398,7 @@ public interface RestValueHandler<T, Q extends Value<T, Q>> extends RestHandler{
 
     	public RestStringValueHandler() {
     		this.jsonHandler = new StringJSONValueHandler();
-    		this.sqlHandler = new StringSQLValueHandler();
+    		this.sqlHandler = new StringValuePersistHandler();
     	}
     	
 			@Override
@@ -416,7 +416,7 @@ public interface RestValueHandler<T, Q extends Value<T, Q>> extends RestHandler{
 
     	public RestTableValueHandler() {
     		this.jsonHandler = new TableJSONValueHandler();
-    		this.sqlHandler = new TableSQLValueHandler();
+    		this.sqlHandler = new TableValuePersistHandler();
     	}
     	
 			@Override
@@ -434,7 +434,7 @@ public interface RestValueHandler<T, Q extends Value<T, Q>> extends RestHandler{
 
     	public RestTimeValueHandler() {
     		this.jsonHandler = new TimeJSONValueHandler();
-    		this.sqlHandler = new TimeSQLValueHandler();
+    		this.sqlHandler = new TimeValuePersistHandler();
     	}
     	
 			public JSONValueHandler<DateTime, TimeValue> jsonHandler() {
@@ -450,7 +450,7 @@ public interface RestValueHandler<T, Q extends Value<T, Q>> extends RestHandler{
 
     	public RestTextValueHandler() {
     		this.jsonHandler = new TextJSONValueHandler();
-    		this.sqlHandler = new TextSQLValueHandler();
+    		this.sqlHandler = new TextValuePersistHandler();
     	}
     	
 			public JSONValueHandler<String, TextValue> jsonHandler() {
@@ -466,7 +466,7 @@ public interface RestValueHandler<T, Q extends Value<T, Q>> extends RestHandler{
 
     	public RestTimestampValueHandler() {
     		this.jsonHandler = new TimestampJSONValueHandler();
-    		this.sqlHandler = new TimestampSQLValueHandler();
+    		this.sqlHandler = new TimestampValuePersistHandler();
     	}
     	
 			public JSONValueHandler<Timestamp, TimestampValue> jsonHandler() {

@@ -3372,7 +3372,6 @@ public class CampSQL {
    * @param table table name
    * @param tdef table definition
    * @param action type of db action
-   * @param log log switch
    * @return a String representation of the SQL 'column_name [column_definition] [=?]' dependent on the type of DB action.
    */
   //TODO: add logging;
@@ -3391,7 +3390,6 @@ public class CampSQL {
    *
    * @param tdef table definition
    * @param action type of db action
-   * @param log log switch
    * @return a String representation of the SQL 'column_name [column_definition] [=?]' dependent on the type of DB action.
    */
   //TODO: add logging;

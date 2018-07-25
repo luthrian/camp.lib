@@ -55,7 +55,7 @@ public interface HasValueId {
 	/**
 	 * Request to set the value aspect id. Return the previous value aspect id.
 	 * 
-	 * @param valueId new value id
+	 * @param newValueId new value id
 	 * @return previous value aspect id
 	 */
 	public String valueId(String newValueId);

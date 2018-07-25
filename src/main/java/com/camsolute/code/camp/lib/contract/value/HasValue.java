@@ -63,10 +63,10 @@ public interface HasValue {
 	 * Request to update the value of a business object instance. The value aspect of a business object instance must generally 
 	 * available during the all active periods of its life-cycle. An update therefore generally requires that the value aspect be 
 	 * persisted to storage to ensure this availability. Persisting the value aspect to storage after the request has been made
-	 * may not always be required; this can be controlled by setting the <code>registerStateModified</parameter> to false.
+	 * may not always be required; this can be controlled by setting the <code>registerUpdate</code> parameter to false.
 	 * An update does not necessarily require the notification of associated processes.
-	 * @param newValue<?,?> new value
-	 * @param registerStateModified if true then call Value.states().modify() 
+	 * @param newValue new value
+	 * @param registerUpdate if true then call Value.states().modify() 
 	 * @return previous value
 	 */
   public Value<?,?> updateValue(Value<?,?> newValue, boolean registerUpdate);
