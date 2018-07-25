@@ -174,6 +174,37 @@ public interface ValuePersistHandler<T,Q extends Value<T,Q>> { //extends SQLRead
 //  public static String _updateValueSQL() {
 //    return valueSQL.updateSQL(" `"+valueSQL.id+"`=%s");
 //  }
+  
+  public static ValueList _saveList(String objectId, ValueList vl) throws PersistanceException {
+    Connection conn = null;
+    ResultSet rs = null;
+    PreparedStatement dbp = null;
+    Statement dbs = null;
+    int retVal = 0;
+    boolean dbsOK = false;
+    try {
+      // get a connection TODO: need to setup connection pool
+      conn = Util.DB.__conn();
+      dbs = conn.prepareStatement(valueSQL.insertPSQL());
+      for(Value<?,?> value:vl) {
+        dbp = _addValueInsertToPreparedStatement(objectId, value, dbp);
+      }
+
+      retVal = Util.Math.addArray(dbs.executeBatch());
+      if (retVal == 0) {
+        throw new PersistanceException("Failed to persist Value instance to database.");
+      }
+    } catch (Exception e) {
+      throw new PersistanceException("SQL Exception!",e);
+    } finally {
+      Util.DB.__release(conn);
+      if(dbp != null) Util.DB.releaseStatement(dbp);
+      if(dbs != null) Util.DB.releaseStatement(dbs);
+      Util.DB.releaseRS(rs);
+    }
+    return vl;
+  }
+  
   public static int _createTables() throws SQLException {
     Connection conn = null;
     Statement dbs = null;
@@ -334,33 +365,7 @@ public interface ValuePersistHandler<T,Q extends Value<T,Q>> { //extends SQLRead
     }
 
     public ValueList saveList(String objectId, ValueList vl) throws PersistanceException {
-      Connection conn = null;
-      ResultSet rs = null;
-      PreparedStatement dbp = null;
-      Statement dbs = null;
-      int retVal = 0;
-      boolean dbsOK = false;
-      try {
-        // get a connection TODO: need to setup connection pool
-        conn = Util.DB.__conn();
-        dbs = conn.prepareStatement(valueSQL.insertPSQL());
-        for(Value<?,?> value:vl) {
-          dbp = _addValueInsertToPreparedStatement(objectId, value, dbp);
-        }
-
-        retVal = Util.Math.addArray(dbs.executeBatch());
-        if (retVal == 0) {
-          throw new PersistanceException("Failed to persist Value instance to database.");
-        }
-      } catch (Exception e) {
-        throw new PersistanceException("SQL Exception!",e);
-      } finally {
-        Util.DB.__release(conn);
-        if(dbp != null) Util.DB.releaseStatement(dbp);
-        if(dbs != null) Util.DB.releaseStatement(dbs);
-        Util.DB.releaseRS(rs);
-      }
-      return vl;
+    	return _saveList(objectId, vl);
     }
 
     public int update(String objectId, Q value) throws PersistanceException {
