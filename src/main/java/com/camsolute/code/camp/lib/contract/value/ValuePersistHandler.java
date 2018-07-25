@@ -174,6 +174,42 @@ public interface ValuePersistHandler<T,Q extends Value<T,Q>> { //extends SQLRead
 //  public static String _updateValueSQL() {
 //    return valueSQL.updateSQL(" `"+valueSQL.id+"`=%s");
 //  }
+  public static int _createTables() throws SQLException {
+    Connection conn = null;
+    Statement dbs = null;
+    int retVal = 0;
+    try {
+      // get a connection TODO: need to setup connection pool
+      conn = Util.DB.__conn();
+      dbs = conn.createStatement();
+      retVal = dbs.executeUpdate(valueSQL.createSQL());
+   } catch (SQLException e) {
+      throw e;
+    } finally {
+      Util.DB.__release(conn);
+      Util.DB.releaseStatement(dbs);
+    }
+    return retVal;
+  }
+
+  public static int _clearTables() throws SQLException {
+    Connection conn = null;
+    Statement dbs = null;
+    int retVal = 0;
+    try {
+      // get a connection TODO: need to setup connection pool
+      conn = Util.DB.__conn();
+      dbs = conn.createStatement();
+      retVal = dbs.executeUpdate(valueSQL.clearSQL());
+   } catch (SQLException e) {
+      throw e;
+    } finally {
+      Util.DB.__release(conn);
+      Util.DB.releaseStatement(dbs);
+    }
+    return retVal;
+  }
+
 
   public static Statement _addValueUpdateToStatement(String objectId, Value<?,?> value, Statement dbs) throws SQLException {
     dbs.addBatch(valueSQL.updateSQL(objectId,value));
@@ -526,39 +562,11 @@ public interface ValuePersistHandler<T,Q extends Value<T,Q>> { //extends SQLRead
     }
 
     public int createTables() throws SQLException {
-      Connection conn = null;
-      Statement dbs = null;
-      int retVal = 0;
-      try {
-        // get a connection TODO: need to setup connection pool
-        conn = Util.DB.__conn();
-        dbs = conn.createStatement();
-        retVal = dbs.executeUpdate(valueSQL.createSQL());
-     } catch (SQLException e) {
-        throw e;
-      } finally {
-        Util.DB.__release(conn);
-        Util.DB.releaseStatement(dbs);
-      }
-      return retVal;
+      return _createTables();
     }
 
     public int clearTables() throws SQLException {
-      Connection conn = null;
-      Statement dbs = null;
-      int retVal = 0;
-      try {
-        // get a connection TODO: need to setup connection pool
-        conn = Util.DB.__conn();
-        dbs = conn.createStatement();
-        retVal = dbs.executeUpdate(valueSQL.clearSQL());
-     } catch (SQLException e) {
-        throw e;
-      } finally {
-        Util.DB.__release(conn);
-        Util.DB.releaseStatement(dbs);
-      }
-      return retVal;
+      return _clearTables();
     }
 
     public Value<?,?> toValue(ResultSet rs) throws SQLException {
