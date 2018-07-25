@@ -15,6 +15,7 @@ import com.camsolute.code.camp.lib.contract.core.Serialization;
 import com.camsolute.code.camp.lib.contract.core.CampTable.ValueTable;
 import com.camsolute.code.camp.lib.contract.core.HasCoordinate;
 import com.camsolute.code.camp.lib.contract.core.Coordinate;
+import com.camsolute.code.camp.lib.contract.core.Coordinate.CoordinateImpl;
 import com.camsolute.code.camp.lib.contract.core.CampException.AlreadyContainsElementException;
 import com.camsolute.code.camp.lib.contract.core.CampException.DataMismatchException;
 import com.camsolute.code.camp.lib.contract.core.CampException.TableDimensionsException;
@@ -141,7 +142,7 @@ public interface Value<T,Q extends Value<T,Q>> extends HasId, HasValueParent, Ha
 	
 		private Group group = new Group(Util.Config.instance().defaultGroup("Value"));
 		
-		private Coordinate position;
+		private Coordinate position = new CoordinateImpl();
 
 		private boolean selected = false;
 
@@ -298,6 +299,26 @@ public interface Value<T,Q extends Value<T,Q>> extends HasId, HasValueParent, Ha
 			sqlHandler(new ValuePersistHandler.BooleanValuePersistHandler());
 			jsonHandler(new JSONValueHandler.BooleanJSONValueHandler());
 		}
+		
+		protected BooleanValue(Boolean value,String group,int posX, int posY, int posZ) {
+			this.myValue = value;
+			this.setGroup(group);
+			this.position().update(posX,posY,posZ);
+			sqlHandler(new ValuePersistHandler.BooleanValuePersistHandler());
+			jsonHandler(new JSONValueHandler.BooleanJSONValueHandler());
+		}
+
+		protected BooleanValue(Boolean value,String group,int posX, int posY, int posZ, boolean selected) {
+			this.myValue = value;
+			this.setGroup(group);
+			this.position().update(posX,posY,posZ);
+			this.setSelected(selected);
+			sqlHandler(new ValuePersistHandler.BooleanValuePersistHandler());
+			jsonHandler(new JSONValueHandler.BooleanJSONValueHandler());
+		}
+
+
+		
 		public ValueType type() {
 			return  ValueType._boolean;
 		}
@@ -339,6 +360,24 @@ public interface Value<T,Q extends Value<T,Q>> extends HasId, HasValueParent, Ha
 			sqlHandler(new ValuePersistHandler.ComplexValuePersistHandler());
 			jsonHandler(new JSONValueHandler.ComplexJSONValueHandler());
 		}
+
+		protected ComplexValue(ValueListComplex value,String group,int posX, int posY, int posZ) {
+			this.myValue = value;
+			this.setGroup(group);
+			this.position().update(posX,posY,posZ);
+			sqlHandler(new ValuePersistHandler.ComplexValuePersistHandler());
+			jsonHandler(new JSONValueHandler.ComplexJSONValueHandler());
+		}
+
+		protected ComplexValue(ValueListComplex value,String group,int posX, int posY, int posZ, boolean selected) {
+			this.myValue = value;
+			this.setGroup(group);
+			this.position().update(posX,posY,posZ);
+			this.setSelected(selected);
+			sqlHandler(new ValuePersistHandler.ComplexValuePersistHandler());
+			jsonHandler(new JSONValueHandler.ComplexJSONValueHandler());
+		}
+
 
 		public ValueType type() {
 			return ValueType._complex;
@@ -429,6 +468,24 @@ public interface Value<T,Q extends Value<T,Q>> extends HasId, HasValueParent, Ha
 			jsonHandler(new JSONValueHandler.DateJSONValueHandler());
 		}
 
+		protected DateValue(DateTime value,String group,int posX, int posY, int posZ) {
+			this.myValue = value;
+			this.setGroup(group);
+			this.position().update(posX,posY,posZ);
+			sqlHandler(new ValuePersistHandler.DateValuePersistHandler());
+			jsonHandler(new JSONValueHandler.DateJSONValueHandler());
+		}
+
+		protected DateValue(DateTime value,String group,int posX, int posY, int posZ, boolean selected) {
+			this.myValue = value;
+			this.setGroup(group);
+			this.position().update(posX,posY,posZ);
+			this.setSelected(selected);
+			sqlHandler(new ValuePersistHandler.DateValuePersistHandler());
+			jsonHandler(new JSONValueHandler.DateJSONValueHandler());
+		}
+
+
 		public ValueType type() {
 			return ValueType._date;
 		}
@@ -467,6 +524,23 @@ public interface Value<T,Q extends Value<T,Q>> extends HasId, HasValueParent, Ha
 		
 		protected DateTimeValue(DateTime value) {
 			this.myValue = value;
+			sqlHandler(new ValuePersistHandler.DateTimeValuePersistHandler());
+			jsonHandler(new JSONValueHandler.DateTimeJSONValueHandler());
+		}
+
+		protected DateTimeValue(DateTime value,String group,int posX, int posY, int posZ) {
+			this.myValue = value;
+			this.setGroup(group);
+			this.position().update(posX,posY,posZ);
+			sqlHandler(new ValuePersistHandler.DateTimeValuePersistHandler());
+			jsonHandler(new JSONValueHandler.DateTimeJSONValueHandler());
+		}
+
+		protected DateTimeValue(DateTime value,String group,int posX, int posY, int posZ, boolean selected) {
+			this.myValue = value;
+			this.setGroup(group);
+			this.position().update(posX,posY,posZ);
+			this.setSelected(selected);
 			sqlHandler(new ValuePersistHandler.DateTimeValuePersistHandler());
 			jsonHandler(new JSONValueHandler.DateTimeJSONValueHandler());
 		}
@@ -514,6 +588,24 @@ public interface Value<T,Q extends Value<T,Q>> extends HasId, HasValueParent, Ha
 			jsonHandler(new JSONValueHandler.EnumJSONValueHandler());
 		}
 
+		protected EnumValue(String value,String group,int posX, int posY, int posZ) {
+			this.myValue = value;
+			this.setGroup(group);
+			this.position().update(posX,posY,posZ);
+			sqlHandler(new ValuePersistHandler.EnumValuePersistHandler());
+			jsonHandler(new JSONValueHandler.EnumJSONValueHandler());
+		}
+
+		protected EnumValue(String value,String group,int posX, int posY, int posZ, boolean selected) {
+			this.myValue = value;
+			this.setGroup(group);
+			this.position().update(posX,posY,posZ);
+			this.setSelected(selected);
+			sqlHandler(new ValuePersistHandler.EnumValuePersistHandler());
+			jsonHandler(new JSONValueHandler.EnumJSONValueHandler());
+		}
+
+
 		public ValueType type() {
 			return ValueType._enum;
 		}
@@ -557,6 +649,23 @@ public interface Value<T,Q extends Value<T,Q>> extends HasId, HasValueParent, Ha
 			jsonHandler(new JSONValueHandler.IntegerJSONValueHandler());
 		}
 
+		protected IntegerValue(int value,String group,int posX, int posY, int posZ) {
+			this.myValue = value;
+			this.setGroup(group);
+			this.position().update(posX,posY,posZ);
+			sqlHandler(new ValuePersistHandler.IntegerValuePersistHandler());
+			jsonHandler(new JSONValueHandler.IntegerJSONValueHandler());
+		}
+
+		protected IntegerValue(int value,String group,int posX, int posY, int posZ, boolean selected) {
+			this.myValue = value;
+			this.setGroup(group);
+			this.position().update(posX,posY,posZ);
+			this.setSelected(selected);
+			sqlHandler(new ValuePersistHandler.IntegerValuePersistHandler());
+			jsonHandler(new JSONValueHandler.IntegerJSONValueHandler());
+		}
+
 		public ValueType type() {
 			return ValueType._integer;
 		}
@@ -596,6 +705,23 @@ public interface Value<T,Q extends Value<T,Q>> extends HasId, HasValueParent, Ha
 		
 		protected ListValue(ValueList value) {
 			this.myValue = value;
+			sqlHandler(new ValuePersistHandler.ListValuePersistHandler());
+			jsonHandler(new JSONValueHandler.ListJSONValueHandler());
+		}
+
+		protected ListValue(ValueList value,String group,int posX, int posY, int posZ) {
+			this.myValue = value;
+			this.setGroup(group);
+			this.position().update(posX,posY,posZ);
+			sqlHandler(new ValuePersistHandler.ListValuePersistHandler());
+			jsonHandler(new JSONValueHandler.ListJSONValueHandler());
+		}
+
+		protected ListValue(ValueList value,String group,int posX, int posY, int posZ, boolean selected) {
+			this.myValue = value;
+			this.setGroup(group);
+			this.position().update(posX,posY,posZ);
+			this.setSelected(selected);
 			sqlHandler(new ValuePersistHandler.ListValuePersistHandler());
 			jsonHandler(new JSONValueHandler.ListJSONValueHandler());
 		}
@@ -668,6 +794,23 @@ public interface Value<T,Q extends Value<T,Q>> extends HasId, HasValueParent, Ha
 		
 		protected MapValue(ValueComplex value) {
 			this.myValue = value;
+			sqlHandler(new ValuePersistHandler.MapValuePersistHandler());
+			jsonHandler(new JSONValueHandler.MapJSONValueHandler());
+		}
+
+		protected MapValue(ValueComplex value,String group,int posX, int posY, int posZ) {
+			this.myValue = value;
+			this.setGroup(group);
+			this.position().update(posX,posY,posZ);
+			sqlHandler(new ValuePersistHandler.MapValuePersistHandler());
+			jsonHandler(new JSONValueHandler.MapJSONValueHandler());
+		}
+
+		protected MapValue(ValueComplex value,String group,int posX, int posY, int posZ, boolean selected) {
+			this.myValue = value;
+			this.setGroup(group);
+			this.position().update(posX,posY,posZ);
+			this.setSelected(selected);
 			sqlHandler(new ValuePersistHandler.MapValuePersistHandler());
 			jsonHandler(new JSONValueHandler.MapJSONValueHandler());
 		}
@@ -755,6 +898,23 @@ public interface Value<T,Q extends Value<T,Q>> extends HasId, HasValueParent, Ha
 			jsonHandler(new JSONValueHandler.SetJSONValueHandler());
 		}
 
+		protected SetValue(String value,String group,int posX, int posY, int posZ) {
+			this.myValue = value;
+			this.setGroup(group);
+			this.position().update(posX,posY,posZ);
+			sqlHandler(new ValuePersistHandler.SetValuePersistHandler());
+			jsonHandler(new JSONValueHandler.SetJSONValueHandler());
+		}
+
+		protected SetValue(String value,String group,int posX, int posY, int posZ, boolean selected) {
+			this.myValue = value;
+			this.setGroup(group);
+			this.position().update(posX,posY,posZ);
+			this.setSelected(selected);
+			sqlHandler(new ValuePersistHandler.SetValuePersistHandler());
+			jsonHandler(new JSONValueHandler.SetJSONValueHandler());
+		}
+
 		public ValueType type() {
 			return ValueType._set;
 		}
@@ -793,6 +953,23 @@ public interface Value<T,Q extends Value<T,Q>> extends HasId, HasValueParent, Ha
 		
 		protected StringValue(String value) {
 			this.myValue = value;
+			sqlHandler(new ValuePersistHandler.StringValuePersistHandler());
+			jsonHandler(new JSONValueHandler.StringJSONValueHandler());
+		}
+
+		protected StringValue(String value,String group,int posX, int posY, int posZ) {
+			this.myValue = value;
+			this.setGroup(group);
+			this.position().update(posX,posY,posZ);
+			sqlHandler(new ValuePersistHandler.StringValuePersistHandler());
+			jsonHandler(new JSONValueHandler.StringJSONValueHandler());
+		}
+
+		protected StringValue(String value,String group,int posX, int posY, int posZ, boolean selected) {
+			this.myValue = value;
+			this.setGroup(group);
+			this.position().update(posX,posY,posZ);
+			this.setSelected(selected);
 			sqlHandler(new ValuePersistHandler.StringValuePersistHandler());
 			jsonHandler(new JSONValueHandler.StringJSONValueHandler());
 		}
@@ -836,6 +1013,23 @@ public interface Value<T,Q extends Value<T,Q>> extends HasId, HasValueParent, Ha
 		
 		protected TableValue(ValueTable value) {
 			this.myValue = value;
+			sqlHandler(new ValuePersistHandler.TableValuePersistHandler());
+			jsonHandler(new JSONValueHandler.TableJSONValueHandler());
+		}
+
+		protected TableValue(ValueTable value,String group,int posX, int posY, int posZ) {
+			this.myValue = value;
+			this.setGroup(group);
+			this.position().update(posX,posY,posZ);
+			sqlHandler(new ValuePersistHandler.TableValuePersistHandler());
+			jsonHandler(new JSONValueHandler.TableJSONValueHandler());
+		}
+
+		protected TableValue(ValueTable value,String group,int posX, int posY, int posZ, boolean selected) {
+			this.myValue = value;
+			this.setGroup(group);
+			this.position().update(posX,posY,posZ);
+			this.setSelected(selected);
 			sqlHandler(new ValuePersistHandler.TableValuePersistHandler());
 			jsonHandler(new JSONValueHandler.TableJSONValueHandler());
 		}
@@ -945,6 +1139,23 @@ public interface Value<T,Q extends Value<T,Q>> extends HasId, HasValueParent, Ha
 			jsonHandler(new JSONValueHandler.TextJSONValueHandler());
 		}
 
+		protected TextValue(String value,String group,int posX, int posY, int posZ) {
+			this.myValue = value;
+			this.setGroup(group);
+			this.position().update(posX,posY,posZ);
+			sqlHandler(new ValuePersistHandler.TextValuePersistHandler());
+			jsonHandler(new JSONValueHandler.TextJSONValueHandler());
+		}
+
+		protected TextValue(String value,String group,int posX, int posY, int posZ, boolean selected) {
+			this.myValue = value;
+			this.setGroup(group);
+			this.position().update(posX,posY,posZ);
+			this.setSelected(selected);
+			sqlHandler(new ValuePersistHandler.TextValuePersistHandler());
+			jsonHandler(new JSONValueHandler.TextJSONValueHandler());
+		}
+
 		public ValueType type() {
 			return ValueType._text;
 		}
@@ -984,6 +1195,23 @@ public interface Value<T,Q extends Value<T,Q>> extends HasId, HasValueParent, Ha
 		
 		protected TimeValue(DateTime value) {
 			this.myValue = value;
+			sqlHandler(new ValuePersistHandler.TimeValuePersistHandler());
+			jsonHandler(new JSONValueHandler.TimeJSONValueHandler());
+		}
+
+		protected TimeValue(DateTime value,String group,int posX, int posY, int posZ) {
+			this.myValue = value;
+			this.setGroup(group);
+			this.position().update(posX,posY,posZ);
+			sqlHandler(new ValuePersistHandler.TimeValuePersistHandler());
+			jsonHandler(new JSONValueHandler.TimeJSONValueHandler());
+		}
+
+		protected TimeValue(DateTime value,String group,int posX, int posY, int posZ, boolean selected) {
+			this.myValue = value;
+			this.setGroup(group);
+			this.position().update(posX,posY,posZ);
+			this.setSelected(selected);
 			sqlHandler(new ValuePersistHandler.TimeValuePersistHandler());
 			jsonHandler(new JSONValueHandler.TimeJSONValueHandler());
 		}
@@ -1030,6 +1258,23 @@ public interface Value<T,Q extends Value<T,Q>> extends HasId, HasValueParent, Ha
 			jsonHandler(new JSONValueHandler.TimestampJSONValueHandler());
 		}
 
+		protected TimestampValue(Timestamp value,String group,int posX, int posY, int posZ) {
+			this.myValue = value;
+			this.setGroup(group);
+			this.position().update(posX,posY,posZ);
+			sqlHandler(new ValuePersistHandler.TimestampValuePersistHandler());
+			jsonHandler(new JSONValueHandler.TimestampJSONValueHandler());
+		}
+
+		protected TimestampValue(Timestamp value,String group,int posX, int posY, int posZ, boolean selected) {
+			this.myValue = value;
+			this.setGroup(group);
+			this.position().update(posX,posY,posZ);
+			this.setSelected(selected);
+			sqlHandler(new ValuePersistHandler.TimestampValuePersistHandler());
+			jsonHandler(new JSONValueHandler.TimestampJSONValueHandler());
+		}
+
 		public ValueType type() {
 			return ValueType._timestamp;
 		}
@@ -1070,6 +1315,24 @@ public interface Value<T,Q extends Value<T,Q>> extends HasId, HasValueParent, Ha
 			sqlHandler(new ValuePersistHandler.BinaryValuePersistHandler());
 			jsonHandler(new JSONValueHandler.BinaryJSONValueHandler());
 		}
+		
+		protected BinaryValue(Binary value,String group,int posX, int posY, int posZ) {
+			this.myValue = value;
+			this.setGroup(group);
+			this.position().update(posX,posY,posZ);
+			sqlHandler(new ValuePersistHandler.BinaryValuePersistHandler());
+			jsonHandler(new JSONValueHandler.BinaryJSONValueHandler());
+		}
+
+		protected BinaryValue(Binary value,String group,int posX, int posY, int posZ, boolean selected) {
+			this.myValue = value;
+			this.setGroup(group);
+			this.position().update(posX,posY,posZ);
+			this.setSelected(selected);
+			sqlHandler(new ValuePersistHandler.BinaryValuePersistHandler());
+			jsonHandler(new JSONValueHandler.BinaryJSONValueHandler());
+		}
+
 		public ValueType type() {
 			return  ValueType._binary;
 		}

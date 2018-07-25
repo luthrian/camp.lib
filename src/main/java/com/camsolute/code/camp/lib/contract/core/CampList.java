@@ -137,7 +137,7 @@ public interface CampList<T extends Serialization<T>,Q extends CampList<T,Q>> ex
 
 	}
 	
-  	public class ValueList extends AbstractCampList<Value<?,?>,ValueList> {//ArrayList<Value> implements CampList<Value,ValueList>, Serialization<ValueList> {
+  public class ValueList extends AbstractCampList<Value<?,?>,ValueList> {//ArrayList<Value> implements CampList<Value,ValueList>, Serialization<ValueList> {
 
 		/**
 		 * 
